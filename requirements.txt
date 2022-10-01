@@ -1,0 +1,4 @@
+discord
+certifi
+pymongo
+dnspython
