@@ -3,8 +3,8 @@ from aiohttp import ClientConnectorError
 from discord.ext import commands
 import discord
 from os import environ
-import database
-from constants import PREFIX
+from util import database
+from util.constants import PREFIX
 
 # start database connections
 database.init_database()
@@ -17,7 +17,6 @@ try:
     #read local bot_info
     with open("bot_token.txt", "r") as file:
         TOKEN = file.read()
-        print(TOKEN)
 except FileNotFoundError:
     #read token from environment variable
     TOKEN = environ["BOT_TOKEN"]
@@ -40,7 +39,7 @@ async def on_ready():
         print(f"Loaded cog: {extension}")
 
     #set playing game to !help
-    await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX} help"))
+    await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
 
 try:
     bot_instance.run(TOKEN) #run the client using using my bot's token
