@@ -2,3 +2,4 @@ discord
 certifi
 pymongo
 dnspython
+requests

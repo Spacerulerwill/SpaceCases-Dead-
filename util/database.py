@@ -23,7 +23,7 @@ def update_price_data_loop():
     global skin_prices
     while True:
         skin_prices = get_skin_prices()
-        time.sleep(10)
+        time.sleep(3600)
 
 # setup database and data
 def init_database():
