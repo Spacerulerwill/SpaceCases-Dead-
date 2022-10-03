@@ -15,7 +15,7 @@ def update_price_data_loop():
   while True:
     skin_prices = get_skin_prices()
     time.sleep(3600)
-    
+
 # setup database and data
 def init():
 

@@ -1,7 +1,6 @@
 from discord.ext import commands
 from src.util.constants import CASES, PREFIX
-from src.util.database import skin_static_data, skin_prices
-from discord.ext import tasks
+from src.util import database
 
 # initialise class
 class UnboxCommands(commands.Cog):
@@ -23,8 +22,7 @@ class UnboxCommands(commands.Cog):
 
     @commands.command()
     async def price(self, ctx, *args):
-        skin_name = " ".join(args[:]).strip()
-        print(skin_prices[skin_name])
+        print(database.skin_prices)
         
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
