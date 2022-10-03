@@ -1,5 +1,7 @@
 from discord.ext import commands
-from util.constants import CASES, PREFIX
+from src.util.constants import CASES, PREFIX
+from src.util.database import skin_static_data, skin_prices
+from discord.ext import tasks
 
 # initialise class
 class UnboxCommands(commands.Cog):
@@ -18,6 +20,11 @@ class UnboxCommands(commands.Cog):
             pass
         else:
             await ctx.send(f"Invalid case! Use {PREFIX}cases to see the list of available cases.")
+
+    @commands.command()
+    async def price(self, ctx, *args):
+        skin_name = " ".join(args[:]).strip()
+        print(skin_prices[skin_name])
         
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

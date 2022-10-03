@@ -2,8 +2,7 @@
 # it is run at a fixed time interval while the bot is running
 
 import requests
-from util.constants import err_msg_dict
-import json
+from src.util.constants import err_code_dict
 
 # only get prices of items of these types
 VALID_TYPES = ["Weapon", "Knife", "Gloves"]
@@ -17,7 +16,7 @@ def get_skin_prices():
     status_code = api_fetch.status_code
 
     if status_code != 200:
-        print(f"Status code {status_code} when fetching skin prices: {err_msg_dict[status_code]}")
+        print(f"Status code {status_code} when fetching skin prices: {err_code_dict[status_code]}")
         return {}
     
     items_list = api_fetch.json()["items_list"]
@@ -35,7 +34,5 @@ def get_skin_prices():
             else: #if none are found, no price data
                 prices[value["name"]] = None
 
-    #with open('data.json', 'w', encoding='utf-8') as f:
-        #json.dump(prices, f, ensure_ascii=False, indent=4)
-
+    print("Successfully Scraped Prices!")
     return prices

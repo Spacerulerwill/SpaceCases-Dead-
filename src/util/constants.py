@@ -1,6 +1,6 @@
 PREFIX = "cs "
 
-err_msg_dict = {
+err_code_dict = {
     301: "Redirected to to a different endpoint!",
     400: "Bad request!",
     401: "Authentication error!",

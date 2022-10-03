@@ -3,13 +3,13 @@ from aiohttp import ClientConnectorError
 from discord.ext import commands
 import discord
 from os import environ
-from util import database
-from util.constants import PREFIX
+from src.util import database
+from src.util.constants import PREFIX
 
 # start database connections
-database.init_database()
+database.init()
 
-#list of cogss
+#list of cogs
 cogs = ["unbox"]   
 
 #try read token from text file, if failed read token from server environment variable
@@ -35,7 +35,7 @@ async def on_ready():
 
     #load each cog
     for extension in cogs:
-        await bot_instance.load_extension(f'cogs.{extension}')
+        await bot_instance.load_extension(f'src.cogs.{extension}')
         print(f"Loaded cog: {extension}")
 
     #set playing game to !help
