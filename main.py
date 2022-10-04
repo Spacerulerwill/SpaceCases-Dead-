@@ -17,6 +17,7 @@ try:
     #read local bot_info
     with open("bot_token.txt", "r") as file:
         TOKEN = file.read()
+        
 except FileNotFoundError:
     #read token from environment variable
     TOKEN = environ["BOT_TOKEN"]

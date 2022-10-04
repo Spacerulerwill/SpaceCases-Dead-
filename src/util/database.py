@@ -1,5 +1,5 @@
-from src.scripts.collect_skin_prices import get_api_data, add_skin_prices, add_skin_images
-from src.scripts.collect_skin_static_data import get_skin_static_data
+from src.scripts.collect_skin_api_data import get_api_data, add_skin_prices, add_skin_images
+from src.scripts.collect_skin_floats import get_skin_static_data
 from threading import Thread
 import time
 import pymongo
