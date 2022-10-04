@@ -23,6 +23,7 @@ class UnboxCommands(commands.Cog):
     @commands.command()
     async def price(self, ctx, *args):
         print(database.skin_prices)
+        print(database.skin_static_data)
         
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
