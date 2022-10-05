@@ -35,14 +35,19 @@ def add_skin_prices(input_dict, api_data):
 
     print("Added prices!")
 
-def add_skin_images(input_dict, api_data):
+def add_skin_static_data(input_dict, api_data):
     items_list = api_data["items_list"]
     for value in items_list.values():
         if value["type"] in VALID_TYPES:
             name= value["name"]
 
             if name in input_dict:
-                input_dict[name]["image_url"] = "community.akamai.steamstatic.com/economy/image/" + value["icon_url"]
+                input_dict[name]["image_url"] = "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"]
+                input_dict[name]["rarity_color"] = value["rarity_color"]
             else:
-                input_dict[name] = {"image_url": "community.akamai.steamstatic.com/economy/image/" + value["icon_url"]}
-    print("Added weapon images")
+                input_dict[name] = {
+                    "image_url": "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"],
+                    "rarity_color": value["rarity_color"]
+                }
+    print("Added weapon static data")
+

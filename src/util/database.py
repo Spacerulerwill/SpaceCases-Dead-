@@ -1,4 +1,4 @@
-from src.scripts.collect_skin_api_data import get_api_data, add_skin_prices, add_skin_images
+from src.scripts.collect_skin_api_data import get_api_data, add_skin_prices, add_skin_static_data
 from src.scripts.collect_skin_floats import get_skin_static_data
 from threading import Thread
 import time
@@ -45,7 +45,7 @@ def init():
   api_data = get_api_data()
   Thread(target=update_price_data_loop).start()
   add_skin_prices(skin_prices, api_data)
-  add_skin_images(skin_static_data, api_data)
+  add_skin_static_data(skin_static_data, api_data)
 
   #setup mongodb database
   mongo_url = f"mongodb+srv://admin:{PASS}@csgo-case-bot.y4kcpx1.mongodb.net/?retryWrites=true&w=majority"
