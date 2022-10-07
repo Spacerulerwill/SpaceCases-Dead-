@@ -1,0 +1,1 @@
+# file for all items, with their min and max floats and stattrak availability

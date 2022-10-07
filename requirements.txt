@@ -3,3 +3,4 @@ certifi
 pymongo
 dnspython
 requests
+urllib3

@@ -9,16 +9,6 @@ err_code_dict = {
     503: "Server not ready to handle request!"
 }
 
-CASES = {
-    "gamma case" : {
-        "Mil-Spec": [],
-        "Restricted": [],
-        "Classified": [],
-        "Covert": [],
-        "Special": []
-    }
-}
-
 wear_dict = {
     "fn": "(Factory New)",
     "mw": "(Minimal Wear)",
@@ -28,6 +18,7 @@ wear_dict = {
 }
 
 weapon_name_dict = {
+    # pistols
     "cz75": "CZ75-Auto",
     "desert eagle": "Desert Eagle",
     "dual berretas": "Dual Berretas",
@@ -38,6 +29,7 @@ weapon_name_dict = {
     "r8": "R8 Revolver",
     "tec9": "Tec-9",
     "usp": "USP-S",
+    # rifles
     "ak47": "AK-47",
     "aug": "AUG",
     "awp": "AWP",
@@ -49,6 +41,7 @@ weapon_name_dict = {
     "scar20": "SCAR-20",
     "sg553": "SG 553",
     "ssg08": "SSG 08",
+    # smgs
     "mac10": "MAC-10",
     "mp5": "MP5-SD",
     "mp7": "MP7",
@@ -56,12 +49,14 @@ weapon_name_dict = {
     "bizon": "PP-Bizon",
     "p90": "P90",
     "ump45": "UMP 45",
+    # shotguns
     "mag7": "MAG-7",
     "nova": "Nova",
     "sawed off": "Sawed-Off",
     "xm1014": "XM1014",
     "m249": "M249",
     "negev": "Negev",
+    # knives
     "nomad knife": "★ Nomad Knife",
     "skeleton knife": "★ Skeleton Knife",
     "survival knife": "★ Survival Knife",
@@ -81,4 +76,13 @@ weapon_name_dict = {
     "stiletto knife": "★ Stiletto Knife",
     "talon knife": "★ Talon Knife",
     "ursus knife": "★ Ursus Knife",
+    # gloves
+    "broken fang gloves": "★ Broken Fang Gloves",
+    "driver gloves": "★ Driver Gloves",
+    "hand wraps": "★ Hand Wraps",
+    "moto gloves": "★ Moto Gloves",
+    "specialist gloves": "★ Specialist Gloves",
+    "sport gloves": "★ Sport Gloves",
+    "hydra gloves": "★ Hydra Gloves",
+    "bloodhound gloves": "★ Bloodhound Gloves",
 }

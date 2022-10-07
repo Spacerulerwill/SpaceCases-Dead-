@@ -1,6 +1,7 @@
-
 import requests
+import html
 from src.util.constants import err_code_dict
+import json
 
 # only get prices of items of these types
 VALID_TYPES = ["Weapon", "Knife", "Gloves"]
@@ -15,7 +16,7 @@ def get_api_data():
         print(f"Status code {status_code} when fetching api data: {err_code_dict[status_code]}")
         return {}
 
-    return api_fetch.json()
+    return json.loads(html.unescape(api_fetch.text))
 
 def add_skin_prices(input_dict, api_data):    
     items_list = api_data["items_list"]
@@ -23,15 +24,16 @@ def add_skin_prices(input_dict, api_data):
     #fetch prices from resulting json
     for value in items_list.values():
         if value["type"] in VALID_TYPES:
+            name = value["name"]
             # try to get the most recent pricing
             for time_range in PRICE_TIME_RANGES:
                 try:
-                    input_dict[value["name"]] = value["price"][time_range]["average"]
+                    input_dict[name] = value["price"][time_range]["average"]
                     break
                 except KeyError:
                     pass
             else: #if none are found, no price data
-                input_dict[value["name"]] = None
+                input_dict[name] = None
 
     print("Added prices!")
 
