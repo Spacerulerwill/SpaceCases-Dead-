@@ -1,15 +1,18 @@
-from src.scripts.collect_skin_api_data import get_api_data, add_skin_prices, add_skin_static_data
-from src.scripts.collect_skin_floats import get_skin_static_data
+from tkinter import filedialog
+from src.scripts.collect_skin_api_data import get_api_data, add_skin_prices, add_api_static_data
+from src.scripts.csgostash_scraper import get_csgostash_static_data
 from threading import Thread
 import time
 import pymongo
 import certifi
 from os import environ
 import datetime
+import json
 
 api_data = {}
-skin_prices = {}
-skin_static_data = {}
+skin_prices = {} # all prices
+skin_static_data = {} # skin images, rarity colors, rarities
+csgostash_static_data = {} # skin min max floats, is stattrak, is souvenir
 
 delta_hour = datetime.datetime.now().hour
 
@@ -45,7 +48,7 @@ def init():
   api_data = get_api_data()
   Thread(target=update_price_data_loop).start()
   add_skin_prices(skin_prices, api_data)
-  add_skin_static_data(skin_static_data, api_data)
+  add_api_static_data(skin_static_data, api_data)
 
   #setup mongodb database
   mongo_url = f"mongodb+srv://admin:{PASS}@csgo-case-bot.y4kcpx1.mongodb.net/?retryWrites=true&w=majority"
@@ -53,3 +56,14 @@ def init():
 
   #load the csgo bot database
   db = mongo['csgo-case-bot']
+
+  #skin data collection
+  csgostash_static_data_collection = db["skin-data"]
+
+  #insert csgostash_static_data if document doesn't exist
+  if csgostash_static_data_collection.find({"_id": "csgostash_static_data"}) == None:
+    with open('res/csgostash_static_data.json') as f:
+      file_data = json.load(f)
+      csgostash_static_data_collection.insert_one(file_data)
+
+  csgostash_static_data = csgostash_static_data_collection.find_one({"_id": "csgostash_static_data"})

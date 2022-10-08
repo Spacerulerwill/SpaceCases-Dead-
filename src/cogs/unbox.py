@@ -61,14 +61,16 @@ class UnboxCommands(commands.Cog):
         try:
             skin_price = database.skin_prices[reconstructed_name]
         except KeyError:
-            await ctx.send("Invalid skin name!")
+            await ctx.send("Cannot find skin!")
             return
 
         image_url = database.skin_static_data[reconstructed_name]["image_url"]
         color = int(database.skin_static_data[reconstructed_name]["rarity_color"], base=16)
+        rarity = database.skin_static_data[reconstructed_name]["rarity"]
         
         e = Embed(title=reconstructed_name, color=color)
         e.add_field(name="Current Market Price", value="$" + str(skin_price))
+        e.add_field(name="Rarity", value=rarity, inline=True)
         e.set_image(url=image_url)
         await ctx.send(embed=e)
         

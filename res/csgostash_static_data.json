@@ -1,0 +1,225 @@
+{
+    "_id": "csgostash_static_data",
+    "AWP | Chromatic Aberration": {
+        "min_float": "0.00",
+        "max_float": "0.70",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Containment Breach": {
+        "min_float": "0.00",
+        "max_float": "1.00",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Wildfire": {
+        "min_float": "0.01",
+        "max_float": "0.70",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Neo-Noir": {
+        "min_float": "0.00",
+        "max_float": "0.50",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Oni Taiji": {
+        "min_float": "0.00",
+        "max_float": "0.50",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Hyper Beast": {
+        "min_float": "0.00",
+        "max_float": "1.00",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Man-o'-war": {
+        "min_float": "0.10",
+        "max_float": "0.20",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Asiimov": {
+        "min_float": "0.18",
+        "max_float": "1.00",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Lightning Strike": {
+        "min_float": "0.00",
+        "max_float": "0.08",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Desert Hydra": {
+        "min_float": "0.00",
+        "max_float": "0.60",
+        "stattrak": false,
+        "souvenir": true
+    },
+    "AWP | Fade": {
+        "min_float": "0.00",
+        "max_float": "0.08",
+        "stattrak": false,
+        "souvenir": false
+    },
+    "AWP | The Prince": {
+        "min_float": "0.00",
+        "max_float": "0.60",
+        "stattrak": false,
+        "souvenir": false
+    },
+    "AWP | Gungnir": {
+        "min_float": "0.00",
+        "max_float": "0.60",
+        "stattrak": false,
+        "souvenir": false
+    },
+    "AWP | Medusa": {
+        "min_float": "0.00",
+        "max_float": "1.00",
+        "stattrak": false,
+        "souvenir": false
+    },
+    "AWP | Dragon Lore": {
+        "min_float": "0.00",
+        "max_float": "0.70",
+        "stattrak": false,
+        "souvenir": true
+    },
+    "AWP | Mortis": {
+        "min_float": "0.00",
+        "max_float": "0.64",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Fever Dream": {
+        "min_float": "0.00",
+        "max_float": "0.55",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Elite Build": {
+        "min_float": "0.00",
+        "max_float": "1.00",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Corticera": {
+        "min_float": "0.06",
+        "max_float": "0.30",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Redline": {
+        "min_float": "0.10",
+        "max_float": "0.40",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Electric Hive": {
+        "min_float": "0.00",
+        "max_float": "0.40",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Graphite": {
+        "min_float": "0.00",
+        "max_float": "0.12",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | BOOM": {
+        "min_float": "0.06",
+        "max_float": "0.28",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Silk Tiger": {
+        "min_float": "0.00",
+        "max_float": "0.60",
+        "stattrak": false,
+        "souvenir": false
+    },
+    "AWP | Exoskeleton": {
+        "min_float": "0.00",
+        "max_float": "1.00",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Atheris": {
+        "min_float": "0.00",
+        "max_float": "1.00",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | PAW": {
+        "min_float": "0.00",
+        "max_float": "0.50",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Phobos": {
+        "min_float": "0.00",
+        "max_float": "0.40",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Worm God": {
+        "min_float": "0.00",
+        "max_float": "0.45",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | POP AWP": {
+        "min_float": "0.00",
+        "max_float": "0.44",
+        "stattrak": false,
+        "souvenir": false
+    },
+    "AWP | Pink DDPAT": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": true
+    },
+    "AWP | Pit Viper": {
+        "min_float": "0.08",
+        "max_float": "0.50",
+        "stattrak": false,
+        "souvenir": true
+    },
+    "AWP | Capillary": {
+        "min_float": "0.05",
+        "max_float": "0.70",
+        "stattrak": true,
+        "souvenir": false
+    },
+    "AWP | Acheron": {
+        "min_float": "0.00",
+        "max_float": "0.83",
+        "stattrak": false,
+        "souvenir": true
+    },
+    "AWP | Snake Camo": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false
+    },
+    "AWP | Sun in Leo": {
+        "min_float": "0.00",
+        "max_float": "0.50",
+        "stattrak": false,
+        "souvenir": false
+    },
+    "AWP | Safari Mesh": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": true
+    }
+}
