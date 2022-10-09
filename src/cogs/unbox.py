@@ -45,11 +45,13 @@ class UnboxCommands(commands.Cog):
 
         if weapon_skin not in database.csgostash_static_data:
             await ctx.send(f"{skin} is not an available skin for {weapon}")
+            return
 
         try:
             wear = wear_dict[query[2].lower()]
         except KeyError:
             await ctx.send("Wear must be either fn, mw, ft, ww, bs")
+            return
 
         if (len(query) == 4):
             modifier = query[3].lower()
@@ -96,11 +98,14 @@ class UnboxCommands(commands.Cog):
         e = Embed(title=full_item, color=color)
         e.add_field(name="Current Market Price", value=skin_price)
         e.add_field(name="Rarity", value=rarity, inline=True)
+
+        if len(query) == 4 and query[3] == "souvenir":
+            tournament = database.skin_static_data[full_item]["tournament"]
+            e.add_field(name="Tournament", value=tournament)
+            
         e.set_image(url=image_url)
         await ctx.send(embed=e)
 
-        
-        
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
     await bot.add_cog(UnboxCommands(bot))

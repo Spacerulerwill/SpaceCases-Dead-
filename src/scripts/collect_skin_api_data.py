@@ -47,11 +47,17 @@ def add_api_static_data(input_dict, api_data):
                 input_dict[name]["image_url"] = "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"]
                 input_dict[name]["rarity_color"] = value["rarity_color"]
                 input_dict[name]["rarity"] = value["rarity"]
+                if "tournament" in value:
+                    input_dict[name]["tournament"] = value["tournament"]
             else:
                 input_dict[name] = {
                     "image_url": "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"],
                     "rarity_color": value["rarity_color"],
                     "rarity": value["rarity"]
                 }
+
+                if "tournament" in value:
+                    input_dict[name]["tournament"] = value["tournament"]
+                    
     print("Added weapon static data")
 

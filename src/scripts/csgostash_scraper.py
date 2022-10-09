@@ -68,5 +68,13 @@ def get_csgostash_static_data():
     with open("res/csgostash_static_data.json", "w+") as file:
         json.dump(result, file, indent=4)
 
+
+def dump_csgobackpack_api():
+    data = requests.get("http://csgobackpack.net/api/GetItemsList/v2/").json()
+    with open("res/csgobackpack_api.json", "w+") as f:
+        json.dump(data,f, indent=4)
+
+
 if __name__ == "__main__":
-    get_csgostash_static_data()
+    dump_csgobackpack_api()
+    #get_csgostash_static_data()
