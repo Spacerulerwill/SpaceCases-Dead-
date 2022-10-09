@@ -28,7 +28,7 @@ class UnboxCommands(commands.Cog):
     async def inspect(self, ctx, *args):
         query = " ".join(args[:]).split(",")
         if not 3 <= len(query) <= 4:
-            await ctx.send("Must provide 3 - 4 comma seperated arguments in format: weapon, skin name, condition, stattrak (optional)")
+            await ctx.send("Must provide 3 - 4 comma seperated arguments in format: weapon, skin name, condition, stattrak | souvenir (optional)")
             return
 
         query = [_s.strip() for _s in query]
@@ -47,21 +47,33 @@ class UnboxCommands(commands.Cog):
             await ctx.send("Condition must be either: fn, mw, ft, ww, bs")
             return
 
-        stattrak = ""
+        #if a modifier is specified (stattrak / souvenir)
+        modifier = ""
         if len(query) == 4:
-            if query[3] == "stattrak":
-                stattrak = "StatTrak™ "
+            if query[3].lower() == "stattrak":
+                modifier = "StatTrak™ "
+
+            elif query[3].lower() == "souvenir":
+                modifier = "Souvenir "
             else:
-                await ctx.send("Argument 4 must be stattrak!")
+                await ctx.send("Argument 4 must can either be stattrak or souvenir")
+                return
+            
+            try:
+                # check the skin is actually available in specified modifier
+                if database.csgostash_static_data[f"{weapon} | {skin}"][query[3].lower()] == False:
+                    await ctx.send(f"{weapon} | {skin} is not available as {modifier}")
+                    return
+            except KeyError:
+                await ctx.send("Cannot find skin with that name!")
                 return
 
-        reconstructed_name = f"{stattrak}{weapon} | {skin} {condition}"
-        #print(reconstructed_name)
+        reconstructed_name = f"{modifier}{weapon} | {skin} {condition}"
 
         try:
             skin_price = database.skin_prices[reconstructed_name]
         except KeyError:
-            await ctx.send("Cannot find skin!")
+            await ctx.send("Cannot find skin with that name!")
             return
 
         image_url = database.skin_static_data[reconstructed_name]["image_url"]

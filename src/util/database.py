@@ -33,7 +33,7 @@ def update_price_data_loop():
 # setup database and data
 def init():
 
-  global skin_static_data, api_data
+  global skin_static_data, api_data, csgostash_static_data
 
     #try read mongodb database password from database_pass.txt, if fails read from environment variable
   try:
@@ -61,7 +61,8 @@ def init():
   csgostash_static_data_collection = db["skin-data"]
 
   #insert csgostash_static_data if document doesn't exist
-  if csgostash_static_data_collection.find({"_id": "csgostash_static_data"}) == None:
+  if csgostash_static_data_collection.find_one({"_id": "csgostash_static_data"}) == None:
+    print("bruh!")
     with open('res/csgostash_static_data.json') as f:
       file_data = json.load(f)
       csgostash_static_data_collection.insert_one(file_data)
