@@ -4,13 +4,17 @@ import json
 
 weapons = [
     # pistols
-    "CZ75-Auto", "Desert Eagle", "Dual Berettas", "Five-SeveN", "Glock-18", "P2000", "P250", "R8 Revolver", "Tec-9", "USP-S",
+    "CZ75-Auto", "Desert Eagle", "Dual Berettas", "Five-SeveN", "Glock-18", "P2000", "P250", "R8 Revolver", "Tec-9", "USP-S", 
     #rifles
     "AK-47", "AUG", "AWP", "FAMAS", "G3SG1", "Galil AR", "M4A1-S", "M4A4", "SCAR-20", "SG 553", "SSG 08",
     #smgs
     "MAC-10", "MP5-SD", "MP7", "MP9", "PP-Bizon", "P90", "UMP-45",
     #heavy
-    "MAG-7", "Nova", "Sawed-Off", "XM1014", "M249", "Negev"
+    "MAG-7", "Nova", "Sawed-Off", "XM1014", "M249", "Negev",
+
+    #knives
+    "Nomad Knife", "Skeleton Knife", "Survival Knife", "Paracord Knife", "Classic Knife", "Bayonet", "Bowie Knife", "Butterfly Knife", "Falchion Knife",
+    "Flip Knife", "Gut Knife", "Huntsman Knife", "Karambit", "M9 Bayonet", "Navaja Knife", "Shadow Daggers", "Stiletto Knife", "Talon Knife", "Ursus Knife"
 ]
 
 # skin floats and whether they are stattrak souvenir or none
@@ -41,16 +45,25 @@ def get_csgostash_static_data():
 
                         stattrak = soup.find("div", {"class": "stattrak"}) != None
                         souvenir = soup.find("div", {"class": "souvenir"}) != None
+                        is_special = any(type in soup.find("div", {"class": "quality"}).text for type in ["Gloves", "Knife"])
+                        
+                        if "★ (Vanilla)" in skin_name:
+                            min_float = 0.0
+                            max_float = 1.0
+                        else:
+                            markers = soup.find_all("div", {"class": "marker-value"})
 
-                        markers = soup.find_all("div", {"class": "marker-value"})
+                            min_float = markers[0].text
+                            max_float = markers[1].text
 
-                        min_float = markers[0].text
-                        max_float = markers[1].text
+                        skin_data = {"min_float": min_float, "max_float": max_float, "stattrak": stattrak, "souvenir": souvenir, "is_special": is_special}
 
-                        skin_data = {"min_float": min_float, "max_float": max_float, "stattrak": stattrak, "souvenir": souvenir}
-
-                    print(f"Scraped {weapon} | {skin_name}")
-                    result[f"{weapon} | {skin_name}"] = skin_data
+                    if "★ (Vanilla)" in skin_name:
+                        result[f"{weapon}"] = skin_data
+                        print(f"Scraped {weapon}")
+                    else:
+                        result[f"{weapon} | {skin_name}"] = skin_data
+                        print(f"Scraped {weapon} | {skin_name}")
 
     with open("res/csgostash_static_data.json", "w+") as file:
         json.dump(result, file, indent=4)
