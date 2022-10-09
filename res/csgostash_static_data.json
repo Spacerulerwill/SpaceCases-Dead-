@@ -1736,139 +1736,6 @@
         "souvenir": true,
         "is_special": false
     },
-    "R8 Revolver | Fade": {
-        "min_float": "0.00",
-        "max_float": "0.40",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Skull Crusher": {
-        "min_float": "0.25",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Llama Cannon": {
-        "min_float": "0.03",
-        "max_float": "0.70",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Amber Fade": {
-        "min_float": "0.00",
-        "max_float": "0.40",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "R8 Revolver | Crazy 8": {
-        "min_float": "0.00",
-        "max_float": "1.00",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Reboot": {
-        "min_float": "0.00",
-        "max_float": "1.00",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Junk Yard": {
-        "min_float": "0.00",
-        "max_float": "1.00",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Bone Forged": {
-        "min_float": "0.00",
-        "max_float": "0.60",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Memento": {
-        "min_float": "0.00",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Survivalist": {
-        "min_float": "0.00",
-        "max_float": "0.70",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Grip": {
-        "min_float": "0.00",
-        "max_float": "1.00",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Crimson Web": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Blaze": {
-        "min_float": "0.00",
-        "max_float": "0.08",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Phoenix Marker": {
-        "min_float": "0.00",
-        "max_float": "0.60",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Nitro": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "R8 Revolver | Desert Brush": {
-        "min_float": "0.00",
-        "max_float": "0.60",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "R8 Revolver | Night": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "R8 Revolver | Canal Spray": {
-        "min_float": "0.06",
-        "max_float": "0.60",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "R8 Revolver | Bone Mask": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
     "Tec-9 | Decimator": {
         "min_float": "0.00",
         "max_float": "0.75",
@@ -5334,230 +5201,6 @@
         "souvenir": true,
         "is_special": false
     },
-    "MP7 | Bloodsport": {
-        "min_float": "0.00",
-        "max_float": "0.65",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Abyssal Apparition": {
-        "min_float": "0.00",
-        "max_float": "1.00",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Nemesis": {
-        "min_float": "0.00",
-        "max_float": "0.32",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Neon Ply": {
-        "min_float": "0.00",
-        "max_float": "1.00",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Powercore": {
-        "min_float": "0.00",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Impire": {
-        "min_float": "0.00",
-        "max_float": "0.40",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Special Delivery": {
-        "min_float": "0.00",
-        "max_float": "0.62",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Ocean Foam": {
-        "min_float": "0.00",
-        "max_float": "0.08",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Fade": {
-        "min_float": "0.00",
-        "max_float": "0.25",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "MP7 | Guerrilla": {
-        "min_float": "0.00",
-        "max_float": "1.00",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Mischief": {
-        "min_float": "0.10",
-        "max_float": "1.00",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Akoben": {
-        "min_float": "0.00",
-        "max_float": "0.70",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Cirrus": {
-        "min_float": "0.00",
-        "max_float": "0.75",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Armor Core": {
-        "min_float": "0.00",
-        "max_float": "0.50",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Urban Hazard": {
-        "min_float": "0.00",
-        "max_float": "0.50",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Skulls": {
-        "min_float": "0.10",
-        "max_float": "0.26",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Teal Blossom": {
-        "min_float": "0.00",
-        "max_float": "0.50",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Full Stop": {
-        "min_float": "0.00",
-        "max_float": "0.60",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Anodized Navy": {
-        "min_float": "0.00",
-        "max_float": "0.08",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "MP7 | Whiteout": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Vault Heist": {
-        "min_float": "0.00",
-        "max_float": "0.60",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Tall Grass": {
-        "min_float": "0.00",
-        "max_float": "0.65",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "MP7 | Motherboard": {
-        "min_float": "0.00",
-        "max_float": "0.50",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "MP7 | Gunsmoke": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "MP7 | Orange Peel": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "MP7 | Prey": {
-        "min_float": "0.00",
-        "max_float": "0.48",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "MP7 | Scorched": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Asterion": {
-        "min_float": "0.00",
-        "max_float": "0.55",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Olive Plaid": {
-        "min_float": "0.00",
-        "max_float": "0.58",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Forest DDPAT": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "MP7 | Army Recon": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
-    "MP7 | Groundwater": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
     "MP9 | Starlight Protector": {
         "min_float": "0.00",
         "max_float": "0.80",
@@ -6979,18 +6622,18 @@
         "souvenir": true,
         "is_special": false
     },
-    "Nova | Forest Leaves": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
     "Nova | Walnut": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": false,
         "souvenir": true,
+        "is_special": false
+    },
+    "Nova | Forest Leaves": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
         "is_special": false
     },
     "Sawed-Off | The Kraken": {
@@ -7729,13 +7372,6 @@
         "is_special": false
     },
     "Negev | Army Sheen": {
-        "min_float": "0.00",
-        "max_float": "0.30",
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": false
-    },
-    "Nomad Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -7820,13 +7456,6 @@
         "is_special": true
     },
     "Nomad Knife | Forest DDPAT": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Skeleton Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -7882,21 +7511,7 @@
         "souvenir": false,
         "is_special": true
     },
-    "Skeleton Knife | Safari Mesh": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "Skeleton Knife | Forest DDPAT": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Skeleton Knife | Boreal Forest": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
@@ -7910,14 +7525,21 @@
         "souvenir": false,
         "is_special": true
     },
-    "Skeleton Knife | Scorched": {
+    "Skeleton Knife | Safari Mesh": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Survival Knife": {
+    "Skeleton Knife | Boreal Forest": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Skeleton Knife | Scorched": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -8002,13 +7624,6 @@
         "is_special": true
     },
     "Survival Knife | Scorched": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Paracord Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -8029,16 +7644,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "Paracord Knife | Night Stripe": {
-        "min_float": "0.06",
-        "max_float": "0.80",
+    "Paracord Knife | Slaughter": {
+        "min_float": "0.01",
+        "max_float": "0.26",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Paracord Knife | Slaughter": {
-        "min_float": "0.01",
-        "max_float": "0.26",
+    "Paracord Knife | Night Stripe": {
+        "min_float": "0.06",
+        "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -8071,14 +7686,14 @@
         "souvenir": false,
         "is_special": true
     },
-    "Paracord Knife | Boreal Forest": {
+    "Paracord Knife | Scorched": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Paracord Knife | Scorched": {
+    "Paracord Knife | Boreal Forest": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
@@ -8093,13 +7708,6 @@
         "is_special": true
     },
     "Paracord Knife | Safari Mesh": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Classic Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -8184,13 +7792,6 @@
         "is_special": true
     },
     "Classic Knife | Forest DDPAT": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Bayonet": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -8309,16 +7910,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "Bayonet | Boreal Forest": {
-        "min_float": "0.06",
-        "max_float": "0.80",
+    "Bayonet | Blue Steel": {
+        "min_float": "0.00",
+        "max_float": "1.00",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Bayonet | Blue Steel": {
-        "min_float": "0.00",
-        "max_float": "1.00",
+    "Bayonet | Boreal Forest": {
+        "min_float": "0.06",
+        "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -8359,13 +7960,6 @@
         "is_special": true
     },
     "Bayonet | Forest DDPAT": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Bowie Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -8534,13 +8128,6 @@
         "is_special": true
     },
     "Bowie Knife | Urban Masked": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Butterfly Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -8709,13 +8296,6 @@
         "is_special": true
     },
     "Butterfly Knife | Fade": {
-        "min_float": "0.00",
-        "max_float": "0.08",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Falchion Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -8884,13 +8464,6 @@
         "is_special": true
     },
     "Falchion Knife | Safari Mesh": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Flip Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -9037,7 +8610,7 @@
         "souvenir": false,
         "is_special": true
     },
-    "Flip Knife | Urban Masked": {
+    "Flip Knife | Scorched": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
@@ -9058,14 +8631,7 @@
         "souvenir": false,
         "is_special": true
     },
-    "Flip Knife | Scorched": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Gut Knife": {
+    "Flip Knife | Urban Masked": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -9163,16 +8729,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "Gut Knife | Case Hardened": {
-        "min_float": "0.00",
-        "max_float": "1.00",
+    "Gut Knife | Slaughter": {
+        "min_float": "0.01",
+        "max_float": "0.26",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Gut Knife | Slaughter": {
-        "min_float": "0.01",
-        "max_float": "0.26",
+    "Gut Knife | Case Hardened": {
+        "min_float": "0.00",
+        "max_float": "1.00",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9205,14 +8771,14 @@
         "souvenir": false,
         "is_special": true
     },
-    "Gut Knife | Scorched": {
+    "Gut Knife | Boreal Forest": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Gut Knife | Boreal Forest": {
+    "Gut Knife | Scorched": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
@@ -9234,13 +8800,6 @@
         "is_special": true
     },
     "Gut Knife | Safari Mesh": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Huntsman Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -9275,16 +8834,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "Huntsman Knife | Bright Water": {
+    "Huntsman Knife | Freehand": {
         "min_float": "0.00",
-        "max_float": "0.50",
+        "max_float": "0.48",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Huntsman Knife | Freehand": {
+    "Huntsman Knife | Bright Water": {
         "min_float": "0.00",
-        "max_float": "0.48",
+        "max_float": "0.50",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9394,7 +8953,7 @@
         "souvenir": false,
         "is_special": true
     },
-    "Huntsman Knife | Safari Mesh": {
+    "Huntsman Knife | Boreal Forest": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
@@ -9408,14 +8967,7 @@
         "souvenir": false,
         "is_special": true
     },
-    "Huntsman Knife | Boreal Forest": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Karambit": {
+    "Huntsman Knife | Safari Mesh": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -9450,16 +9002,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "Karambit | Bright Water": {
+    "Karambit | Freehand": {
         "min_float": "0.00",
-        "max_float": "0.50",
+        "max_float": "0.48",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Karambit | Freehand": {
+    "Karambit | Bright Water": {
         "min_float": "0.00",
-        "max_float": "0.48",
+        "max_float": "0.50",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9541,16 +9093,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "Karambit | Stained": {
-        "min_float": "0.00",
-        "max_float": "1.00",
+    "Karambit | Night": {
+        "min_float": "0.06",
+        "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Karambit | Night": {
-        "min_float": "0.06",
-        "max_float": "0.80",
+    "Karambit | Stained": {
+        "min_float": "0.00",
+        "max_float": "1.00",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9562,14 +9114,14 @@
         "souvenir": false,
         "is_special": true
     },
-    "Karambit | Urban Masked": {
+    "Karambit | Forest DDPAT": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Karambit | Forest DDPAT": {
+    "Karambit | Urban Masked": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
@@ -9584,13 +9136,6 @@
         "is_special": true
     },
     "Karambit | Fade": {
-        "min_float": "0.00",
-        "max_float": "0.08",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "M9 Bayonet": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -9660,16 +9205,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "M9 Bayonet | Damascus Steel": {
-        "min_float": "0.00",
-        "max_float": "0.50",
+    "M9 Bayonet | Ultraviolet": {
+        "min_float": "0.06",
+        "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "M9 Bayonet | Ultraviolet": {
-        "min_float": "0.06",
-        "max_float": "0.80",
+    "M9 Bayonet | Damascus Steel": {
+        "min_float": "0.00",
+        "max_float": "0.50",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9737,16 +9282,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "M9 Bayonet | Stained": {
-        "min_float": "0.00",
-        "max_float": "1.00",
+    "M9 Bayonet | Urban Masked": {
+        "min_float": "0.06",
+        "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "M9 Bayonet | Urban Masked": {
-        "min_float": "0.06",
-        "max_float": "0.80",
+    "M9 Bayonet | Stained": {
+        "min_float": "0.00",
+        "max_float": "1.00",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9759,13 +9304,6 @@
         "is_special": true
     },
     "M9 Bayonet | Forest DDPAT": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Navaja Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -9892,22 +9430,8 @@
         "is_special": true
     },
     "Navaja Knife | Boreal Forest": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Shadow Daggers": {
         "min_float": 0.0,
         "max_float": 1.0,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Shadow Daggers | Gamma Doppler": {
-        "min_float": "0.00",
-        "max_float": "0.08",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9915,6 +9439,13 @@
     "Shadow Daggers | Lore": {
         "min_float": "0.00",
         "max_float": "1.00",
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Shadow Daggers | Gamma Doppler": {
+        "min_float": "0.00",
+        "max_float": "0.08",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10024,6 +9555,13 @@
         "souvenir": false,
         "is_special": true
     },
+    "Shadow Daggers | Safari Mesh": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
     "Shadow Daggers | Urban Masked": {
         "min_float": "0.06",
         "max_float": "0.80",
@@ -10032,13 +9570,6 @@
         "is_special": true
     },
     "Shadow Daggers | Scorched": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Shadow Daggers | Safari Mesh": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
@@ -10067,13 +9598,6 @@
         "is_special": true
     },
     "Shadow Daggers | Boreal Forest": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Stiletto Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -10178,14 +9702,14 @@
         "souvenir": false,
         "is_special": true
     },
-    "Stiletto Knife | Forest DDPAT": {
+    "Stiletto Knife | Scorched": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "Stiletto Knife | Boreal Forest": {
+    "Stiletto Knife | Forest DDPAT": {
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
@@ -10199,14 +9723,7 @@
         "souvenir": false,
         "is_special": true
     },
-    "Stiletto Knife | Scorched": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Talon Knife": {
+    "Stiletto Knife | Boreal Forest": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -10290,13 +9807,6 @@
         "souvenir": false,
         "is_special": true
     },
-    "Talon Knife | Stained": {
-        "min_float": "0.00",
-        "max_float": "1.00",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "Talon Knife | Scorched": {
         "min_float": "0.06",
         "max_float": "0.80",
@@ -10304,9 +9814,9 @@
         "souvenir": false,
         "is_special": true
     },
-    "Talon Knife | Night Stripe": {
-        "min_float": "0.06",
-        "max_float": "0.80",
+    "Talon Knife | Stained": {
+        "min_float": "0.00",
+        "max_float": "1.00",
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10325,6 +9835,13 @@
         "souvenir": false,
         "is_special": true
     },
+    "Talon Knife | Night Stripe": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
     "Talon Knife | Boreal Forest": {
         "min_float": "0.06",
         "max_float": "0.80",
@@ -10333,13 +9850,6 @@
         "is_special": true
     },
     "Talon Knife | Safari Mesh": {
-        "min_float": "0.06",
-        "max_float": "0.80",
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "Ursus Knife": {
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -10469,6 +9979,510 @@
         "min_float": "0.06",
         "max_float": "0.80",
         "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Broken Fang Gloves | Yellow-banded": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Broken Fang Gloves | Unhinged": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Broken Fang Gloves | Jade": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Broken Fang Gloves | Needle Point": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Snow Leopard": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Black Tie": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Rezan the Red": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Queen Jaguar": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | CAUTION!": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Desert Shamagh": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Giraffe": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Constrictor": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Smoke Out": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Finish Line": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Blood Pressure": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | 3rd Commando Company": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Field Agent": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Marble Fade": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Tiger Strike": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Lt. Commander": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Slingshot": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Nocts": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Scarlet Shamagh": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Big Game": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | King Snake": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Imperial Plaid": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Racing Green": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Overtake": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Cobalt Skulls": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Overprint": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Arboreal": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Duct Tape": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hydra Gloves | Case Hardened": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hydra Gloves | Emerald": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hydra Gloves | Rattler": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hydra Gloves | Mangrove": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | POW!": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Polygon": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Transport": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Turtle": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Mogul": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Crimson Web": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Fade": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Buckshot": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Vice": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Amphibious": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Omega": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Bronze Morph": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Bloodhound Gloves | Guerrilla": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Bloodhound Gloves | Snakebite": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Bloodhound Gloves | Bronzed": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Bloodhound Gloves | Charred": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Crimson Weave": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Lunar Weave": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Convoy": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Driver Gloves | Diamondback": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Slaughter": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Spruce DDPAT": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Leather": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Hand Wraps | Badlands": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Spearmint": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Cool Mint": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Eclipse": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Moto Gloves | Boom!": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Crimson Kimono": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Emerald Web": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Foundation": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Specialist Gloves | Forest DDPAT": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Superconductor": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Pandora's Box": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Arid": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "Sport Gloves | Hedge Maze": {
+        "min_float": "0.06",
+        "max_float": "0.80",
+        "stattrak": false,
         "souvenir": false,
         "is_special": true
     }

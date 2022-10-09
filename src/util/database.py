@@ -62,7 +62,6 @@ def init():
 
   #insert csgostash_static_data if document doesn't exist
   if csgostash_static_data_collection.find_one({"_id": "csgostash_static_data"}) == None:
-    print("bruh!")
     with open('res/csgostash_static_data.json') as f:
       file_data = json.load(f)
       csgostash_static_data_collection.insert_one(file_data)

@@ -2,19 +2,25 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-weapons = [
+items = [
     # pistols
-    "CZ75-Auto", "Desert Eagle", "Dual Berettas", "Five-SeveN", "Glock-18", "P2000", "P250", "R8 Revolver", "Tec-9", "USP-S", 
+    "weapon/CZ75-Auto", "weapon/Desert+Eagle", "weapon/Dual+Berettas", "weapon/Five-SeveN", "weapon/Glock-18", "weapon/P2000", "weapon/P250", "weaponR8+Revolver",
+     "weapon/Tec-9", "weapon/USP-S", 
     #rifles
-    "AK-47", "AUG", "AWP", "FAMAS", "G3SG1", "Galil AR", "M4A1-S", "M4A4", "SCAR-20", "SG 553", "SSG 08",
+    "weapon/AK-47", "weapon/AUG", "weapon/AWP", "weapon/FAMAS", "weapon/G3SG1", "weapon/Galil AR", "weapon/M4A1-S", "weapon/M4A4", "weapon/SCAR-20", "weapon/SG+553", "weapon/SSG+08",
     #smgs
-    "MAC-10", "MP5-SD", "MP7", "MP9", "PP-Bizon", "P90", "UMP-45",
+    "weapon/MAC-10", "weapon/MP5-SD", "waepon/MP7", "weapon/MP9", "weapon/PP-Bizon", "weapon/P90", "weapon/UMP-45",
     #heavy
-    "MAG-7", "Nova", "Sawed-Off", "XM1014", "M249", "Negev",
+    "weapon/MAG-7", "weapon/Nova", "weapon/Sawed-Off", "weapon/XM1014", "weapon/M249", "weapon/Negev",
 
     #knives
-    "Nomad Knife", "Skeleton Knife", "Survival Knife", "Paracord Knife", "Classic Knife", "Bayonet", "Bowie Knife", "Butterfly Knife", "Falchion Knife",
-    "Flip Knife", "Gut Knife", "Huntsman Knife", "Karambit", "M9 Bayonet", "Navaja Knife", "Shadow Daggers", "Stiletto Knife", "Talon Knife", "Ursus Knife"
+    "weapon/Nomad+Knife", "weapon/Skeleton+Knife", "weapon/Survival+Knife", "weapon/Paracord+Knife", "weapon/Classic+Knife", 
+    "weapon/Bayonet", "weapon/Bowie+Knife", "weapon/Butterfly+Knife", "weapon/Falchion+Knife",
+    "weapon/Flip+Knife", "weapon/Gut+Knife", "weapon/Huntsman+Knife", "weapon/Karambit", "weapon/M9+Bayonet", 
+    "weapon/Navaja+Knife", "weapon/Shadow+Daggers", "weapon/Stiletto+Knife", "weapon/Talon+Knife", "weapon/Ursus+Knife",
+
+    #gloves
+    "gloves?page=1", "gloves?page=2"
 ]
 
 # skin floats and whether they are stattrak souvenir or none
@@ -22,9 +28,9 @@ def get_csgostash_static_data():
 
     result = {"_id": "csgostash_static_data"}
 
-    for weapon in weapons:
-        weapon_link = "https://csgostash.com/weapon/" + weapon.replace(" ", "+")
-        page = requests.get(weapon_link)
+    for item in items:
+        item_link = "https://csgostash.com/" + item
+        page = requests.get(item_link)
         soup = BeautifulSoup(page.content, "html.parser")
 
         # get all result boxes (the boxes that have the skins in the)
@@ -58,12 +64,16 @@ def get_csgostash_static_data():
 
                         skin_data = {"min_float": min_float, "max_float": max_float, "stattrak": stattrak, "souvenir": souvenir, "is_special": is_special}
 
-                    if "★ (Vanilla)" in skin_name:
-                        result[f"{weapon}"] = skin_data
-                        print(f"Scraped {weapon}")
+                    if "gloves" in item:
+                        full_name = skin_name #using the h3 from the box
                     else:
-                        result[f"{weapon} | {skin_name}"] = skin_data
-                        print(f"Scraped {weapon} | {skin_name}")
+                        if "★ (Vanilla)" in skin_name:
+                            skin_name = item.rsplit("/")[1].replace("+", " ")
+                        else:
+                            full_name = item.rsplit("/")[1].replace("+", " ") + " | " + skin_name
+
+                    result[full_name] = skin_data
+                    print(f"Scraped {full_name}")
 
     with open("res/csgostash_static_data.json", "w+") as file:
         json.dump(result, file, indent=4)
@@ -76,5 +86,5 @@ def dump_csgobackpack_api():
 
 
 if __name__ == "__main__":
-    dump_csgobackpack_api()
-    #get_csgostash_static_data()
+    #dump_csgobackpack_api()
+    get_csgostash_static_data()
