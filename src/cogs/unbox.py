@@ -80,13 +80,14 @@ class UnboxCommands(commands.Cog):
             full_item = "★ " + full_item
 
         try:
-            skin_price = "$" + database.skin_prices[full_item]
+            skin_price = database.skin_prices[full_item]
+            if skin_price == None:
+                skin_price = "Unknown"
+            else:
+                skin_price = "$" + str(skin_price)
         except KeyError:
             await ctx.send(f"{modifier}{weapon} | {skin} is not available as {wear}")
             return
-
-        if skin_price == None:
-            skin_price = "Unknown"
 
         image_url = database.skin_static_data[full_item]["image_url"]
         color = int(database.skin_static_data[full_item]["rarity_color"], base=16)
