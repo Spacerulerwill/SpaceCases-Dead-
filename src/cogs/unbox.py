@@ -1,9 +1,11 @@
 
+from faulthandler import dump_traceback_later
 from discord.ext import commands
 from discord import Embed
 from src.util.constants import PREFIX, wear_dict, weapon_name_dict
 from src.util.cases import CASES
 from src.util import database
+from src.util.format import remove_skin_name_formatting
 
 # initialise class
 class UnboxCommands(commands.Cog):
@@ -31,81 +33,77 @@ class UnboxCommands(commands.Cog):
             await ctx.send("Must provide 3 - 4 comma seperated arguments in format: weapon, skin name, condition, modifier: stattrak | souvenir (optional)")
             return
 
+        #argument formatting to convert arguments to useable skin name
         query = [_s.strip() for _s in query]
 
-        try:
-            weapon = weapon_name_dict[query[0].lower()]
-        except KeyError:
-            await ctx.send("Weapon not found!")
-            return
+        weapon = query[0]
 
-        skin = query[1].title()
+        skin = query[1]
 
-        weapon_skin = f"{weapon} | {skin}"
+        unformatted_name = remove_skin_name_formatting(f"{weapon} | {skin}")
 
-        if weapon_skin not in database.csgostash_static_data:
-            await ctx.send(f"{skin} is not an available skin for {weapon}")
-            return
+        wear = query[2].lower()
 
-        try:
-            wear = wear_dict[query[2].lower()]
-        except KeyError:
-            await ctx.send("Wear must be either fn, mw, ft, ww, bs")
-            return
-
-        if (len(query) == 4):
+        modifier = ""
+        if len(query) == 4:
             modifier = query[3].lower()
 
-            if modifier not in ["stattrak", "souvenir"]:
-                modifier = ""
-                await ctx.send("Modifier argument must be either stattrak or souvenir!")
-                return
-            elif modifier == "stattrak":
-                if database.csgostash_static_data[weapon_skin]["stattrak"] == True:
-                    modifier = "StatTrak™ "
+            try:
+                if database.csgostash_static_data[unformatted_name][modifier]:
+                    if modifier == "stattrak":
+                        modifier = "StatTrak™ "
+                    elif modifier == "souvenir":
+                        modifier = "Souvenir"
                 else:
-                    await ctx.send(f"{weapon_skin} is not available as {modifier}")
+                    await ctx.send(f"Skin not available as {modifier}")
                     return
-
-            elif modifier == "souvenir":
-                if database.csgostash_static_data[weapon_skin]["souvenir"] == True:
-                    modifier = "Souvenir "
-                else:
-                    await ctx.send(f"{weapon_skin} is not available as {modifier}")
-                    return
-        else:
-            modifier = ""
-
-        full_item = f"{modifier}{weapon} | {skin} {wear}"
-
-        if database.csgostash_static_data[f"{weapon} | {skin}"]["is_special"]:
-            full_item = "★ " + full_item
+            except KeyError:
+                await ctx.send("Modifier must either be: stattrak | souvenir")
 
         try:
-            skin_price = database.skin_prices[full_item]
+            if database.csgostash_static_data[unformatted_name]["is_special"]:
+                formatted_name = "★ " + modifier + database.csgostash_static_data[unformatted_name]["formatted_name"]
+            else:
+                formatted_name = modifier + database.csgostash_static_data[unformatted_name]["formatted_name"]
+        except KeyError:
+            await ctx.send(f"Skin does not exist!")
+            return
+
+        if wear not in wear_dict:
+            await ctx.send(f"Wear must be one of the following: fn, mw, ft, ww, bs")
+            return
+        else:
+            wear = wear_dict[wear]
+        formatted_name = formatted_name + " " + wear
+
+        full_name = remove_skin_name_formatting(formatted_name)
+
+        # get price and details and create embed
+        try:
+            skin_price = database.skin_prices[full_name]
             if skin_price == None:
                 skin_price = "Unknown"
             else:
                 skin_price = "$" + str(skin_price)
-        except KeyError:
-            await ctx.send(f"{modifier}{weapon} | {skin} is not available as {wear}")
+        except:
+            await ctx.send(f"Skin not available in that condition")
             return
 
-        image_url = database.skin_static_data[full_item]["image_url"]
-        color = int(database.skin_static_data[full_item]["rarity_color"], base=16)
-        rarity = database.skin_static_data[full_item]["rarity"]
+        image_url = database.skin_static_data[full_name]["image_url"]
+        color = int(database.skin_static_data[full_name]["rarity_color"], base=16)
+        rarity = database.skin_static_data[full_name]["rarity"]
         
-        e = Embed(title=full_item, color=color)
-        e.add_field(name="Current Market Price", value=skin_price)
+        e = Embed(title=formatted_name, color=color)
+        e.add_field(name="Market Price", value=skin_price)
         e.add_field(name="Rarity", value=rarity, inline=True)
 
         if len(query) == 4 and query[3] == "souvenir":
-            tournament = database.skin_static_data[full_item]["tournament"]
+            tournament = database.skin_static_data[full_name]["tournament"]
             e.add_field(name="Tournament", value=tournament)
             
         e.set_image(url=image_url)
         await ctx.send(embed=e)
-
+        
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
     await bot.add_cog(UnboxCommands(bot))

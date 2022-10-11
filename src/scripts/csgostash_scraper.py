@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+from src.util.format import remove_skin_name_formatting
 
 items = [
     # pistols
@@ -36,11 +37,7 @@ def get_csgostash_static_data():
         # get all result boxes (the boxes that have the skins in the)
         result_boxes = (soup.find_all("div", {"class": "result-box"}))
         for box in result_boxes:
-            h3 = box.find("h3") #skin name he3
-            if h3 != None:
-                skin_name = h3.text
-                if "Default" not in skin_name:
-
+                try:
                     #find link to skin in div
                     skin_link_div = box.find("div", {"class":"details-link"})
                     if skin_link_div != None:
@@ -49,11 +46,12 @@ def get_csgostash_static_data():
                         page = requests.get(skin_link)
                         soup = BeautifulSoup(page.content, "html.parser")
 
+                        formatted_name = soup.find("div", {"class": "result-box"}).find("h2").text
                         stattrak = soup.find("div", {"class": "stattrak"}) != None
                         souvenir = soup.find("div", {"class": "souvenir"}) != None
                         is_special = any(type in soup.find("div", {"class": "quality"}).text for type in ["Gloves", "Knife"])
                         
-                        if "★ (Vanilla)" in skin_name:
+                        if "★ (Vanilla)" in formatted_name:
                             min_float = 0.0
                             max_float = 1.0
                         else:
@@ -62,27 +60,24 @@ def get_csgostash_static_data():
                             min_float = markers[0].text
                             max_float = markers[1].text
 
-                        skin_data = {"min_float": min_float, "max_float": max_float, "stattrak": stattrak, "souvenir": souvenir, "is_special": is_special}
+                    skin_data = {"formatted_name": formatted_name, "min_float": min_float, "max_float": max_float, "stattrak": stattrak, "souvenir": souvenir, "is_special": is_special}
 
-                    if "gloves" in item:
-                        full_name = skin_name #using the h3 from the box
-                    else:
-                        if "★ (Vanilla)" in skin_name:
-                            skin_name = item.rsplit("/")[1].replace("+", " ")
-                        else:
-                            full_name = item.rsplit("/")[1].replace("+", " ") + " | " + skin_name
+                    unformatted_name = remove_skin_name_formatting(formatted_name)
 
-                    result[full_name] = skin_data
-                    print(f"Scraped {full_name}")
+                    result[unformatted_name] = skin_data
+                    
+                    print(f"Scraped {formatted_name}")
+                except:
+                    pass
 
-    with open("res/csgostash_static_data.json", "w+") as file:
-        json.dump(result, file, indent=4)
+    with open("res/csgostash_static_data.json", "w+", encoding="utf-8") as file:
+        json.dump(result, file, indent=4, ensure_ascii=False)
 
 
 def dump_csgobackpack_api():
     data = requests.get("http://csgobackpack.net/api/GetItemsList/v2/").json()
-    with open("res/csgobackpack_api.json", "w+") as f:
-        json.dump(data,f, indent=4)
+    with open("res/csgobackpack_api.json", "w+", encoding="utf-8") as f:
+        json.dump(data,f, indent=4, ensure_ascii=False)
 
 
 if __name__ == "__main__":
