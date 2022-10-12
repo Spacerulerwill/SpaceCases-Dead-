@@ -1,4 +1,5 @@
 #import all neccesary modules
+from ast import dump
 from aiohttp import ClientConnectorError
 from discord.ext import commands
 import discord
@@ -6,11 +7,11 @@ from os import environ
 from src.util import database
 from src.util.constants import PREFIX
 
-# start database connections
-database.init()
-
 #list of cogs
 cogs = ["unbox"]   
+
+# start database connections
+database.init()
 
 #try read token from text file, if failed read token from server environment variable
 try:
@@ -28,6 +29,13 @@ intents = discord.Intents().all()
 #instanciate bot with prefix, intents and disabled help command (uses custom command)
 bot_instance = commands.Bot(command_prefix=PREFIX, intents=intents, help_command=None) #define command decorator
 
+
+def run_bot():
+    try:
+        bot_instance.run(TOKEN) #run the client using using my bot's token
+    except ClientConnectorError:
+            print("Failed to connect to discord.py")
+    
 @bot_instance.event
 async def on_ready():
 
@@ -42,7 +50,5 @@ async def on_ready():
     #set playing game to !help
     await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
 
-try:
-    bot_instance.run(TOKEN) #run the client using using my bot's token
-except ClientConnectorError:
-    print("Failed to connect to discord.py")
+if __name__ == "__main__":
+    run_bot()

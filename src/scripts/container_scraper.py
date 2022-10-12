@@ -86,6 +86,3 @@ def scrape_containers():
 
   with open("res/containers.json", "w+", encoding="utf-8") as file:
     json.dump(result, file, indent=4, ensure_ascii=False)
-
-if __name__ == "__main__":
-  scrape_containers()

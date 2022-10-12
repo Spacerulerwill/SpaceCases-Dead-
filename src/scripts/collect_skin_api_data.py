@@ -9,9 +9,6 @@ VALID_TYPES = ["Weapon", "Knife", "Gloves"]
 
 PRICE_TIME_RANGES = ["24_hours", "7_days", "30_days", "all_time"]
 
-allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 |★"
-space_chars = ["-"]
-
 def get_api_data():
     api_fetch = requests.get("http://csgobackpack.net/api/GetItemsList/v2/")
     status_code = api_fetch.status_code
@@ -29,6 +26,11 @@ def add_skin_prices(input_dict, api_data):
     for value in items_list.values():
         if value["type"] in VALID_TYPES:
             formatted_name = value["name"]
+
+            #vanilla knives have no skin name so no pipe
+            if "|" not in formatted_name and value["weapon_type"] == "Knife":
+                formatted_name += " | Vanilla"
+
 
             unformatted_name = remove_skin_name_formatting(formatted_name)
             # try to get the most recent pricing
@@ -48,6 +50,9 @@ def add_api_static_data(input_dict, api_data):
     for value in items_list.values():
         if value["type"] in VALID_TYPES:
             formatted_name = value["name"]
+
+            if "|" not in formatted_name and value["weapon_type"] == "Knife":
+                formatted_name += " | Vanilla"
 
             unformatted_name = remove_skin_name_formatting(formatted_name)
 

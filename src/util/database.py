@@ -10,6 +10,7 @@ api_data = {}
 skin_prices = {} # all prices
 skin_static_data = {} # skin images, rarity colors, rarities
 csgostash_static_data = {} # skin min max floats, is stattrak, is souvenir
+containers = {} # item containers
 
 delta_hour = datetime.datetime.now().hour
 
@@ -30,7 +31,7 @@ def update_price_data_loop():
 # setup database and data
 def init():
 
-  global skin_static_data, api_data, csgostash_static_data
+  global skin_static_data, api_data, csgostash_static_data, containers
   
   # collect skin static data and start price data fetch loop
   api_data = get_api_data()
@@ -41,3 +42,5 @@ def init():
   #insert csgostash_static_data if document doesn't exist
   with open('res/csgostash_static_data.json', encoding="utf-8") as f:
     csgostash_static_data = json.load(f)
+  with open('res/containers.json', encoding="utf-8") as f:
+    containers = json.load(f)

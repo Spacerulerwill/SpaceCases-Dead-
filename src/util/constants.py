@@ -14,7 +14,8 @@ wear_dict = {
     "mw": "(Minimal Wear)",
     "ft": "(Field-Tested)",
     "ww": "(Well-Worn)",
-    "bs": "(Battle-Scarred)"
+    "bs": "(Battle-Scarred)",
+    "no_wear": ""
 }
 
 weapon_name_dict = {

@@ -40,26 +40,35 @@ class UnboxCommands(commands.Cog):
 
         skin = query[1]
 
-        unformatted_name = remove_skin_name_formatting(f"{weapon} | {skin}")
+        unformatted_weapon = remove_skin_name_formatting(weapon)
+        unformatted_skin = remove_skin_name_formatting(skin)
+        unformatted_name = f"{unformatted_weapon} | {unformatted_skin}"            
 
         wear = query[2].lower()
+
+        # vanilla knives making everything needlessly complicated
+        if unformatted_skin == "vanilla":
+            wear = "no_wear"
 
         modifier = ""
         if len(query) == 4:
             modifier = query[3].lower()
 
-            try:
-                if database.csgostash_static_data[unformatted_name][modifier]:
-                    if modifier == "stattrak":
+        if unformatted_name not in database.csgostash_static_data:
+            await ctx.send("Skin does not exist!")
+            return
+        else:
+            if modifier not in database.csgostash_static_data[unformatted_name]:
+                await ctx.send(f"Skin modifier can only be stattrak or souvenir")
+                return
+            else:
+                if modifier == "stattrak":
                         modifier = "StatTrak™ "
-                    elif modifier == "souvenir":
-                        modifier = "Souvenir"
+                elif modifier == "souvenir":
+                    modifier = "Souvenir"
                 else:
                     await ctx.send(f"Skin not available as {modifier}")
                     return
-            except KeyError:
-                await ctx.send("Modifier must either be: stattrak | souvenir")
-
         try:
             if database.csgostash_static_data[unformatted_name]["is_special"]:
                 formatted_name = "★ " + modifier + database.csgostash_static_data[unformatted_name]["formatted_name"]
@@ -74,6 +83,7 @@ class UnboxCommands(commands.Cog):
             return
         else:
             wear = wear_dict[wear]
+            
         formatted_name = formatted_name + " " + wear
 
         full_name = remove_skin_name_formatting(formatted_name)
