@@ -5,7 +5,7 @@ from src.util.format import remove_skin_name_formatting
 
 items = [
     # pistols
-    "weapon/CZ75-Auto", "weapon/Desert+Eagle", "weapon/Dual+Berettas", "weapon/Five-SeveN", "weapon/Glock-18", "weapon/P2000", "weapon/P250", "weaponR8+Revolver",
+    "weapon/CZ75-Auto", "weapon/Desert+Eagle", "weapon/Dual+Berettas", "weapon/Five-SeveN", "weapon/Glock-18", "weapon/P2000", "weapon/P250", "weapon/R8+Revolver",
      "weapon/Tec-9", "weapon/USP-S", 
     #rifles
     "weapon/AK-47", "weapon/AUG", "weapon/AWP", "weapon/FAMAS", "weapon/G3SG1", "weapon/Galil AR", "weapon/M4A1-S", "weapon/M4A4", "weapon/SCAR-20", "weapon/SG+553", "weapon/SSG+08",
