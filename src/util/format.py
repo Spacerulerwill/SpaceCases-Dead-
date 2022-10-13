@@ -2,8 +2,8 @@ def remove_skin_name_formatting(formatted_name):
     allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 |"
     space_chars = ["-"]
     replace_chars = {
-        "&", "and",
-        "-", " "
+        "&": "and",
+        "-": " "
     }
 
     unformatted_name = formatted_name.lower() #lowercase
