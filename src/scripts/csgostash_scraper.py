@@ -10,7 +10,7 @@ items = [
     #rifles
     "weapon/AK-47", "weapon/AUG", "weapon/AWP", "weapon/FAMAS", "weapon/G3SG1", "weapon/Galil AR", "weapon/M4A1-S", "weapon/M4A4", "weapon/SCAR-20", "weapon/SG+553", "weapon/SSG+08",
     #smgs
-    "weapon/MAC-10", "weapon/MP5-SD", "waepon/MP7", "weapon/MP9", "weapon/PP-Bizon", "weapon/P90", "weapon/UMP-45",
+    "weapon/MAC-10", "weapon/MP5-SD", "weapon/MP7", "weapon/MP9", "weapon/PP-Bizon", "weapon/P90", "weapon/UMP-45",
     #heavy
     "weapon/MAG-7", "weapon/Nova", "weapon/Sawed-Off", "weapon/XM1014", "weapon/M249", "weapon/Negev",
 
@@ -57,8 +57,8 @@ def get_csgostash_static_data():
                         else:
                             markers = soup.find_all("div", {"class": "marker-value"})
 
-                            min_float = markers[0].text
-                            max_float = markers[1].text
+                            min_float = float(markers[0].text)
+                            max_float = float(markers[1].text)
 
                     skin_data = {"formatted_name": formatted_name, "min_float": min_float, "max_float": max_float, "stattrak": stattrak, "souvenir": souvenir, "is_special": is_special}
 

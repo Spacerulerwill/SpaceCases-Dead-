@@ -29,7 +29,6 @@ intents = discord.Intents().all()
 #instanciate bot with prefix, intents and disabled help command (uses custom command)
 bot_instance = commands.Bot(command_prefix=PREFIX, intents=intents, help_command=None) #define command decorator
 
-
 def run_bot():
     try:
         bot_instance.run(TOKEN) #run the client using using my bot's token
@@ -47,7 +46,8 @@ async def on_ready():
         await bot_instance.load_extension(f'src.cogs.{extension}')
         print(f"Loaded cog: {extension}")
 
-    #set playing game to !help
+    #set playing game to !helpcs open csgo weapon case
+
     await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
 
 if __name__ == "__main__":

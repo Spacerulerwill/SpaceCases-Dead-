@@ -1,27 +1,92 @@
 
-from faulthandler import dump_traceback_later
 from discord.ext import commands
 from discord import Embed
-from src.util.constants import PREFIX, wear_dict, weapon_name_dict
-from src.util.cases import CASES
+from src.util.constants import PREFIX, wear_dict
 from src.util import database
 from src.util.format import remove_skin_name_formatting
+from src.util.constants import case_rarity_odds, case_wear_ranges
+import random
 
 # initialise class
 class UnboxCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # unbox a case
+    # unbox a case 
     @commands.command()
-    async def unbox(self, ctx, *args):
+    async def open(self, ctx, *args):
         # combine args to make word
-        case_name = " ".join(args[:]).strip().lower()
-        if "case" not in args:
-            case_name += " case"
+        container_name = " ".join(args[:]).strip().lower()
+        
+        if container_name in database.containers:
 
-        if case_name in CASES:
-            pass
+            # get container
+            container = database.containers[container_name]
+
+            # get rarity
+            rarity_rand = random.random()
+            skin_rarity = None
+
+            for rarity, upper in case_rarity_odds.items():
+                if rarity_rand > upper:
+                    skin_rarity = rarity
+                    break
+            
+            # get skin
+            skins_list = container[skin_rarity]
+            skin_name = random.choice(skins_list)
+
+            # float and condition
+            min_float = database.csgostash_static_data[skin_name]["min_float"]
+            max_float = database.csgostash_static_data[skin_name]["max_float"]
+
+            float_value = random.random()
+            
+            #determine condition
+            if float_value > 0 and float_value <= 0.1471:
+                float_value = random.uniform(0.00, 0.07)
+            elif float_value > 0.1471 and float_value <=  0.3939:
+                float_value = random.uniform(0.07, 0.15)
+            elif float_value > 0.3939 and float_value <= 0.8257:
+                float_value = random.uniform(0.15, 0.38)
+            elif float_value > 0.8257 and float_value <=   0.9007:
+                float_value = random.uniform(0.38, 0.45)
+            elif float_value > 0.9007 and float_value <= 1.0:
+                float_value = random.uniform(0.45, 1)
+
+            #linear interpolate between max and min float
+            final_float = float_value * (max_float - min_float) + min_float
+
+            skin_wear = None
+            for wear, upper in case_wear_ranges.items():
+                if final_float > upper:
+                    skin_wear = wear
+                    break
+
+            # create embed and show player
+            formatted_name = database.csgostash_static_data[skin_name]["formatted_name"] + " " + skin_wear
+
+            skin_name = skin_name + " " + remove_skin_name_formatting(skin_wear)
+            
+            image_url = database.skin_static_data[skin_name]["image_url"]
+            color = int(database.skin_static_data[skin_name]["rarity_color"], base=16)
+            skin_rarity = database.skin_static_data[skin_name]["rarity"]
+
+            skin_price = database.skin_prices[skin_name]
+
+            if skin_price == None or skin_price == 0:
+                skin_price = "Unknown"
+            else:
+                skin_price = "$" + str(skin_price)
+
+            e = Embed(title=formatted_name, color=color)
+            e.add_field(name="Market Value", value=skin_price)
+            e.add_field(name="Rarity", value=skin_rarity)
+            e.add_field(name="Float", value=str(final_float))
+            e.set_image(url=image_url)
+
+            await ctx.send(embed=e)
+            
         else:
             await ctx.send(f"Invalid case! Use {PREFIX}cases to see the list of available cases.")
 
