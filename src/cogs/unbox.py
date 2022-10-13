@@ -111,10 +111,6 @@ class UnboxCommands(commands.Cog):
 
         wear = query[2].lower()
 
-        # vanilla knives making everything needlessly complicated
-        if unformatted_skin == "vanilla":
-            wear = "no_wear"
-
         modifier = ""
         if len(query) == 4:
             modifier = query[3].lower()

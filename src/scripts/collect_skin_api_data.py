@@ -27,21 +27,34 @@ def add_skin_prices(input_dict, api_data):
         if value["type"] in VALID_TYPES:
             formatted_name = value["name"]
 
-            #vanilla knives have no skin name so no pipe
+            #if vanilla knife, add 5 each with different wear conditions but the same data
             if "|" not in formatted_name and value["weapon_type"] == "Knife":
                 formatted_name += " | Vanilla"
 
+                for wear in ["(Factory New)", "(Minimal Wear)", "(Field-Tested)", "(Well-Worn)", "(Battle-Scarred)"]:
+                    unformatted_name = remove_skin_name_formatting(formatted_name + " " + wear)
 
-            unformatted_name = remove_skin_name_formatting(formatted_name)
-            # try to get the most recent pricing
-            for time_range in PRICE_TIME_RANGES:
-                try:
-                    input_dict[unformatted_name] = value["price"][time_range]["average"]
-                    break
-                except KeyError:
-                    pass
-            else: #if none are found, no price data
-                input_dict[unformatted_name] = None
+                    # try to get the most recent pricing
+                    for time_range in PRICE_TIME_RANGES:
+                        try:
+                            input_dict[unformatted_name] = value["price"][time_range]["average"]
+                            break
+                        except KeyError:
+                            pass
+                    else: #if none are found, no price data
+                        input_dict[unformatted_name] = None
+
+            else: # otherwise add skin as normal
+                unformatted_name = remove_skin_name_formatting(formatted_name)
+                # try to get the most recent pricing
+                for time_range in PRICE_TIME_RANGES:
+                    try:
+                        input_dict[unformatted_name] = value["price"][time_range]["average"]
+                        break
+                    except KeyError:
+                        pass
+                else: #if none are found, no price data
+                    input_dict[unformatted_name] = None
 
     print("Added prices!")
 
@@ -51,25 +64,43 @@ def add_api_static_data(input_dict, api_data):
         if value["type"] in VALID_TYPES:
             formatted_name = value["name"]
 
+            #if vanilla knife, add 5 each with different wear conditions but the same data
             if "|" not in formatted_name and value["weapon_type"] == "Knife":
                 formatted_name += " | Vanilla"
+                for wear in ["(Factory New)", "(Minimal Wear)", "(Field-Tested)", "(Well-Worn)", "(Battle-Scarred)"]:
+                    unformatted_name = remove_skin_name_formatting(formatted_name + " " + wear)
 
-            unformatted_name = remove_skin_name_formatting(formatted_name)
+                    if unformatted_name in input_dict:
+                        input_dict[unformatted_name]["image_url"] = "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"]
+                        input_dict[unformatted_name]["rarity_color"] = value["rarity_color"]
+                        input_dict[unformatted_name]["rarity"] = value["rarity"]
+                        if "tournament" in value:
+                            input_dict[unformatted_name]["tournament"] = value["tournament"]
+                    else:
+                        input_dict[unformatted_name] = {
+                            "image_url": "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"],
+                            "rarity_color": value["rarity_color"],
+                            "rarity": value["rarity"]
+                        }
+                        if "tournament" in value:
+                            input_dict[unformatted_name]["tournament"] = value["tournament"]
 
-            if unformatted_name in input_dict:
-                input_dict[unformatted_name]["image_url"] = "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"]
-                input_dict[unformatted_name]["rarity_color"] = value["rarity_color"]
-                input_dict[unformatted_name]["rarity"] = value["rarity"]
-                if "tournament" in value:
-                    input_dict[unformatted_name]["tournament"] = value["tournament"]
-            else:
-                input_dict[unformatted_name] = {
-                    "image_url": "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"],
-                    "rarity_color": value["rarity_color"],
-                    "rarity": value["rarity"]
-                }
+            else: #otherwise run as normal
+                unformatted_name = remove_skin_name_formatting(formatted_name)
 
-                if "tournament" in value:
-                    input_dict[unformatted_name]["tournament"] = value["tournament"]
+                if unformatted_name in input_dict:
+                    input_dict[unformatted_name]["image_url"] = "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"]
+                    input_dict[unformatted_name]["rarity_color"] = value["rarity_color"]
+                    input_dict[unformatted_name]["rarity"] = value["rarity"]
+                    if "tournament" in value:
+                        input_dict[unformatted_name]["tournament"] = value["tournament"]
+                else:
+                    input_dict[unformatted_name] = {
+                        "image_url": "https://community.akamai.steamstatic.com/economy/image/" + value["icon_url"],
+                        "rarity_color": value["rarity_color"],
+                        "rarity": value["rarity"]
+                    }
+                    if "tournament" in value:
+                        input_dict[unformatted_name]["tournament"] = value["tournament"]
                      
-    print("Added weapon static data")
+    print("Added weapon static data!")
