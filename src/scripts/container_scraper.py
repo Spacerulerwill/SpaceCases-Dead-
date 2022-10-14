@@ -42,10 +42,9 @@ def scrape_containers():
     container_skins = requests.get(link)
     container_soup = BeautifulSoup(container_skins.content, "html.parser")
 
-    container_name = remove_skin_name_formatting(
-      container_soup.find("h1", {
+    container_name = container_soup.find("h1", {
         "class": "margin-top-sm"
-      }).text)
+      }).text
 
     result_boxes = container_soup.find_all("div", {"class": "result-box"})
 
@@ -80,8 +79,8 @@ def scrape_containers():
           if container_name not in unformatted_name: #avoids the link back to the cases original skins
             container_data["rare-item"].append(unformatted_name)
           
-
-    result[container_name] = container_data
+    container_data["formatted_name"] = container_name
+    result[remove_skin_name_formatting(container_name)] = container_data
     print(f"Scraped {container_name}")
 
   with open("res/containers.json", "w+", encoding="utf-8") as file:

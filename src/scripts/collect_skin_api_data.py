@@ -5,7 +5,7 @@ import json
 from src.util.format import remove_skin_name_formatting
 
 # only get prices of items of these types
-VALID_TYPES = ["Weapon", "Knife", "Gloves"]
+VALID_TYPES = ["Weapon", "Gloves"]
 
 PRICE_TIME_RANGES = ["24_hours", "7_days", "30_days", "all_time"]
 
@@ -25,10 +25,11 @@ def add_skin_prices(input_dict, api_data):
     #fetch prices from resulting json
     for value in items_list.values():
         if value["type"] in VALID_TYPES:
+
             formatted_name = value["name"]
 
             #if vanilla knife, add 5 each with different wear conditions but the same data
-            if "|" not in formatted_name and value["weapon_type"] == "Knife":
+            if "|" not in formatted_name and value["type"] == "Weapon" and value["weapon_type"] == "Knife":
                 formatted_name += " | Vanilla"
 
                 for wear in ["(Factory New)", "(Minimal Wear)", "(Field-Tested)", "(Well-Worn)", "(Battle-Scarred)"]:
@@ -65,7 +66,7 @@ def add_api_static_data(input_dict, api_data):
             formatted_name = value["name"]
 
             #if vanilla knife, add 5 each with different wear conditions but the same data
-            if "|" not in formatted_name and value["weapon_type"] == "Knife":
+            if "|" not in formatted_name and value["type"] == "Weapon" and value["weapon_type"] == "Knife":
                 formatted_name += " | Vanilla"
                 for wear in ["(Factory New)", "(Minimal Wear)", "(Field-Tested)", "(Well-Worn)", "(Battle-Scarred)"]:
                     unformatted_name = remove_skin_name_formatting(formatted_name + " " + wear)

@@ -8,7 +8,7 @@ from src.util import database
 from src.util.constants import PREFIX
 
 #list of cogs
-cogs = ["unbox"]   
+cogs = ["unbox", "user"]   
 
 # start database connections
 database.init()
@@ -49,6 +49,9 @@ async def on_ready():
     #set playing game to !helpcs open csgo weapon case
 
     await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
+    
 
 if __name__ == "__main__":
     run_bot()
+    #from src.scripts.container_scraper import scrape_containers
+    #scrape_containers()

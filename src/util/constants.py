@@ -1,5 +1,7 @@
 PREFIX = "cs "
 
+KEY_PRICE = 2.5
+
 err_code_dict = {
     301: "Redirected to to a different endpoint!",
     400: "Bad request!",

@@ -1,11 +1,17 @@
+# This cog is for skin unboxing related commands
+# Commands:
+# * open
+# * inspect
 
 from discord.ext import commands
 from discord import Embed
-from src.util.constants import PREFIX, wear_dict
+from src.util.constants import PREFIX, wear_dict, KEY_PRICE
 from src.util import database
 from src.util.format import remove_skin_name_formatting
 from src.util.constants import case_rarity_odds, case_wear_ranges
 import random
+import requests
+import urllib.parse
 
 # initialise class
 class UnboxCommands(commands.Cog):
@@ -17,7 +23,34 @@ class UnboxCommands(commands.Cog):
     async def open(self, ctx, *args):
         # combine args to make word
         container_name = " ".join(args[:]).strip().lower()
+
+        # get container price from steam market api and check if they have enough money to open
+        case_market_hash_name = urllib.parse.quote(database.containers[container_name]["formatted_name"])
+        container_req = requests.get(f"https://steamcommunity.com/market/priceoverview/?appid=730&currency=1&market_hash_name={case_market_hash_name}").json()
+
+        user = database.user_data.find_one({"_id": ctx.author.id})
+
+        if user == None:
+            await ctx.send(f"Use {PREFIX}register to register!")
+            return
         
+        if container_req["success"]:
+            container_price = float(container_req["median_price"][1:]) #remove dollar sign convert to float
+            user_balance = user["balance"]
+
+            #if they don't have enough
+            if user_balance < container_price + KEY_PRICE:
+                await ctx.send("Not enough balance to perform this action")
+                return
+            else: # if they do subtract from balance and continue
+                new_balance = round(user_balance - (container_price + KEY_PRICE), 2)
+                database.user_data.update_one(user,{"$set" :{"balance" : new_balance}})
+
+        else:
+            await ctx.send(f"Invalid case! Use {PREFIX}cases to see the list of available cases.")
+            return
+
+        #check container exists
         if container_name in database.containers:
 
             # get container
@@ -77,7 +110,7 @@ class UnboxCommands(commands.Cog):
             if skin_price == None or skin_price == 0:
                 skin_price = "Unknown"
             else:
-                skin_price = "$" + str(skin_price)
+                skin_price = "$" + "{:.2f}".format(skin_price)
 
             e = Embed(title=formatted_name, color=color)
             e.add_field(name="Market Value", value=skin_price)
@@ -155,7 +188,7 @@ class UnboxCommands(commands.Cog):
             if skin_price == None:
                 skin_price = "Unknown"
             else:
-                skin_price = "$" + str(skin_price)
+                skin_price = "$" + "{:.2f}".format(skin_price)
         except:
             await ctx.send(f"Skin not available in that condition")
             return
