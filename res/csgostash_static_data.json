@@ -1832,7 +1832,7 @@
         "souvenir": false,
         "is_special": false
     },
-    "p250 | black tan": {
+    "p250 | black and tan": {
         "formatted_name": "P250 | Black & Tan",
         "min_float": 0.0,
         "max_float": 0.5,
@@ -1970,6 +1970,158 @@
     },
     "p250 | bone mask": {
         "formatted_name": "P250 | Bone Mask",
+        "min_float": 0.06,
+        "max_float": 0.8,
+        "stattrak": false,
+        "souvenir": true,
+        "is_special": false
+    },
+    "r8 revolver | fade": {
+        "formatted_name": "R8 Revolver | Fade",
+        "min_float": 0.0,
+        "max_float": 0.4,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | skull crusher": {
+        "formatted_name": "R8 Revolver | Skull Crusher",
+        "min_float": 0.25,
+        "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | llama cannon": {
+        "formatted_name": "R8 Revolver | Llama Cannon",
+        "min_float": 0.03,
+        "max_float": 0.7,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | amber fade": {
+        "formatted_name": "R8 Revolver | Amber Fade",
+        "min_float": 0.0,
+        "max_float": 0.4,
+        "stattrak": false,
+        "souvenir": true,
+        "is_special": false
+    },
+    "r8 revolver | crazy 8": {
+        "formatted_name": "R8 Revolver | Crazy 8",
+        "min_float": 0.0,
+        "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | reboot": {
+        "formatted_name": "R8 Revolver | Reboot",
+        "min_float": 0.0,
+        "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | junk yard": {
+        "formatted_name": "R8 Revolver | Junk Yard",
+        "min_float": 0.0,
+        "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | bone forged": {
+        "formatted_name": "R8 Revolver | Bone Forged",
+        "min_float": 0.0,
+        "max_float": 0.6,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | memento": {
+        "formatted_name": "R8 Revolver | Memento",
+        "min_float": 0.0,
+        "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | survivalist": {
+        "formatted_name": "R8 Revolver | Survivalist",
+        "min_float": 0.0,
+        "max_float": 0.7,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | grip": {
+        "formatted_name": "R8 Revolver | Grip",
+        "min_float": 0.0,
+        "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | crimson web": {
+        "formatted_name": "R8 Revolver | Crimson Web",
+        "min_float": 0.06,
+        "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | blaze": {
+        "formatted_name": "R8 Revolver | Blaze",
+        "min_float": 0.0,
+        "max_float": 0.08,
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | phoenix marker": {
+        "formatted_name": "R8 Revolver | Phoenix Marker",
+        "min_float": 0.0,
+        "max_float": 0.6,
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | nitro": {
+        "formatted_name": "R8 Revolver | Nitro",
+        "min_float": 0.06,
+        "max_float": 0.8,
+        "stattrak": false,
+        "souvenir": true,
+        "is_special": false
+    },
+    "r8 revolver | desert brush": {
+        "formatted_name": "R8 Revolver | Desert Brush",
+        "min_float": 0.0,
+        "max_float": 0.6,
+        "stattrak": false,
+        "souvenir": true,
+        "is_special": false
+    },
+    "r8 revolver | night": {
+        "formatted_name": "R8 Revolver | Night",
+        "min_float": 0.06,
+        "max_float": 0.8,
+        "stattrak": false,
+        "souvenir": true,
+        "is_special": false
+    },
+    "r8 revolver | canal spray": {
+        "formatted_name": "R8 Revolver | Canal Spray",
+        "min_float": 0.06,
+        "max_float": 0.6,
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": false
+    },
+    "r8 revolver | bone mask": {
+        "formatted_name": "R8 Revolver | Bone Mask",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,
@@ -5376,14 +5528,6 @@
         "souvenir": false,
         "is_special": false
     },
-    "ssg 08 | hand brake": {
-        "formatted_name": "SSG 08 | Hand Brake",
-        "min_float": 0.0,
-        "max_float": 1.0,
-        "stattrak": false,
-        "souvenir": true,
-        "is_special": false
-    },
     "ssg 08 | detour": {
         "formatted_name": "SSG 08 | Detour",
         "min_float": 0.0,
@@ -8728,18 +8872,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "nomad knife | boreal forest": {
-        "formatted_name": "Nomad Knife | Boreal Forest",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "nomad knife | stained": {
         "formatted_name": "Nomad Knife | Stained",
         "min_float": 0.0,
         "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "nomad knife | forest ddpat": {
+        "formatted_name": "Nomad Knife | Forest DDPAT",
+        "min_float": 0.06,
+        "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -8760,16 +8904,8 @@
         "souvenir": false,
         "is_special": true
     },
-    "nomad knife | safari mesh": {
-        "formatted_name": "Nomad Knife | Safari Mesh",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "nomad knife | forest ddpat": {
-        "formatted_name": "Nomad Knife | Forest DDPAT",
+    "nomad knife | boreal forest": {
+        "formatted_name": "Nomad Knife | Boreal Forest",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -8778,6 +8914,14 @@
     },
     "nomad knife | scorched": {
         "formatted_name": "Nomad Knife | Scorched",
+        "min_float": 0.06,
+        "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "nomad knife | safari mesh": {
+        "formatted_name": "Nomad Knife | Safari Mesh",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -8824,6 +8968,14 @@
         "souvenir": false,
         "is_special": true
     },
+    "skeleton knife | urban masked": {
+        "formatted_name": "Skeleton Knife | Urban Masked",
+        "min_float": 0.06,
+        "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
     "skeleton knife | stained": {
         "formatted_name": "Skeleton Knife | Stained",
         "min_float": 0.0,
@@ -8834,14 +8986,6 @@
     },
     "skeleton knife | night stripe": {
         "formatted_name": "Skeleton Knife | Night Stripe",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "skeleton knife | urban masked": {
-        "formatted_name": "Skeleton Knife | Urban Masked",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -8904,18 +9048,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "survival knife | crimson web": {
-        "formatted_name": "Survival Knife | Crimson Web",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "survival knife | slaughter": {
         "formatted_name": "Survival Knife | Slaughter",
         "min_float": 0.01,
         "max_float": 0.26,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "survival knife | crimson web": {
+        "formatted_name": "Survival Knife | Crimson Web",
+        "min_float": 0.06,
+        "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -8952,18 +9096,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "survival knife | stained": {
-        "formatted_name": "Survival Knife | Stained",
-        "min_float": 0.0,
-        "max_float": 1.0,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "survival knife | safari mesh": {
         "formatted_name": "Survival Knife | Safari Mesh",
         "min_float": 0.06,
         "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "survival knife | stained": {
+        "formatted_name": "Survival Knife | Stained",
+        "min_float": 0.0,
+        "max_float": 1.0,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9016,14 +9160,6 @@
         "souvenir": false,
         "is_special": true
     },
-    "paracord knife | night stripe": {
-        "formatted_name": "Paracord Knife | Night Stripe",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "paracord knife | slaughter": {
         "formatted_name": "Paracord Knife | Slaughter",
         "min_float": 0.01,
@@ -9044,6 +9180,14 @@
         "formatted_name": "Paracord Knife | Blue Steel",
         "min_float": 0.0,
         "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "paracord knife | night stripe": {
+        "formatted_name": "Paracord Knife | Night Stripe",
+        "min_float": 0.06,
+        "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9352,18 +9496,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "bayonet | stained": {
-        "formatted_name": "Bayonet | Stained",
-        "min_float": 0.0,
-        "max_float": 1.0,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "bayonet | night": {
         "formatted_name": "Bayonet | Night",
         "min_float": 0.06,
         "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "bayonet | stained": {
+        "formatted_name": "Bayonet | Stained",
+        "min_float": 0.0,
+        "max_float": 1.0,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9384,16 +9528,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "bayonet | safari mesh": {
-        "formatted_name": "Bayonet | Safari Mesh",
+    "bayonet | scorched": {
+        "formatted_name": "Bayonet | Scorched",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "bayonet | scorched": {
-        "formatted_name": "Bayonet | Scorched",
+    "bayonet | safari mesh": {
+        "formatted_name": "Bayonet | Safari Mesh",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -9552,16 +9696,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "bowie knife | stained": {
-        "formatted_name": "Bowie Knife | Stained",
+    "bowie knife | blue steel": {
+        "formatted_name": "Bowie Knife | Blue Steel",
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "bowie knife | blue steel": {
-        "formatted_name": "Bowie Knife | Blue Steel",
+    "bowie knife | stained": {
+        "formatted_name": "Bowie Knife | Stained",
         "min_float": 0.0,
         "max_float": 1.0,
         "stattrak": true,
@@ -9744,14 +9888,6 @@
         "souvenir": false,
         "is_special": true
     },
-    "butterfly knife | urban masked": {
-        "formatted_name": "Butterfly Knife | Urban Masked",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "butterfly knife | forest ddpat": {
         "formatted_name": "Butterfly Knife | Forest DDPAT",
         "min_float": 0.06,
@@ -9764,6 +9900,14 @@
         "formatted_name": "Butterfly Knife | Stained",
         "min_float": 0.0,
         "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "butterfly knife | urban masked": {
+        "formatted_name": "Butterfly Knife | Urban Masked",
+        "min_float": 0.06,
+        "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -9840,18 +9984,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "falchion knife | black laminate": {
-        "formatted_name": "Falchion Knife | Black Laminate",
-        "min_float": 0.0,
-        "max_float": 1.0,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "falchion knife | bright water": {
         "formatted_name": "Falchion Knife | Bright Water",
         "min_float": 0.0,
         "max_float": 0.5,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "falchion knife | black laminate": {
+        "formatted_name": "Falchion Knife | Black Laminate",
+        "min_float": 0.0,
+        "max_float": 1.0,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10024,18 +10168,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "flip knife | bright water": {
-        "formatted_name": "Flip Knife | Bright Water",
-        "min_float": 0.0,
-        "max_float": 0.5,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "flip knife | lore": {
         "formatted_name": "Flip Knife | Lore",
         "min_float": 0.0,
         "max_float": 0.65,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "flip knife | bright water": {
+        "formatted_name": "Flip Knife | Bright Water",
+        "min_float": 0.0,
+        "max_float": 0.5,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10160,14 +10304,6 @@
         "souvenir": false,
         "is_special": true
     },
-    "flip knife | stained": {
-        "formatted_name": "Flip Knife | Stained",
-        "min_float": 0.0,
-        "max_float": 1.0,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "flip knife | boreal forest": {
         "formatted_name": "Flip Knife | Boreal Forest",
         "min_float": 0.06,
@@ -10176,16 +10312,24 @@
         "souvenir": false,
         "is_special": true
     },
-    "flip knife | safari mesh": {
-        "formatted_name": "Flip Knife | Safari Mesh",
-        "min_float": 0.06,
-        "max_float": 0.8,
+    "flip knife | stained": {
+        "formatted_name": "Flip Knife | Stained",
+        "min_float": 0.0,
+        "max_float": 1.0,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
     "flip knife | urban masked": {
         "formatted_name": "Flip Knife | Urban Masked",
+        "min_float": 0.06,
+        "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "flip knife | safari mesh": {
+        "formatted_name": "Flip Knife | Safari Mesh",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -10208,10 +10352,10 @@
         "souvenir": false,
         "is_special": true
     },
-    "gut knife | lore": {
-        "formatted_name": "Gut Knife | Lore",
+    "gut knife | gamma doppler": {
+        "formatted_name": "Gut Knife | Gamma Doppler",
         "min_float": 0.0,
-        "max_float": 0.65,
+        "max_float": 0.08,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10224,10 +10368,10 @@
         "souvenir": false,
         "is_special": true
     },
-    "gut knife | gamma doppler": {
-        "formatted_name": "Gut Knife | Gamma Doppler",
+    "gut knife | lore": {
+        "formatted_name": "Gut Knife | Lore",
         "min_float": 0.0,
-        "max_float": 0.08,
+        "max_float": 0.65,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10240,18 +10384,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "gut knife | bright water": {
-        "formatted_name": "Gut Knife | Bright Water",
-        "min_float": 0.0,
-        "max_float": 0.5,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "gut knife | freehand": {
         "formatted_name": "Gut Knife | Freehand",
         "min_float": 0.0,
         "max_float": 0.48,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "gut knife | bright water": {
+        "formatted_name": "Gut Knife | Bright Water",
+        "min_float": 0.0,
+        "max_float": 0.5,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10352,18 +10496,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "gut knife | boreal forest": {
-        "formatted_name": "Gut Knife | Boreal Forest",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "gut knife | stained": {
         "formatted_name": "Gut Knife | Stained",
         "min_float": 0.0,
         "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "gut knife | boreal forest": {
+        "formatted_name": "Gut Knife | Boreal Forest",
+        "min_float": 0.06,
+        "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10376,8 +10520,8 @@
         "souvenir": false,
         "is_special": true
     },
-    "gut knife | forest ddpat": {
-        "formatted_name": "Gut Knife | Forest DDPAT",
+    "gut knife | safari mesh": {
+        "formatted_name": "Gut Knife | Safari Mesh",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -10392,8 +10536,8 @@
         "souvenir": false,
         "is_special": true
     },
-    "gut knife | safari mesh": {
-        "formatted_name": "Gut Knife | Safari Mesh",
+    "gut knife | forest ddpat": {
+        "formatted_name": "Gut Knife | Forest DDPAT",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -10416,18 +10560,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "huntsman knife | autotronic": {
-        "formatted_name": "Huntsman Knife | Autotronic",
-        "min_float": 0.0,
-        "max_float": 0.85,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "huntsman knife | gamma doppler": {
         "formatted_name": "Huntsman Knife | Gamma Doppler",
         "min_float": 0.0,
         "max_float": 0.08,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "huntsman knife | autotronic": {
+        "formatted_name": "Huntsman Knife | Autotronic",
+        "min_float": 0.0,
+        "max_float": 0.85,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10560,18 +10704,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "huntsman knife | urban masked": {
-        "formatted_name": "Huntsman Knife | Urban Masked",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "huntsman knife | stained": {
         "formatted_name": "Huntsman Knife | Stained",
         "min_float": 0.0,
         "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "huntsman knife | urban masked": {
+        "formatted_name": "Huntsman Knife | Urban Masked",
+        "min_float": 0.06,
+        "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10616,18 +10760,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "karambit | lore": {
-        "formatted_name": "Karambit | Lore",
-        "min_float": 0.0,
-        "max_float": 0.65,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "karambit | autotronic": {
         "formatted_name": "Karambit | Autotronic",
         "min_float": 0.0,
         "max_float": 0.85,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "karambit | lore": {
+        "formatted_name": "Karambit | Lore",
+        "min_float": 0.0,
+        "max_float": 0.65,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10664,16 +10808,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "karambit | doppler": {
-        "formatted_name": "Karambit | Doppler",
+    "karambit | tiger tooth": {
+        "formatted_name": "Karambit | Tiger Tooth",
         "min_float": 0.0,
         "max_float": 0.08,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "karambit | tiger tooth": {
-        "formatted_name": "Karambit | Tiger Tooth",
+    "karambit | doppler": {
+        "formatted_name": "Karambit | Doppler",
         "min_float": 0.0,
         "max_float": 0.08,
         "stattrak": true,
@@ -10720,14 +10864,6 @@
         "souvenir": false,
         "is_special": true
     },
-    "karambit | boreal forest": {
-        "formatted_name": "Karambit | Boreal Forest",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "karambit | case hardened": {
         "formatted_name": "Karambit | Case Hardened",
         "min_float": 0.0,
@@ -10744,8 +10880,8 @@
         "souvenir": false,
         "is_special": true
     },
-    "karambit | night": {
-        "formatted_name": "Karambit | Night",
+    "karambit | boreal forest": {
+        "formatted_name": "Karambit | Boreal Forest",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -10756,6 +10892,14 @@
         "formatted_name": "Karambit | Stained",
         "min_float": 0.0,
         "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "karambit | night": {
+        "formatted_name": "Karambit | Night",
+        "min_float": 0.06,
+        "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10776,16 +10920,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "karambit | urban masked": {
-        "formatted_name": "Karambit | Urban Masked",
+    "karambit | forest ddpat": {
+        "formatted_name": "Karambit | Forest DDPAT",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "karambit | forest ddpat": {
-        "formatted_name": "Karambit | Forest DDPAT",
+    "karambit | urban masked": {
+        "formatted_name": "Karambit | Urban Masked",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -10880,18 +11024,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "m9 bayonet | damascus steel": {
-        "formatted_name": "M9 Bayonet | Damascus Steel",
-        "min_float": 0.0,
-        "max_float": 0.5,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "m9 bayonet | ultraviolet": {
         "formatted_name": "M9 Bayonet | Ultraviolet",
         "min_float": 0.06,
         "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "m9 bayonet | damascus steel": {
+        "formatted_name": "M9 Bayonet | Damascus Steel",
+        "min_float": 0.0,
+        "max_float": 0.5,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -10984,16 +11128,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "m9 bayonet | forest ddpat": {
-        "formatted_name": "M9 Bayonet | Forest DDPAT",
+    "m9 bayonet | safari mesh": {
+        "formatted_name": "M9 Bayonet | Safari Mesh",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "m9 bayonet | safari mesh": {
-        "formatted_name": "M9 Bayonet | Safari Mesh",
+    "m9 bayonet | forest ddpat": {
+        "formatted_name": "M9 Bayonet | Forest DDPAT",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -11160,6 +11304,14 @@
         "souvenir": false,
         "is_special": true
     },
+    "shadow daggers | autotronic": {
+        "formatted_name": "Shadow Daggers | Autotronic",
+        "min_float": 0.0,
+        "max_float": 0.85,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
     "shadow daggers | gamma doppler": {
         "formatted_name": "Shadow Daggers | Gamma Doppler",
         "min_float": 0.0,
@@ -11172,14 +11324,6 @@
         "formatted_name": "Shadow Daggers | Lore",
         "min_float": 0.0,
         "max_float": 1.0,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
-    "shadow daggers | autotronic": {
-        "formatted_name": "Shadow Daggers | Autotronic",
-        "min_float": 0.0,
-        "max_float": 0.85,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -11304,14 +11448,6 @@
         "souvenir": false,
         "is_special": true
     },
-    "shadow daggers | night": {
-        "formatted_name": "Shadow Daggers | Night",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "shadow daggers | stained": {
         "formatted_name": "Shadow Daggers | Stained",
         "min_float": 0.0,
@@ -11322,6 +11458,14 @@
     },
     "shadow daggers | scorched": {
         "formatted_name": "Shadow Daggers | Scorched",
+        "min_float": 0.06,
+        "max_float": 0.8,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "shadow daggers | night": {
+        "formatted_name": "Shadow Daggers | Night",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -11424,18 +11568,18 @@
         "souvenir": false,
         "is_special": true
     },
-    "stiletto knife | crimson web": {
-        "formatted_name": "Stiletto Knife | Crimson Web",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "stiletto knife | case hardened": {
         "formatted_name": "Stiletto Knife | Case Hardened",
         "min_float": 0.0,
         "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "stiletto knife | crimson web": {
+        "formatted_name": "Stiletto Knife | Crimson Web",
+        "min_float": 0.06,
+        "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
@@ -11480,16 +11624,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "stiletto knife | boreal forest": {
-        "formatted_name": "Stiletto Knife | Boreal Forest",
+    "stiletto knife | forest ddpat": {
+        "formatted_name": "Stiletto Knife | Forest DDPAT",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "stiletto knife | forest ddpat": {
-        "formatted_name": "Stiletto Knife | Forest DDPAT",
+    "stiletto knife | boreal forest": {
+        "formatted_name": "Stiletto Knife | Boreal Forest",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -11592,14 +11736,6 @@
         "souvenir": false,
         "is_special": true
     },
-    "talon knife | stained": {
-        "formatted_name": "Talon Knife | Stained",
-        "min_float": 0.0,
-        "max_float": 1.0,
-        "stattrak": true,
-        "souvenir": false,
-        "is_special": true
-    },
     "talon knife | blue steel": {
         "formatted_name": "Talon Knife | Blue Steel",
         "min_float": 0.0,
@@ -11608,8 +11744,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "talon knife | boreal forest": {
-        "formatted_name": "Talon Knife | Boreal Forest",
+    "talon knife | stained": {
+        "formatted_name": "Talon Knife | Stained",
+        "min_float": 0.0,
+        "max_float": 1.0,
+        "stattrak": true,
+        "souvenir": false,
+        "is_special": true
+    },
+    "talon knife | forest ddpat": {
+        "formatted_name": "Talon Knife | Forest DDPAT",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -11624,8 +11768,8 @@
         "souvenir": false,
         "is_special": true
     },
-    "talon knife | forest ddpat": {
-        "formatted_name": "Talon Knife | Forest DDPAT",
+    "talon knife | scorched": {
+        "formatted_name": "Talon Knife | Scorched",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -11640,8 +11784,8 @@
         "souvenir": false,
         "is_special": true
     },
-    "talon knife | scorched": {
-        "formatted_name": "Talon Knife | Scorched",
+    "talon knife | boreal forest": {
+        "formatted_name": "Talon Knife | Boreal Forest",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -11744,16 +11888,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "ursus knife | urban masked": {
-        "formatted_name": "Ursus Knife | Urban Masked",
+    "ursus knife | safari mesh": {
+        "formatted_name": "Ursus Knife | Safari Mesh",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "ursus knife | safari mesh": {
-        "formatted_name": "Ursus Knife | Safari Mesh",
+    "ursus knife | urban masked": {
+        "formatted_name": "Ursus Knife | Urban Masked",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -11784,16 +11928,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "ursus knife | boreal forest": {
-        "formatted_name": "Ursus Knife | Boreal Forest",
+    "ursus knife | scorched": {
+        "formatted_name": "Ursus Knife | Scorched",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
         "souvenir": false,
         "is_special": true
     },
-    "ursus knife | scorched": {
-        "formatted_name": "Ursus Knife | Scorched",
+    "ursus knife | boreal forest": {
+        "formatted_name": "Ursus Knife | Boreal Forest",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": true,
@@ -11984,16 +12128,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "sport gloves | big game": {
-        "formatted_name": "Sport Gloves | Big Game",
+    "sport gloves | scarlet shamagh": {
+        "formatted_name": "Sport Gloves | Scarlet Shamagh",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,
         "souvenir": false,
         "is_special": true
     },
-    "sport gloves | scarlet shamagh": {
-        "formatted_name": "Sport Gloves | Scarlet Shamagh",
+    "sport gloves | big game": {
+        "formatted_name": "Sport Gloves | Big Game",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,
@@ -12008,16 +12152,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "driver gloves | overtake": {
-        "formatted_name": "Driver Gloves | Overtake",
+    "driver gloves | imperial plaid": {
+        "formatted_name": "Driver Gloves | Imperial Plaid",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,
         "souvenir": false,
         "is_special": true
     },
-    "driver gloves | imperial plaid": {
-        "formatted_name": "Driver Gloves | Imperial Plaid",
+    "driver gloves | overtake": {
+        "formatted_name": "Driver Gloves | Overtake",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,
@@ -12104,16 +12248,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "moto gloves | polygon": {
-        "formatted_name": "Moto Gloves | Polygon",
+    "moto gloves | turtle": {
+        "formatted_name": "Moto Gloves | Turtle",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,
         "souvenir": false,
         "is_special": true
     },
-    "moto gloves | turtle": {
-        "formatted_name": "Moto Gloves | Turtle",
+    "moto gloves | polygon": {
+        "formatted_name": "Moto Gloves | Polygon",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,
@@ -12328,14 +12472,6 @@
         "souvenir": false,
         "is_special": true
     },
-    "specialist gloves | emerald web": {
-        "formatted_name": "Specialist Gloves | Emerald Web",
-        "min_float": 0.06,
-        "max_float": 0.8,
-        "stattrak": false,
-        "souvenir": false,
-        "is_special": true
-    },
     "specialist gloves | foundation": {
         "formatted_name": "Specialist Gloves | Foundation",
         "min_float": 0.06,
@@ -12344,16 +12480,16 @@
         "souvenir": false,
         "is_special": true
     },
-    "specialist gloves | forest ddpat": {
-        "formatted_name": "Specialist Gloves | Forest DDPAT",
+    "specialist gloves | emerald web": {
+        "formatted_name": "Specialist Gloves | Emerald Web",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,
         "souvenir": false,
         "is_special": true
     },
-    "sport gloves | superconductor": {
-        "formatted_name": "Sport Gloves | Superconductor",
+    "specialist gloves | forest ddpat": {
+        "formatted_name": "Specialist Gloves | Forest DDPAT",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,
@@ -12378,6 +12514,14 @@
     },
     "sport gloves | hedge maze": {
         "formatted_name": "Sport Gloves | Hedge Maze",
+        "min_float": 0.06,
+        "max_float": 0.8,
+        "stattrak": false,
+        "souvenir": false,
+        "is_special": true
+    },
+    "sport gloves | superconductor": {
+        "formatted_name": "Sport Gloves | Superconductor",
         "min_float": 0.06,
         "max_float": 0.8,
         "stattrak": false,

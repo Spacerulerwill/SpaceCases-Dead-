@@ -204,21 +204,21 @@ class UnboxCommands(commands.Cog):
         if len(query) == 4:
             modifier = query[3].lower()
 
-        if unformatted_name not in database.csgostash_static_data:
-            await ctx.send("Skin does not exist!")
-            return
-        else:
-            if modifier not in database.csgostash_static_data[unformatted_name]:
-                await ctx.send(f"Skin modifier can only be stattrak or souvenir")
+            if unformatted_name not in database.csgostash_static_data:
+                await ctx.send("Skin does not exist!")
                 return
             else:
-                if modifier == "stattrak":
-                        modifier = "StatTrak™ "
-                elif modifier == "souvenir":
-                    modifier = "Souvenir"
-                else:
-                    await ctx.send(f"Skin not available as {modifier}")
+                if modifier not in database.csgostash_static_data[unformatted_name]:
+                    await ctx.send(f"Skin modifier can only be stattrak or souvenir")
                     return
+                else:
+                    if modifier == "stattrak":
+                            modifier = "StatTrak™ "
+                    elif modifier == "souvenir":
+                        modifier = "Souvenir"
+                    else:
+                        await ctx.send(f"Skin not available as {modifier}")
+                        return
         try:
             if database.csgostash_static_data[unformatted_name]["is_special"]:
                 formatted_name = "★ " + modifier + database.csgostash_static_data[unformatted_name]["formatted_name"]
