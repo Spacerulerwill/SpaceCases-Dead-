@@ -37,16 +37,18 @@ class UnboxCommands(commands.Cog):
         
         if container_req["success"]:
             container_price = float(container_req["median_price"][1:]) #remove dollar sign convert to float
+
             user_balance = user["balance"]
+            user_total_spent = user["total-spent"]
+            user_total_received = user["total-received"]
 
             #if they don't have enough
             if user_balance < container_price + KEY_PRICE:
                 await ctx.send("Not enough balance to perform this action")
                 return
-            else: # if they do subtract from balance and continue
+            else: # if they do subtract from balance, increase total spent
                 new_balance = round(user_balance - (container_price + KEY_PRICE), 2)
-                database.user_data.update_one(user,{"$set" :{"balance" : new_balance}})
-
+                new_total_spent = round(user_total_spent + container_price + KEY_PRICE, 2)
         else:
             await ctx.send(f"Invalid case! Use {PREFIX}cases to see the list of available cases.")
             return
@@ -111,6 +113,10 @@ class UnboxCommands(commands.Cog):
             if skin_price == None or skin_price == 0:
                 skin_price = 0
 
+            new_total_received = round(user_total_received + skin_price, 2)
+            database.user_data.update_one(user,{"$set" :{"balance" : new_balance, "total-spent": new_total_spent, "total-received": new_total_received}})
+
+
             e = Embed(title=formatted_name, color=color)
             e.add_field(name="Market Value", value="$" + "{:.2f}".format(skin_price))
             e.add_field(name="Rarity", value=skin_rarity)
@@ -128,16 +134,32 @@ class UnboxCommands(commands.Cog):
 
             #call back for adding to inventory
             async def inventory_callback(interact):
-                if ctx.author.id == interact.user.id:
+                nonlocal user
 
-                    e.colour = discord.colour.Color.green()
-                    e.set_footer(text="")
-                    await  msg.edit(embed=e, view=None)
+                if ctx.author.id == interact.user.id:
+                    user = database.user_data.find_one({"_id": ctx.author.id})
+                    
+                    # add to inventory if there is room
+                    inventory = list(user["inventory"])
+
+                    if len(inventory) < user["inventory-size"]:
+                        inventory.append({skin_name: final_float})
+
+                        database.user_data.update_one(user,{"$set" :{"inventory" : inventory}})
+
+                        e.colour = discord.colour.Color.green()
+                        e.set_footer(text="")
+                        await  msg.edit(embed=e, view=None)
+                    else:
+                        await ctx.send("Your inventory is full! Sell an item or buy more inventory space")
 
             #call back for selling the item
             async def sell_callback(interact):
-                nonlocal new_balance
+                nonlocal new_balance, user
 
+                #refresh user document
+                user = database.user_data.find_one({"_id": ctx.author.id})
+                
                 if ctx.author.id == interact.user.id:
 
                     #change color to green, remove footer, change balance to have balance of skin
@@ -147,7 +169,7 @@ class UnboxCommands(commands.Cog):
                     new_balance = round(new_balance + skin_price, 2)
                     e.set_field_at(index=3, name="New Balance", value="$" + "{:.2f}".format(new_balance))
                     await msg.edit(embed=e, view=None)
-                    database.user_data.update_one(user,{"$set" :{"balance" : new_balance}})
+                    database.user_data.update_one(user, {"$set" :{"balance" : new_balance}})
 
             sell.callback = sell_callback
             inventory.callback = inventory_callback
