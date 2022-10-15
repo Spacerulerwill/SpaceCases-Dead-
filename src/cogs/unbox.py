@@ -3,6 +3,7 @@
 # * open
 # * inspect
 
+import discord
 from discord.ext import commands
 from discord import Embed
 from src.util.constants import PREFIX, wear_dict, KEY_PRICE
@@ -108,18 +109,51 @@ class UnboxCommands(commands.Cog):
             skin_price = database.skin_prices[skin_name]
 
             if skin_price == None or skin_price == 0:
-                skin_price = "Unknown"
-            else:
-                skin_price = "$" + "{:.2f}".format(skin_price)
+                skin_price = 0
 
             e = Embed(title=formatted_name, color=color)
-            e.add_field(name="Market Value", value=skin_price)
+            e.add_field(name="Market Value", value="$" + "{:.2f}".format(skin_price))
             e.add_field(name="Rarity", value=skin_rarity)
             e.add_field(name="Float", value=str(final_float))
+            e.add_field(name="New Balance", value="$" + "{:.2f}".format(new_balance))
             e.set_image(url=image_url)
+            e.set_footer(text="Warning! Buttons are only usable for 30 seconds.")
 
-            await ctx.send(embed=e)
-            
+             #create buttons
+            view = discord.ui.View(timeout=30)
+            sell = discord.ui.Button(style=discord.ButtonStyle.red, label="Sell")
+            inventory = discord.ui.Button(style=discord.ButtonStyle.green, label="Add to Inventory")
+            view.add_item(item=sell)
+            view.add_item(item=inventory)
+
+            #call back for adding to inventory
+            async def inventory_callback(interact):
+                if ctx.author.id == interact.user.id:
+
+                    e.colour = discord.colour.Color.green()
+                    e.set_footer(text="")
+                    await  msg.edit(embed=e, view=None)
+
+            #call back for selling the item
+            async def sell_callback(interact):
+                nonlocal new_balance
+
+                if ctx.author.id == interact.user.id:
+
+                    #change color to green, remove footer, change balance to have balance of skin
+                    e.colour = discord.colour.Color.dark_gray()
+                    e.set_footer(text="")
+
+                    new_balance = round(new_balance + skin_price, 2)
+                    e.set_field_at(index=3, name="New Balance", value="$" + "{:.2f}".format(new_balance))
+                    await msg.edit(embed=e, view=None)
+                    database.user_data.update_one(user,{"$set" :{"balance" : new_balance}})
+
+            sell.callback = sell_callback
+            inventory.callback = inventory_callback
+
+            msg = await ctx.send(embed=e, view=view)
+
         else:
             await ctx.send(f"Invalid case! Use {PREFIX}cases to see the list of available cases.")
 
