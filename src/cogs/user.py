@@ -9,6 +9,7 @@ from discord.ext import commands
 from src.util import database
 from src.util.constants import PREFIX
 from datetime import timezone, datetime
+from decimal import Decimal
 
 # initialise class
 class UserCommands(commands.Cog):
@@ -21,14 +22,14 @@ class UserCommands(commands.Cog):
         if database.user_data.find_one({"_id": ctx.author.id}) == None:
             profile = {
                 "_id": ctx.author.id,
-                "balance": 0.0,
+                "balance": '0.0',
                 "last-claim": "01/01/1970",
                 "inventory": [],
                 "inventory-size": 5,
-                "inventory-value": 0.0,
+                "inventory-value": '0.0',
                 "cases-opened": 0,
-                "total-spent": 0.0,
-                "total-received": 0.0,
+                "total-spent": '0.0',
+                "total-received": '0.0',
                 "created_at": int(datetime.now(tz=timezone.utc).timestamp() * 1000),
             }
 
@@ -61,14 +62,14 @@ class UserCommands(commands.Cog):
             #see if it has been atleast a day
             if dmy != dt:
                 #add money
-                current_balance = user['balance']
+                current_balance = Decimal(user['balance'])
                 
-                database.user_data.update_one({"_id":ctx.author.id},{"$set" :{"balance" : round(current_balance+100, 2)}})
+                database.user_data.update_one({"_id":ctx.author.id},{"$set" :{"balance" : str(current_balance+100)}})
 
                 #update last claim date
                 database.user_data.update_one({"_id":ctx.author.id},{"$set" :{"last-claim" : str(dmy)}})
 
-                await ctx.send("You claimed $100!")
+                await ctx.send("You claimed $100! Come back tomorrow to claim again")
             else:
                 await ctx.send("You must wait until tomorrow to claim again!")
 
@@ -84,13 +85,14 @@ class UserCommands(commands.Cog):
         #get user
         user = database.user_data.find_one({"_id": member.id})
 
+        user_balance = Decimal(user["balance"])
         if user == None:
             if member == ctx.author:
                 await ctx.send(f"Use {PREFIX}register to register")
             else:
                 await ctx.send(f'{member.display_name} has not registered yet')
         else:
-            await ctx.send(f"{name} balance is: ${'{:.2f}'.format(user['balance'])}")
+            await ctx.send(f"{name} balance is: ${'{:.2f}'.format(user_balance)}")
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

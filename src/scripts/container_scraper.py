@@ -30,11 +30,13 @@ def scrape_containers():
   for container in container_endpoints:
 
     container_data = {
-      "milspec": [],
-      "restricted": [],
-      "classified": [],
-      "covert": [],
-      "rare-item": []
+      "items": {
+        "milspec": [],
+        "restricted": [],
+        "classified": [],
+        "covert": [],
+        "rare-item": []
+      }
     }
 
     #get gun skins
@@ -42,9 +44,12 @@ def scrape_containers():
     container_skins = requests.get(link)
     container_soup = BeautifulSoup(container_skins.content, "html.parser")
 
+    #container name and image url
     container_name = container_soup.find("h1", {
         "class": "margin-top-sm"
       }).text
+
+    container_img_url = container_soup.find("a", {"class":"market-button-item"}).find("img")["src"]
 
     result_boxes = container_soup.find_all("div", {"class": "result-box"})
 
@@ -63,7 +68,7 @@ def scrape_containers():
         else:
           quality_div = result_box.find("div", {"class": "quality"})
           quality = quality_div["class"][1].replace("color-", " ").strip()
-          container_data[quality].append(name)
+          container_data["items"][quality].append(name)
 
     #open rare-item skins and get them too if there are any
     if rare_items_link != None:
@@ -74,12 +79,13 @@ def scrape_containers():
 
       for result_box in result_boxes:
         h3 = result_box.find("h3")
-        if h3 != None:
+        if h3 != None and "Case Skins" not in h3.text:
           unformatted_name = remove_skin_name_formatting(h3.text)
           if container_name not in unformatted_name: #avoids the link back to the cases original skins
-            container_data["rare-item"].append(unformatted_name)
+            container_data["items"]["rare-item"].append(unformatted_name)
           
     container_data["formatted_name"] = container_name
+    container_data["image_url"] = container_img_url
     result[remove_skin_name_formatting(container_name)] = container_data
     print(f"Scraped {container_name}")
 

@@ -1,80 +1,253 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+import concurrent.futures
+from re import I, sub
 from src.util.format import remove_skin_name_formatting
+from src.util.constants import case_wear_ranges
 
-items = [
-    # pistols
-    "weapon/CZ75-Auto", "weapon/Desert+Eagle", "weapon/Dual+Berettas", "weapon/Five-SeveN", "weapon/Glock-18", "weapon/P2000", "weapon/P250", "weapon/R8+Revolver",
-     "weapon/Tec-9", "weapon/USP-S", 
-    #rifles
-    "weapon/AK-47", "weapon/AUG", "weapon/AWP", "weapon/FAMAS", "weapon/G3SG1", "weapon/Galil AR", "weapon/M4A1-S", "weapon/M4A4", "weapon/SCAR-20", "weapon/SG+553", "weapon/SSG+08",
-    #smgs
-    "weapon/MAC-10", "weapon/MP5-SD", "weapon/MP7", "weapon/MP9", "weapon/PP-Bizon", "weapon/P90", "weapon/UMP-45",
-    #heavy
-    "weapon/MAG-7", "weapon/Nova", "weapon/Sawed-Off", "weapon/XM1014", "weapon/M249", "weapon/Negev",
+MAX_THREADS = 30
 
-    #knives
-    "weapon/Nomad+Knife", "weapon/Skeleton+Knife", "weapon/Survival+Knife", "weapon/Paracord+Knife", "weapon/Classic+Knife", 
-    "weapon/Bayonet", "weapon/Bowie+Knife", "weapon/Butterfly+Knife", "weapon/Falchion+Knife",
-    "weapon/Flip+Knife", "weapon/Gut+Knife", "weapon/Huntsman+Knife", "weapon/Karambit", "weapon/M9+Bayonet", 
-    "weapon/Navaja+Knife", "weapon/Shadow+Daggers", "weapon/Stiletto+Knife", "weapon/Talon+Knife", "weapon/Ursus+Knife",
+NO_PRICE_FOUND = "3000.0"
 
-    #gloves
-    "gloves?page=1", "gloves?page=2"
+result = {}
+
+skin_links = []
+
+endpoints = [
+  # pistols
+  "weapon/CZ75-Auto",
+  "weapon/Desert+Eagle",
+  "weapon/Dual+Berettas",
+  "weapon/Five-SeveN",
+  "weapon/Glock-18",
+  "weapon/P2000",
+  "weapon/P250",
+  "weapon/R8+Revolver",
+  "weapon/Tec-9",
+  "weapon/USP-S",
+  #rifles
+  "weapon/AK-47",
+  "weapon/AUG",
+  "weapon/AWP",
+  "weapon/FAMAS",
+  "weapon/G3SG1",
+  "weapon/Galil AR",
+  "weapon/M4A1-S",
+  "weapon/M4A4",
+  "weapon/SCAR-20",
+  "weapon/SG+553",
+  "weapon/SSG+08",
+  #smgs
+  "weapon/MAC-10",
+  "weapon/MP5-SD",
+  "weapon/MP7",
+  "weapon/MP9",
+  "weapon/PP-Bizon",
+  "weapon/P90",
+  "weapon/UMP-45",
+  #heavy
+  "weapon/MAG-7",
+  "weapon/Nova",
+  "weapon/Sawed-Off",
+  "weapon/XM1014",
+  "weapon/M249",
+  "weapon/Negev",
+
+  #knives
+  "weapon/Nomad+Knife",
+  "weapon/Skeleton+Knife",
+  "weapon/Survival+Knife",
+  "weapon/Paracord+Knife",
+  "weapon/Classic+Knife",
+  "weapon/Bayonet",
+  "weapon/Bowie+Knife",
+  "weapon/Butterfly+Knife",
+  "weapon/Falchion+Knife",
+  "weapon/Flip+Knife",
+  "weapon/Gut+Knife",
+  "weapon/Huntsman+Knife",
+  "weapon/Karambit",
+  "weapon/M9+Bayonet",
+  "weapon/Navaja+Knife",
+  "weapon/Shadow+Daggers",
+  "weapon/Stiletto+Knife",
+  "weapon/Talon+Knife",
+  "weapon/Ursus+Knife",
+
+  #gloves
+  "gloves?page=1",
+  "gloves?page=2"
 ]
 
-# skin floats and whether they are stattrak souvenir or none
-def get_csgostash_static_data():
+inspect_button_condition_dict = {
+  "Inspect (FN)": "factory new ",
+  "Inspect (MW)": "minimal wear ",
+  "Inspect (FT)": "field tested ",
+  "Inspect (WW)": "well worn ",
+  "Inspect (BS)": "battle scarred "
+}
 
-    result = {"_id": "csgostash_static_data"}
+#scraping a weapon endpoint (all the skins for a weapon) - adds them to a skin_links list
+def scrape_endpoint(endpoint):
+  global skin_links
 
-    for item in items:
-        item_link = "https://csgostash.com/" + item
-        page = requests.get(item_link)
-        soup = BeautifulSoup(page.content, "html.parser")
+  r = requests.get(f"https://csgostash.com/{endpoint}")
+  soup = BeautifulSoup(r.content, "html.parser")
 
-        # get all result boxes (the boxes that have the skins in the)
-        result_boxes = (soup.find_all("div", {"class": "result-box"}))
-        for box in result_boxes:
-                try:
-                    #find link to skin in div
-                    skin_link_div = box.find("div", {"class":"details-link"})
-                    if skin_link_div != None:
-                        skin_link = skin_link_div.find("a")["href"]
-                        
-                        page = requests.get(skin_link)
-                        soup = BeautifulSoup(page.content, "html.parser")
+  # extract href from a tag of ever div with class details link
+  details_links = [
+    link_div.find("a")["href"]
+    for link_div in soup.find_all("div", {"class": "details-link"})
+  ]
+  skin_links += details_links
 
-                        formatted_name = soup.find("div", {"class": "result-box"}).find("h2").text
-                        stattrak = soup.find("div", {"class": "stattrak"}) != None
-                        souvenir = soup.find("div", {"class": "souvenir"}) != None
-                        is_special = any(type in soup.find("div", {"class": "quality"}).text for type in ["Gloves", "Knife"])
-                        
-                        if "★ (Vanilla)" in formatted_name:
-                            min_float = 0.0
-                            max_float = 1.0
-                        else:
-                            markers = soup.find_all("div", {"class": "marker-value"})
-
-                            min_float = float(markers[0].text)
-                            max_float = float(markers[1].text)
-
-                    skin_data = {"formatted_name": formatted_name, "min_float": min_float, "max_float": max_float, "stattrak": stattrak, "souvenir": souvenir, "is_special": is_special}
-
-                    unformatted_name = remove_skin_name_formatting(formatted_name)
-
-                    result[unformatted_name] = skin_data
-                    
-                    print(f"Scraped {formatted_name}")
-                except:
-                    pass
-
-    with open("res/csgostash_static_data.json", "w+", encoding="utf-8") as file:
-        json.dump(result, file, indent=4, ensure_ascii=False)
+  print(endpoint)
 
 
-def dump_csgobackpack_api():
-    data = requests.get("http://csgobackpack.net/api/GetItemsList/v2/").json()
-    with open("res/csgobackpack_api.json", "w+", encoding="utf-8") as f:
-        json.dump(data,f, indent=4, ensure_ascii=False)
+def scrape_skin_link(skin_link):
+
+  # get html source
+  r = requests.get(skin_link)
+  soup = BeautifulSoup(r.content, "html.parser")
+
+  # get skins formatted and unformatted name
+  formatted_name = soup.find("div", {
+    "class": ["well", "result-box", "nomargin"]
+  }).find("h2").text
+
+  is_vanilla_knife = "★ (Vanilla)" in formatted_name # vanilla knives are difficult
+
+  unformatted_name = remove_skin_name_formatting(formatted_name)
+
+  # check if available in stattrak, souvenir or none and choose the right condition prefixes
+  has_stattrak_variant = soup.find("div", {"class": "stattrak"}) != None
+  has_souvenir_variant = soup.find("div", {"class": "souvenir"}) != None
+
+  # min and max floats
+  markers = soup.find_all("div", {"class": "marker-value"})
+
+  if markers != []:
+    min_float = float(markers[0].text)
+    max_float = float(markers[1].text)
+  else:
+    min_float = 0.0
+    max_float = 1.0
+
+  # best and worst conditions
+  for index, lower_value in case_wear_ranges.items():
+      if min_float >= lower_value:
+        best_condition_index = index
+        break
+    
+  # best and worst conditions
+  for index, lower_value in case_wear_ranges.items():
+      if max_float >= lower_value:
+        worst_condition_index = index
+        break
+
+  #rarity
+  rarity_div = soup.find("div", {"class": ["quality"]})
+  rarity = rarity_div["class"][1].replace("color-", "").title()
+
+  # add prices
+  table = soup.find(
+    "table", {
+      "class": [
+        "table table-hover", "table-bordered", "table-condensed",
+        "price-details-table dataTable", "no-footer"
+      ]
+    })
+  table_body = table.find("tbody")
+  table_rows = table_body.find_all("tr")
+
+  for row in table_rows:
+    data_cells = row.find_all("td")
+    row_formatted_condition = data_cells[0].text.replace("\n", "").strip()
+
+    row_unformatted_condition = remove_skin_name_formatting(row_formatted_condition)
+
+    steam_price = data_cells[1].text.replace("\n", "").strip()
+    bitskins_price = data_cells[5].text.replace("\n", "").strip()
+
+    price = NO_PRICE_FOUND
+
+    if bitskins_price != "":
+      price = sub(r'[^\d.]', '', bitskins_price)
+    elif steam_price != "":
+      price = sub(r'[^\d.]', '', steam_price)
+
+
+    if is_vanilla_knife:
+      for condition in ["Factory New", "Minimal Wear", "Field Tested", "Well Worn", "Battle Scarred", "StatTrak Factory New", "StatTrak Minimal Wear", "StatTrak Field Tested", "StatTrak Well Worn", "StatTrak Battle Scarred"]:
+        result[condition.lower() + " " + unformatted_name] = {
+              "formatted_name": condition + " " + formatted_name,
+              "price": price,
+              "rarity": rarity,
+              "min_float": min_float,
+              "max_float": max_float,
+              "best_condition_index": best_condition_index,
+              "worst_condition_index": worst_condition_index,
+              "has_stattrak_variant": has_stattrak_variant,
+              "has_souvenir_variant": has_souvenir_variant
+        }
+    else:
+      result[row_unformatted_condition + " " + unformatted_name] = {
+        "formatted_name": row_formatted_condition + " " + formatted_name,
+        "price": price,
+        "rarity": rarity,
+        "min_float": min_float,
+        "max_float": max_float,
+        "best_condition_index": best_condition_index,
+        "worst_condition_index": worst_condition_index,
+        "has_stattrak_variant": has_stattrak_variant,
+        "has_souvenir_variant": has_souvenir_variant
+      }
+    
+  # add the non wear versions
+  result[unformatted_name] = {
+      "formatted_name": formatted_name,
+      "rarity": rarity,
+      "min_float": min_float,
+      "max_float": max_float,
+      "best_condition_index": best_condition_index,
+      "worst_condition_index": worst_condition_index,
+      "has_stattrak_variant": has_stattrak_variant,
+      "has_souvenir_variant": has_souvenir_variant
+  }
+
+  # add images
+  if is_vanilla_knife:
+    img_url = soup.find("img", {"class": "main-skin-img"})["src"]
+    for condition in ["Factory New", "Minimal Wear", "Field Tested", "Well Worn", "Battle Scarred", "StatTrak Factory New", "StatTrak Minimal Wear", "StatTrak Field Tested", "StatTrak Well Worn", "StatTrak Battle Scarred"]:
+        result[condition.lower() + " " + unformatted_name]["image_url"] = img_url
+  else:
+    image_buttons_div = soup.find("div", {"class": ["btn-group-sm", "btn-group-justified"]})
+    image_buttons = image_buttons_div.find_all("a")
+
+    for button in image_buttons:
+      text = button.text.strip()
+      wear = inspect_button_condition_dict[text]
+      url = button["data-hoverimg"]
+
+      result[wear + unformatted_name]["image_url"] = url
+
+      if has_stattrak_variant:
+        result["stattrak " + wear + unformatted_name]["image_url"] = url
+      if has_souvenir_variant:
+        result["souvenir " + wear + unformatted_name]["image_url"] = url
+
+  print(formatted_name)
+
+
+def csgostash_scrape():
+  with concurrent.futures.ThreadPoolExecutor(
+      max_workers=MAX_THREADS) as executor:
+    executor.map(scrape_endpoint, endpoints)
+
+  with concurrent.futures.ThreadPoolExecutor(
+      max_workers=MAX_THREADS) as executor:
+    executor.map(scrape_skin_link, skin_links)
+
+  with open("res/skin_data.json", "w+", encoding="utf-8") as file:
+    json.dump(result, file, indent=4, ensure_ascii=False)

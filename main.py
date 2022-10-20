@@ -1,7 +1,8 @@
 #import all neccesary modules
-from ast import dump
 from aiohttp import ClientConnectorError
 from discord.ext import commands
+from discord.ext import commands
+
 import discord
 from os import environ
 from src.util import database
@@ -32,7 +33,7 @@ bot_instance = commands.Bot(command_prefix=PREFIX, intents=intents, help_command
 def run_bot():
     try:
         bot_instance.run(TOKEN) #run the client using using my bot's token
-    except ClientConnectorError:
+    except ClientConnectorError: 
             print("Failed to connect to discord.py")
     
 @bot_instance.event
@@ -47,9 +48,9 @@ async def on_ready():
         print(f"Loaded cog: {extension}")
 
     #set playing game to !helpcs open csgo weapon case
-
     await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
     
-
 if __name__ == "__main__":
     run_bot()
+    #from src.scripts.csgostash_scraper import csgostash_scrape
+    #csgostash_scrape()
