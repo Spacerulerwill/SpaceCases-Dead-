@@ -1,7 +1,7 @@
 # This cog is for skin unboxing related commands
 # Commands:
 # * open
-# * inspect
+# * weapon
 # * container
 # * containers
 
@@ -42,7 +42,6 @@ containerlist_pages = {
         Falcion Case
         Chroma 2 Case
         Chroma Case""",
-
         """
         Operation Vanguard Weapon Case
         eSports 2014 Summer Case
@@ -55,7 +54,7 @@ containerlist_pages = {
         CSGO Weapon Case 2
         Operation Bravo Case
         eSports 2013 Case
-        CSGO Weapon Case"
+        CSGO Weapon Case
         """]
 }
 
@@ -73,7 +72,6 @@ class UnboxCommands(commands.Cog):
         if weapon_query not in database.skin_data:
             await ctx.send("Could not find weapon")
             return
-        
         try:
             weapon_data = database.skin_data[weapon_query]
 
@@ -108,6 +106,8 @@ class UnboxCommands(commands.Cog):
         container_formatted_name = container_data["formatted_name"]
 
         container_item_data = container_data["items"]
+        
+        container_price = container_data["price"]
 
         #make a list of all items skins in case
         all_container_items = []
@@ -198,7 +198,7 @@ class UnboxCommands(commands.Cog):
             if has_modifier_price: 
                 price_range_str += f"\n${min_modifier_price} - ${max_modifier_price}"
 
-            e = discord.Embed(title=container_formatted_name + f" - {item_index+1}/{items_amount}\n" + formatted_item_name, color=rarity_color)
+            e = discord.Embed(title=f"{container_formatted_name} - ${container_price}\n{formatted_item_name} ({item_index+1}/{items_amount})", color=rarity_color)
             e.add_field(name="Rarity", value=rarity)
             e.add_field(name="Price Range", value=price_range_str)
             e.add_field(name="Float Range", value=f"{min_float} - {max_float}")
@@ -237,7 +237,30 @@ class UnboxCommands(commands.Cog):
             await ctx.send("Container does not exist!")
             return
 
+        user = database.user_data.find_one({"_id": ctx.author.id})
+
+        if user == None:
+            await ctx.send(f"Use {PREFIX}register to register")
+            return
+
         container = database.containers[container_name]
+
+        container_price = Decimal(container["price"])
+
+        user_balance = Decimal(user["balance"])
+        user_total_spent = Decimal(user["total-spent"])
+        user_total_received = Decimal(user["total-received"])
+        user_containers_opened = user["containers-opened"]
+
+        #if they don't have enough
+        if user_balance < container_price + KEY_PRICE:
+            await ctx.send("Not enough balance to perform this action")
+            return
+
+        #subtract from balance, increase total spent, and containers opened
+        new_balance = str(user_balance - (container_price + KEY_PRICE))
+        new_total_spent = str(user_total_spent + container_price + KEY_PRICE)
+        new_containers_opened = user_containers_opened + 1
 
         # get rarity
         rarity_rand = random.random()
@@ -287,13 +310,19 @@ class UnboxCommands(commands.Cog):
         image_url = database.skin_data[skin_name]["image_url"]
         skin_rarity = database.skin_data[skin_name]["rarity"]
         color = rarity_color_dict[skin_rarity]
-
+        
         skin_price = Decimal(database.skin_data[skin_name]["price"]).quantize(Decimal('0.01')) # 2 dp
+
+        new_total_received = str(user_total_received + skin_price)
+        
+        #update user data
+        database.user_data.update_one(user,{"$set" :{"balance" : new_balance, "total-spent": new_total_spent, "total-received": new_total_received, "containers-opened": new_containers_opened}})
 
         e = discord.Embed(title=formatted_name, color=color)
         e.add_field(name="Market Value", value="$" + str(skin_price))
         e.add_field(name="Rarity", value=skin_rarity)
         e.add_field(name="Float", value=str(final_float))
+        e.add_field(name="New Balance", value="$" + new_balance)
         e.set_image(url=image_url)
         e.set_footer(text="Warning! Buttons are only usable for 30 seconds.")
 
@@ -306,14 +335,45 @@ class UnboxCommands(commands.Cog):
 
         #call back for adding to inventory
         async def inventory_callback(interact):
+            nonlocal user
+
             if ctx.author.id == interact.user.id:
-                await msg.edit(view=None)
+                user = database.user_data.find_one({"_id": ctx.author.id})
+                
+                # add to inventory if there is room
+                inventory = list(user["inventory"])
+
+                if len(inventory) < user["inventory-size"]:
+                    inventory.append({skin_name: final_float})
+
+                    database.user_data.update_one(user,{"$set" :{"inventory" : inventory}})
+
+                    e.colour = discord.colour.Color.green()
+                    e.set_footer(text="")
+                    await  msg.edit(embed=e, view=None)
+                else:
+                    await ctx.send("Your inventory is full! Sell an item or buy more inventory space")
+                    await interact.response.defer()
                
         #call back for selling the item
         async def sell_callback(interact):
-            if ctx.author.id == interact.user.id:
-                await msg.edit(view=None)
+            nonlocal new_balance, user
 
+            #refresh user document
+            user = database.user_data.find_one({"_id": ctx.author.id})
+            
+            if ctx.author.id == interact.user.id:
+
+                #change color to green, remove footer, change balance to have balance of skin
+                e.colour = discord.colour.Color.dark_gray()
+                e.set_footer(text="")
+
+                new_balance = str(Decimal(new_balance) + skin_price)
+                e.set_field_at(index=3, name="New Balance", value="$" + new_balance)
+                await msg.edit(embed=e, view=None)
+                database.user_data.update_one(user, {"$set" :{"balance" : new_balance}})
+
+        #set callabcks
         sell.callback = sell_callback
         inventory.callback = inventory_callback
 

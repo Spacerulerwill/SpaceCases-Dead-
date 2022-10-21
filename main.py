@@ -52,5 +52,6 @@ async def on_ready():
     
 if __name__ == "__main__":
     run_bot()
-    #from src.scripts.csgostash_scraper import csgostash_scrape
-    #csgostash_scrape()
+    
+    #from src.scripts.container_scraper import scrape_containers
+    #scrape_containers()

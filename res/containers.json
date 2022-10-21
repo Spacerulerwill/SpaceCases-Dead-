@@ -11,16 +11,16 @@
                 "negev drop me"
             ],
             "restricted": [
-                "dual berettas flora carnivora",
                 "r8 revolver crazy 8",
+                "dual berettas flora carnivora",
                 "sg 553 dragon tech",
                 "p90 vent rush",
                 "m249 downtown"
             ],
             "classified": [
                 "ak 47 ice coaled",
-                "sawed off kisslove",
-                "p250 visions"
+                "p250 visions",
+                "sawed off kisslove"
             ],
             "covert": [
                 "usp s printstream",
@@ -33,14 +33,14 @@
                 "broken fang gloves needle point",
                 "driver gloves snow leopard",
                 "driver gloves black tie",
-                "driver gloves rezan the red",
                 "driver gloves queen jaguar",
+                "driver gloves rezan the red",
                 "hand wraps caution",
                 "hand wraps giraffe",
                 "hand wraps constrictor",
                 "hand wraps desert shamagh",
-                "moto gloves smoke out",
                 "moto gloves finish line",
+                "moto gloves smoke out",
                 "moto gloves blood pressure",
                 "moto gloves 3rd commando company",
                 "specialist gloves field agent",
@@ -53,6 +53,7 @@
                 "sport gloves scarlet shamagh"
             ]
         },
+        "price": "1.03",
         "formatted_name": "Recoil Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFQxnaecIT8Wv9rilYTYkfTyNuiFwmhUvpZz3-2Z9oqg0Vew80NvZzuiJdeLMlhpwFO-XdA/256fx256f"
     },
@@ -62,8 +63,8 @@
                 "mac 10 ensnared",
                 "five seven scrawl",
                 "mp5 sd necro jr",
-                "sawed off spirit board",
                 "p2000 lifted spirits",
+                "sawed off spirit board",
                 "mag 7 foresight",
                 "scar 20 poultrygeist"
             ],
@@ -90,18 +91,18 @@
                 "bowie knife bright water",
                 "bowie knife black laminate",
                 "bowie knife freehand",
+                "butterfly knife gamma doppler",
                 "butterfly knife autotronic",
                 "butterfly knife lore",
                 "butterfly knife black laminate",
                 "butterfly knife freehand",
                 "butterfly knife bright water",
-                "butterfly knife gamma doppler",
                 "falchion knife gamma doppler",
-                "falchion knife lore",
                 "falchion knife autotronic",
+                "falchion knife lore",
                 "falchion knife freehand",
-                "falchion knife black laminate",
                 "falchion knife bright water",
+                "falchion knife black laminate",
                 "huntsman knife autotronic",
                 "huntsman knife lore",
                 "huntsman knife gamma doppler",
@@ -110,12 +111,13 @@
                 "huntsman knife bright water",
                 "shadow daggers gamma doppler",
                 "shadow daggers lore",
-                "shadow daggers black laminate",
                 "shadow daggers autotronic",
                 "shadow daggers freehand",
+                "shadow daggers black laminate",
                 "shadow daggers bright water"
             ]
         },
+        "price": "0.71",
         "formatted_name": "Dreams & Nightmares Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFQwnfCcJmxDv9rhwIHZwqP3a-uGwz9Xv8F0j-qQrI3xiVLkrxVuZW-mJoWLMlhpWhFkc9M/256fx256f"
     },
@@ -153,18 +155,18 @@
                 "bowie knife bright water",
                 "bowie knife black laminate",
                 "bowie knife freehand",
+                "butterfly knife gamma doppler",
                 "butterfly knife autotronic",
                 "butterfly knife lore",
                 "butterfly knife black laminate",
                 "butterfly knife freehand",
                 "butterfly knife bright water",
-                "butterfly knife gamma doppler",
                 "falchion knife gamma doppler",
-                "falchion knife lore",
                 "falchion knife autotronic",
+                "falchion knife lore",
                 "falchion knife freehand",
-                "falchion knife black laminate",
                 "falchion knife bright water",
+                "falchion knife black laminate",
                 "huntsman knife autotronic",
                 "huntsman knife lore",
                 "huntsman knife gamma doppler",
@@ -173,12 +175,13 @@
                 "huntsman knife bright water",
                 "shadow daggers gamma doppler",
                 "shadow daggers lore",
-                "shadow daggers black laminate",
                 "shadow daggers autotronic",
                 "shadow daggers freehand",
+                "shadow daggers black laminate",
                 "shadow daggers bright water"
             ]
         },
+        "price": "1.68",
         "formatted_name": "Operation Riptide Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU5narKKW4SvIrhw9PZlaPwNuqAxmgBucNz2L3C8dyj31Xn-0VtMW3wdY6LMlhplna0TPI/256fx256f"
     },
@@ -187,10 +190,10 @@
             "milspec": [
                 "glock 18 clear polymer",
                 "r8 revolver junk yard",
-                "sg 553 heavy metal",
                 "cz75 auto circaetus",
-                "m249 osipr",
+                "sg 553 heavy metal",
                 "nova windblown",
+                "m249 osipr",
                 "ump 45 oscillator"
             ],
             "restricted": [
@@ -216,14 +219,14 @@
                 "broken fang gloves needle point",
                 "driver gloves snow leopard",
                 "driver gloves black tie",
-                "driver gloves rezan the red",
                 "driver gloves queen jaguar",
+                "driver gloves rezan the red",
                 "hand wraps caution",
                 "hand wraps giraffe",
                 "hand wraps constrictor",
                 "hand wraps desert shamagh",
-                "moto gloves smoke out",
                 "moto gloves finish line",
+                "moto gloves smoke out",
                 "moto gloves blood pressure",
                 "moto gloves 3rd commando company",
                 "specialist gloves field agent",
@@ -236,6 +239,7 @@
                 "sport gloves scarlet shamagh"
             ]
         },
+        "price": "0.13",
         "formatted_name": "Snakebite Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU4naLOJzgUuYqyzIaIxa6jMOLXxGkHvcMjibmU99Sg3Qaw-hA_ZWrzLISLMlhpgJJUhGE/256fx256f"
     },
@@ -246,21 +250,21 @@
                 "galil ar vandal",
                 "cz75 auto vendetta",
                 "p250 contaminant",
-                "m249 deep relief",
                 "p90 cocoa rampage",
+                "m249 deep relief",
                 "g3sg1 digital mesh"
             ],
             "restricted": [
                 "awp exoskeleton",
                 "ssg 08 parallax",
                 "dual berettas dezastre",
-                "nova clear polymer",
-                "ump 45 gold bismuth"
+                "ump 45 gold bismuth",
+                "nova clear polymer"
             ],
             "classified": [
                 "five seven fairy tale",
-                "usp s monster mashup",
-                "m4a4 cyber security"
+                "m4a4 cyber security",
+                "usp s monster mashup"
             ],
             "covert": [
                 "m4a1 s printstream",
@@ -273,14 +277,14 @@
                 "broken fang gloves needle point",
                 "driver gloves snow leopard",
                 "driver gloves black tie",
-                "driver gloves rezan the red",
                 "driver gloves queen jaguar",
+                "driver gloves rezan the red",
                 "hand wraps caution",
                 "hand wraps giraffe",
                 "hand wraps constrictor",
                 "hand wraps desert shamagh",
-                "moto gloves smoke out",
                 "moto gloves finish line",
+                "moto gloves smoke out",
                 "moto gloves blood pressure",
                 "moto gloves 3rd commando company",
                 "specialist gloves field agent",
@@ -293,6 +297,7 @@
                 "sport gloves scarlet shamagh"
             ]
         },
+        "price": "1.79",
         "formatted_name": "Operation Broken Fang Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU3naeZIWUStYjgxdnewfGmZb6DxW8AupMp27yT9IqiilCxqkRkZGyldoaLMlhp6IQjKcg/256fx256f"
     },
@@ -301,8 +306,8 @@
             "milspec": [
                 "ssg 08 mainframe 001",
                 "pp bizon runic",
-                "p2000 gnarled",
                 "p90 freight",
+                "p2000 gnarled",
                 "p250 cassette",
                 "negev ultralight",
                 "sg 553 ol rusty"
@@ -325,30 +330,30 @@
             ],
             "rare-item": [
                 "nomad knife fade",
-                "nomad knife slaughter",
                 "nomad knife case hardened",
                 "nomad knife crimson web",
+                "nomad knife slaughter",
                 "nomad knife vanilla",
                 "nomad knife blue steel",
                 "nomad knife stained",
-                "nomad knife safari mesh",
                 "nomad knife night stripe",
                 "nomad knife urban masked",
                 "nomad knife boreal forest",
                 "nomad knife scorched",
+                "nomad knife safari mesh",
                 "nomad knife forest ddpat",
                 "paracord knife fade",
                 "paracord knife crimson web",
                 "paracord knife slaughter",
                 "paracord knife case hardened",
                 "paracord knife vanilla",
-                "paracord knife night stripe",
                 "paracord knife blue steel",
+                "paracord knife night stripe",
                 "paracord knife stained",
-                "paracord knife urban masked",
                 "paracord knife boreal forest",
-                "paracord knife scorched",
+                "paracord knife urban masked",
                 "paracord knife forest ddpat",
+                "paracord knife scorched",
                 "paracord knife safari mesh",
                 "skeleton knife fade",
                 "skeleton knife crimson web",
@@ -360,22 +365,23 @@
                 "skeleton knife night stripe",
                 "skeleton knife urban masked",
                 "skeleton knife forest ddpat",
-                "skeleton knife boreal forest",
                 "skeleton knife safari mesh",
+                "skeleton knife boreal forest",
                 "skeleton knife scorched",
                 "survival knife fade",
-                "survival knife slaughter",
                 "survival knife crimson web",
+                "survival knife slaughter",
                 "survival knife case hardened",
                 "survival knife vanilla",
-                "survival knife blue steel",
                 "survival knife night stripe",
-                "survival knife forest ddpat",
+                "survival knife boreal forest",
+                "survival knife blue steel",
                 "survival knife stained",
-                "survival knife safari mesh",
-                "survival knife urban masked"
+                "survival knife forest ddpat",
+                "survival knife safari mesh"
             ]
         },
+        "price": "0.13",
         "formatted_name": "Fracture Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU2nfGaJG0btN2wwYHfxa-hY-uFxj4Dv50nj7uXpI7w3AewrhBpMWH6d9CLMlhpEbAe-Zk/256fx256f"
     },
@@ -394,8 +400,8 @@
                 "ssg 08 fever dream",
                 "sg 553 darkwing",
                 "scar 20 enforcer",
-                "p2000 acid etched",
-                "sawed off apocalypto"
+                "sawed off apocalypto",
+                "p2000 acid etched"
             ],
             "classified": [
                 "ak 47 phantom disruptor",
@@ -410,8 +416,8 @@
                 "navaja knife doppler",
                 "navaja knife marble fade",
                 "navaja knife tiger tooth",
-                "navaja knife rust coat",
                 "navaja knife ultraviolet",
+                "navaja knife rust coat",
                 "navaja knife damascus steel",
                 "stiletto knife marble fade",
                 "stiletto knife doppler",
@@ -433,6 +439,7 @@
                 "ursus knife rust coat"
             ]
         },
+        "price": "0.15",
         "formatted_name": "Prisma 2 Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU1nfbOIj8W7oWzkYLdlPOsMOmIk2kGscAj2erE99Sn2AGw_0M4NW2hIYOLMlhpcmY0CRM/256fx256f"
     },
@@ -444,14 +451,14 @@
                 "r8 revolver memento",
                 "nova plume",
                 "mp5 sd acid wash",
-                "scar 20 torn",
-                "g3sg1 black sand"
+                "g3sg1 black sand",
+                "scar 20 torn"
             ],
             "restricted": [
                 "ak 47 rat rod",
                 "aug arctic wolf",
-                "p2000 obsidian",
                 "pp bizon embargo",
+                "p2000 obsidian",
                 "mp7 neon ply"
             ],
             "classified": [
@@ -465,30 +472,30 @@
             ],
             "rare-item": [
                 "nomad knife fade",
-                "nomad knife slaughter",
                 "nomad knife case hardened",
                 "nomad knife crimson web",
+                "nomad knife slaughter",
                 "nomad knife vanilla",
                 "nomad knife blue steel",
                 "nomad knife stained",
-                "nomad knife safari mesh",
                 "nomad knife night stripe",
                 "nomad knife urban masked",
                 "nomad knife boreal forest",
                 "nomad knife scorched",
+                "nomad knife safari mesh",
                 "nomad knife forest ddpat",
                 "paracord knife fade",
                 "paracord knife crimson web",
                 "paracord knife slaughter",
                 "paracord knife case hardened",
                 "paracord knife vanilla",
-                "paracord knife night stripe",
                 "paracord knife blue steel",
+                "paracord knife night stripe",
                 "paracord knife stained",
-                "paracord knife urban masked",
                 "paracord knife boreal forest",
-                "paracord knife scorched",
+                "paracord knife urban masked",
                 "paracord knife forest ddpat",
+                "paracord knife scorched",
                 "paracord knife safari mesh",
                 "skeleton knife fade",
                 "skeleton knife crimson web",
@@ -500,22 +507,23 @@
                 "skeleton knife night stripe",
                 "skeleton knife urban masked",
                 "skeleton knife forest ddpat",
-                "skeleton knife boreal forest",
                 "skeleton knife safari mesh",
+                "skeleton knife boreal forest",
                 "skeleton knife scorched",
                 "survival knife fade",
-                "survival knife slaughter",
                 "survival knife crimson web",
+                "survival knife slaughter",
                 "survival knife case hardened",
                 "survival knife vanilla",
-                "survival knife blue steel",
                 "survival knife night stripe",
-                "survival knife forest ddpat",
+                "survival knife boreal forest",
+                "survival knife blue steel",
                 "survival knife stained",
-                "survival knife safari mesh",
-                "survival knife urban masked"
+                "survival knife forest ddpat",
+                "survival knife safari mesh"
             ]
         },
+        "price": "1.20",
         "formatted_name": "Shattered Web Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFUznaCaJWVDvozlzdONwvKjYLiBk24IsZEl0uuYrNjw0A3n80JpZWzwIYWLMlhpLvhcskA/256fx256f"
     },
@@ -527,20 +535,20 @@
                 "tec 9 flash out",
                 "dual berettas elite 16",
                 "mac 10 classic crate",
-                "mag 7 popdog",
-                "scar 20 assault"
+                "scar 20 assault",
+                "mag 7 popdog"
             ],
             "restricted": [
                 "mp5 sd agent",
-                "m249 aztec",
                 "ump 45 plastique",
                 "p250 inferno",
-                "five seven buddy"
+                "five seven buddy",
+                "m249 aztec"
             ],
             "classified": [
+                "aug death by puppy",
                 "mp9 hydra",
-                "p90 nostalgia",
-                "aug death by puppy"
+                "p90 nostalgia"
             ],
             "covert": [
                 "awp wildfire",
@@ -552,16 +560,17 @@
                 "classic knife crimson web",
                 "classic knife vanilla",
                 "classic knife case hardened",
-                "classic knife night stripe",
                 "classic knife blue steel",
-                "classic knife boreal forest",
                 "classic knife stained",
+                "classic knife night stripe",
+                "classic knife boreal forest",
                 "classic knife urban masked",
                 "classic knife scorched",
                 "classic knife forest ddpat",
                 "classic knife safari mesh"
             ]
         },
+        "price": "0.16",
         "formatted_name": "CS20 Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU0naHKIj9D7oTgl4LelaGnMuqIwDgFusR337HCpYmhiwzm8ktqMjv2INKLMlhprbp6CTE/256fx256f"
     },
@@ -569,9 +578,9 @@
         "items": {
             "milspec": [
                 "ak 47 uncharted",
-                "galil ar akoben",
                 "p90 off world",
                 "p250 verdigris",
+                "galil ar akoben",
                 "mac 10 whitefish",
                 "famas crypsis",
                 "mp7 mischief"
@@ -596,8 +605,8 @@
                 "navaja knife doppler",
                 "navaja knife marble fade",
                 "navaja knife tiger tooth",
-                "navaja knife rust coat",
                 "navaja knife ultraviolet",
+                "navaja knife rust coat",
                 "navaja knife damascus steel",
                 "stiletto knife marble fade",
                 "stiletto knife doppler",
@@ -619,6 +628,7 @@
                 "ursus knife rust coat"
             ]
         },
+        "price": "0.14",
         "formatted_name": "Prisma Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFUynfWaI25G6Ijkl9iPw_SnNrjXw2oBu8cj3b2Qo4_33QbnrUdlYD37ddCLMlhpvs0XIz0/256fx256f"
     },
@@ -628,8 +638,8 @@
                 "mp9 deadly poison",
                 "glock 18 catacombs",
                 "m249 system lock",
-                "scar 20 grotto",
-                "xm1014 quicksilver"
+                "xm1014 quicksilver",
+                "scar 20 grotto"
             ],
             "restricted": [
                 "desert eagle naga",
@@ -650,9 +660,9 @@
                 "bayonet marble fade",
                 "bayonet tiger tooth",
                 "bayonet doppler",
+                "bayonet ultraviolet",
                 "bayonet damascus steel",
                 "bayonet rust coat",
-                "bayonet ultraviolet",
                 "flip knife marble fade",
                 "flip knife doppler",
                 "flip knife tiger tooth",
@@ -668,8 +678,8 @@
                 "karambit marble fade",
                 "karambit doppler",
                 "karambit tiger tooth",
-                "karambit damascus steel",
                 "karambit ultraviolet",
+                "karambit damascus steel",
                 "karambit rust coat",
                 "m9 bayonet marble fade",
                 "m9 bayonet tiger tooth",
@@ -679,6 +689,7 @@
                 "m9 bayonet rust coat"
             ]
         },
+        "price": "1.08",
         "formatted_name": "Chroma Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFEuh_KQJTtEuI63xIXbxqOtauyClTMEsJV1jruS89T3iQKx_BBqa2j3JpjVLFH1xpp0EQ/256fx256f"
     },
@@ -700,8 +711,8 @@
             ],
             "classified": [
                 "galil ar eco",
-                "five seven monkey business",
-                "famas djinn"
+                "famas djinn",
+                "five seven monkey business"
             ],
             "covert": [
                 "m4a1 s hyper beast",
@@ -711,9 +722,9 @@
                 "bayonet marble fade",
                 "bayonet tiger tooth",
                 "bayonet doppler",
+                "bayonet ultraviolet",
                 "bayonet damascus steel",
                 "bayonet rust coat",
-                "bayonet ultraviolet",
                 "flip knife marble fade",
                 "flip knife doppler",
                 "flip knife tiger tooth",
@@ -729,8 +740,8 @@
                 "karambit marble fade",
                 "karambit doppler",
                 "karambit tiger tooth",
-                "karambit damascus steel",
                 "karambit ultraviolet",
+                "karambit damascus steel",
                 "karambit rust coat",
                 "m9 bayonet marble fade",
                 "m9 bayonet tiger tooth",
@@ -740,6 +751,7 @@
                 "m9 bayonet rust coat"
             ]
         },
+        "price": "0.78",
         "formatted_name": "Chroma 2 Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFAuhqSaKWtEu43mxtbbk6b1a77Twm4Iu8Yl3bCU9Imii1Xt80M5MmD7JZjVLFH-6VnQJQ/256fx256f"
     },
@@ -748,8 +760,8 @@
             "milspec": [
                 "mp9 bioleak",
                 "dual berettas ventilators",
-                "sg 553 atlas",
                 "p2000 oceanic",
+                "sg 553 atlas",
                 "m249 spectre",
                 "g3sg1 orange crash",
                 "sawed off fubar"
@@ -757,8 +769,8 @@
             "restricted": [
                 "ssg 08 ghost crusader",
                 "xm1014 black tie",
-                "galil ar firefight",
                 "tec 9 re entry",
+                "galil ar firefight",
                 "cz75 auto red astor"
             ],
             "classified": [
@@ -774,9 +786,9 @@
                 "bayonet marble fade",
                 "bayonet tiger tooth",
                 "bayonet doppler",
+                "bayonet ultraviolet",
                 "bayonet damascus steel",
                 "bayonet rust coat",
-                "bayonet ultraviolet",
                 "flip knife marble fade",
                 "flip knife doppler",
                 "flip knife tiger tooth",
@@ -792,8 +804,8 @@
                 "karambit marble fade",
                 "karambit doppler",
                 "karambit tiger tooth",
-                "karambit damascus steel",
                 "karambit ultraviolet",
+                "karambit damascus steel",
                 "karambit rust coat",
                 "m9 bayonet marble fade",
                 "m9 bayonet tiger tooth",
@@ -803,6 +815,7 @@
                 "m9 bayonet rust coat"
             ]
         },
+        "price": "0.63",
         "formatted_name": "Chroma 3 Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFYynaSdJGhE74y0wNWIw_OlNuvXkDpSuZQmi--SrN-h3gey-Uo6YWmlIoCLMlhplhFFvwI/256fx256f"
     },
@@ -819,10 +832,10 @@
             ],
             "restricted": [
                 "glock 18 moonrise",
-                "mag 7 swag 7",
                 "ump 45 arctic wolf",
-                "nova wild six",
-                "negev lionfish"
+                "mag 7 swag 7",
+                "negev lionfish",
+                "nova wild six"
             ],
             "classified": [
                 "usp s cortex",
@@ -843,8 +856,8 @@
                 "hand wraps arboreal",
                 "hand wraps duct tape",
                 "hydra gloves case hardened",
-                "hydra gloves emerald",
                 "hydra gloves rattler",
+                "hydra gloves emerald",
                 "hydra gloves mangrove",
                 "moto gloves pow",
                 "moto gloves polygon",
@@ -860,6 +873,7 @@
                 "sport gloves bronze morph"
             ]
         },
+        "price": "0.32",
         "formatted_name": "Clutch Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFY5naqQIz4R7Yjix9bZkvKiZrmAzzlTu5AoibiT8d_x21Wy8hY_MWz1doSLMlhpM3FKbNs/256fx256f"
     },
@@ -867,8 +881,8 @@
         "items": {
             "milspec": [
                 "sg 553 ultraviolet",
-                "aug wings",
-                "mp7 skulls"
+                "mp7 skulls",
+                "aug wings"
             ],
             "restricted": [
                 "glock 18 dragon tattoo",
@@ -883,13 +897,13 @@
                 "awp lightning strike"
             ],
             "rare-item": [
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -913,11 +927,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -932,9 +946,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "57.36",
         "formatted_name": "CS:GO Weapon Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsRVx4MwFo5_T3eAQ3i6DMIW0X7ojiwoHax6egMOKGxj4G68Nz3-jCp4itjFWx-ktqfSmtcwqVx6sT/256fx256f"
     },
@@ -962,13 +977,13 @@
             ],
             "rare-item": [
                 "csgo weapon case 2 skins",
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -992,11 +1007,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -1011,9 +1026,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "6.38",
         "formatted_name": "CS:GO Weapon Case 2",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsRVx4MwFo5PT8elUwgKKZJmtEvo_kxITZk6StNe-Fz2pTu8Aj3eqVpIqgjVfjrRI9fSmtc1Nw-Kh3/256fx256f"
     },
@@ -1028,8 +1044,8 @@
             ],
             "restricted": [
                 "desert eagle heirloom",
-                "cz75 auto tread plate",
                 "five seven copper galaxy",
+                "cz75 auto tread plate",
                 "tec 9 titanium bit"
             ],
             "classified": [
@@ -1041,13 +1057,13 @@
             ],
             "rare-item": [
                 "csgo weapon case 3 skins",
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -1071,11 +1087,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -1090,9 +1106,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "4.12",
         "formatted_name": "CS:GO Weapon Case 3",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsRVx4MwFo5fSnf15k0KGacG0UtYXnzdTdkq-gariGlDgHvMcmjryZotqg2wCxrUVtfSmtc20v4quI/256fx256f"
     },
@@ -1111,8 +1128,8 @@
                 "usp s flashback",
                 "p250 nevermore",
                 "galil ar signal",
-                "g3sg1 scavenger",
-                "mac 10 pipe down"
+                "mac 10 pipe down",
+                "g3sg1 scavenger"
             ],
             "classified": [
                 "desert eagle mecha industries",
@@ -1130,10 +1147,10 @@
                 "navaja knife crimson web",
                 "navaja knife safari mesh",
                 "navaja knife blue steel",
+                "navaja knife stained",
                 "navaja knife night stripe",
                 "navaja knife urban masked",
                 "navaja knife scorched",
-                "navaja knife stained",
                 "navaja knife forest ddpat",
                 "navaja knife vanilla",
                 "navaja knife boreal forest",
@@ -1142,12 +1159,12 @@
                 "stiletto knife vanilla",
                 "stiletto knife crimson web",
                 "stiletto knife case hardened",
-                "stiletto knife blue steel",
                 "stiletto knife stained",
+                "stiletto knife blue steel",
                 "stiletto knife urban masked",
                 "stiletto knife night stripe",
-                "stiletto knife scorched",
                 "stiletto knife boreal forest",
+                "stiletto knife scorched",
                 "stiletto knife forest ddpat",
                 "stiletto knife safari mesh",
                 "talon knife fade",
@@ -1156,11 +1173,11 @@
                 "talon knife vanilla",
                 "talon knife crimson web",
                 "talon knife blue steel",
-                "talon knife stained",
                 "talon knife night stripe",
+                "talon knife stained",
                 "talon knife forest ddpat",
-                "talon knife boreal forest",
                 "talon knife urban masked",
+                "talon knife boreal forest",
                 "talon knife scorched",
                 "talon knife safari mesh",
                 "ursus knife fade",
@@ -1176,6 +1193,7 @@
                 "ursus knife scorched"
             ]
         },
+        "price": "0.15",
         "formatted_name": "Danger Zone Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFUxnaPLJz5H74y1xtTcz6etNumIx29U6Zd3j7yQoYih3lG1-UJqY27xJIeLMlhpaD9Aclo/256fx256f"
     },
@@ -1199,13 +1217,13 @@
                 "p90 death by kitty"
             ],
             "rare-item": [
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -1229,11 +1247,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -1248,9 +1266,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "35.70",
         "formatted_name": "eSports 2013 Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsVk5kKhZDpYX3e1YznfCcdzkR74vnw9TZwa-sYOOCzzoF6ZJ0jL6Qp9uj3Qbj_Uc6Z2z1I9WLMlhp9VPHu3g/256fx256f"
     },
@@ -1277,13 +1296,13 @@
                 "m4a4 x ray"
             ],
             "rare-item": [
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -1307,11 +1326,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -1326,9 +1345,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "4.38",
         "formatted_name": "eSports 2013 Winter Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsVk5kKhZDpYX3e1Yz7KKcPzwav9jnzdfdlfWmY7_TzmkF6ZMlj77A9o3x0Qe1qhBkZGjxI9LBJgMgIQaH1G7WeaA/256fx256f"
     },
@@ -1360,13 +1380,13 @@
                 "m4a4 bullet rain"
             ],
             "rare-item": [
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -1390,11 +1410,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -1409,9 +1429,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "3.66",
         "formatted_name": "eSports 2014 Summer Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsVk5kKhZDpYX3e1Y07ODdfDBH_pKzwdfSkqTyZLjQxjsF7sEoiLyQ9I2ljgHt_EZlYzr6J4DHIA9oZ1-D5BHglkR7Cs6C/256fx256f"
     },
@@ -1433,8 +1454,8 @@
                 "famas neural net"
             ],
             "classified": [
-                "mp7 nemesis",
                 "sg 553 cyrex",
+                "mp7 nemesis",
                 "cz75 auto yellow jacket"
             ],
             "covert": [
@@ -1452,11 +1473,12 @@
                 "falchion knife blue steel",
                 "falchion knife stained",
                 "falchion knife boreal forest",
-                "falchion knife scorched",
                 "falchion knife forest ddpat",
+                "falchion knife scorched",
                 "falchion knife safari mesh"
             ]
         },
+        "price": "0.31",
         "formatted_name": "Falchion Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FF8ugPDMIWpAuIq1w4KIlaChZOyFwzgJuZNy3-2T89T0jlC2rhZla2vwIJjVLFHz75yKpg/256fx256f"
     },
@@ -1488,8 +1510,8 @@
                 "glock 18 wasteland rebel"
             ],
             "rare-item": [
-                "bayonet gamma doppler",
                 "bayonet lore",
+                "bayonet gamma doppler",
                 "bayonet autotronic",
                 "bayonet black laminate",
                 "bayonet freehand",
@@ -1503,12 +1525,12 @@
                 "gut knife autotronic",
                 "gut knife gamma doppler",
                 "gut knife lore",
-                "gut knife bright water",
-                "gut knife black laminate",
                 "gut knife freehand",
+                "gut knife black laminate",
+                "gut knife bright water",
                 "karambit gamma doppler",
-                "karambit lore",
                 "karambit autotronic",
+                "karambit lore",
                 "karambit black laminate",
                 "karambit bright water",
                 "karambit freehand",
@@ -1520,6 +1542,7 @@
                 "m9 bayonet freehand"
             ]
         },
+        "price": "0.83",
         "formatted_name": "Gamma Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFYznarJJjkQ6ovjw4SPlfP3auqEl2oBuJB1j--WoY322QziqkdpZGr3IteLMlhpw4RJCv8/256fx256f"
     },
@@ -1528,11 +1551,11 @@
             "milspec": [
                 "p90 grim",
                 "negev dazzle",
-                "ump 45 briefing",
                 "xm1014 slipstream",
                 "five seven scumbria",
-                "cz75 auto imprint",
-                "g3sg1 ventilator"
+                "ump 45 briefing",
+                "g3sg1 ventilator",
+                "cz75 auto imprint"
             ],
             "restricted": [
                 "desert eagle directive",
@@ -1543,16 +1566,16 @@
             ],
             "classified": [
                 "tec 9 fuel injector",
-                "aug syd mead",
-                "mp9 airlock"
+                "mp9 airlock",
+                "aug syd mead"
             ],
             "covert": [
                 "ak 47 neon revolution",
                 "famas roll cage"
             ],
             "rare-item": [
-                "bayonet gamma doppler",
                 "bayonet lore",
+                "bayonet gamma doppler",
                 "bayonet autotronic",
                 "bayonet black laminate",
                 "bayonet freehand",
@@ -1566,12 +1589,12 @@
                 "gut knife autotronic",
                 "gut knife gamma doppler",
                 "gut knife lore",
-                "gut knife bright water",
-                "gut knife black laminate",
                 "gut knife freehand",
+                "gut knife black laminate",
+                "gut knife bright water",
                 "karambit gamma doppler",
-                "karambit lore",
                 "karambit autotronic",
+                "karambit lore",
                 "karambit black laminate",
                 "karambit bright water",
                 "karambit freehand",
@@ -1583,6 +1606,7 @@
                 "m9 bayonet freehand"
             ]
         },
+        "price": "0.88",
         "formatted_name": "Gamma 2 Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsVFx5KAVo5PSkKV4xhfGfKTgVvIXlxNPSwaOmMLiGwzgJvJMniO-Zoo_z2wXg-EVvfSmtc78HsNoy/256fx256f"
     },
@@ -1591,8 +1615,8 @@
             "milspec": [
                 "mp7 cirrus",
                 "glock 18 ironwork",
-                "p2000 turf",
                 "galil ar black sand",
+                "p2000 turf",
                 "mp9 sand scale",
                 "mag 7 sonar",
                 "cz75 auto polymer"
@@ -1631,8 +1655,8 @@
                 "moto gloves boom",
                 "moto gloves eclipse",
                 "specialist gloves crimson kimono",
-                "specialist gloves emerald web",
                 "specialist gloves foundation",
+                "specialist gloves emerald web",
                 "specialist gloves forest ddpat",
                 "sport gloves pandoras box",
                 "sport gloves arid",
@@ -1640,6 +1664,7 @@
                 "sport gloves superconductor"
             ]
         },
+        "price": "3.01",
         "formatted_name": "Glove Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFY1naTMdzwTtNrukteIkqT2MO_Uwz5Q6cYhibyXo4rw2ALsrkRoYjuncNCLMlhpEV4XDTk/256fx256f"
     },
@@ -1656,15 +1681,15 @@
             ],
             "restricted": [
                 "awp paw",
-                "nova toy soldier",
                 "cz75 auto eco",
-                "g3sg1 high seas",
-                "mp7 powercore"
+                "nova toy soldier",
+                "mp7 powercore",
+                "g3sg1 high seas"
             ],
             "classified": [
                 "m4a1 s nightmare",
-                "famas eye of athena",
-                "sawed off devourer"
+                "sawed off devourer",
+                "famas eye of athena"
             ],
             "covert": [
                 "ak 47 neon rider",
@@ -1677,10 +1702,10 @@
                 "navaja knife crimson web",
                 "navaja knife safari mesh",
                 "navaja knife blue steel",
+                "navaja knife stained",
                 "navaja knife night stripe",
                 "navaja knife urban masked",
                 "navaja knife scorched",
-                "navaja knife stained",
                 "navaja knife forest ddpat",
                 "navaja knife vanilla",
                 "navaja knife boreal forest",
@@ -1689,12 +1714,12 @@
                 "stiletto knife vanilla",
                 "stiletto knife crimson web",
                 "stiletto knife case hardened",
-                "stiletto knife blue steel",
                 "stiletto knife stained",
+                "stiletto knife blue steel",
                 "stiletto knife urban masked",
                 "stiletto knife night stripe",
-                "stiletto knife scorched",
                 "stiletto knife boreal forest",
+                "stiletto knife scorched",
                 "stiletto knife forest ddpat",
                 "stiletto knife safari mesh",
                 "talon knife fade",
@@ -1703,11 +1728,11 @@
                 "talon knife vanilla",
                 "talon knife crimson web",
                 "talon knife blue steel",
-                "talon knife stained",
                 "talon knife night stripe",
+                "talon knife stained",
                 "talon knife forest ddpat",
-                "talon knife boreal forest",
                 "talon knife urban masked",
+                "talon knife boreal forest",
                 "talon knife scorched",
                 "talon knife safari mesh",
                 "ursus knife fade",
@@ -1723,6 +1748,7 @@
                 "ursus knife scorched"
             ]
         },
+        "price": "0.22",
         "formatted_name": "Horizon Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFUwnfbOdDgavYXukYTZkqf2ZbrTwmkE6scgj7CY94ml3FXl-ENkMW3wctOLMlhpVHKV9YA/256fx256f"
     },
@@ -1767,6 +1793,7 @@
                 "huntsman knife safari mesh"
             ]
         },
+        "price": "5.02",
         "formatted_name": "Huntsman Weapon Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFQu0PaQIm9DtY6wzYaIxKWtN7iJwW8G6Z0h2LqWoY6s2Qy2-0Q_Nzv7IJjVLFGZqUbjlQ/256fx256f"
     },
@@ -1775,10 +1802,10 @@
             "milspec": [
                 "g3sg1 demeter",
                 "sg 553 wave spray",
-                "galil ar shattered",
                 "nova tempest",
-                "dual berettas black limba",
-                "ump 45 bone pile"
+                "galil ar shattered",
+                "ump 45 bone pile",
+                "dual berettas black limba"
             ],
             "restricted": [
                 "usp s overgrowth",
@@ -1796,13 +1823,13 @@
                 "desert eagle golden koi"
             ],
             "rare-item": [
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -1826,11 +1853,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -1845,9 +1872,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "39.80",
         "formatted_name": "Operation Bravo Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsXE1xNwVDv7WrFA5pnabNJGwSuN3gxtnawKOlMO6HzzhQucAm0uvFo4n2iw3h_UM-ZmilJNeLMlhpjfjxEoE/256fx256f"
     },
@@ -1861,10 +1889,10 @@
                 "negev desert strike"
             ],
             "restricted": [
-                "p250 supernova",
                 "nova koi",
-                "cz75 auto tigris",
-                "pp bizon osiris"
+                "p250 supernova",
+                "pp bizon osiris",
+                "cz75 auto tigris"
             ],
             "classified": [
                 "glock 18 water elemental",
@@ -1878,12 +1906,12 @@
             "rare-item": [
                 "butterfly knife vanilla",
                 "butterfly knife slaughter",
-                "butterfly knife blue steel",
                 "butterfly knife crimson web",
+                "butterfly knife blue steel",
                 "butterfly knife case hardened",
                 "butterfly knife night",
-                "butterfly knife stained",
                 "butterfly knife forest ddpat",
+                "butterfly knife stained",
                 "butterfly knife urban masked",
                 "butterfly knife boreal forest",
                 "butterfly knife safari mesh",
@@ -1891,6 +1919,7 @@
                 "butterfly knife fade"
             ]
         },
+        "price": "3.74",
         "formatted_name": "Operation Breakout Weapon Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFMu1aPMI24auITjxteJwPXxY72AkGgIvZAniLjHpon2jlbl-kpvNjz3JJjVLFG9rl1YLQ/256fx256f"
     },
@@ -1914,8 +1943,8 @@
             ],
             "classified": [
                 "galil ar sugar rush",
-                "m4a4 hellfire",
-                "dual berettas cobra strike"
+                "dual berettas cobra strike",
+                "m4a4 hellfire"
             ],
             "covert": [
                 "awp oni taiji",
@@ -1939,8 +1968,8 @@
                 "moto gloves boom",
                 "moto gloves eclipse",
                 "specialist gloves crimson kimono",
-                "specialist gloves emerald web",
                 "specialist gloves foundation",
+                "specialist gloves emerald web",
                 "specialist gloves forest ddpat",
                 "sport gloves pandoras box",
                 "sport gloves arid",
@@ -1948,6 +1977,7 @@
                 "sport gloves superconductor"
             ]
         },
+        "price": "14.28",
         "formatted_name": "Operation Hydra Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFY3navMJWgQtNm1ldLZzvOiZr-BlToIsZcoi-yTpdutiVW2-Es4NWjwIo-LMlhpinMS53M/256fx256f"
     },
@@ -1955,8 +1985,8 @@
         "items": {
             "milspec": [
                 "tec 9 sandstorm",
-                "negev terrain",
                 "ump 45 corporal",
+                "negev terrain",
                 "mag 7 heaven guard"
             ],
             "restricted": [
@@ -1975,13 +2005,13 @@
                 "aug chameleon"
             ],
             "rare-item": [
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -2005,11 +2035,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -2024,9 +2054,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "1.18",
         "formatted_name": "Operation Phoenix Weapon Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFUuh6qZJmlD7tiyl4OIlaGhYuLTzjhVupJ12urH89ii3lHlqEdoMDr2I5jVLFFSv_J2Rg/256fx256f"
     },
@@ -2035,8 +2066,8 @@
             "milspec": [
                 "mag 7 firestarter",
                 "ump 45 delusion",
-                "mp9 dart",
                 "five seven urban hazard",
+                "mp9 dart",
                 "g3sg1 murky"
             ],
             "restricted": [
@@ -2046,8 +2077,8 @@
                 "sawed off highwayman"
             ],
             "classified": [
-                "xm1014 tranquility",
                 "p250 cartel",
+                "xm1014 tranquility",
                 "scar 20 cardiac"
             ],
             "covert": [
@@ -2055,13 +2086,13 @@
                 "p2000 fire elemental"
             ],
             "rare-item": [
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -2085,11 +2116,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -2104,9 +2135,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "1.04",
         "formatted_name": "Operation Vanguard Weapon Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFIuh6rJImVGvtjllYaNka6la7rUxWkE65BzibvD9N7z0Q22-0Fka2GlJ5jVLFHqavWW2g/256fx256f"
     },
@@ -2117,8 +2149,8 @@
                 "ssg 08 necropos",
                 "pp bizon photic zone",
                 "dual berettas cartel",
-                "mac 10 lapis gator",
-                "tec 9 jambiya"
+                "tec 9 jambiya",
+                "mac 10 lapis gator"
             ],
             "restricted": [
                 "glock 18 royal legion",
@@ -2140,10 +2172,10 @@
                 "bowie knife fade",
                 "bowie knife slaughter",
                 "bowie knife crimson web",
-                "bowie knife scorched",
                 "bowie knife case hardened",
-                "bowie knife stained",
+                "bowie knife scorched",
                 "bowie knife night",
+                "bowie knife stained",
                 "bowie knife blue steel",
                 "bowie knife vanilla",
                 "bowie knife boreal forest",
@@ -2152,6 +2184,7 @@
                 "bowie knife safari mesh"
             ]
         },
+        "price": "0.74",
         "formatted_name": "Operation Wildfire Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFYxnaeQImRGu4S1x9TawfSmY-iHkmoD7cEl2LiQpIjz3wPl_ERkYWHwLY-LMlhp9pkR_UQ/256fx256f"
     },
@@ -2183,13 +2216,13 @@
                 "r8 revolver fade"
             ],
             "rare-item": [
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -2213,11 +2246,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -2232,9 +2265,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "0.37",
         "formatted_name": "Revolver Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFYwnfKfcG9HvN7iktaOkqD1auLTxD5SvZYgiLvFpo7xjVLh-kdrYWnzcoGLMlhpsyM-5vg/256fx256f"
     },
@@ -2244,8 +2278,8 @@
                 "dual berettas dualing dragons",
                 "glock 18 wraiths",
                 "famas survivor z",
-                "xm1014 scumbria",
                 "mac 10 rangeen",
+                "xm1014 scumbria",
                 "mag 7 cobalt core",
                 "scar 20 green marine"
             ],
@@ -2267,9 +2301,9 @@
             "rare-item": [
                 "shadow daggers fade",
                 "shadow daggers case hardened",
+                "shadow daggers crimson web",
                 "shadow daggers slaughter",
                 "shadow daggers vanilla",
-                "shadow daggers crimson web",
                 "shadow daggers blue steel",
                 "shadow daggers urban masked",
                 "shadow daggers stained",
@@ -2280,6 +2314,7 @@
                 "shadow daggers boreal forest"
             ]
         },
+        "price": "0.37",
         "formatted_name": "Shadow Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FF4u1qubIW4Su4mzxYHbzqGtZ-KGlz8EuJcg3rnE9NiijVe3_UY-Zzr2JJjVLFEEeiQRtg/256fx256f"
     },
@@ -2295,9 +2330,9 @@
                 "pp bizon jungle slipstream"
             ],
             "restricted": [
-                "m249 emerald poison dart",
-                "mac 10 last dive",
                 "ump 45 scaffold",
+                "mac 10 last dive",
+                "m249 emerald poison dart",
                 "xm1014 seasons",
                 "galil ar crimson tsunami"
             ],
@@ -2311,8 +2346,8 @@
                 "usp s neo noir"
             ],
             "rare-item": [
-                "bowie knife doppler",
                 "bowie knife marble fade",
+                "bowie knife doppler",
                 "bowie knife tiger tooth",
                 "bowie knife damascus steel",
                 "bowie knife ultraviolet",
@@ -2332,8 +2367,8 @@
                 "huntsman knife marble fade",
                 "huntsman knife doppler",
                 "huntsman knife tiger tooth",
-                "huntsman knife ultraviolet",
                 "huntsman knife damascus steel",
+                "huntsman knife ultraviolet",
                 "huntsman knife rust coat",
                 "shadow daggers doppler",
                 "shadow daggers tiger tooth",
@@ -2343,6 +2378,7 @@
                 "shadow daggers rust coat"
             ]
         },
+        "price": "1.04",
         "formatted_name": "Spectrum Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFY2nfKadD4U7Y7lwYXexaGlYb3QzjlUvZ0k0ujHptug2VbirkRrNW2md4SLMlhph09hpX0/256fx256f"
     },
@@ -2359,10 +2395,10 @@
             ],
             "restricted": [
                 "mp9 goo",
-                "ump 45 exposure",
-                "sg 553 phantom",
+                "cz75 auto tacticat",
                 "xm1014 ziggy",
-                "cz75 auto tacticat"
+                "sg 553 phantom",
+                "ump 45 exposure"
             ],
             "classified": [
                 "m4a1 s leaded glass",
@@ -2374,8 +2410,8 @@
                 "p250 see ya later"
             ],
             "rare-item": [
-                "bowie knife doppler",
                 "bowie knife marble fade",
+                "bowie knife doppler",
                 "bowie knife tiger tooth",
                 "bowie knife damascus steel",
                 "bowie knife ultraviolet",
@@ -2395,8 +2431,8 @@
                 "huntsman knife marble fade",
                 "huntsman knife doppler",
                 "huntsman knife tiger tooth",
-                "huntsman knife ultraviolet",
                 "huntsman knife damascus steel",
+                "huntsman knife ultraviolet",
                 "huntsman knife rust coat",
                 "shadow daggers doppler",
                 "shadow daggers tiger tooth",
@@ -2406,6 +2442,7 @@
                 "shadow daggers rust coat"
             ]
         },
+        "price": "0.68",
         "formatted_name": "Spectrum 2 Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFY4naeaJGhGtdnmx4Tek_bwY-iFlGlUsJMp3LuTot-mjFGxqUttZ2r3d4eLMlhpnZPxZK0/256fx256f"
     },
@@ -2433,13 +2470,13 @@
                 "sawed off the kraken"
             ],
             "rare-item": [
-                "bayonet fade",
                 "bayonet vanilla",
+                "bayonet fade",
                 "bayonet slaughter",
                 "bayonet case hardened",
                 "bayonet crimson web",
-                "bayonet blue steel",
                 "bayonet boreal forest",
+                "bayonet blue steel",
                 "bayonet stained",
                 "bayonet night",
                 "bayonet urban masked",
@@ -2463,11 +2500,11 @@
                 "gut knife case hardened",
                 "gut knife slaughter",
                 "gut knife crimson web",
-                "gut knife urban masked",
                 "gut knife vanilla",
                 "gut knife blue steel",
                 "gut knife boreal forest",
                 "gut knife stained",
+                "gut knife urban masked",
                 "gut knife scorched",
                 "gut knife night",
                 "gut knife forest ddpat",
@@ -2482,9 +2519,10 @@
                 "karambit night",
                 "karambit stained",
                 "karambit scorched",
-                "karambit forest ddpat"
+                "karambit urban masked"
             ]
         },
+        "price": "4.11",
         "formatted_name": "Winter Offensive Weapon Case",
         "image_url": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFYu0aKfJz8a793gxNLfzvOkMunUwWgH7JIjj-qW8d7x2VXt_UBuMT3zIpjVLFEGDSGUSQ/256fx256f"
     }

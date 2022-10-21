@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import concurrent.futures
-from re import I, sub
+from re import sub
 from src.util.format import remove_skin_name_formatting
 from src.util.constants import case_wear_ranges
 
@@ -177,7 +177,7 @@ def scrape_skin_link(skin_link):
     elif steam_price != "":
       price = sub(r'[^\d.]', '', steam_price)
 
-
+    # if a vanilla knife, create 5 identical entries with different wear ratings in their names (circumvents difficulty later for vanilla knives)
     if is_vanilla_knife:
       for condition in ["Factory New", "Minimal Wear", "Field Tested", "Well Worn", "Battle Scarred", "StatTrak Factory New", "StatTrak Minimal Wear", "StatTrak Field Tested", "StatTrak Well Worn", "StatTrak Battle Scarred"]:
         result[condition.lower() + " " + unformatted_name] = {
@@ -191,7 +191,8 @@ def scrape_skin_link(skin_link):
               "has_stattrak_variant": has_stattrak_variant,
               "has_souvenir_variant": has_souvenir_variant
         }
-    else:
+
+    else: #otherwise do as usual
       result[row_unformatted_condition + " " + unformatted_name] = {
         "formatted_name": row_formatted_condition + " " + formatted_name,
         "price": price,
@@ -217,11 +218,13 @@ def scrape_skin_link(skin_link):
   }
 
   # add images
+
+  #if its a vanilla knife, add the same image to each wear
   if is_vanilla_knife:
     img_url = soup.find("img", {"class": "main-skin-img"})["src"]
     for condition in ["Factory New", "Minimal Wear", "Field Tested", "Well Worn", "Battle Scarred", "StatTrak Factory New", "StatTrak Minimal Wear", "StatTrak Field Tested", "StatTrak Well Worn", "StatTrak Battle Scarred"]:
         result[condition.lower() + " " + unformatted_name]["image_url"] = img_url
-  else:
+  else: # otherwise add different images to each wear
     image_buttons_div = soup.find("div", {"class": ["btn-group-sm", "btn-group-justified"]})
     image_buttons = image_buttons_div.find_all("a")
 

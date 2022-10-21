@@ -1,22 +1,11 @@
-import builtins
-
+from decimal import Decimal
 
 PREFIX = "cs "
 
-KEY_PRICE = 2.5
+KEY_PRICE = Decimal('2.5')
 
 NO_PRICE_VALUE = 2500
 
-
-
-err_code_dict = {
-    301: "Redirected to to a different endpoint!",
-    400: "Bad request!",
-    401: "Authentication error!",
-    403: "Forbidden access!",
-    404: "Not found!",
-    503: "Server not ready to handle request!"
-}
 
 wear_dict = {
     "fn": "(Factory New) ",

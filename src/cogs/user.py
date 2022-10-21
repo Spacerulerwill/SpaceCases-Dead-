@@ -27,7 +27,7 @@ class UserCommands(commands.Cog):
                 "inventory": [],
                 "inventory-size": 5,
                 "inventory-value": '0.0',
-                "cases-opened": 0,
+                "containers-opened": 0,
                 "total-spent": '0.0',
                 "total-received": '0.0',
                 "created_at": int(datetime.now(tz=timezone.utc).timestamp() * 1000),
@@ -46,32 +46,33 @@ class UserCommands(commands.Cog):
 
         if user == None:
             await ctx.send(f"Use {PREFIX}register to register")
+            return
+            
+        #if user is registed
+        #get last claim time
+        last_claim = user['last-claim']
+        
+        #convert to date time
+        dt = datetime.strptime(last_claim ,"%d/%m/%Y")
+        dt = dt.strftime("%d/%m/%Y")
+        
+        #get current time
+        now = datetime.now(tz=timezone.utc)
+        dmy = now.strftime("%d/%m/%Y")
+
+        #see if it has been atleast a day
+        if dmy != dt:
+            #add money
+            current_balance = Decimal(user['balance'])
+            
+            database.user_data.update_one({"_id":ctx.author.id},{"$set" :{"balance" : str(current_balance+100)}})
+
+            #update last claim date
+            database.user_data.update_one({"_id":ctx.author.id},{"$set" :{"last-claim" : str(dmy)}})
+
+            await ctx.send("You claimed $100! Come back tomorrow to claim again")
         else:
-            #if user is registed
-            #get last claim time
-            last_claim = user['last-claim']
-            
-            #convert to date time
-            dt = datetime.strptime(last_claim ,"%d/%m/%Y")
-            dt = dt.strftime("%d/%m/%Y")
-            
-            #get current time
-            now = datetime.now(tz=timezone.utc)
-            dmy = now.strftime("%d/%m/%Y")
-
-            #see if it has been atleast a day
-            if dmy != dt:
-                #add money
-                current_balance = Decimal(user['balance'])
-                
-                database.user_data.update_one({"_id":ctx.author.id},{"$set" :{"balance" : str(current_balance+100)}})
-
-                #update last claim date
-                database.user_data.update_one({"_id":ctx.author.id},{"$set" :{"last-claim" : str(dmy)}})
-
-                await ctx.send("You claimed $100! Come back tomorrow to claim again")
-            else:
-                await ctx.send("You must wait until tomorrow to claim again!")
+            await ctx.send("You must wait until tomorrow to claim again!")
 
     @commands.command()
     async def balance(self, ctx, member: discord.Member = None):

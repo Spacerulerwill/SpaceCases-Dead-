@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 from src.util.format import remove_skin_name_formatting
+from re import sub
 
 result = {}
 container_endpoints = [
@@ -48,6 +49,13 @@ def scrape_containers():
     container_name = container_soup.find("h1", {
         "class": "margin-top-sm"
       }).text
+
+    price_div = container_soup.find("div", {"class": ["btn-group", "content-header-container-btn"]})
+    container_price = price_div.find("a", {"class": ["btn", "btn-default", "market-button-item"]}).text
+
+    container_price = container_price.split(" ")[0]
+    container_price = sub(r'[^\d.]', '', container_price)
+    container_data["price"] = container_price
 
     container_img_url = container_soup.find("a", {"class":"market-button-item"}).find("img")["src"]
 
