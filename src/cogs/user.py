@@ -29,8 +29,7 @@ class UserCommands(commands.Cog):
                 "inventory-value": '0.0',
                 "containers-opened": 0,
                 "total-spent": '0.0',
-                "total-received": '0.0',
-                "created_at": int(datetime.now(tz=timezone.utc).timestamp() * 1000),
+                "total-return": '0.0',
             }
 
             database.user_data.insert_one(profile)
@@ -45,9 +44,9 @@ class UserCommands(commands.Cog):
         user = database.user_data.find_one({"_id": ctx.author.id})
 
         if user == None:
-            await ctx.send(f"Use {PREFIX}register to register")
+            await ctx.send(f"You aren't registed! Use {PREFIX}register to register")
             return
-            
+
         #if user is registed
         #get last claim time
         last_claim = user['last-claim']
@@ -86,15 +85,39 @@ class UserCommands(commands.Cog):
         #get user
         user = database.user_data.find_one({"_id": member.id})
 
-        user_balance = Decimal(user["balance"])
         if user == None:
             if member == ctx.author:
-                await ctx.send(f"Use {PREFIX}register to register")
+                await ctx.send(f"You are not registered! Use {PREFIX}register to register")
             else:
                 await ctx.send(f'{member.display_name} has not registered yet')
         else:
+            user_balance = Decimal(user["balance"])
             await ctx.send(f"{name} balance is: ${'{:.2f}'.format(user_balance)}")
 
+    @commands.command()
+    async def profile(self, ctx):
+        user = database.user_data.find_one({"_id": ctx.author.id})
+
+        if user == None:
+            await ctx.send(f"You are not registered! Use {PREFIX}register to register")
+            return
+
+        try:
+            percent_return = round(float(user["total-return"]) / float(user["total-spent"]) * 100)
+        except ZeroDivisionError:
+            percent_return = 0.0
+
+        stats  = f"""
+        Containers Opened: {user["containers-opened"]}
+        Total Spent: {user["total-spent"]}
+        Total Return: {user["total-return"]}
+        % Return: {percent_return}%
+        """
+        
+        e = discord.Embed(title=f"{ctx.author.name}'s profile")
+        e.add_field(name="Statistics", value=stats)
+        e.set_thumbnail(url=ctx.message.author.avatar.url)
+        await ctx.send(embed=e)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

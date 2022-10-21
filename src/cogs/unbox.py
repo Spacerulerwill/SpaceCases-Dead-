@@ -240,7 +240,7 @@ class UnboxCommands(commands.Cog):
         user = database.user_data.find_one({"_id": ctx.author.id})
 
         if user == None:
-            await ctx.send(f"Use {PREFIX}register to register")
+            await ctx.send(f"You aren't registed! Use {PREFIX}register to register")
             return
 
         container = database.containers[container_name]
@@ -249,7 +249,7 @@ class UnboxCommands(commands.Cog):
 
         user_balance = Decimal(user["balance"])
         user_total_spent = Decimal(user["total-spent"])
-        user_total_received = Decimal(user["total-received"])
+        user_total_return = Decimal(user["total-return"])
         user_containers_opened = user["containers-opened"]
 
         #if they don't have enough
@@ -302,10 +302,16 @@ class UnboxCommands(commands.Cog):
                 skin_wear = conditions[wear]
                 break
 
-        # create embed and show player
-        formatted_name = skin_wear + " " + database.skin_data[skin_name]["formatted_name"] 
+        #if is stattrak?
+        if random.random() < 0.1:
+            stattrak = "StatTrak "
+        else:
+            stattrak = ""
 
-        skin_name = remove_skin_name_formatting(skin_wear) + " " + skin_name
+        # create embed and show player
+        formatted_name = stattrak + skin_wear + " " + database.skin_data[skin_name]["formatted_name"] 
+
+        skin_name = stattrak.lower() + remove_skin_name_formatting(skin_wear) + " " + skin_name
         
         image_url = database.skin_data[skin_name]["image_url"]
         skin_rarity = database.skin_data[skin_name]["rarity"]
@@ -313,10 +319,10 @@ class UnboxCommands(commands.Cog):
         
         skin_price = Decimal(database.skin_data[skin_name]["price"]).quantize(Decimal('0.01')) # 2 dp
 
-        new_total_received = str(user_total_received + skin_price)
+        new_total_return = str(user_total_return + skin_price)
         
         #update user data
-        database.user_data.update_one(user,{"$set" :{"balance" : new_balance, "total-spent": new_total_spent, "total-received": new_total_received, "containers-opened": new_containers_opened}})
+        database.user_data.update_one(user,{"$set" :{"balance" : new_balance, "total-spent": new_total_spent, "total-return": new_total_return, "containers-opened": new_containers_opened}})
 
         e = discord.Embed(title=formatted_name, color=color)
         e.add_field(name="Market Value", value="$" + str(skin_price))
