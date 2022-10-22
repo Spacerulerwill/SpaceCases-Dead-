@@ -13,7 +13,7 @@ from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, 
 from src.util import database
 import random
 from decimal import Decimal
-
+from numpy import array_split
 
 containerlist_pages = {
     "Cases": 
@@ -82,9 +82,12 @@ class UnboxCommands(commands.Cog):
             image_url = weapon_data["image_url"]
             rarity = weapon_data["rarity"]
             rarity_color = rarity_color_dict[rarity]
+            min_float = "{:.2f}".format(weapon_data["min_float"])
+            max_float = "{:.2f}".format(weapon_data["max_float"])
             e = discord.Embed(title=formatted_name, color=rarity_color)
             e.add_field(name="Current Market Value", value=price)
             e.add_field(name="Rarity", value=rarity)
+            e.add_field(name="Float Range", value=f"{min_float} - {max_float}")
             e.set_image(url=image_url)
 
             await ctx.send(embed=e)
@@ -184,9 +187,14 @@ class UnboxCommands(commands.Cog):
             rarity = item_data["rarity"]
             rarity_color = rarity_color_dict[rarity]
 
+            min_float = "{:.2f}".format(item_data["min_float"])
+            max_float = "{:.2f}".format(item_data["max_float"])
+
             image_url = item_data["image_url"]
 
             e = discord.Embed(title=f"{container_name} - ${container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})", color=rarity_color)
+            e.add_field(name="Rarity", value=rarity)
+            e.add_field(name="Float Range", value=f"{min_float} - {max_float}")
             e.set_image(url=image_url)
             e.set_thumbnail(url=container_image_url)
             return e
@@ -199,6 +207,7 @@ class UnboxCommands(commands.Cog):
         if page <= 0 or page > len_containerlist_pages:
             await ctx.send("Invalid page number!")
             return
+
         page -= 1
         page_title, page_fields = list(containerlist_pages.items())[page]
         e = discord.Embed(title=f"Page {page+1}/{len_containerlist_pages}")

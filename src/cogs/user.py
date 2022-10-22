@@ -8,7 +8,7 @@
 import discord
 from discord.ext import commands
 from src.util import database
-from src.util.constants import PREFIX
+from src.util.constants import PREFIX, rarity_color_dict
 from datetime import timezone, datetime
 from decimal import Decimal
 
@@ -95,8 +95,116 @@ class UserCommands(commands.Cog):
             await ctx.send(f"{name} balance is: ${'{:.2f}'.format(user_balance)}")
 
     @commands.command()
-    async def inventory(self, ctx):
-        pass
+    async def inventory(self, ctx, page=1):
+        user = database.user_data.find_one({"_id": ctx.author.id})
+
+        if user == None:
+            await ctx.send(f"You aren't registed! Use {PREFIX}register to register")
+            return
+
+        inventory_data = user["inventory"]
+
+        total_inventory_value = Decimal('0.0')
+
+        #calculate inventory value
+        for item in inventory_data:
+            item_name = list(item.keys())[0]
+            price = Decimal(database.skin_data[item_name]["price"])
+            total_inventory_value += price
+
+        if len(inventory_data) == 0:
+            await ctx.send(f"Your inventory is empty! Use {PREFIX}open to start opening cases!")
+            return
+
+        page -= 1
+        item_index = 0
+        inventory_pages = [inventory_data[x:x+25] for x in range(0, len(inventory_data), 25)]
+        page_data = inventory_pages[page]
+
+        select = None
+
+        name = ctx.author.name
+
+        async def select_callback(interact):
+            nonlocal item_index
+            if interact.user.id == ctx.author.id:
+                item_index = int(select.values[0])
+
+                await msg.edit(embed=await get_embed())
+            
+            await interact.response.defer()
+
+        async def next_button_callback(interact):
+            nonlocal page, item_index
+            if interact.user.id == ctx.author.id:
+                if page == len(inventory_pages)-1:
+                    page = 0
+                else:
+                    page += 1
+                item_index = 0
+
+                await msg.edit(embed=await get_embed(), view=await get_view())
+
+            await interact.response.defer()
+
+        async def prev_button_callback(interact):
+            nonlocal page, item_index
+            if interact.user.id == ctx.author.id:
+                if page == 0:
+                    page = len(inventory_pages)-1
+                else:
+                    page -= 1
+                item_index = 0
+
+                await msg.edit(embed=await get_embed(), view=await get_view())
+
+            await interact.response.defer()
+
+        async def get_embed():
+            item_unformatted_name = list(page_data[item_index].keys())[0]
+            item_float = page_data[item_index][item_unformatted_name]
+            item_data = database.skin_data[item_unformatted_name]
+            item_formatted_name = item_data["formatted_name"]
+            image_url = item_data["image_url"]
+            rarity = item_data["rarity"]
+            rarity_color = rarity_color_dict[rarity]
+            item_price = item_data["price"]
+
+            e = discord.Embed(title=f"{name}'s inventory - Page {page+1}/{len(inventory_pages)}\n{item_formatted_name}", color=rarity_color)
+            e.add_field(name="Price", value="$" + item_price)
+            e.add_field(name="Rarity", value=rarity)
+            e.add_field(name="Float", value=item_float)
+            e.set_footer(text=f"Total inventory value: ${total_inventory_value}")
+            e.set_image(url=image_url)
+            e.set_thumbnail(url=ctx.author.avatar.url)
+
+            return e
+
+        async def get_view():
+            nonlocal select
+
+            view = discord.ui.View()
+
+            select_options = []
+            for index, item in enumerate(page_data):
+                unformatted_name = list(item.keys())[0]
+                formatted_name = database.skin_data[unformatted_name]["formatted_name"]
+                select_options.append(discord.SelectOption(label=formatted_name, value=index))
+
+            select = discord.ui.Select(options=select_options)
+            select.callback = select_callback
+
+            prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
+            prev_button.callback = prev_button_callback
+            next_button = discord.ui.Button(label="▶", style=discord.ButtonStyle.gray)
+            next_button.callback = next_button_callback
+            view.add_item(select)
+            view.add_item(prev_button)
+            view.add_item(next_button)
+
+            return view
+        
+        msg = await ctx.send(embed=await get_embed(), view=await get_view())
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
