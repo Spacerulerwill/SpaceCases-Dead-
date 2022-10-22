@@ -1,7 +1,7 @@
 # This cog is for skin unboxing related commands
 # Commands:
 # * open
-# * skin
+# * item
 # * container
 # * containers
 
@@ -60,20 +60,27 @@ containerlist_pages = {
 len_containerlist_pages = len(containerlist_pages)
 
 # initialise class
-class UnboxCommands(commands.Cog):
+class Unboxing(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     # inspect a skins image and information
-    @commands.command()
-    async def skin(self, ctx, *args):
-        skin_query = " ".join(args[:]).strip().lower()
+    @commands.command(description="View details for an item", usage=f"""
+    `{PREFIX}item <item name>`
+    **Arguments**
+    `<item name>` - item name as a string
+    **Additional Information**
+    Different items have different naming conventions, such as:
+    `Weapons - <modifier> <condition> <weapon name> <skin name>`
+    """)
+    async def item(self, ctx, *args):
+        item_query = " ".join(args[:]).strip().lower()
 
-        if skin_query not in database.skin_data:
+        if item_query not in database.skin_data:
             await ctx.send("Could not find weapon")
             return
         try:
-            weapon_data = database.skin_data[skin_query]
+            weapon_data = database.skin_data[item_query]
 
             formatted_name = weapon_data["formatted_name"]
             price = "$" + weapon_data["price"]
@@ -95,7 +102,11 @@ class UnboxCommands(commands.Cog):
             return
 
     # view a containers price and contents
-    @commands.command()
+    @commands.command(description="View a container's price and contents", usage=f"""
+    `{PREFIX}container <container name>`
+    **Arguments**
+    `<container name>` - container name as a string
+    """)
     async def container(self, ctx, *args):
         container = " ".join(args[:]).strip().lower()
 
@@ -241,7 +252,9 @@ class UnboxCommands(commands.Cog):
         msg = await ctx.send(embed=get_embed(), view=view)
 
     # see a list of all containers
-    @commands.command()
+    @commands.command(description="See a list of all purchasable containers", usage=f"""
+    `{PREFIX}containers`
+    """)
     async def containers(self, ctx, page:int = 1):
         if page <= 0 or page > len_containerlist_pages:
             await ctx.send("Invalid page number!")
@@ -249,9 +262,7 @@ class UnboxCommands(commands.Cog):
 
         page -= 1
         page_title, page_fields = list(containerlist_pages.items())[page]
-        e = discord.Embed(title=f"Page {page+1}/{len_containerlist_pages}")
-
-        e.set_footer(text=f"Use {PREFIX}container (case name) to see a case's contents and {PREFIX}open to open one")
+        e = discord.Embed(title=f"Page {page+1}/{len_containerlist_pages}", description=f"Use `{PREFIX}container <container>` to see a container's contents and `{PREFIX}open <container>` to open one")
 
         for field in page_fields:
             e.add_field(name=page_title, value=field)
@@ -264,7 +275,11 @@ class UnboxCommands(commands.Cog):
             await ctx.send("Page number must be an integer!")
 
     # open a container
-    @commands.command()
+    @commands.command(description="Purchase and open a container, with the option to either sell it or add it to your inventory", usage=f"""
+    `{PREFIX}open <container name>`
+    **Arguments**
+    `<container name>` - the name of the container to open as a string
+    """)
     async def open(self, ctx, *args):
         container_name = " ".join(args[:]).strip().lower()
         
@@ -425,4 +440,4 @@ class UnboxCommands(commands.Cog):
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
-    await bot.add_cog(UnboxCommands(bot))
+    await bot.add_cog(Unboxing(bot))

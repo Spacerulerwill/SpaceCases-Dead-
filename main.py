@@ -9,7 +9,7 @@ from src.util import database
 from src.util.constants import PREFIX
 
 #list of cogs
-cogs = ["unbox", "user"]   
+cogs = ["unbox", "user", "help"]   
 
 # start database connections
 database.init()
@@ -34,7 +34,7 @@ def run_bot():
     try:
         bot_instance.run(TOKEN) #run the client using using my bot's token
     except ClientConnectorError: 
-            print("Failed to connect to discord.py")
+        print("Failed to connect to discord.py")
     
 @bot_instance.event
 async def on_ready():
@@ -52,6 +52,3 @@ async def on_ready():
     
 if __name__ == "__main__":
     run_bot()
-    
-    #from src.scripts.container_scraper import scrape_containers
-    #scrape_containers()

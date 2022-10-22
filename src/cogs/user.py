@@ -13,12 +13,14 @@ from datetime import timezone, datetime
 from decimal import Decimal
 
 # initialise class
-class UserCommands(commands.Cog):
+class User(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     #register a profile
-    @commands.command()
+    @commands.command(description="Register for a bank account", usage=f"""
+    `{PREFIX}register`
+    """)
     async def register(self, ctx):
         if database.user_data.find_one({"_id": ctx.author.id}) == None:
             profile = {
@@ -37,7 +39,9 @@ class UserCommands(commands.Cog):
         else:
             await ctx.send("You are already registered!")
 
-    @commands.command()
+    @commands.command(description="Claim daily money allowance", usage=f"""
+    `{PREFIX}claim`
+    """)
     async def claim(self, ctx):
 
         #check if user is registed
@@ -73,7 +77,11 @@ class UserCommands(commands.Cog):
         else:
             await ctx.send("You must wait until tomorrow to claim again!")
 
-    @commands.command()
+    @commands.command(description="Check a user's balance", usage=f"""
+    `{PREFIX}balance <user>`
+    **Arguments**
+    `<user>` - optional - user to check balance of
+    """)
     async def balance(self, ctx, member: discord.Member = None):
         #if used an @ to specify a member
         if member == None:
@@ -94,7 +102,11 @@ class UserCommands(commands.Cog):
             user_balance = Decimal(user["balance"])
             await ctx.send(f"{name} balance is: ${'{:.2f}'.format(user_balance)}")
 
-    @commands.command()
+    @commands.command(description="View a user's inventory", usage=f"""
+    `{PREFIX}inventory <user>`
+    **Arguments**
+    `<user>` - optional - user whos inventory to check
+    """)
     async def inventory(self, ctx, discord_user: discord.Member = None):
 
         if discord_user == None:
@@ -213,4 +225,4 @@ class UserCommands(commands.Cog):
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
-    await bot.add_cog(UserCommands(bot))
+    await bot.add_cog(User(bot))
