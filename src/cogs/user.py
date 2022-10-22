@@ -95,11 +95,16 @@ class UserCommands(commands.Cog):
             await ctx.send(f"{name} balance is: ${'{:.2f}'.format(user_balance)}")
 
     @commands.command()
-    async def inventory(self, ctx, page=1):
-        user = database.user_data.find_one({"_id": ctx.author.id})
+    async def inventory(self, ctx, discord_user: discord.Member = None):
+
+        if discord_user == None:
+            discord_user = ctx.author
+            
+
+        user = database.user_data.find_one({"_id": discord_user.id})
 
         if user == None:
-            await ctx.send(f"You aren't registed! Use {PREFIX}register to register")
+            await ctx.send(f"User is not registed! Use {PREFIX}register to register")
             return
 
         inventory_data = user["inventory"]
@@ -113,17 +118,17 @@ class UserCommands(commands.Cog):
             total_inventory_value += price
 
         if len(inventory_data) == 0:
-            await ctx.send(f"Your inventory is empty! Use {PREFIX}open to start opening cases!")
+            await ctx.send(f"User's inventory is empty! Use {PREFIX}open to start opening cases!")
             return
 
-        page -= 1
+        page = 0
         item_index = 0
         inventory_pages = [inventory_data[x:x+25] for x in range(0, len(inventory_data), 25)]
         page_data = inventory_pages[page]
 
         select = None
 
-        name = ctx.author.name
+        name = discord_user.name
 
         async def select_callback(interact):
             nonlocal item_index
@@ -176,7 +181,7 @@ class UserCommands(commands.Cog):
             e.add_field(name="Float", value=item_float)
             e.set_footer(text=f"Total inventory value: ${total_inventory_value}")
             e.set_image(url=image_url)
-            e.set_thumbnail(url=ctx.author.avatar.url)
+            e.set_thumbnail(url=discord_user.avatar.url)
 
             return e
 
