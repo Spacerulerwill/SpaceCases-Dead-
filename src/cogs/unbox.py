@@ -7,13 +7,12 @@
 
 import discord
 from discord.ext import commands
-from src.util.constants import PREFIX, wear_dict, KEY_PRICE
+from src.util.constants import PREFIX, KEY_PRICE
 from src.util.format import remove_skin_name_formatting
 from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, case_wear_ranges
 from src.util import database
 import random
 from decimal import Decimal
-from numpy import array_split
 
 containerlist_pages = {
     "Cases": 
@@ -182,6 +181,7 @@ class UnboxCommands(commands.Cog):
             formatted_item_name = database.skin_data[item]["formatted_name"]
             best_condition_index = database.skin_data[item]["best_condition_index"]
             worst_condition_index = database.skin_data[item]["best_condition_index"]
+
             best_condition = conditions[best_condition_index].lower()
             item_data = database.skin_data[best_condition + " " + item]
             rarity = item_data["rarity"]

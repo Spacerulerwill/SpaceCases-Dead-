@@ -7,15 +7,6 @@ KEY_PRICE = Decimal('2.5')
 NO_PRICE_VALUE = 2500
 
 
-wear_dict = {
-    "fn": "(Factory New) ",
-    "mw": "(Minimal Wear) ",
-    "ft": "(Field-Tested) ",
-    "ww": "(Well-Worn) ",
-    "bs": "(Battle-Scarred) ",
-    "no_wear": ""
-}
-
 rarity_color_dict = {
     "Milspec": 4942335,
     "Restricted": 8931327,
