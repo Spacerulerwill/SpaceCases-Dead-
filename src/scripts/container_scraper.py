@@ -36,8 +36,9 @@ def scrape_containers():
         "restricted": [],
         "classified": [],
         "covert": [],
-        "rare-item": []
-      }
+        "rare items": []
+      },
+      "all items": []
     }
 
     #get gun skins
@@ -60,6 +61,7 @@ def scrape_containers():
     container_img_url = container_soup.find("a", {"class":"market-button-item"}).find("img")["src"]
 
     result_boxes = container_soup.find_all("div", {"class": "result-box"})
+    result_boxes.reverse()
 
     rare_items_link = None
 
@@ -75,10 +77,11 @@ def scrape_containers():
           rare_items_link = link + "?Knives=1"
         else:
           quality_div = result_box.find("div", {"class": "quality"})
-          quality = quality_div["class"][1].replace("color-", " ").strip()
+          quality = quality_div["class"][1].replace("color-", " ").replace("-", "").strip()
           container_data["items"][quality].append(name)
+          container_data["all items"].append(name)
 
-    #open rare-item skins and get them too if there are any
+    #open rare items skins and get them too if there are any
     if rare_items_link != None:
       rare_items_skins = requests.get(rare_items_link)
       rare_items_soup = BeautifulSoup(rare_items_skins.content, "html.parser")
@@ -90,8 +93,9 @@ def scrape_containers():
         if h3 != None and "Case Skins" not in h3.text:
           unformatted_name = remove_skin_name_formatting(h3.text)
           if container_name not in unformatted_name: #avoids the link back to the cases original skins
-            container_data["items"]["rare-item"].append(unformatted_name)
-          
+            container_data["items"]["rare items"].append(unformatted_name)
+            container_data["all items"].append(unformatted_name)
+
     container_data["formatted_name"] = container_name
     container_data["image_url"] = container_img_url
     result[remove_skin_name_formatting(container_name)] = container_data

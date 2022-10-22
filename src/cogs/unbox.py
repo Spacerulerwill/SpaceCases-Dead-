@@ -1,7 +1,7 @@
 # This cog is for skin unboxing related commands
 # Commands:
 # * open
-# * weapon
+# * skin
 # * container
 # * containers
 
@@ -65,15 +65,16 @@ class UnboxCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    # inspect a skins image and information
     @commands.command()
-    async def weapon(self, ctx, *args):
-        weapon_query = " ".join(args[:]).strip().lower()
+    async def skin(self, ctx, *args):
+        skin_query = " ".join(args[:]).strip().lower()
 
-        if weapon_query not in database.skin_data:
+        if skin_query not in database.skin_data:
             await ctx.send("Could not find weapon")
             return
         try:
-            weapon_data = database.skin_data[weapon_query]
+            weapon_data = database.skin_data[skin_query]
 
             formatted_name = weapon_data["formatted_name"]
             price = "$" + weapon_data["price"]
@@ -91,6 +92,7 @@ class UnboxCommands(commands.Cog):
             await ctx.send("Could not find weapon")
             return
 
+    # view a containers price and contents
     @commands.command()
     async def container(self, ctx, *args):
         container = " ".join(args[:]).strip().lower()
@@ -99,115 +101,99 @@ class UnboxCommands(commands.Cog):
             await ctx.send("Invalid container!")
             return
         
-        container_data = database.containers[container]
-
-        container_image_url = container_data["image_url"]
-
-        container_formatted_name = container_data["formatted_name"]
-
-        container_item_data = container_data["items"]
-        
-        container_price = container_data["price"]
-
-        #make a list of all items skins in case
-        all_container_items = []
-        for quality in container_item_data.values():
-            all_container_items += quality
-
-        items_amount = len(all_container_items)
-
         item_index = 0
 
-        #create buttons for changing item
+        container_data = database.containers[container]
+        container_name = container_data["formatted_name"]
+        container_price = container_data["price"]
+        container_image_url = container_data["image_url"]
+        
+        rarities = {}
+        selected_rarity = "all items"
+        rarities["all items"] = container_data["all items"]
+        rarity_len = len(rarities[selected_rarity])
+
+        for key, value in container_data["items"].items():
+            if len(value) != 0:
+                rarities[key] = value
+
+        #create select menu and left right arrow buttons
         view = discord.ui.View()
+
+        select_options = [discord.SelectOption(label="All Items", value="all items")]
+        for key, rarity, in container_data["items"].items():
+            if len(rarity) != 0:
+                select_options.append(discord.SelectOption(label=key.title(), value=key))
+
+        select = discord.ui.Select(options=select_options)
+
+        async def select_callback(interact):
+            nonlocal selected_rarity, item_index, rarity_len
+
+            if interact.user.id == ctx.author.id:
+                selected_rarity = select.values[0]        
+                rarity_len = len(rarities[selected_rarity])
+                item_index = 0
+                await msg.edit(embed=get_embed(), view=view)
+
+            await interact.response.defer()
+
+        select.callback = select_callback
+
         prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
         next_button = discord.ui.Button(label="▶", style=discord.ButtonStyle.gray)
+
+        async def prev_callback(interact):
+            nonlocal item_index
+
+            if interact.user.id == ctx.author.id:
+                if item_index == 0:
+                    item_index = len(rarities[selected_rarity])-1
+                else:
+                    item_index -= 1
+                await msg.edit(embed=get_embed(), view=view)
+
+            await interact.response.defer()
+
+        async def next_callback(interact):
+            nonlocal item_index
+            
+            if interact.user.id == ctx.author.id:
+                if item_index == len(rarities[selected_rarity])-1:
+                    item_index = 0
+                else:
+                    item_index += 1
+                await msg.edit(embed=get_embed(), view=view)
+
+            await interact.response.defer()
+
+        next_button.callback = next_callback
+        prev_button.callback = prev_callback
+
+        view.add_item(select)
         view.add_item(prev_button)
         view.add_item(next_button)
 
-        async def next_button_callback(interaction):
-            nonlocal item_index
-
-            if interaction.user.id == ctx.author.id and item_index < len(all_container_items)-1:
-                item_index += 1
-                await msg.edit(embed=get_embed())
-
-            await interaction.response.defer()
-
-        async def prev_button_callback(interaction):
-            nonlocal item_index
-
-            if interaction.user.id == ctx.author.id and item_index > 0:
-                item_index -= 1
-                await msg.edit(embed=get_embed())
-
-            await interaction.response.defer()
-
-        next_button.callback = next_button_callback
-        prev_button.callback = prev_button_callback
-
-        #create a new embed for each item
-        def get_embed(): 
-            item = all_container_items[item_index]
+        def get_embed():
+            item = rarities[selected_rarity][item_index]
             formatted_item_name = database.skin_data[item]["formatted_name"]
             best_condition_index = database.skin_data[item]["best_condition_index"]
+            worst_condition_index = database.skin_data[item]["best_condition_index"]
             best_condition = conditions[best_condition_index].lower()
             item_data = database.skin_data[best_condition + " " + item]
-
-            image_url = item_data["image_url"]
             rarity = item_data["rarity"]
             rarity_color = rarity_color_dict[rarity]
-            min_float = "{:.2f}".format(item_data["min_float"])
-            max_float ="{:.2f}".format(item_data["max_float"])
 
-            best_condition_index = item_data["best_condition_index"]
-            worst_condition_index = item_data["worst_condition_index"]
+            image_url = item_data["image_url"]
 
-            has_stattrak_variant = item_data["has_stattrak_variant"]
-            has_souvenir_variant = item_data["has_souvenir_variant"]
-
-            has_modifier_price = False
-
-            min_price = float('inf')
-            max_price = 0.0
-            for i in range(best_condition_index, worst_condition_index+1):
-                price = Decimal(database.skin_data[conditions[i].lower() + " " + item]["price"]).quantize(Decimal('0.01'))
-                if price < min_price:
-                    min_price = price
-                if price > max_price:
-                    max_price = price
-
-            if has_stattrak_variant:
-                has_modifier_price = True
-                modifier = "stattrak "
-            elif has_souvenir_variant:
-                has_modifier_price = True
-                modifier = "souvenir "
-
-            if has_modifier_price:
-                min_modifier_price = float('inf')
-                max_modifier_price = 0.0
-                for i in range(best_condition_index, worst_condition_index+1):
-                    price = Decimal(database.skin_data[modifier + conditions[i].lower() + " " + item]["price"]).quantize(Decimal('0.01'))
-                    if price < min_modifier_price:
-                        min_modifier_price = price
-                    if price > max_modifier_price:
-                        max_modifier_price = price
-
-            price_range_str = f"${min_price} - ${max_price}"
-            if has_modifier_price: 
-                price_range_str += f"\n${min_modifier_price} - ${max_modifier_price}"
-
-            e = discord.Embed(title=f"{container_formatted_name} - ${container_price}\n{formatted_item_name} ({item_index+1}/{items_amount})", color=rarity_color)
-            e.add_field(name="Rarity", value=rarity)
-            e.add_field(name="Price Range", value=price_range_str)
-            e.add_field(name="Float Range", value=f"{min_float} - {max_float}")
+            e = discord.Embed(title=f"{container_name} - ${container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})", color=rarity_color)
             e.set_image(url=image_url)
             e.set_thumbnail(url=container_image_url)
             return e
 
         msg = await ctx.send(embed=get_embed(), view=view)
 
+    # see a list of all containers
     @commands.command()
     async def containers(self, ctx, page:int = 1):
         if page <= 0 or page > len_containerlist_pages:
@@ -229,6 +215,7 @@ class UnboxCommands(commands.Cog):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Page number must be an integer!")
 
+    # open a container
     @commands.command()
     async def open(self, ctx, *args):
         container_name = " ".join(args[:]).strip().lower()
@@ -358,8 +345,9 @@ class UnboxCommands(commands.Cog):
                     e.set_footer(text="")
                     await  msg.edit(embed=e, view=None)
                 else:
-                    await ctx.send("Your inventory is full! Sell an item or buy more inventory space")
-                    await interact.response.defer()
+                    await interact.response.send_message("Your inventory is full! Sell an item or buy more inventory space")
+            else:
+                await interact.response.defer()
                
         #call back for selling the item
         async def sell_callback(interact):
@@ -378,6 +366,8 @@ class UnboxCommands(commands.Cog):
                 e.set_field_at(index=3, name="New Balance", value="$" + new_balance)
                 await msg.edit(embed=e, view=None)
                 database.user_data.update_one(user, {"$set" :{"balance" : new_balance}})
+            else:
+                await interact.response.defer()
 
         #set callabcks
         sell.callback = sell_callback

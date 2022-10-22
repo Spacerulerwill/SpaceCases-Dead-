@@ -3,6 +3,7 @@
 # * register
 # * claim
 # * balance
+# * inventory
 
 import discord
 from discord.ext import commands
@@ -26,7 +27,6 @@ class UserCommands(commands.Cog):
                 "last-claim": "01/01/1970",
                 "inventory": [],
                 "inventory-size": 5,
-                "inventory-value": '0.0',
                 "containers-opened": 0,
                 "total-spent": '0.0',
                 "total-return": '0.0',
@@ -95,29 +95,8 @@ class UserCommands(commands.Cog):
             await ctx.send(f"{name} balance is: ${'{:.2f}'.format(user_balance)}")
 
     @commands.command()
-    async def profile(self, ctx):
-        user = database.user_data.find_one({"_id": ctx.author.id})
-
-        if user == None:
-            await ctx.send(f"You are not registered! Use {PREFIX}register to register")
-            return
-
-        try:
-            percent_return = round(float(user["total-return"]) / float(user["total-spent"]) * 100)
-        except ZeroDivisionError:
-            percent_return = 0.0
-
-        stats  = f"""
-        Containers Opened: {user["containers-opened"]}
-        Total Spent: {user["total-spent"]}
-        Total Return: {user["total-return"]}
-        % Return: {percent_return}%
-        """
-        
-        e = discord.Embed(title=f"{ctx.author.name}'s profile")
-        e.add_field(name="Statistics", value=stats)
-        e.set_thumbnail(url=ctx.message.author.avatar.url)
-        await ctx.send(embed=e)
+    async def inventory(self, ctx):
+        pass
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

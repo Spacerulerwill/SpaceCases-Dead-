@@ -25,7 +25,7 @@ rarity_color_dict = {
 }
 
 case_rarity_odds = {
-    "rare-item": 0.9974,
+    "special items": 0.9974,
     "covert": 0.9910,
     "classified": 0.9590,
     "restricted": 0.7992,
