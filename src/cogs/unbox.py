@@ -179,20 +179,59 @@ class UnboxCommands(commands.Cog):
         def get_embed():
             item = rarities[selected_rarity][item_index]
             formatted_item_name = database.skin_data[item]["formatted_name"]
+
             best_condition_index = database.skin_data[item]["best_condition_index"]
-            worst_condition_index = database.skin_data[item]["best_condition_index"]
+            worst_condition_index = database.skin_data[item]["worst_condition_index"]
 
             best_condition = conditions[best_condition_index].lower()
             item_data = database.skin_data[best_condition + " " + item]
             rarity = item_data["rarity"]
             rarity_color = rarity_color_dict[rarity]
 
+            #price range string generation
+            has_stattrak_variant = item_data["has_stattrak_variant"]
+            has_souvenir_variant = item_data["has_souvenir_variant"]
+
+            has_modifier_price = False
+
+            min_price = float('inf')
+            max_price = 0.0
+            for i in range(best_condition_index, worst_condition_index+1):
+                price = Decimal(database.skin_data[conditions[i].lower() + " " + item]["price"]).quantize(Decimal('0.01'))
+                if price < min_price:
+                    min_price = price
+                if price > max_price:
+                    max_price = price
+
+            if has_stattrak_variant:
+                has_modifier_price = True
+                modifier = "stattrak "
+            elif has_souvenir_variant:
+                has_modifier_price = True
+                modifier = "souvenir "
+
+            if has_modifier_price:
+                min_modifier_price = float('inf')
+                max_modifier_price = 0.0
+                for i in range(best_condition_index, worst_condition_index+1):
+                    price = Decimal(database.skin_data[modifier + conditions[i].lower() + " " + item]["price"]).quantize(Decimal('0.01'))
+                    if price < min_modifier_price:
+                        min_modifier_price = price
+                    if price > max_modifier_price:
+                        max_modifier_price = price
+
+            price_range_str = f"${min_price} - ${max_price}"
+            if has_modifier_price: 
+                price_range_str += f"\n${min_modifier_price} - ${max_modifier_price}"
+
+            #min max float
             min_float = "{:.2f}".format(item_data["min_float"])
             max_float = "{:.2f}".format(item_data["max_float"])
 
             image_url = item_data["image_url"]
 
             e = discord.Embed(title=f"{container_name} - ${container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})", color=rarity_color)
+            e.add_field(name="Price Range", value=price_range_str)
             e.add_field(name="Rarity", value=rarity)
             e.add_field(name="Float Range", value=f"{min_float} - {max_float}")
             e.set_image(url=image_url)
