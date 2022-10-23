@@ -208,7 +208,7 @@ class User(commands.Cog):
                 formatted_name = database.skin_data[unformatted_name]["formatted_name"]
                 select_options.append(discord.SelectOption(label=formatted_name, value=index))
 
-            select = discord.ui.Select(options=select_options)
+            select = discord.ui.Select(options=select_options, placeholder="Select a skin")
             select.callback = select_callback
 
             prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
