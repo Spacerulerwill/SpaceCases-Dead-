@@ -466,7 +466,7 @@ class Unboxing(commands.Cog):
 
         start_item_name = user_inventory[inventory_index]["name"]
         start_item_float = user_inventory[inventory_index]["float"]
-        
+
         result_item_name = " ".join(args[:]).strip().lower()
 
         if result_item_name not in database.skin_data:
@@ -501,7 +501,15 @@ class Unboxing(commands.Cog):
         e.set_image(url=result_item_data["image_url"])
         e.set_thumbnail(url=start_item_data["image_url"])
 
-        await ctx.send(embed=e)
+        view = discord.ui.View()
+        
+        upgrade_button = discord.ui.Button(label="Upgrade", style=discord.ButtonStyle.green)
+        cancel_button = discord.ui.Button(label="Cancel", style=discord.ButtonStyle.red)
+
+        view.add_item(upgrade_button)
+        view.add_item(cancel_button)
+
+        await ctx.send(embed=e, view=view)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
