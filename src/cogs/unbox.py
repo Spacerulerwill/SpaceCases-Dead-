@@ -4,7 +4,9 @@
 # * item
 # * container
 # * containers
+# * upgrade
 
+from unittest import result
 import discord
 from discord.ext import commands
 from src.util.constants import PREFIX, KEY_PRICE
@@ -290,7 +292,7 @@ class Unboxing(commands.Cog):
         user = database.user_data.find_one({"_id": ctx.author.id})
 
         if user == None:
-            await ctx.send(f"You aren't registed! Use {PREFIX}register to register")
+            await ctx.send(f"You aren't registed! Use `{PREFIX}register` to register")
             return
 
         container = database.containers[container_name]
@@ -352,6 +354,9 @@ class Unboxing(commands.Cog):
                 skin_wear = conditions[wear]
                 break
 
+
+        final_float = str(final_float)
+
         #if is stattrak?
         if random.random() < 0.1:
             stattrak = "StatTrak "
@@ -377,7 +382,7 @@ class Unboxing(commands.Cog):
         e = discord.Embed(title=formatted_name, color=color)
         e.add_field(name="Market Value", value="$" + str(skin_price))
         e.add_field(name="Rarity", value=skin_rarity)
-        e.add_field(name="Float", value=str(final_float))
+        e.add_field(name="Float", value=final_float)
         e.add_field(name="New Balance", value="$" + new_balance)
         e.set_image(url=image_url)
         e.set_footer(text="Warning! Buttons are only usable for 30 seconds.")
@@ -400,7 +405,7 @@ class Unboxing(commands.Cog):
                 inventory = list(user["inventory"])
 
                 if len(inventory) < user["inventory-size"]:
-                    inventory.append({skin_name: final_float})
+                    inventory.append({"name": skin_name, "float": final_float})
 
                     database.user_data.update_one(user,{"$set" :{"inventory" : inventory}})
 
@@ -437,6 +442,64 @@ class Unboxing(commands.Cog):
         inventory.callback = inventory_callback
 
         msg = await ctx.send(embed=e, view=view)
+
+    @commands.command(description="Take a chance to upgrade your skin to one of higher value", usage=f"""
+    `{PREFIX}open <inventory item number> <item to recieve>`
+    **Arguments**
+    `<inventory item number>` - the inventory item number of the item you want to upgrade
+    `<item to recieve>` - the name of the item you want to upgrade too
+    """)
+    async def upgrade(self, ctx, inventory_index:int, *args):
+        inventory_index -= 1
+
+        user = database.user_data.find_one({"_id": ctx.author.id})
+
+        if user == None:
+            await ctx.send(f"You aren't registed! Use `{PREFIX}register` to register")
+            return
+        
+        user_inventory = user["inventory"]
+
+        if inventory_index >= len(user_inventory):
+            await ctx.send(f"Invalid item number!")
+            return
+
+        start_item_name = user_inventory[inventory_index]["name"]
+        result_item_name = " ".join(args[:]).strip().lower()
+
+        if result_item_name not in database.skin_data:
+            await ctx.send(f"Result item does not exist!")
+            return
+
+        start_item_data = database.skin_data[start_item_name]
+        result_item_data = database.skin_data[result_item_name]
+
+        start_item_formatted_name = start_item_data["formatted_name"]
+        result_item_formatted_name = result_item_data["formatted_name"]
+
+        color = rarity_color_dict[result_item_data["rarity"]]
+        
+        try:
+            start_item_price = Decimal(start_item_data["price"])
+            result_item_price = Decimal(result_item_data["price"])
+        except KeyError:
+            await ctx.send(f"Result item does not exist!")
+            return
+
+        price_multiplier = result_item_price / start_item_price
+
+        upgrade_chance = (Decimal('1.0') / price_multiplier) * 100
+
+        e = discord.Embed(title=f"Upgrading {start_item_formatted_name} to {result_item_formatted_name}", color=color)
+
+        e.add_field(name="Price Multiplier", value=str(price_multiplier.quantize(Decimal('0.01'))) + "X")
+
+        e.add_field(name="Upgrade Chance", value=str(upgrade_chance.quantize(Decimal('0.01'))) + "%")
+
+        e.set_image(url=result_item_data["image_url"])
+        e.set_thumbnail(url=start_item_data["image_url"])
+
+        await ctx.send(embed=e)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

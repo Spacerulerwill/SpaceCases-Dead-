@@ -35,7 +35,7 @@ class User(commands.Cog):
             }
 
             database.user_data.insert_one(profile)
-            await ctx.send(f"Registered! Use {PREFIX}profile to see your profile")
+            await ctx.send(f"Registered! Use `{PREFIX}profile` to see your profile")
         else:
             await ctx.send("You are already registered!")
 
@@ -48,7 +48,7 @@ class User(commands.Cog):
         user = database.user_data.find_one({"_id": ctx.author.id})
 
         if user == None:
-            await ctx.send(f"You aren't registed! Use {PREFIX}register to register")
+            await ctx.send(f"You aren't registed! Use `{PREFIX}register` to register")
             return
 
         #if user is registed
@@ -95,7 +95,7 @@ class User(commands.Cog):
 
         if user == None:
             if member == ctx.author:
-                await ctx.send(f"You are not registered! Use {PREFIX}register to register")
+                await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
             else:
                 await ctx.send(f'{member.display_name} has not registered yet')
         else:
@@ -116,7 +116,7 @@ class User(commands.Cog):
         user = database.user_data.find_one({"_id": discord_user.id})
 
         if user == None:
-            await ctx.send(f"User is not registed! Use {PREFIX}register to register")
+            await ctx.send(f"User is not registed! Use `{PREFIX}register` to register")
             return
 
         inventory_data = user["inventory"]
@@ -125,12 +125,12 @@ class User(commands.Cog):
 
         #calculate inventory value
         for item in inventory_data:
-            item_name = list(item.keys())[0]
+            item_name = item["name"]
             price = Decimal(database.skin_data[item_name]["price"])
             total_inventory_value += price
 
         if len(inventory_data) == 0:
-            await ctx.send(f"User's inventory is empty! Use {PREFIX}open to start opening cases!")
+            await ctx.send(f"User's inventory is empty! Use `{PREFIX}open` to start opening cases!")
             return
 
         page = 0
@@ -178,8 +178,8 @@ class User(commands.Cog):
             await interact.response.defer()
 
         async def get_embed():
-            item_unformatted_name = list(page_data[item_index].keys())[0]
-            item_float = page_data[item_index][item_unformatted_name]
+            item_unformatted_name = page_data[item_index]["name"]
+            item_float = page_data[item_index]["float"]
             item_data = database.skin_data[item_unformatted_name]
             item_formatted_name = item_data["formatted_name"]
             image_url = item_data["image_url"]
@@ -204,7 +204,7 @@ class User(commands.Cog):
 
             select_options = []
             for index, item in enumerate(page_data):
-                unformatted_name = list(item.keys())[0]
+                unformatted_name = item["name"]
                 formatted_name = database.skin_data[unformatted_name]["formatted_name"]
                 select_options.append(discord.SelectOption(label=formatted_name, value=index))
 
