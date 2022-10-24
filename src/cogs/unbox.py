@@ -420,7 +420,7 @@ class Unboxing(commands.Cog):
                 await interact.response.defer()
 
         async def sell_item():
-            nonlocal new_balance, user
+            nonlocal new_balance, user, is_sold
             #refresh user document
             user = database.user_data.find_one({"_id": ctx.author.id})
             #change color to green, remove footer, change balance to have balance of skin
@@ -491,6 +491,10 @@ class Unboxing(commands.Cog):
         try:
             start_item_price = Decimal(start_item_data["price"])
             result_item_price = Decimal(result_item_data["price"])
+
+            if result_item_price <= start_item_price:
+                await ctx.send("Result item must have a greater price than your starting item!")
+                return
         except KeyError:
             await ctx.send(f"Result item does not exist!")
             return
