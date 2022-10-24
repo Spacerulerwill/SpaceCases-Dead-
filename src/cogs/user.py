@@ -191,6 +191,7 @@ class User(commands.Cog):
             e.add_field(name="Price", value="$" + item_price)
             e.add_field(name="Rarity", value=rarity)
             e.add_field(name="Float", value=item_float)
+            e.add_field(name="Inventory Index", value=str(item_index + (page*25) + 1))
             e.set_footer(text=f"Total inventory value: ${total_inventory_value}")
             e.set_image(url=image_url)
             e.set_thumbnail(url=discord_user.avatar.url)

@@ -446,7 +446,7 @@ class Unboxing(commands.Cog):
     @commands.command(description="Take a chance to upgrade your skin to one of higher value", usage=f"""
     `{PREFIX}open <inventory item number> <item to recieve>`
     **Arguments**
-    `<inventory item number>` - the inventory item number of the item you want to upgrade
+    `<inventory item slot>` - the inventory slot number of the item you want to upgrade
     `<item to recieve>` - the name of the item you want to upgrade too
     """)
     async def upgrade(self, ctx, inventory_index:int, *args):
@@ -465,6 +465,8 @@ class Unboxing(commands.Cog):
             return
 
         start_item_name = user_inventory[inventory_index]["name"]
+        start_item_float = user_inventory[inventory_index]["float"]
+        
         result_item_name = " ".join(args[:]).strip().lower()
 
         if result_item_name not in database.skin_data:
