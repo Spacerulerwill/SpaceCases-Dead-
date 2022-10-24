@@ -6,7 +6,6 @@
 # * containers
 # * upgrade
 
-from unittest import result
 import discord
 from discord.ext import commands
 from src.util.constants import PREFIX, KEY_PRICE
@@ -15,6 +14,7 @@ from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, 
 from src.util import database
 import random
 from decimal import Decimal
+import asyncio
 
 containerlist_pages = {
     "Cases": 
@@ -385,7 +385,7 @@ class Unboxing(commands.Cog):
         e.add_field(name="Float", value=final_float)
         e.add_field(name="New Balance", value="$" + new_balance)
         e.set_image(url=image_url)
-        e.set_footer(text="Warning! Buttons are only usable for 30 seconds.")
+        e.set_footer(text="Warning! Items are automatically sold after 30 seconds")
 
         #create buttons
         view = discord.ui.View(timeout=30)
@@ -393,6 +393,8 @@ class Unboxing(commands.Cog):
         inventory = discord.ui.Button(style=discord.ButtonStyle.green, label="Add to Inventory")
         view.add_item(item=sell)
         view.add_item(item=inventory)
+
+        is_sold = False
 
         #call back for adding to inventory
         async def inventory_callback(interact):
@@ -416,24 +418,25 @@ class Unboxing(commands.Cog):
                     await interact.response.send_message("Your inventory is full! Sell an item or buy more inventory space")
             else:
                 await interact.response.defer()
+
+        async def sell_item():
+            nonlocal new_balance, user
+            #refresh user document
+            user = database.user_data.find_one({"_id": ctx.author.id})
+            #change color to green, remove footer, change balance to have balance of skin
+            e.colour = discord.colour.Color.dark_gray()
+            e.set_footer(text="")
+
+            new_balance = str(Decimal(new_balance) + skin_price)
+            e.set_field_at(index=3, name="New Balance", value="$" + new_balance)
+            await msg.edit(embed=e, view=None)
+            database.user_data.update_one(user, {"$set" :{"balance" : new_balance}})
+            is_sold = True
                
         #call back for selling the item
         async def sell_callback(interact):
-            nonlocal new_balance, user
-
-            #refresh user document
-            user = database.user_data.find_one({"_id": ctx.author.id})
-            
             if ctx.author.id == interact.user.id:
-
-                #change color to green, remove footer, change balance to have balance of skin
-                e.colour = discord.colour.Color.dark_gray()
-                e.set_footer(text="")
-
-                new_balance = str(Decimal(new_balance) + skin_price)
-                e.set_field_at(index=3, name="New Balance", value="$" + new_balance)
-                await msg.edit(embed=e, view=None)
-                database.user_data.update_one(user, {"$set" :{"balance" : new_balance}})
+                await sell_item()
             else:
                 await interact.response.defer()
 
@@ -442,6 +445,10 @@ class Unboxing(commands.Cog):
         inventory.callback = inventory_callback
 
         msg = await ctx.send(embed=e, view=view)
+
+        await asyncio.sleep(30)
+        if not is_sold:
+            await sell_item()
 
     @commands.command(description="Take a chance to upgrade your skin to one of higher value", usage=f"""
     `{PREFIX}open <inventory item number> <item to recieve>`
