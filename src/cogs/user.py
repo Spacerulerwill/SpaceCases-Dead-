@@ -11,6 +11,7 @@ from src.util import database
 from src.util.constants import PREFIX, rarity_color_dict
 from datetime import timezone, datetime
 from decimal import Decimal
+from pymongo.collection import ReturnDocument
 
 # initialise class
 class User(commands.Cog):
@@ -122,8 +123,6 @@ class User(commands.Cog):
             item_name = item["name"]
             total_inventory_value += database.skin_data[item_name]["price"]
 
-        total_inventory_value = str((Decimal(total_inventory_value) / 100).quantize(Decimal('0.01')))
-
         if len(inventory_data) == 0:
             await ctx.send(f"User's inventory is empty! Use `{PREFIX}open` to start opening cases!")
             return
@@ -173,7 +172,35 @@ class User(commands.Cog):
             await interact.response.defer()
 
         async def sell_callback(interact):
-            database.user_data.find_and
+            nonlocal item_index, page, total_inventory_value, inventory_pages, inventory_data
+            if interact.user.id == ctx.author.id:
+                item_unformatted_name = page_data[item_index]["name"]
+                item_float = page_data[item_index]["float"]
+
+                #remove from inventory
+                new_user_data = database.user_data.find_one_and_update({
+                    "_id": ctx.author.id}, 
+                    {
+                        "$pull": {"inventory": {"name": item_unformatted_name, "float": item_float}},
+                        "$inc": {"balance": database.skin_data[item_unformatted_name]["price"]}
+                    }, 
+                    return_document=ReturnDocument.AFTER
+                )
+
+                total_inventory_value -= database.skin_data[item_unformatted_name]["price"]
+                inventory_data = new_user_data["inventory"]
+                inventory_pages = [inventory_data[x:x+25] for x in range(0, len(inventory_data), 25)]
+                
+                if item_index != 0:
+                    item_index -= 1
+                    await msg.edit(embed=await get_embed(), view=await get_view())
+                elif page != 0:
+                    page -= 1
+                    await msg.edit(embed=await get_embed(), view=await get_view())
+                else:
+                    await msg.delete()
+                    await ctx.send("Your inventory is now empty!")
+                    
             await interact.response.defer()
 
         async def get_embed():
@@ -192,7 +219,7 @@ class User(commands.Cog):
             e.add_field(name="Rarity", value=rarity)
             e.add_field(name="Float", value=item_float)
             e.add_field(name="Inventory Index", value=str(item_index + (page*25) + 1))
-            e.set_footer(text=f"Total inventory value: ${total_inventory_value}")
+            e.set_footer(text=f"Total inventory value: ${str((Decimal(total_inventory_value) / 100).quantize(Decimal('0.01')))}")
             e.set_image(url=image_url)
             e.set_thumbnail(url=discord_user.avatar.url)
 
