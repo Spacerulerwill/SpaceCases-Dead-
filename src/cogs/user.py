@@ -112,7 +112,6 @@ class User(commands.Cog):
         if discord_user == None:
             discord_user = ctx.author
             
-
         user = database.user_data.find_one({"_id": discord_user.id})
 
         if user == None:
@@ -177,6 +176,9 @@ class User(commands.Cog):
 
             await interact.response.defer()
 
+        async def sell_callback(interact):
+            await interact.response.defer()
+
         async def get_embed():
             item_unformatted_name = page_data[item_index]["name"]
             item_float = page_data[item_index]["float"]
@@ -216,9 +218,13 @@ class User(commands.Cog):
             prev_button.callback = prev_button_callback
             next_button = discord.ui.Button(label="▶", style=discord.ButtonStyle.gray)
             next_button.callback = next_button_callback
+            sell_button = discord.ui.Button(label="Sell", style=discord.ButtonStyle.red)
+            sell_button.callback = sell_callback
+
             view.add_item(select)
             view.add_item(prev_button)
             view.add_item(next_button)
+            view.add_item(sell_button)
 
             return view
         
