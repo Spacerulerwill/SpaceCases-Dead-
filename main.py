@@ -1,7 +1,6 @@
 #import all neccesary modules
 from aiohttp import ClientConnectorError
 from discord.ext import commands
-from discord.ext import commands
 
 import discord
 from os import environ

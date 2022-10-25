@@ -512,15 +512,51 @@ class Unboxing(commands.Cog):
         e.set_image(url=result_item_data["image_url"])
         e.set_thumbnail(url=start_item_data["image_url"])
 
-        view = discord.ui.View()
+        e.set_footer(text="Warning! Upgrade request automatically deleted after 30 seconds")
+
+        view = discord.ui.View(timeout=30)
         
         upgrade_button = discord.ui.Button(label="Upgrade", style=discord.ButtonStyle.green)
         cancel_button = discord.ui.Button(label="Cancel", style=discord.ButtonStyle.red)
 
+        is_cancelled = False
+
+        async def cancel_callback(interact):
+            nonlocal is_cancelled, user, user_inventory
+            if interact.user.id == ctx.author.id:
+                await msg.delete()
+                is_cancelled = True
+            else:
+                await interact.response.defer()
+
+        async def upgrade_callback(interact):
+            if interact.user.id == ctx.author.id:
+                user = database.user_data.find_one({"_id": ctx.author.id})
+
+                user_inventory = list(user["inventory"])
+                user_inventory[inventory_index] = {"name": result_item_name, "float": "1.0"}
+                database.user_data.update_one(user, {"$set" :{"inventory" : user_inventory}})
+
+                e.color = discord.Color.green()
+                e.title = "Upgrade Successfull!"
+                e.set_footer(text="")
+                await msg.edit(embed=e, view=None)
+
+            else:
+                await interact.response.defer()
+        
+        cancel_button.callback = cancel_callback
+        upgrade_button.callback = upgrade_callback
+
         view.add_item(upgrade_button)
         view.add_item(cancel_button)
 
-        await ctx.send(embed=e, view=view)
+        msg = await ctx.send(embed=e, view=view)
+
+        await asyncio.sleep(30)
+        if not is_cancelled:
+            await msg.delete()
+
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
