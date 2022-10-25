@@ -172,7 +172,7 @@ class User(commands.Cog):
             await interact.response.defer()
 
         async def sell_callback(interact):
-            nonlocal item_index, page, total_inventory_value, inventory_pages, inventory_data
+            nonlocal item_index, page, total_inventory_value, inventory_pages, inventory_data, page_data
             if interact.user.id == ctx.author.id:
                 item_unformatted_name = page_data[item_index]["name"]
                 item_float = page_data[item_index]["float"]
@@ -191,16 +191,17 @@ class User(commands.Cog):
                 inventory_data = new_user_data["inventory"]
                 inventory_pages = [inventory_data[x:x+25] for x in range(0, len(inventory_data), 25)]
                 
-                if item_index != 0:
-                    item_index -= 1
-                    await msg.edit(embed=await get_embed(), view=await get_view())
-                elif page != 0:
-                    page -= 1
-                    await msg.edit(embed=await get_embed(), view=await get_view())
-                else:
+                if page == 0 and item_index == 0:
                     await msg.delete()
                     await ctx.send("Your inventory is now empty!")
-                    
+                    return
+                else:
+                    page = 0
+                    item_index = 0
+
+                page_data = inventory_pages[page]
+                await msg.edit(embed=await get_embed(), view=await get_view())
+
             await interact.response.defer()
 
         async def get_embed():
@@ -229,7 +230,6 @@ class User(commands.Cog):
             nonlocal select
 
             view = discord.ui.View()
-
             select_options = []
             for index, item in enumerate(page_data):
                 unformatted_name = item["name"]
