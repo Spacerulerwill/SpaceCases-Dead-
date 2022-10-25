@@ -2,10 +2,7 @@ from decimal import Decimal
 
 PREFIX = "cs "
 
-KEY_PRICE = Decimal('2.5')
-
-NO_PRICE_VALUE = 2500
-
+KEY_PRICE = 250
 
 rarity_color_dict = {
     "Milspec": 4942335,

@@ -5,10 +5,11 @@ import concurrent.futures
 from re import sub
 from src.util.format import remove_skin_name_formatting
 from src.util.constants import case_wear_ranges
+from decimal import Decimal
 
 MAX_THREADS = 30
 
-NO_PRICE_FOUND = "3000.0"
+NO_PRICE_FOUND = 300000
 
 result = {}
 
@@ -106,15 +107,12 @@ def scrape_endpoint(endpoint):
 
 
 def scrape_skin_link(skin_link):
-
   # get html source
   r = requests.get(skin_link)
   soup = BeautifulSoup(r.content, "html.parser")
 
   # get skins formatted and unformatted name
-  formatted_name = soup.find("div", {
-    "class": ["well", "result-box", "nomargin"]
-  }).find("h2").text
+  formatted_name = soup.select_one("div.well.result-box.nomargin").find("h2").text
 
   is_vanilla_knife = "★ (Vanilla)" in formatted_name # vanilla knives are difficult
 
@@ -133,6 +131,7 @@ def scrape_skin_link(skin_link):
   else:
     min_float = 0.0
     max_float = 1.0
+
 
   # best and worst conditions
   for index, lower_value in case_wear_ranges.items():
@@ -173,9 +172,11 @@ def scrape_skin_link(skin_link):
     price = NO_PRICE_FOUND
 
     if bitskins_price != "":
-      price = sub(r'[^\d.]', '', bitskins_price)
+      price_str = sub(r'[^\d.]', '', bitskins_price)
+      price = int(Decimal(price_str) * 100)
     elif steam_price != "":
-      price = sub(r'[^\d.]', '', steam_price)
+      price_str = sub(r'[^\d.]', '', steam_price)
+      price = int(Decimal(price_str) * 100)
 
     # if a vanilla knife, create 5 identical entries with different wear ratings in their names (circumvents difficulty later for vanilla knives)
     if is_vanilla_knife:

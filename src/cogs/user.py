@@ -25,13 +25,13 @@ class User(commands.Cog):
         if database.user_data.find_one({"_id": ctx.author.id}) == None:
             profile = {
                 "_id": ctx.author.id,
-                "balance": '0.0',
+                "balance": 0,
                 "last-claim": "01/01/1970",
                 "inventory": [],
                 "inventory-size": 5,
                 "containers-opened": 0,
-                "total-spent": '0.0',
-                "total-return": '0.0',
+                "total-spent": 0,
+                "total-return": 0,
             }
 
             database.user_data.insert_one(profile)
@@ -64,14 +64,9 @@ class User(commands.Cog):
         dmy = now.strftime("%d/%m/%Y")
 
         #see if it has been atleast a day
-        if dmy != dt:
-            #add money
-            current_balance = Decimal(user['balance'])
-            
-            database.user_data.update_one({"_id":ctx.author.id},{"$set" :{"balance" : str(current_balance+100)}})
-
-            #update last claim date
-            database.user_data.update_one({"_id":ctx.author.id},{"$set" :{"last-claim" : str(dmy)}})
+        if dmy != dt:            
+            #find and update current balance and last claim
+            database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$inc" :{"balance" : 10000}, "$set": {"last-claim" : str(dmy)}})
 
             await ctx.send("You claimed $100! Come back tomorrow to claim again")
         else:
@@ -99,8 +94,8 @@ class User(commands.Cog):
             else:
                 await ctx.send(f'{member.display_name} has not registered yet')
         else:
-            user_balance = Decimal(user["balance"])
-            await ctx.send(f"{name} balance is: ${'{:.2f}'.format(user_balance)}")
+            user_balance = (Decimal(user["balance"])/100).quantize(Decimal('0.01'))
+            await ctx.send(f"{name} balance is: ${user_balance}")
 
     @commands.command(description="View a user's inventory", usage=f"""
     `{PREFIX}inventory <user>`
@@ -120,13 +115,14 @@ class User(commands.Cog):
 
         inventory_data = user["inventory"]
 
-        total_inventory_value = Decimal('0.0')
+        total_inventory_value = 0
 
         #calculate inventory value
         for item in inventory_data:
             item_name = item["name"]
-            price = Decimal(database.skin_data[item_name]["price"])
-            total_inventory_value += price
+            total_inventory_value += database.skin_data[item_name]["price"]
+
+        total_inventory_value = str((Decimal(total_inventory_value) / 100).quantize(Decimal('0.01')))
 
         if len(inventory_data) == 0:
             await ctx.send(f"User's inventory is empty! Use `{PREFIX}open` to start opening cases!")
@@ -177,6 +173,7 @@ class User(commands.Cog):
             await interact.response.defer()
 
         async def sell_callback(interact):
+            database.user_data.find_and
             await interact.response.defer()
 
         async def get_embed():
@@ -187,7 +184,8 @@ class User(commands.Cog):
             image_url = item_data["image_url"]
             rarity = item_data["rarity"]
             rarity_color = rarity_color_dict[rarity]
-            item_price = item_data["price"]
+            item_price_int = item_data["price"]
+            item_price = str((Decimal(item_price_int)/ 100).quantize(Decimal('0.01')))
 
             e = discord.Embed(title=f"{name}'s inventory - Page {page+1}/{len(inventory_pages)}\n{item_formatted_name}", color=rarity_color)
             e.add_field(name="Price", value="$" + item_price)

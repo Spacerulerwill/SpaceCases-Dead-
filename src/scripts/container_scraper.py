@@ -5,6 +5,7 @@ import requests
 import json
 from src.util.format import remove_skin_name_formatting
 from re import sub
+from decimal import Decimal
 
 result = {}
 container_endpoints = [
@@ -56,7 +57,7 @@ def scrape_containers():
 
     container_price = container_price.split(" ")[0]
     container_price = sub(r'[^\d.]', '', container_price)
-    container_data["price"] = container_price
+    container_data["price"] = int(Decimal(container_price) * 100)
 
     container_img_url = container_soup.find("a", {"class":"market-button-item"}).find("img")["src"]
 

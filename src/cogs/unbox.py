@@ -85,7 +85,7 @@ class Unboxing(commands.Cog):
             weapon_data = database.skin_data[item_query]
 
             formatted_name = weapon_data["formatted_name"]
-            price = "$" + weapon_data["price"]
+            price = "$" + str((Decimal(weapon_data["price"]) / 100).quantize(Decimal('0.01')))
 
             image_url = weapon_data["image_url"]
             rarity = weapon_data["rarity"]
@@ -120,7 +120,7 @@ class Unboxing(commands.Cog):
 
         container_data = database.containers[container]
         container_name = container_data["formatted_name"]
-        container_price = container_data["price"]
+        container_price = str((Decimal(container_data["price"]) / 100).quantize(Decimal('0.01')))
         container_image_url = container_data["image_url"]
         
         rarities = {}
@@ -208,9 +208,9 @@ class Unboxing(commands.Cog):
             has_modifier_price = False
 
             min_price = float('inf')
-            max_price = 0.0
+            max_price = 0
             for i in range(best_condition_index, worst_condition_index+1):
-                price = Decimal(database.skin_data[conditions[i].lower() + " " + item]["price"]).quantize(Decimal('0.01'))
+                price = (Decimal(database.skin_data[conditions[i].lower() + " " + item]["price"] )/100).quantize(Decimal('0.01'))
                 if price < min_price:
                     min_price = price
                 if price > max_price:
@@ -227,7 +227,7 @@ class Unboxing(commands.Cog):
                 min_modifier_price = float('inf')
                 max_modifier_price = 0.0
                 for i in range(best_condition_index, worst_condition_index+1):
-                    price = Decimal(database.skin_data[modifier + conditions[i].lower() + " " + item]["price"]).quantize(Decimal('0.01'))
+                    price = (Decimal(database.skin_data[modifier + conditions[i].lower() + " " + item]["price"])/100).quantize(Decimal('0.01'))
                     if price < min_modifier_price:
                         min_modifier_price = price
                     if price > max_modifier_price:
@@ -297,22 +297,14 @@ class Unboxing(commands.Cog):
 
         container = database.containers[container_name]
 
-        container_price = Decimal(container["price"])
+        container_price = container["price"]
 
-        user_balance = Decimal(user["balance"])
-        user_total_spent = Decimal(user["total-spent"])
-        user_total_return = Decimal(user["total-return"])
-        user_containers_opened = user["containers-opened"]
+        user_balance = user["balance"]
 
         #if they don't have enough
         if user_balance < container_price + KEY_PRICE:
             await ctx.send("Not enough balance to perform this action")
             return
-
-        #subtract from balance, increase total spent, and containers opened
-        new_balance = str(user_balance - (container_price + KEY_PRICE))
-        new_total_spent = str(user_total_spent + container_price + KEY_PRICE)
-        new_containers_opened = user_containers_opened + 1
 
         # get rarity
         rarity_rand = random.random()
@@ -354,7 +346,6 @@ class Unboxing(commands.Cog):
                 skin_wear = conditions[wear]
                 break
 
-
         final_float = str(final_float)
 
         #if is stattrak?
@@ -372,18 +363,20 @@ class Unboxing(commands.Cog):
         skin_rarity = database.skin_data[skin_name]["rarity"]
         color = rarity_color_dict[skin_rarity]
         
-        skin_price = Decimal(database.skin_data[skin_name]["price"]).quantize(Decimal('0.01')) # 2 dp
-
-        new_total_return = str(user_total_return + skin_price)
+        skin_price = database.skin_data[skin_name]["price"]
         
-        #update user data
-        database.user_data.update_one(user,{"$set" :{"balance" : new_balance, "total-spent": new_total_spent, "total-return": new_total_return, "containers-opened": new_containers_opened}})
+        #decrement balance, increment total spent, increase total return and containers opened
+        database.user_data.find_one_and_update({"_id": ctx.author.id},{"$inc" :{
+            "balance" : -(container_price + KEY_PRICE), 
+            "total-spent": container_price + KEY_PRICE, 
+            "total-return": skin_price, 
+            "containers-opened": 1
+        }})
 
         e = discord.Embed(title=formatted_name, color=color)
-        e.add_field(name="Market Value", value="$" + str(skin_price))
+        e.add_field(name="Market Value", value="$" + str((Decimal(skin_price) / 100).quantize(Decimal('0.01'))))
         e.add_field(name="Rarity", value=skin_rarity)
-        e.add_field(name="Float", value=final_float)
-        e.add_field(name="New Balance", value="$" + new_balance)
+        e.add_field(name="Float", value=final_float) 
         e.set_image(url=image_url)
         e.set_footer(text="Warning! Items are automatically sold after 30 seconds")
 
@@ -407,9 +400,9 @@ class Unboxing(commands.Cog):
                 inventory = list(user["inventory"])
 
                 if len(inventory) < user["inventory-size"]:
-                    inventory.append({"name": skin_name, "float": final_float})
 
-                    database.user_data.update_one(user,{"$set" :{"inventory" : inventory}})
+                    # add to user inventory
+                    database.user_data.find_one_and_update({"_id": ctx.author.id},{"$push" :{"inventory" : {"name": skin_name, "float": final_float}}})
 
                     e.colour = discord.colour.Color.green()
                     e.set_footer(text="")
@@ -420,17 +413,13 @@ class Unboxing(commands.Cog):
                 await interact.response.defer()
 
         async def sell_item():
-            nonlocal new_balance, user, is_sold
-            #refresh user document
-            user = database.user_data.find_one({"_id": ctx.author.id})
+            nonlocal user, is_sold
             #change color to green, remove footer, change balance to have balance of skin
             e.colour = discord.colour.Color.dark_gray()
             e.set_footer(text="")
 
-            new_balance = str(Decimal(new_balance) + skin_price)
-            e.set_field_at(index=3, name="New Balance", value="$" + new_balance)
             await msg.edit(embed=e, view=None)
-            database.user_data.update_one(user, {"$set" :{"balance" : new_balance}})
+            database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$inc" :{"balance" : skin_price}})
             is_sold = True
                
         #call back for selling the item
@@ -457,105 +446,7 @@ class Unboxing(commands.Cog):
     `<item to recieve>` - the name of the item you want to upgrade too
     """)
     async def upgrade(self, ctx, inventory_index:int, *args):
-        inventory_index -= 1
-
-        user = database.user_data.find_one({"_id": ctx.author.id})
-
-        if user == None:
-            await ctx.send(f"You aren't registed! Use `{PREFIX}register` to register")
-            return
-        
-        user_inventory = user["inventory"]
-
-        if inventory_index >= len(user_inventory):
-            await ctx.send(f"Invalid item number!")
-            return
-
-        start_item_name = user_inventory[inventory_index]["name"]
-        start_item_float = user_inventory[inventory_index]["float"]
-
-        result_item_name = " ".join(args[:]).strip().lower()
-
-        if result_item_name not in database.skin_data:
-            await ctx.send(f"Result item does not exist!")
-            return
-
-        start_item_data = database.skin_data[start_item_name]
-        result_item_data = database.skin_data[result_item_name]
-
-        start_item_formatted_name = start_item_data["formatted_name"]
-        result_item_formatted_name = result_item_data["formatted_name"]
-
-        color = rarity_color_dict[result_item_data["rarity"]]
-        
-        try:
-            start_item_price = Decimal(start_item_data["price"])
-            result_item_price = Decimal(result_item_data["price"])
-
-            if result_item_price <= start_item_price:
-                await ctx.send("Result item must have a greater price than your starting item!")
-                return
-        except KeyError:
-            await ctx.send(f"Result item does not exist!")
-            return
-
-        price_multiplier = result_item_price / start_item_price
-
-        upgrade_chance = (Decimal('1.0') / price_multiplier) * 100
-
-        e = discord.Embed(title=f"Upgrading {start_item_formatted_name} to {result_item_formatted_name}", color=color)
-
-        e.add_field(name="Price Multiplier", value=str(price_multiplier.quantize(Decimal('0.01'))) + "X")
-
-        e.add_field(name="Upgrade Chance", value=str(upgrade_chance.quantize(Decimal('0.01'))) + "%")
-
-        e.set_image(url=result_item_data["image_url"])
-        e.set_thumbnail(url=start_item_data["image_url"])
-
-        e.set_footer(text="Warning! Upgrade request automatically deleted after 30 seconds")
-
-        view = discord.ui.View(timeout=30)
-        
-        upgrade_button = discord.ui.Button(label="Upgrade", style=discord.ButtonStyle.green)
-        cancel_button = discord.ui.Button(label="Cancel", style=discord.ButtonStyle.red)
-
-        is_cancelled = False
-
-        async def cancel_callback(interact):
-            nonlocal is_cancelled, user, user_inventory
-            if interact.user.id == ctx.author.id:
-                await msg.delete()
-                is_cancelled = True
-            else:
-                await interact.response.defer()
-
-        async def upgrade_callback(interact):
-            if interact.user.id == ctx.author.id:
-                user = database.user_data.find_one({"_id": ctx.author.id})
-
-                user_inventory = list(user["inventory"])
-                user_inventory[inventory_index] = {"name": result_item_name, "float": "1.0"}
-                database.user_data.update_one(user, {"$set" :{"inventory" : user_inventory}})
-
-                e.color = discord.Color.green()
-                e.title = "Upgrade Successfull!"
-                e.set_footer(text="")
-                await msg.edit(embed=e, view=None)
-
-            else:
-                await interact.response.defer()
-        
-        cancel_button.callback = cancel_callback
-        upgrade_button.callback = upgrade_callback
-
-        view.add_item(upgrade_button)
-        view.add_item(cancel_button)
-
-        msg = await ctx.send(embed=e, view=view)
-
-        await asyncio.sleep(30)
-        if not is_cancelled:
-            await msg.delete()
+        pass
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

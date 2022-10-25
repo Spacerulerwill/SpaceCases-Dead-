@@ -7,11 +7,7 @@ from os import environ
 from src.util import database
 from src.util.constants import PREFIX
 
-#list of cogs
-cogs = ["unbox", "user", "help"]   
-
-# start database connections
-database.init()
+cogs = ["unbox", "user", "help"]  
 
 #try read token from text file, if failed read token from server environment variable
 try:
@@ -30,11 +26,12 @@ intents = discord.Intents().all()
 bot_instance = commands.Bot(command_prefix=PREFIX, intents=intents, help_command=None) #define command decorator
 
 def run_bot():
+    global bot_instance
     try:
         bot_instance.run(TOKEN) #run the client using using my bot's token
     except ClientConnectorError: 
         print("Failed to connect to discord.py")
-    
+        
 @bot_instance.event
 async def on_ready():
 
@@ -48,6 +45,7 @@ async def on_ready():
 
     #set playing game to !helpcs open csgo weapon case
     await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
-    
+        
 if __name__ == "__main__":
+    database.init()
     run_bot()
