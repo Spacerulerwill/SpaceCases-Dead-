@@ -197,7 +197,7 @@ class User(commands.Cog):
                 
                 if item_index > 0:
                     item_index -= 1
-                elif len(inventory_pages) > 1:
+                elif len(inventory_pages) > 0:
                     page -= 1
                 elif len(inventory_pages) == 0 and item_index == 0:
                     await msg.delete()
