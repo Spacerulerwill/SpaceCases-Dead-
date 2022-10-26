@@ -8,7 +8,7 @@
 import discord
 from discord.ext import commands
 from src.util import database
-from src.util.constants import PREFIX, rarity_color_dict
+from src.util.constants import PREFIX, rarity_color_dict, INVENTORY_ELEMS_PER_PAGE
 from datetime import timezone, datetime
 from decimal import Decimal
 from pymongo.collection import ReturnDocument
@@ -129,7 +129,7 @@ class User(commands.Cog):
 
         page = 0
         item_index = 0
-        inventory_pages = [inventory_data[x:x+25] for x in range(0, len(inventory_data), 25)]
+        inventory_pages = [inventory_data[x:x+INVENTORY_ELEMS_PER_PAGE] for x in range(0, len(inventory_data), INVENTORY_ELEMS_PER_PAGE)]
         page_data = inventory_pages[page]
 
         select = None
@@ -146,7 +146,7 @@ class User(commands.Cog):
             await interact.response.defer()
 
         async def next_button_callback(interact):
-            nonlocal page, item_index
+            nonlocal page, item_index, page_data
             if interact.user.id == ctx.author.id:
                 if page == len(inventory_pages)-1:
                     page = 0
@@ -154,18 +154,21 @@ class User(commands.Cog):
                     page += 1
                 item_index = 0
 
+                page_data = inventory_pages[page]
                 await msg.edit(embed=await get_embed(), view=await get_view())
 
             await interact.response.defer()
 
         async def prev_button_callback(interact):
-            nonlocal page, item_index
+            nonlocal page, item_index, page_data
             if interact.user.id == ctx.author.id:
                 if page == 0:
                     page = len(inventory_pages)-1
                 else:
                     page -= 1
                 item_index = 0
+
+                page_data = inventory_pages[page]
 
                 await msg.edit(embed=await get_embed(), view=await get_view())
 
@@ -189,15 +192,17 @@ class User(commands.Cog):
 
                 total_inventory_value -= database.skin_data[item_unformatted_name]["price"]
                 inventory_data = new_user_data["inventory"]
-                inventory_pages = [inventory_data[x:x+25] for x in range(0, len(inventory_data), 25)]
+                inventory_pages = [inventory_data[x:x+INVENTORY_ELEMS_PER_PAGE] for x in range(0, len(inventory_data), INVENTORY_ELEMS_PER_PAGE)]
                 
-                if page == 0 and item_index == 0:
+                
+                if item_index > 0:
+                    item_index -= 1
+                elif len(inventory_pages) > 1:
+                    page -= 1
+                elif len(inventory_pages) == 0 and item_index == 0:
                     await msg.delete()
                     await ctx.send("Your inventory is now empty!")
                     return
-                else:
-                    page = 0
-                    item_index = 0
 
                 page_data = inventory_pages[page]
                 await msg.edit(embed=await get_embed(), view=await get_view())
@@ -219,7 +224,7 @@ class User(commands.Cog):
             e.add_field(name="Price", value="$" + item_price)
             e.add_field(name="Rarity", value=rarity)
             e.add_field(name="Float", value=item_float)
-            e.add_field(name="Inventory Index", value=str(item_index + (page*25) + 1))
+            e.add_field(name="Inventory Index", value=str(item_index + (page*INVENTORY_ELEMS_PER_PAGE) + 1))
             e.set_footer(text=f"Total inventory value: ${str((Decimal(total_inventory_value) / 100).quantize(Decimal('0.01')))}")
             e.set_image(url=image_url)
             e.set_thumbnail(url=discord_user.avatar.url)

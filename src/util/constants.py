@@ -1,8 +1,8 @@
-from decimal import Decimal
-
 PREFIX = "cs "
 
 KEY_PRICE = 250
+
+INVENTORY_ELEMS_PER_PAGE = 5
 
 rarity_color_dict = {
     "Milspec": 4942335,
@@ -13,7 +13,7 @@ rarity_color_dict = {
 }
 
 case_rarity_odds = {
-    "special items": 0.9974,
+    "rares items": 0.9974,
     "covert": 0.9910,
     "classified": 0.9590,
     "restricted": 0.7992,
