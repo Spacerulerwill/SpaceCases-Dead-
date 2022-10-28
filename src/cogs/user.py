@@ -200,8 +200,7 @@ class User(commands.Cog):
                 elif len(inventory_pages) > 0:
                     page -= 1
                 elif len(inventory_pages) == 0 and item_index == 0:
-                    await msg.delete()
-                    await ctx.send("Your inventory is now empty!")
+                    await msg.edit(content="Your inventory is now empty!", embed=None, view=None)
                     return
 
                 page_data = inventory_pages[page]
