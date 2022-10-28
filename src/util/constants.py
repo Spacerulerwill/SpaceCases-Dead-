@@ -36,3 +36,5 @@ case_wear_ranges = {
     1: 0.07,
     0: 0.00
 }
+
+round_sig_fig = lambda number, sig_figs: '{:g}'.format(float('{:.{p}g}'.format(number, p=sig_figs)))

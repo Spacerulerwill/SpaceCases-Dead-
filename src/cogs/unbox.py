@@ -10,7 +10,7 @@ import discord
 from discord.ext import commands
 from src.util.constants import PREFIX, KEY_PRICE
 from src.util.format import remove_skin_name_formatting
-from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, case_wear_ranges
+from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, case_wear_ranges, round_sig_fig
 from src.util import database
 import random
 from decimal import Decimal
@@ -438,14 +438,59 @@ class Unboxing(commands.Cog):
         if not is_sold:
             await sell_item()
 
-    @commands.command(description="Take a chance to upgrade your skin to one of higher value", usage=f"""
+    @commands.command(description="Take a chance to upgrade your skin to one of higher value, if you lose the chance then you lose your skin!", usage=f"""
     `{PREFIX}open <inventory item number> <item to recieve>`
     **Arguments**
     `<inventory item slot>` - the inventory slot number of the item you want to upgrade
-    `<item to recieve>` - the name of the item you want to upgrade too
+    `<item to recieve>` - the name of the item you want to recieve
     """)
     async def upgrade(self, ctx, inventory_index:int, *args):
-        pass
+        user = database.user_data.find_one({"_id": ctx.author.id})
+
+        if user == None:
+            await ctx.send(f"You aren't registed! Use `{PREFIX}register` to register")
+            return
+
+        inventory_index -= 1
+        result_item_unformatted_name = " ".join(args[:]).strip().lower()
+
+        if inventory_index < 0:
+            await ctx.send("Inventory index must be 1 or greater")
+            return
+
+        if inventory_index >= len(user["inventory"]):
+            await ctx.send(f"No item exists in inventory at index: {inventory_index+1}")
+            return
+        
+        if result_item_unformatted_name not in database.skin_data:
+            await ctx.send(f'No item with name "{result_item_unformatted_name}" exists!')
+
+        start_item_unformatted_name = user["inventory"][inventory_index]["name"]
+        result_item_data = database.skin_data[result_item_unformatted_name]
+        start_item_data = database.skin_data[start_item_unformatted_name]
+
+        e = discord.Embed(description=f'**Upgrading**: {start_item_data["formatted_name"]}\n**To**: {result_item_data["formatted_name"]}')
+
+        e.set_image(url=result_item_data["image_url"])
+        e.set_thumbnail(url=start_item_data["image_url"])
+
+        start_item_price = (Decimal(start_item_data["price"]) / 100).quantize(Decimal('0.01'))
+        result_item_price = (Decimal(result_item_data["price"]) / 100).quantize(Decimal('0.01'))
+
+        price_multiplier = (result_item_price / start_item_price).quantize(Decimal('0.01'))
+
+        e.add_field(name="Price Multipler", value=f"{str(price_multiplier)}X")
+
+        percentage_chance = 1.0 / float(price_multiplier)
+        percentage_chance_2_sig_fig = round_sig_fig(percentage_chance, 2) + "X"
+        e.add_field(name="Percentage Chance", value=percentage_chance_2_sig_fig)
+
+        view = discord.ui.View(timeout=30)
+        upgrade_button = discord.ui.Button(label="Upgrade", style=discord.ButtonStyle.green)
+        view.add_item(upgrade_button)
+
+        await ctx.send(embed=e, view=view)
+        
 
     @upgrade.error
     async def upgade_error(self, ctx, error):
