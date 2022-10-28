@@ -12,16 +12,17 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(description="This is the command you just used", usage="Literally why are you looking at this")
+    @commands.command()
     async def help(self, ctx, command_name=None):
         if command_name == None:
             e = discord.Embed(description=f'Use `{PREFIX}help <command>` to gain more information about that command')
 
             for cog in self.bot.cogs:
-                field_value = ""
-                for command in self.bot.get_cog(cog).get_commands():
-                    field_value += command.name + "\n"
-                e.add_field(name=cog, value=field_value)
+                if cog != "Help":
+                    field_value = ""
+                    for command in self.bot.get_cog(cog).get_commands():
+                        field_value += command.name + "\n"
+                    e.add_field(name=cog, value=field_value)
 
             await ctx.send(embed=e)
         else:

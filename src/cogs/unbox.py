@@ -272,7 +272,7 @@ class Unboxing(commands.Cog):
         await ctx.send(embed=e)
 
     @containers.error
-    async def containerlist_error(self, ctx, error):
+    async def containers_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Page number must be an integer!")
 
@@ -409,8 +409,8 @@ class Unboxing(commands.Cog):
                     await  msg.edit(embed=e, view=None)
                 else:
                     await interact.response.send_message("Your inventory is full! Sell an item or buy more inventory space")
-            else:
-                await interact.response.defer()
+            
+            await interact.response.defer()
 
         async def sell_item():
             nonlocal user, is_sold
@@ -426,8 +426,7 @@ class Unboxing(commands.Cog):
         async def sell_callback(interact):
             if ctx.author.id == interact.user.id:
                 await sell_item()
-            else:
-                await interact.response.defer()
+            await interact.response.defer()
 
         #set callabcks
         sell.callback = sell_callback
@@ -447,6 +446,11 @@ class Unboxing(commands.Cog):
     """)
     async def upgrade(self, ctx, inventory_index:int, *args):
         pass
+
+    @upgrade.error
+    async def upgade_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Inventory index must be an integer!")
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

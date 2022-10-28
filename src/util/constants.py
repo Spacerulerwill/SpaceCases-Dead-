@@ -2,7 +2,7 @@ PREFIX = "cs "
 
 KEY_PRICE = 250
 
-INVENTORY_ELEMS_PER_PAGE = 5
+INVENTORY_ELEMS_PER_PAGE = 10
 
 rarity_color_dict = {
     "Milspec": 4942335,
