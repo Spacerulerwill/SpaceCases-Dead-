@@ -220,7 +220,8 @@ class User(commands.Cog):
             item_price_int = item_data["price"]
             item_price = str((Decimal(item_price_int)/ 100).quantize(Decimal('0.01')))
 
-            e = discord.Embed(title=f"{name}'s inventory - Page {page+1}/{len(inventory_pages)}\n{item_formatted_name}", color=rarity_color)
+            e = discord.Embed(title=f"{name}'s inventory - Page {page+1}/{len(inventory_pages)}", color=rarity_color)
+            e.add_field(name="Item Name", value=item_formatted_name, inline=False)
             e.add_field(name="Price", value="$" + item_price)
             e.add_field(name="Rarity", value=rarity)
             e.add_field(name="Float", value=item_float)
