@@ -36,7 +36,7 @@ class User(commands.Cog):
             }
 
             database.user_data.insert_one(profile)
-            await ctx.send(f"Registered! Use `{PREFIX}profile` to see your profile")
+            await ctx.send(f"Registered! Use `{PREFIX}claim` to claim some money!")
         else:
             await ctx.send("You are already registered!")
 

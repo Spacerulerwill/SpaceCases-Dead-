@@ -22,6 +22,10 @@ class Minigames(commands.Cog):
         if user == None:
             await ctx.send(f"You aren't registed! Use `{PREFIX}register` to register")
             return
+
+        if user["balance"] == 0:
+            await ctx.send("You have no balance, come back when you aren't broke!")
+            return
         
         if random.random() < 0.5:
             database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$inc" :{"balance" : user["balance"]}})
