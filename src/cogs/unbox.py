@@ -466,6 +466,7 @@ class Unboxing(commands.Cog):
             await ctx.send(f'No item with name "{result_item_unformatted_name}" exists!')
 
         start_item_unformatted_name = user["inventory"][inventory_index]["name"]
+        start_item_float = user["inventory"][inventory_index]["float"]
         result_item_data = database.skin_data[result_item_unformatted_name]
         start_item_data = database.skin_data[start_item_unformatted_name]
 
@@ -482,11 +483,34 @@ class Unboxing(commands.Cog):
         e.add_field(name="Price Multipler", value=f"{str(price_multiplier)}X")
 
         percentage_chance = 1.0 / float(price_multiplier)
-        percentage_chance_2_sig_fig = round_sig_fig(percentage_chance, 2) + "X"
+        percentage_chance_2_sig_fig = round_sig_fig(percentage_chance * 100, 2) + "%"
         e.add_field(name="Percentage Chance", value=percentage_chance_2_sig_fig)
+
+        async def upgrade_callback(interact):      
+            nonlocal e
+            if interact.user.id == ctx.author.id:
+                # percetange chance
+                if random.random() < percentage_chance:
+                    e.color = discord.Color.green()
+                    database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$set" :{f"inventory.{inventory_index}" : {"name": result_item_unformatted_name, "float": 1.0}}})
+                else:
+                    e.color= discord.Color.red()
+                    database.user_data.find_one_and_update({
+                    "_id": ctx.author.id}, 
+                    {
+                        "$pull": {"inventory": {"name": start_item_unformatted_name, "float": start_item_float}},
+                    }
+                )
+
+                await interact.response.edit_message(embed=e, view=None)
+            else:
+                await interact.response.defer()
+
 
         view = discord.ui.View(timeout=30)
         upgrade_button = discord.ui.Button(label="Upgrade", style=discord.ButtonStyle.green)
+        upgrade_button.callback = upgrade_callback
+
         view.add_item(upgrade_button)
 
         await ctx.send(embed=e, view=view)
