@@ -397,10 +397,11 @@ class Unboxing(commands.Cog):
         view.add_item(item=inventory)
 
         is_sold = False
+        is_added_to_inventory = False
 
         #call back for adding to inventory
         async def inventory_callback(interact):
-            nonlocal user
+            nonlocal user, is_added_to_inventory
 
             if ctx.author.id == interact.user.id:
                 user = database.user_data.find_one({"_id": ctx.author.id})
@@ -412,7 +413,7 @@ class Unboxing(commands.Cog):
 
                     # add to user inventory
                     database.user_data.find_one_and_update({"_id": ctx.author.id},{"$push" :{"inventory" : {"name": skin_name, "float": final_float}}})
-
+                    is_added_to_inventory = True
                     database.user_actions[ctx.author.id] = None
 
                     e.colour = discord.colour.Color.green()
@@ -449,7 +450,7 @@ class Unboxing(commands.Cog):
         msg = await ctx.send(embed=e, view=view)
 
         await asyncio.sleep(30)
-        if not is_sold:
+        if not is_sold and not is_added_to_inventory:
             await sell_item()
 
     @commands.command(description="Take a chance to upgrade your skin to one of higher value, if you lose the chance then you lose your skin!", usage=f"""
@@ -541,6 +542,10 @@ class Unboxing(commands.Cog):
             else:
                 await interact.response.defer()
 
+        async def view_timeout_callback():
+            await msg.delete()
+            database.user_actions[ctx.author.id] = None
+
         view = discord.ui.View(timeout=30)
         upgrade_button = discord.ui.Button(label="Upgrade", style=discord.ButtonStyle.green)
         upgrade_button.callback = upgrade_callback
@@ -550,6 +555,7 @@ class Unboxing(commands.Cog):
 
         view.add_item(upgrade_button)
         view.add_item(cancel_button)
+        view.on_timeout = view_timeout_callback
 
         msg = await ctx.send(embed=e, view=view)
         

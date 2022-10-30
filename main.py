@@ -22,7 +22,7 @@ except FileNotFoundError:
 #use all intents
 intents = discord.Intents().all()
 
-#instanciate bot with prefix, intents and disabled help command (uses custom command)
+#instanciate bot with prefix, intents and disabled help command (uses custom command) 
 bot_instance = commands.Bot(command_prefix=PREFIX, intents=intents, help_command=None) #define command decorator
 
 def run_bot():

@@ -34,7 +34,7 @@ class User(commands.Cog):
                 "total-spent": 0,
                 "total-return": 0,
             }
-
+            database.user_actions[ctx.author.id] = None
             database.user_data.insert_one(profile)
             await ctx.send(f"Registered! Use `{PREFIX}claim` to claim some money!")
         else:
@@ -201,7 +201,6 @@ class User(commands.Cog):
                 total_inventory_value -= database.skin_data[item_unformatted_name]["price"]
                 inventory_data = new_user_data["inventory"]
                 inventory_pages = [inventory_data[x:x+INVENTORY_ELEMS_PER_PAGE] for x in range(0, len(inventory_data), INVENTORY_ELEMS_PER_PAGE)]
-                
                 
                 if item_index > 1:
                     item_index -= 1
