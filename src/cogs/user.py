@@ -116,6 +116,10 @@ class User(commands.Cog):
 
         inventory_data = user["inventory"]
 
+        if len(inventory_data) == 0:
+            await ctx.send(f"User's inventory is empty! Use `{PREFIX}open` to start opening cases!")
+            return
+
         total_inventory_value = 0
 
         #calculate inventory value
@@ -123,9 +127,13 @@ class User(commands.Cog):
             item_name = item["name"]
             total_inventory_value += database.skin_data[item_name]["price"]
 
-        if len(inventory_data) == 0:
-            await ctx.send(f"User's inventory is empty! Use `{PREFIX}open` to start opening cases!")
+        # check they have no current action
+        current_action = database.user_actions[ctx.author.id]
+        if current_action not in [None, database.OPENING_CASE]:
+            await ctx.send(database.user_action_responses[current_action])
             return
+        
+        database.user_actions[ctx.author.id] = database.IN_INVENTORY
 
         page = 0
         item_index = 0
@@ -195,9 +203,9 @@ class User(commands.Cog):
                 inventory_pages = [inventory_data[x:x+INVENTORY_ELEMS_PER_PAGE] for x in range(0, len(inventory_data), INVENTORY_ELEMS_PER_PAGE)]
                 
                 
-                if item_index > 0:
+                if item_index > 1:
                     item_index -= 1
-                elif len(inventory_pages) > 0:
+                elif len(inventory_pages) > 1:
                     page -= 1
                 elif len(inventory_pages) == 0 and item_index == 0:
                     await msg.edit(content="Your inventory is now empty!", embed=None, view=None)
@@ -208,6 +216,13 @@ class User(commands.Cog):
 
             await interact.response.defer()
 
+        async def close_callback(interact):
+            if interact.user.id == ctx.author.id:
+                database.user_actions[ctx.author.id] = None
+                await msg.delete()
+            else:
+                await interact.response.defer()
+            
         async def get_embed():
             item_unformatted_name = page_data[item_index]["name"]
             item_float = page_data[item_index]["float"]
@@ -250,11 +265,14 @@ class User(commands.Cog):
             next_button.callback = next_button_callback
             sell_button = discord.ui.Button(label="Sell", style=discord.ButtonStyle.red)
             sell_button.callback = sell_callback
+            close_button = discord.ui.Button(label="Close", style=discord.ButtonStyle.red)
+            close_button.callback = close_callback
 
             view.add_item(select)
             view.add_item(prev_button)
             view.add_item(next_button)
             view.add_item(sell_button)
+            view.add_item(close_button)
 
             return view
         

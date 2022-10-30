@@ -11,6 +11,7 @@ from discord.ext import commands
 from src.util.constants import PREFIX, KEY_PRICE
 from src.util.format import remove_skin_name_formatting
 from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, case_wear_ranges, round_sig_fig
+
 from src.util import database
 import random
 from decimal import Decimal
@@ -305,6 +306,14 @@ class Unboxing(commands.Cog):
         if user_balance < container_price + KEY_PRICE:
             await ctx.send("Not enough balance to perform this action")
             return
+        
+        # check they have no current action
+        current_action = database.user_actions[ctx.author.id]
+        if current_action != None:
+            await ctx.send(database.user_action_responses[current_action])
+            return
+        
+        database.user_actions[ctx.author.id] = database.OPENING_CASE
 
         # get rarity
         rarity_rand = random.random()
@@ -404,22 +413,27 @@ class Unboxing(commands.Cog):
                     # add to user inventory
                     database.user_data.find_one_and_update({"_id": ctx.author.id},{"$push" :{"inventory" : {"name": skin_name, "float": final_float}}})
 
+                    database.user_actions[ctx.author.id] = None
+
                     e.colour = discord.colour.Color.green()
                     e.set_footer(text="")
                     await  msg.edit(embed=e, view=None)
+
                 else:
                     await interact.response.send_message("Your inventory is full! Sell an item or buy more inventory space")
-            
-            await interact.response.defer()
+            else:
+                await interact.response.defer()
 
         async def sell_item():
             nonlocal user, is_sold
             #change color to green, remove footer, change balance to have balance of skin
+            database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$inc" :{"balance" : skin_price}})
+            database.user_actions[ctx.author.id] = None
+
             e.colour = discord.colour.Color.dark_gray()
             e.set_footer(text="")
 
             await msg.edit(embed=e, view=None)
-            database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$inc" :{"balance" : skin_price}})
             is_sold = True
                
         #call back for selling the item
@@ -439,7 +453,7 @@ class Unboxing(commands.Cog):
             await sell_item()
 
     @commands.command(description="Take a chance to upgrade your skin to one of higher value, if you lose the chance then you lose your skin!", usage=f"""
-    `{PREFIX}open <inventory item number> <item to recieve>`
+    `{PREFIX}upgrade <inventory item number> <item to recieve>`
     **Arguments**
     `<inventory item slot>` - the inventory slot number of the item you want to upgrade
     `<item to recieve>` - the name of the item you want to recieve
@@ -464,6 +478,16 @@ class Unboxing(commands.Cog):
         
         if result_item_unformatted_name not in database.skin_data:
             await ctx.send(f'No item with name "{result_item_unformatted_name}" exists!')
+            return
+
+        # check they have no current action
+        current_action = database.user_actions[ctx.author.id]
+        if current_action != None:
+            await ctx.send(database.user_action_responses[current_action])
+            return
+        
+        # set new action
+        database.user_actions[ctx.author.id] = database.UPGRADING_ITEM  
 
         start_item_unformatted_name = user["inventory"][inventory_index]["name"]
         start_item_float = user["inventory"][inventory_index]["float"]
@@ -486,6 +510,8 @@ class Unboxing(commands.Cog):
         percentage_chance_2_sig_fig = round_sig_fig(percentage_chance * 100, 2) + "%"
         e.add_field(name="Percentage Chance", value=percentage_chance_2_sig_fig)
 
+        e.set_footer(text="Warning! Upgrade are cancelled after 30 seconds")
+
         async def upgrade_callback(interact):      
             nonlocal e
             if interact.user.id == ctx.author.id:
@@ -502,18 +528,30 @@ class Unboxing(commands.Cog):
                     }
                 )
 
+                # set action back to none
+                database.user_actions[ctx.author.id] = None
                 await interact.response.edit_message(embed=e, view=None)
             else:
                 await interact.response.defer()
 
+        async def cancel_callback(interact):
+            if interact.user.id == ctx.author.id:
+                await msg.delete()
+                database.user_actions[ctx.author.id] = None
+            else:
+                await interact.response.defer()
 
         view = discord.ui.View(timeout=30)
         upgrade_button = discord.ui.Button(label="Upgrade", style=discord.ButtonStyle.green)
         upgrade_button.callback = upgrade_callback
 
-        view.add_item(upgrade_button)
+        cancel_button = discord.ui.Button(label="Cancel", style=discord.ButtonStyle.red)
+        cancel_button.callback = cancel_callback
 
-        await ctx.send(embed=e, view=view)
+        view.add_item(upgrade_button)
+        view.add_item(cancel_button)
+
+        msg = await ctx.send(embed=e, view=view)
         
 
     @upgrade.error
