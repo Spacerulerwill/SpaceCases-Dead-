@@ -209,6 +209,7 @@ class User(commands.Cog):
                     page -= 1
                 elif len(inventory_pages) == 0 and item_index == 0:
                     await msg.edit(content="Your inventory is now empty!", embed=None, view=None)
+                    database.user_actions[ctx.author.id] = None
                     return
 
                 page_data = inventory_pages[page]
@@ -222,6 +223,11 @@ class User(commands.Cog):
                 await msg.delete()
             else:
                 await interact.response.defer()
+
+
+        async def view_timeout_callback():
+            database.user_actions[ctx.author.id] = None
+            await msg.delete()
             
         async def get_embed():
             item_unformatted_name = page_data[item_index]["name"]
@@ -240,7 +246,7 @@ class User(commands.Cog):
             e.add_field(name="Rarity", value=rarity)
             e.add_field(name="Float", value=item_float)
             e.add_field(name="Inventory Index", value=str(item_index + (page*INVENTORY_ELEMS_PER_PAGE) + 1))
-            e.set_footer(text=f"Total inventory value: ${str((Decimal(total_inventory_value) / 100).quantize(Decimal('0.01')))}")
+            e.set_footer(text=f"Total inventory value: ${str((Decimal(total_inventory_value) / 100).quantize(Decimal('0.01')))}\nWarning! Inventory will close after 30 seconds of inactivity")
             e.set_image(url=image_url)
             e.set_thumbnail(url=discord_user.avatar.url)
 
@@ -249,7 +255,7 @@ class User(commands.Cog):
         async def get_view():
             nonlocal select
 
-            view = discord.ui.View()
+            view = discord.ui.View(timeout=30)
             select_options = []
             for index, item in enumerate(page_data):
                 unformatted_name = item["name"]
@@ -273,6 +279,8 @@ class User(commands.Cog):
             view.add_item(next_button)
             view.add_item(sell_button)
             view.add_item(close_button)
+            view.on_timeout = view_timeout_callback
+            
 
             return view
         

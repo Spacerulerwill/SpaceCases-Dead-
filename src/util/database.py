@@ -51,7 +51,7 @@ def init():
   for document in user_data.find():
     user_actions[document["_id"]] = None
 
-  print("User commands all set to default value")
+  print("User actions all set to None")
 
   # load container data
   with open('res/containers.json', encoding="utf-8") as f:
