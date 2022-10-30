@@ -559,7 +559,6 @@ class Unboxing(commands.Cog):
 
         msg = await ctx.send(embed=e, view=view)
         
-
     @upgrade.error
     async def upgade_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):

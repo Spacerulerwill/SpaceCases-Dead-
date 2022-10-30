@@ -5,6 +5,8 @@ KEY_PRICE = 250
 INVENTORY_ELEMS_PER_PAGE = 10
 
 rarity_color_dict = {
+    "Consumer": 11584473,
+    "Industrial": 6199513,
     "Milspec": 4942335,
     "Restricted": 8931327,
     "Classified": 13839590,
