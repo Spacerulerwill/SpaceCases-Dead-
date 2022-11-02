@@ -2,7 +2,6 @@
 # Commands:
 # help
 
-from csv import field_size_limit
 import discord
 from discord.ext import commands
 from src.util.constants import PREFIX
