@@ -23,7 +23,35 @@ class Rankings(commands.Cog):
     `<user>` - optional - user to check ranking of`
     """)
     async def ranking(self, ctx):
-        pass
+        user = database.user_data.find_one({"_id": ctx.author.id})
+
+        if user == None:
+            await ctx.send(f"You aren't registed! Use `{PREFIX}register` to register")
+            return
+
+        cursor = database.user_data.find({})
+
+        inventory_values = []
+
+        # get all user inventory values and put them in dict
+        for document in cursor:
+            inventory_value = 0
+            for item in list(document["inventory"]):
+                inventory_value += database.skin_data[item["name"]]["price"]
+            inventory_values.append(inventory_value)
+        
+        #find authors inventory value
+        author_inventory_value = 0
+        for item in user["inventory"]:
+            author_inventory_value += database.skin_data[item["name"]]["price"]
+
+        #find amount of user inventory values less than than authors
+        greater_than = 0
+        for value in inventory_values:
+            if value > author_inventory_value:
+                greater_than += 1
+
+        await ctx.send(f"You are ranked #{greater_than+1} on the global leaderboard")
 
     @commands.command(description="View the leaderboard for inventory value", usage=f"""
     `{PREFIX}leaderboard <page number>
