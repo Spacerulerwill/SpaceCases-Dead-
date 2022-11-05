@@ -22,11 +22,21 @@ class Rankings(commands.Cog):
     **Arguments**
     `<user>` - optional - user to check ranking of
     """)
-    async def ranking(self, ctx):
-        user = database.user_data.find_one({"_id": ctx.author.id})
+    async def ranking(self, ctx, member:discord.Member = None):
 
-        if user == None:
-            await ctx.send(f"You aren't registed! Use `{PREFIX}register` to register")
+        if member == None:
+            member = ctx.author
+            name = "You are "
+        else:
+            name = f"{member.display_name} is "
+
+        member_data = database.user_data.find_one({"_id": member.id})
+
+        if member_data == None:
+            if member == ctx.author:
+                await ctx.send(f"You aren't registed! Use `{PREFIX}register` to register")
+            else:
+                await ctx.send(f'{member.display_name} has not registered yet')
             return
 
         cursor = database.user_data.find({})
@@ -41,17 +51,22 @@ class Rankings(commands.Cog):
             inventory_values.append(inventory_value)
         
         #find authors inventory value
-        author_inventory_value = 0
-        for item in user["inventory"]:
-            author_inventory_value += database.skin_data[item["name"]]["price"]
+        member_inventory_value = 0
+        for item in member_data["inventory"]:
+            member_inventory_value += database.skin_data[item["name"]]["price"]
 
         #find amount of user inventory values great than than authors
         greater_than = 0
         for value in inventory_values:
-            if value >= author_inventory_value:
+            if value >= member_inventory_value:
                 greater_than += 1
 
-        await ctx.send(f"You are ranked #{greater_than+1} on the global leaderboard")
+        await ctx.send(f"{name}ranked #{greater_than} on the global leaderboard")
+
+    @ranking.error
+    async def ranking_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Could not find that user!")
 
     @commands.command(description="View the leaderboard for inventory value", usage=f"""
     `{PREFIX}leaderboard <page number>`

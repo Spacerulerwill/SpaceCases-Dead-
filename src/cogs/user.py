@@ -94,9 +94,10 @@ class User(commands.Cog):
                 await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
             else:
                 await ctx.send(f'{member.display_name} has not registered yet')
-        else:
-            user_balance = (Decimal(user["balance"])/100).quantize(Decimal('0.01'))
-            await ctx.send(f"{name} balance is: ${user_balance}")
+            return
+        
+        user_balance = (Decimal(user["balance"])/100).quantize(Decimal('0.01'))
+        await ctx.send(f"{name} balance is: ${user_balance}")
 
     @balance.error
     async def balance_error(self, ctx, error):
