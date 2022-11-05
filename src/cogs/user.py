@@ -276,8 +276,9 @@ class User(commands.Cog):
                 next_button = discord.ui.Button(label="▶", style=discord.ButtonStyle.gray)
                 next_button.callback = next_button_callback
 
-            sell_button = discord.ui.Button(label="Sell", style=discord.ButtonStyle.red)
-            sell_button.callback = sell_callback
+            if discord_user == ctx.author:
+                sell_button = discord.ui.Button(label="Sell", style=discord.ButtonStyle.red)
+                sell_button.callback = sell_callback
             close_button = discord.ui.Button(label="Close", style=discord.ButtonStyle.red)
             close_button.callback = close_callback
 
@@ -285,7 +286,9 @@ class User(commands.Cog):
             if len(inventory_pages) > 1:
                 view.add_item(prev_button)
                 view.add_item(next_button)
-            view.add_item(sell_button)
+                
+            if discord_user == ctx.author:
+                view.add_item(sell_button)
             view.add_item(close_button)
             view.on_timeout = view_timeout_callback
             
