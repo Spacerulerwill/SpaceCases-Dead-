@@ -270,18 +270,21 @@ class User(commands.Cog):
             select = discord.ui.Select(options=select_options, placeholder="Select a skin")
             select.callback = select_callback
 
-            prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
-            prev_button.callback = prev_button_callback
-            next_button = discord.ui.Button(label="▶", style=discord.ButtonStyle.gray)
-            next_button.callback = next_button_callback
+            if len(inventory_pages) > 1:
+                prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
+                prev_button.callback = prev_button_callback
+                next_button = discord.ui.Button(label="▶", style=discord.ButtonStyle.gray)
+                next_button.callback = next_button_callback
+
             sell_button = discord.ui.Button(label="Sell", style=discord.ButtonStyle.red)
             sell_button.callback = sell_callback
             close_button = discord.ui.Button(label="Close", style=discord.ButtonStyle.red)
             close_button.callback = close_callback
 
             view.add_item(select)
-            view.add_item(prev_button)
-            view.add_item(next_button)
+            if len(inventory_pages) > 1:
+                view.add_item(prev_button)
+                view.add_item(next_button)
             view.add_item(sell_button)
             view.add_item(close_button)
             view.on_timeout = view_timeout_callback
@@ -289,7 +292,9 @@ class User(commands.Cog):
 
             return view
         
+
         msg = await ctx.send(embed=await get_embed(), view=await get_view())
+        
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
