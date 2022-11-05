@@ -98,6 +98,11 @@ class User(commands.Cog):
             user_balance = (Decimal(user["balance"])/100).quantize(Decimal('0.01'))
             await ctx.send(f"{name} balance is: ${user_balance}")
 
+    @balance.error
+    async def balance_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Could not find that user!")
+
     @commands.command(description="View a user's inventory", usage=f"""
     `{PREFIX}inventory <user>`
     **Arguments**
