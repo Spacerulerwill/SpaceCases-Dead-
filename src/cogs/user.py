@@ -107,7 +107,7 @@ class User(commands.Cog):
     @commands.command(description="View a user's inventory", usage=f"""
     `{PREFIX}inventory <user>`
     **Arguments**
-    `<user>` - optional - user whos inventory to check
+    `<user>` - defaults to message author - user whos inventory to check
     """)
     async def inventory(self, ctx, discord_user: discord.Member = None):
 
@@ -126,7 +126,10 @@ class User(commands.Cog):
         inventory_data = user["inventory"]
 
         if len(inventory_data) == 0:
-            await ctx.send(f"User's inventory is empty! Use `{PREFIX}open` to start opening cases!")
+            if discord_user == ctx.author:
+                await ctx.send(f"Your inventory is empty! Use `{PREFIX}open` to start opening cases!")
+            else:
+                await ctx.send(f"{discord_user.display_name}'s inventory is empty")
             return
 
         total_inventory_value = 0
