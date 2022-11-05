@@ -15,7 +15,7 @@ UPGRADING_ITEM = 2
 #responses for each action when trying to perform a new one
 user_action_responses = [
   "You are currently opening a case! Please cancel this command first",
-  "You are currently in your inventory! Please close it before using this command",
+  "You are currently in an inventory! Please close it before using this command",
   "You are currently upgrading a skin! Please cancel this command first"
 ]
 
