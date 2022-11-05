@@ -4,6 +4,8 @@ KEY_PRICE = 250
 
 INVENTORY_ELEMS_PER_PAGE = 10
 
+MAX_THREADS = 30
+
 rarity_color_dict = {
     "Consumer": 11584473,
     "Industrial": 6199513,

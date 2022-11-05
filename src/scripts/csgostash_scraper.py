@@ -4,10 +4,8 @@ import json
 import concurrent.futures
 from re import sub
 from src.util.format import remove_skin_name_formatting
-from src.util.constants import case_wear_ranges
+from src.util.constants import case_wear_ranges, MAX_THREADS
 from decimal import Decimal
-
-MAX_THREADS = 30
 
 NO_PRICE_FOUND = 300000
 
