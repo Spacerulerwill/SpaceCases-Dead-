@@ -117,7 +117,10 @@ class User(commands.Cog):
         user = database.user_data.find_one({"_id": discord_user.id})
 
         if user == None:
-            await ctx.send(f"User is not registed! Use `{PREFIX}register` to register")
+            if discord_user == ctx.author:
+                await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
+            else:
+                await ctx.send(f'{discord_user.display_name} has not registered yet')
             return
 
         inventory_data = user["inventory"]
@@ -286,7 +289,7 @@ class User(commands.Cog):
             if len(inventory_pages) > 1:
                 view.add_item(prev_button)
                 view.add_item(next_button)
-                
+
             if discord_user == ctx.author:
                 view.add_item(sell_button)
             view.add_item(close_button)
@@ -297,6 +300,11 @@ class User(commands.Cog):
         
 
         msg = await ctx.send(embed=await get_embed(), view=await get_view())
+
+    @inventory.error
+    async def inventory_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Could not find that user!")
         
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
