@@ -18,9 +18,9 @@ class Rankings(commands.Cog):
         self.bot = bot
 
     @commands.command(description="See your ranking in the global leaderboard", usage=f"""
-    `{PREFIX}ranking <user>
+    `{PREFIX}ranking <user>`
     **Arguments**
-    `<user>` - optional - user to check ranking of`
+    `<user>` - optional - user to check ranking of
     """)
     async def ranking(self, ctx):
         user = database.user_data.find_one({"_id": ctx.author.id})
@@ -45,16 +45,16 @@ class Rankings(commands.Cog):
         for item in user["inventory"]:
             author_inventory_value += database.skin_data[item["name"]]["price"]
 
-        #find amount of user inventory values less than than authors
+        #find amount of user inventory values great than than authors
         greater_than = 0
         for value in inventory_values:
-            if value > author_inventory_value:
+            if value >= author_inventory_value:
                 greater_than += 1
 
         await ctx.send(f"You are ranked #{greater_than+1} on the global leaderboard")
 
     @commands.command(description="View the leaderboard for inventory value", usage=f"""
-    `{PREFIX}leaderboard <page number>
+    `{PREFIX}leaderboard <page number>`
     **Arguments**
     `<page number>` - defaults to 1 - leaderboard page number`
     """)
