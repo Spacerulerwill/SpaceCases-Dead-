@@ -513,6 +513,8 @@ class Unboxing(commands.Cog):
 
         e.set_footer(text="Warning! Upgrade are cancelled after 30 seconds")
 
+        interacted_with = False
+
         async def upgrade_callback(interact):      
             nonlocal e
             if interact.user.id == ctx.author.id:
@@ -530,7 +532,9 @@ class Unboxing(commands.Cog):
                 )
 
                 # set action back to none
+                interacted_with = True
                 database.user_actions[ctx.author.id] = None
+                e.set_footer("")
                 await interact.response.edit_message(embed=e, view=None)
             else:
                 await interact.response.defer()
@@ -543,8 +547,9 @@ class Unboxing(commands.Cog):
                 await interact.response.defer()
 
         async def view_timeout_callback():
-            await msg.delete()
-            database.user_actions[ctx.author.id] = None
+            if not interacted_with:
+                await msg.delete()
+                database.user_actions[ctx.author.id] = None
 
         view = discord.ui.View(timeout=30)
         upgrade_button = discord.ui.Button(label="Upgrade", style=discord.ButtonStyle.green)
