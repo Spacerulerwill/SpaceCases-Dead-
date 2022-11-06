@@ -82,6 +82,42 @@ class Rankings(commands.Cog):
             await ctx.send("Invalid page number!")
             return
 
+        page -= 1
+
+        inventory_value_dict = {}
+
+        for user in database.user_data.find({}):
+            inventory_value = 0
+            for item in list(user["inventory"]):
+                inventory_value += database.skin_data[item["name"]]["price"]
+            inventory_value_dict[user["_id"]] = inventory_value
+
+        #sort inventory value dict
+        inventory_value_dict = {k: inventory_value_dict[k] for k in sorted(inventory_value_dict, key=inventory_value_dict.get, reverse=True)}
+
+        inventory_value_dict_sliced = {key: inventory_value_dict[key] for key in list(inventory_value_dict.keys())[page*10:(page+1)*10-1]}
+
+        async def get_name_from_id(id):
+            nonlocal id_name_dict
+            id_name_dict[id] = str(await self.bot.fetch_user(id))
+
+        id_name_dict = {}
+
+        tasks = [get_name_from_id(id) for id in inventory_value_dict.keys()]
+        await asyncio.gather(*tasks)
+
+        leaderboard_str = ""
+        for count, (id, value) in enumerate(inventory_value_dict_sliced.items()):
+            name= id_name_dict[id]
+            price = "$" + str((Decimal(value)/ 100).quantize(Decimal('0.01')))
+            leaderboard_str += f"**{count+1})** {name}: {price}\n"
+
+        e = discord.Embed(title=f"Leaderboard {page+1}/{amount_of_pages}", description=leaderboard_str) 
+
+        await ctx.send(embed=e)
+
+
+
     @leaderboard.error
     async def leaderboard_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
