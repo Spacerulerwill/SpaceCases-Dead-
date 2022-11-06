@@ -7,7 +7,7 @@ from os import environ
 from src.util import database
 from src.util.constants import PREFIX
 
-cogs = ["unbox", "user", "help",  "minigame", "rankings"]  
+cogs = ["unbox", "user", "help",  "minigame", "rankings", "shop"]  
 
 #try read token from text file, if failed read token from server environment variable
 try:
