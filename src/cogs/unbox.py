@@ -516,7 +516,7 @@ class Unboxing(commands.Cog):
         interacted_with = False
 
         async def upgrade_callback(interact):      
-            nonlocal e
+            nonlocal e, interacted_with
             if interact.user.id == ctx.author.id:
                 # percetange chance
                 if random.random() < percentage_chance:
@@ -534,7 +534,7 @@ class Unboxing(commands.Cog):
                 # set action back to none
                 interacted_with = True
                 database.user_actions[ctx.author.id] = None
-                e.set_footer("")
+                e.set_footer(text="")
                 await interact.response.edit_message(embed=e, view=None)
             else:
                 await interact.response.defer()
