@@ -257,7 +257,7 @@ class User(commands.Cog):
             e.add_field(name="Rarity", value=rarity)
             e.add_field(name="Float", value=item_float)
             e.add_field(name="Inventory Index", value=str(item_index + (page*INVENTORY_ELEMS_PER_PAGE) + 1))
-            e.set_footer(text=f"Total inventory value: ${str((Decimal(total_inventory_value) / 100).quantize(Decimal('0.01')))}\nWarning! Inventory will close after 30 seconds of inactivity")
+            e.set_footer(text=f"Total inventory value: ${str((Decimal(total_inventory_value) / 100).quantize(Decimal('0.01')))}\nMax Capacity: {user['inventory-size']}\nWarning! Inventory will close after 30 seconds of inactivity")
             e.set_image(url=image_url)
             e.set_thumbnail(url=discord_user.avatar.url)
 
