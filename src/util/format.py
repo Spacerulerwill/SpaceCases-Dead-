@@ -1,4 +1,7 @@
-def remove_skin_name_formatting(formatted_name):
+from decimal import Decimal
+
+#format skin names to a standardized formatt
+def remove_skin_name_formatting(formatted_name:str) -> str:
     allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 "
     replace_chars = {
         "&": "and",
@@ -12,3 +15,12 @@ def remove_skin_name_formatting(formatted_name):
     unformatted_name = ''.join(ch for ch in unformatted_name if ch in allowed_chars).strip() #only allowed chars
     unformatted_name = " ".join(unformatted_name.split()) # remove doubles spaces
     return unformatted_name
+
+#format currency integers to strings e.g 10000 = $100.00
+def currency_str_format(amount:int) -> str:
+    return "$" + str((Decimal(amount) / 100).quantize(Decimal('0.01')))
+
+#round a float to a specified number on significant figures
+def round_sig_fig(number:float, sig_figs:int) -> float:
+    return '{:g}'.format(float('{:.{p}g}'.format(number, p=sig_figs)))
+

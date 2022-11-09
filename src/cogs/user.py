@@ -9,8 +9,8 @@ import discord
 from discord.ext import commands
 from src.util import database
 from src.util.constants import PREFIX, rarity_color_dict, INVENTORY_ELEMS_PER_PAGE
+from src.util.format import currency_str_format
 from datetime import timezone, datetime
-from decimal import Decimal
 from pymongo.collection import ReturnDocument
 
 # initialise class
@@ -96,8 +96,8 @@ class User(commands.Cog):
                 await ctx.send(f'{member.display_name} has not registered yet')
             return
         
-        user_balance = (Decimal(user["balance"])/100).quantize(Decimal('0.01'))
-        await ctx.send(f"{name} balance is: ${user_balance}")
+        user_balance = currency_str_format(user["balance"])
+        await ctx.send(f"{name} balance is: {user_balance}")
 
     @balance.error
     async def balance_error(self, ctx, error):
@@ -249,15 +249,15 @@ class User(commands.Cog):
             rarity = item_data["rarity"]
             rarity_color = rarity_color_dict[rarity]
             item_price_int = item_data["price"]
-            item_price = str((Decimal(item_price_int)/ 100).quantize(Decimal('0.01')))
+            item_price = currency_str_format(item_price_int)
 
             e = discord.Embed(title=f"{name}'s inventory - Page {page+1}/{len(inventory_pages)}", color=rarity_color)
             e.add_field(name="Item Name", value=item_formatted_name, inline=False)
-            e.add_field(name="Price", value="$" + item_price)
+            e.add_field(name="Price", value=item_price)
             e.add_field(name="Rarity", value=rarity)
             e.add_field(name="Float", value=item_float)
             e.add_field(name="Inventory Index", value=str(item_index + (page*INVENTORY_ELEMS_PER_PAGE) + 1))
-            e.set_footer(text=f"Total inventory value: ${str((Decimal(total_inventory_value) / 100).quantize(Decimal('0.01')))}\nMax Capacity: {user['inventory-size']}\nWarning! Inventory will close after 30 seconds of inactivity")
+            e.set_footer(text=f"Total inventory value: {currency_str_format(total_inventory_value)}\nMax Capacity: {user['inventory-size']}\nWarning! Inventory will close after 30 seconds of inactivity")
             e.set_image(url=image_url)
             e.set_thumbnail(url=discord_user.avatar.url)
 

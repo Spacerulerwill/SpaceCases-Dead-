@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 from src.util.constants import PREFIX
 from src.util import database
-from decimal import Decimal
+from src.util.format import currency_str_format
 from pymongo import ReturnDocument
 
 def get_inventory_slot_price(user):
@@ -47,14 +47,14 @@ class Shop(commands.Cog):
             items_str = ""
             for item_name, item_data in shop_items_dict.items():
                 if item_data["type"] == STATIC_PRICE:
-                    item_price = "$" + str((Decimal(item_data["price"]) / 100).quantize(Decimal('0.01')))
+                    item_price = currency_str_format(item_data["price"])
                     items_str += f'{item_name.title()}: {item_price}'
                 elif item_data["type"] == DYNAMIC_PRICE:
-                    item_price = "$" + str((Decimal(item_data["func"](user)) / 100).quantize(Decimal('0.01')))
+                    item_price = currency_str_format(item_data["func"](user))
                     items_str += f'{item_name.title()}: {item_price}'
 
             e.add_field(name="Items For Sale", value=items_str)
-            e.add_field(name="Balance", value="$" + str((Decimal(user["balance"])/100).quantize(Decimal('0.01'))))
+            e.add_field(name="Balance", value=currency_str_format(user["balance"]))
 
             await ctx.send(embed=e)
 

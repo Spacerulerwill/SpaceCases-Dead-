@@ -6,10 +6,7 @@ import discord
 from discord.ext import commands
 from src.util.constants import PREFIX
 from src.util import database
-from heapq import nlargest
-from decimal import Decimal
-from src.util.constants import MAX_THREADS
-import concurrent.futures
+from src.util.format import currency_str_format
 import asyncio
 
 # initialise class
@@ -109,7 +106,7 @@ class Rankings(commands.Cog):
         leaderboard_str = ""
         for count, (id, value) in enumerate(inventory_value_dict_sliced.items()):
             name= id_name_dict[id]
-            price = "$" + str((Decimal(value)/ 100).quantize(Decimal('0.01')))
+            price = currency_str_format(value)
             leaderboard_str += f"**{count+1})** {name}: {price}\n"
 
         e = discord.Embed(title=f"Leaderboard {page+1}/{amount_of_pages}", description=leaderboard_str) 

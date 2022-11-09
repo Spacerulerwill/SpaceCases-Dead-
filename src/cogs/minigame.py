@@ -1,6 +1,6 @@
 # This cog is for skin unboxing related commands
 # Commands:
-# help
+# double
 
 import discord
 from discord.ext import commands

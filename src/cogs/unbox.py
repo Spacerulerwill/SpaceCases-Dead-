@@ -9,8 +9,9 @@
 import discord
 from discord.ext import commands
 from src.util.constants import PREFIX, KEY_PRICE
-from src.util.format import remove_skin_name_formatting
-from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, case_wear_ranges, round_sig_fig
+from src.util.format import remove_skin_name_formatting, round_sig_fig, currency_str_format
+from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, case_wear_ranges
+
 
 from src.util import database
 import random
@@ -86,7 +87,7 @@ class Unboxing(commands.Cog):
             weapon_data = database.skin_data[item_query]
 
             formatted_name = weapon_data["formatted_name"]
-            price = "$" + str((Decimal(weapon_data["price"]) / 100).quantize(Decimal('0.01')))
+            price = currency_str_format(weapon_data["price"])
 
             image_url = weapon_data["image_url"]
             rarity = weapon_data["rarity"]
@@ -121,7 +122,7 @@ class Unboxing(commands.Cog):
 
         container_data = database.containers[container]
         container_name = container_data["formatted_name"]
-        container_price = str((Decimal(container_data["price"]) / 100).quantize(Decimal('0.01')))
+        container_price = currency_str_format(container_data["price"])
         container_image_url = container_data["image_url"]
         
         rarities = {}
@@ -211,7 +212,7 @@ class Unboxing(commands.Cog):
             min_price = float('inf')
             max_price = 0
             for i in range(best_condition_index, worst_condition_index+1):
-                price = (Decimal(database.skin_data[conditions[i].lower() + " " + item]["price"] )/100).quantize(Decimal('0.01'))
+                price = currency_str_format(database.skin_data[conditions[i].lower() + " " + item]["price"])
                 if price < min_price:
                     min_price = price
                 if price > max_price:
@@ -228,7 +229,7 @@ class Unboxing(commands.Cog):
                 min_modifier_price = float('inf')
                 max_modifier_price = 0.0
                 for i in range(best_condition_index, worst_condition_index+1):
-                    price = (Decimal(database.skin_data[modifier + conditions[i].lower() + " " + item]["price"])/100).quantize(Decimal('0.01'))
+                    price = currency_str_format(database.skin_data[modifier + conditions[i].lower() + " " + item]["price"])
                     if price < min_modifier_price:
                         min_modifier_price = price
                     if price > max_modifier_price:
@@ -383,7 +384,7 @@ class Unboxing(commands.Cog):
         }})
 
         e = discord.Embed(title=formatted_name, color=color)
-        e.add_field(name="Market Value", value="$" + str((Decimal(skin_price) / 100).quantize(Decimal('0.01'))))
+        e.add_field(name="Market Value", value=currency_str_format(skin_price))
         e.add_field(name="Rarity", value=skin_rarity)
         e.add_field(name="Float", value=final_float) 
         e.set_image(url=image_url)
@@ -500,8 +501,8 @@ class Unboxing(commands.Cog):
         e.set_image(url=result_item_data["image_url"])
         e.set_thumbnail(url=start_item_data["image_url"])
 
-        start_item_price = (Decimal(start_item_data["price"]) / 100).quantize(Decimal('0.01'))
-        result_item_price = (Decimal(result_item_data["price"]) / 100).quantize(Decimal('0.01'))
+        start_item_price = Decimal(start_item_data["price"])
+        result_item_price = Decimal(result_item_data["price"])
 
         price_multiplier = (result_item_price / start_item_price).quantize(Decimal('0.01'))
 
