@@ -32,7 +32,7 @@ class Minigames(commands.Cog):
             await ctx.send("Congrats! Your balance has been doubled! 🥳")
         else:
             database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$set" :{"balance" : 0}})
-            await ctx.send("Unlucky! You have lost eveyrthing!") 
+            await ctx.send("Unlucky! You have lost everything!") 
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

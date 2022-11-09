@@ -37,7 +37,7 @@ async def on_ready():
 
     #print login message
     print(f'Logged in as: {bot_instance.user.name}')
-
+  
     #load each cog
     for extension in cogs:
         await bot_instance.load_extension(f'src.cogs.{extension}')

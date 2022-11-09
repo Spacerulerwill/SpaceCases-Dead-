@@ -188,7 +188,7 @@ def scrape_skin_link(skin_link):
               "best_condition_index": best_condition_index,
               "worst_condition_index": worst_condition_index,
               "has_stattrak_variant": has_stattrak_variant,
-              "has_souvenir_variant": has_souvenir_variant
+              "has_souvenir_variant": has_souvenir_variant,
         }
 
     else: #otherwise do as usual
@@ -201,7 +201,7 @@ def scrape_skin_link(skin_link):
         "best_condition_index": best_condition_index,
         "worst_condition_index": worst_condition_index,
         "has_stattrak_variant": has_stattrak_variant,
-        "has_souvenir_variant": has_souvenir_variant
+        "has_souvenir_variant": has_souvenir_variant,
       }
     
   # add the non wear versions
@@ -213,7 +213,7 @@ def scrape_skin_link(skin_link):
       "best_condition_index": best_condition_index,
       "worst_condition_index": worst_condition_index,
       "has_stattrak_variant": has_stattrak_variant,
-      "has_souvenir_variant": has_souvenir_variant
+      "has_souvenir_variant": has_souvenir_variant,
   }
 
   # add images
