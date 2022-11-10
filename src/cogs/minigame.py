@@ -1,4 +1,4 @@
-# This cog is for skin unboxing related commands
+# This cog is for minigames
 # Commands:
 # double
 

@@ -1,6 +1,7 @@
-# This cog is for skin unboxing related commands
+# This cog is for commands related to rankings and leaderboards
 # Commands:
-# help
+# ranking
+# leaderboard
 
 import discord
 from discord.ext import commands

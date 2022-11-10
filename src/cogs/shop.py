@@ -1,6 +1,8 @@
-# This cog is for skin unboxing related commands
+# This cog is for the shop
 # Commands:
-# help
+# shop
+# * buy
+# * info
 
 import discord
 from discord.ext import commands
