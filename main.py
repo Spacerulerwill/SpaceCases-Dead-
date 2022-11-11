@@ -47,5 +47,8 @@ async def on_ready():
     await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
         
 if __name__ == "__main__":
-    database.init()
-    run_bot()
+    #database.init()
+    #run_bot()
+
+    from src.scripts.csgostash_scraper import csgostash_scrape
+    csgostash_scrape()

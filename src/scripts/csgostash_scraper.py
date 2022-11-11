@@ -4,7 +4,7 @@ import json
 import concurrent.futures
 from re import sub
 from src.util.format import remove_skin_name_formatting
-from src.util.constants import case_wear_ranges, MAX_THREADS
+from src.util.constants import case_wear_ranges_lower, MAX_THREADS
 from decimal import Decimal
 
 NO_PRICE_FOUND = 300000
@@ -87,6 +87,24 @@ inspect_button_condition_dict = {
   "Inspect (BS)": "battle scarred "
 }
 
+condition_dict = {
+  "factory new": 0,
+  "minimal wear": 1,
+  "field tested": 2,
+  "well worn": 3,
+  "battle scarred": 4,
+  "factory new": 0,
+  "minimal wear": 1,
+  "field tested": 2,
+  "well worn": 3,
+  "battle scarred": 4,
+  "factory new": 0,
+  "minimal wear": 1,
+  "field tested": 2,
+  "well worn": 3,
+  "battle scarred": 4
+}
+
 #scraping a weapon endpoint (all the skins for a weapon) - adds them to a skin_links list
 def scrape_endpoint(endpoint):
   global skin_links
@@ -132,13 +150,13 @@ def scrape_skin_link(skin_link):
 
 
   # best and worst conditions
-  for index, lower_value in case_wear_ranges.items():
+  for index, lower_value in case_wear_ranges_lower.items():
       if min_float >= lower_value:
         best_condition_index = index
         break
     
   # best and worst conditions
-  for index, lower_value in case_wear_ranges.items():
+  for index, lower_value in case_wear_ranges_lower.items():
       if max_float >= lower_value:
         worst_condition_index = index
         break

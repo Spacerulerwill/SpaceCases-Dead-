@@ -10,7 +10,7 @@ import discord
 from discord.ext import commands
 from src.util.constants import PREFIX, KEY_PRICE
 from src.util.format import remove_skin_name_formatting, round_sig_fig, currency_str_format
-from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, case_wear_ranges
+from src.util.constants import conditions, rarity_color_dict, case_rarity_odds, case_wear_ranges_lower, case_wear_ranges_upper
 
 
 from src.util import database
@@ -351,7 +351,7 @@ class Unboxing(commands.Cog):
         final_float = float_value * (max_float - min_float) + min_float
 
         skin_wear = None
-        for wear, upper in case_wear_ranges.items():
+        for wear, upper in case_wear_ranges_lower.items():
             if final_float > upper:
                 skin_wear = conditions[wear]
                 break
@@ -522,8 +522,24 @@ class Unboxing(commands.Cog):
                 # percetange chance
                 if random.random() < percentage_chance:
                     e.color = discord.Color.green()
-                    database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$set" :{f"inventory.{inventory_index}" : {"name": result_item_unformatted_name, "float": 1.0}}})
+
+                    #generate an appropriate float for its condition
+                    worst_condition_float = case_wear_ranges_upper[result_item_data["worst_condition_index"]]
+
+                    if result_item_data["max_float"] < worst_condition_float:
+                        worst_condition_float = result_item_data["max_float"]
+
+                    best_condition_float = case_wear_ranges_lower[result_item_data["best_condition_index"]]
+
+                    if result_item_data["min_float"] < best_condition_float:
+                        best_condition_float = result_item_data["min_float"]
+
+                    upgraded_item_float = random.uniform(worst_condition_float, best_condition_float)
+
+                    #push to database
+                    database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$set" :{f"inventory.{inventory_index}" : {"name": result_item_unformatted_name, "float": upgraded_item_float}}})
                 else:
+                    #set color to red and pull item from inventory
                     e.color= discord.Color.red()
                     database.user_data.find_one_and_update({
                     "_id": ctx.author.id}, 

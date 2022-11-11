@@ -235,7 +235,6 @@ class User(commands.Cog):
             else:
                 await interact.response.defer()
 
-
         async def view_timeout_callback():
             database.user_actions[ctx.author.id] = None
             await msg.delete()
