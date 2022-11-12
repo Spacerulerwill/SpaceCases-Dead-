@@ -524,14 +524,14 @@ class Unboxing(commands.Cog):
                     e.color = discord.Color.green()
 
                     #generate an appropriate float for its condition
-                    worst_condition_float = case_wear_ranges_upper[result_item_data["worst_condition_index"]]
+                    worst_condition_float = case_wear_ranges_upper[result_item_data["condition_index"]]
 
                     if result_item_data["max_float"] < worst_condition_float:
                         worst_condition_float = result_item_data["max_float"]
 
-                    best_condition_float = case_wear_ranges_lower[result_item_data["best_condition_index"]]
+                    best_condition_float = case_wear_ranges_lower[result_item_data["condition_index"]]
 
-                    if result_item_data["min_float"] < best_condition_float:
+                    if result_item_data["min_float"] > best_condition_float:
                         best_condition_float = result_item_data["min_float"]
 
                     upgraded_item_float = random.uniform(worst_condition_float, best_condition_float)

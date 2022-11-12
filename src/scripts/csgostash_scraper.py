@@ -87,22 +87,22 @@ inspect_button_condition_dict = {
   "Inspect (BS)": "battle scarred "
 }
 
-condition_dict = {
+condition_index_dict = {
   "factory new": 0,
   "minimal wear": 1,
   "field tested": 2,
   "well worn": 3,
   "battle scarred": 4,
-  "factory new": 0,
-  "minimal wear": 1,
-  "field tested": 2,
-  "well worn": 3,
-  "battle scarred": 4,
-  "factory new": 0,
-  "minimal wear": 1,
-  "field tested": 2,
-  "well worn": 3,
-  "battle scarred": 4
+  "stattrak factory new": 0,
+  "stattrak minimal wear": 1,
+  "stattrak field tested": 2,
+  "stattrak well worn": 3,
+  "stattrak battle scarred": 4,
+  "souvenir factory new": 0,
+  "souvenir minimal wear": 1,
+  "souvenir field tested": 2,
+  "souvenir well worn": 3,
+  "souvenir battle scarred": 4,
 }
 
 #scraping a weapon endpoint (all the skins for a weapon) - adds them to a skin_links list
@@ -203,6 +203,7 @@ def scrape_skin_link(skin_link):
               "rarity": rarity,
               "min_float": min_float,
               "max_float": max_float,
+              "condition_index": condition_index_dict[condition.lower()],
               "best_condition_index": best_condition_index,
               "worst_condition_index": worst_condition_index,
               "has_stattrak_variant": has_stattrak_variant,
@@ -210,12 +211,15 @@ def scrape_skin_link(skin_link):
         }
 
     else: #otherwise do as usual
+      condition_index = condition_index_dict[row_unformatted_condition]
+
       result[row_unformatted_condition + " " + unformatted_name] = {
         "formatted_name": row_formatted_condition + " " + formatted_name,
         "price": price,
         "rarity": rarity,
         "min_float": min_float,
         "max_float": max_float,
+        "condition_index": condition_index,
         "best_condition_index": best_condition_index,
         "worst_condition_index": worst_condition_index,
         "has_stattrak_variant": has_stattrak_variant,
@@ -228,6 +232,7 @@ def scrape_skin_link(skin_link):
       "rarity": rarity,
       "min_float": min_float,
       "max_float": max_float,
+      "condition_index": condition_index,
       "best_condition_index": best_condition_index,
       "worst_condition_index": worst_condition_index,
       "has_stattrak_variant": has_stattrak_variant,
