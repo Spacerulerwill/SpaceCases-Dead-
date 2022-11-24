@@ -46,6 +46,7 @@ class User(commands.Cog):
     `{PREFIX}claim`
     """)
     async def claim(self, ctx:Context):
+
         #update balance and set last claim to now if been twelve hours since last claim
         post_doc = database.user_data.find_one_and_update({"_id": ctx.author.id},
         [
@@ -87,6 +88,9 @@ class User(commands.Cog):
                 },
             }
         ], return_document=ReturnDocument.AFTER)
+
+        if post_doc == None:
+            await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
         
         #if document modified
         if post_doc["modified"]:
@@ -98,6 +102,7 @@ class User(commands.Cog):
             time_left_formatted = date_time.strftime("%H:%M:%S")
             await ctx.send(f"You have already claimed! You can claim again in {time_left_formatted}")
 
+    #check user balance
     @commands.command(description="Check a user's balance", usage=f"""
     `{PREFIX}balance <user>`
     **Arguments**
@@ -114,6 +119,7 @@ class User(commands.Cog):
         else:
             await ctx.send(f"{member.name} is not registered!")
 
+    #send user money
     @commands.command(description="Transfer money to another user", usage=f"""
     `{PREFIX}transfer <user> <amount>`
     **Arguments**
