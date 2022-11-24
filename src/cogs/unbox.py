@@ -212,7 +212,7 @@ class Unboxing(commands.Cog):
             min_price = float('inf')
             max_price = 0
             for i in range(best_condition_index, worst_condition_index+1):
-                price = currency_str_format(database.skin_data[conditions[i].lower() + " " + item]["price"])
+                price = database.skin_data[conditions[i].lower() + " " + item]["price"]
                 if price < min_price:
                     min_price = price
                 if price > max_price:
@@ -229,7 +229,7 @@ class Unboxing(commands.Cog):
                 min_modifier_price = float('inf')
                 max_modifier_price = 0.0
                 for i in range(best_condition_index, worst_condition_index+1):
-                    price = currency_str_format(database.skin_data[modifier + conditions[i].lower() + " " + item]["price"])
+                    price = database.skin_data[modifier + conditions[i].lower() + " " + item]["price"]
                     if price < min_modifier_price:
                         min_modifier_price = price
                     if price > max_modifier_price:
