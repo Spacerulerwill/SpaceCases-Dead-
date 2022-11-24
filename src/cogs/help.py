@@ -5,13 +5,14 @@
 import discord
 from discord.ext import commands
 from src.util.constants import PREFIX
-from discord.ext.commands import Group
 
 # initialise class
 class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
+    
+    # This command displays a menu with all cogs and their commands if no command is specified
+    # If a command is specified with display the description and usage details of that command
     @commands.command()
     async def help(self, ctx, *args):
 
@@ -35,28 +36,16 @@ class Help(commands.Cog):
 
             await ctx.send(embed=e)
         else:
-            command_name = command_name.split(" ")
-            # if command
-            if len(command_name) == 1:
-                command_name = command_name[0]
-                command = self.bot.get_command(command_name)
-                if command == None:
-                    await ctx.send("Invalid command!")
-                    return
-                e = discord.Embed(description=command.description)
-                e.add_field(name="Usage", value=command.usage)
-
-            #if subcommand
-            elif len(command_name) == 2:
-                group_name = command_name[0]
-                command_name = command_name[1]
-                group = self.bot.get_command(group_name)
-                command = group.get_command(command_name)
-                if command == None:
-                    await ctx.send("Invalid command!")
-                    return
-                e = discord.Embed(description=command.description)
-                e.add_field(name="Usage", value=command.usage)
+            if command_name == "help":
+                await ctx.send("Invalid command!")
+                return
+                
+            command = self.bot.get_command(command_name)
+            if command == None:
+                await ctx.send("Invalid command!")
+                return
+            e = discord.Embed(description=command.description)
+            e.add_field(name="Usage", value=command.usage)
 
             await ctx.send(embed=e)
 

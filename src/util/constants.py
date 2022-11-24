@@ -1,11 +1,12 @@
-PREFIX = "cs "
-
+PREFIX:str = "cs "
+TWELVE_HOURS:int = 43200
 KEY_PRICE = 250
 
+DEFAULT_INVENTORY_SIZE = 5
 INVENTORY_ELEMS_PER_PAGE = 10
-
 MAX_THREADS = 30
 
+#rarity to color 
 rarity_color_dict = {
     "Consumer": 11584473,
     "Industrial": 6199513,
