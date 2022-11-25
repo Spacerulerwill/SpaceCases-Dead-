@@ -48,7 +48,12 @@ async def transfer(ctx:Context, member: discord.Member, amount:float):
             }], session=session, return_document=ReturnDocument.AFTER)
 
             if post_doc["modified"]:
-                database.user_data.find_one_and_update({"_id":member.id}, {"$inc": {"balance": amount}}, session=session)
+                other_user_post = database.user_data.find_one_and_update({"_id":member.id}, {"$inc": {"balance": amount}}, session=session)
+                if other_user_post == None:
+                    await ctx.send(f"{member.name} is not registered!")
+                    session.abort_transaction()
+                    return
+                
                 await ctx.send(f"Successfully transferred {currency_str_format(amount)} to {member.name}'s account")
             else:
                 await ctx.send("You have insufficient funds!")
