@@ -1,6 +1,6 @@
 from discord.ext.commands import Context
 from src.util import database
-from src.util.constants import PREFIX
+from src.util.constants import PREFIX, KEY_PRICE
 import Levenshtein
 
 async def open(ctx:Context, *args):
@@ -26,6 +26,7 @@ async def open(ctx:Context, *args):
                 highest_ratio = ratio
                 closest_match = key
         
+        #if match is reasonably close enough
         if highest_ratio > 0.8:
             container_name = closest_match
             container_data = database.containers[container_name]
@@ -33,4 +34,9 @@ async def open(ctx:Context, *args):
         else:
             await ctx.send("Container not found!")
             return
-
+    
+    # check user has enough balance for case
+    if user_data["balance"] < container_data["price"] + KEY_PRICE:
+        await ctx.send("You don't have enough funds for this action!")
+        return
+    
