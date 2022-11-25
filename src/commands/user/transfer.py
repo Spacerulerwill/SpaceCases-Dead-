@@ -5,7 +5,7 @@ from src.util.format import currency_str_format
 from decimal import Decimal
 from pymongo import ReturnDocument
 
-async def transfer(self, ctx:Context, member: discord.Member, amount:float):
+async def transfer(ctx:Context, member: discord.Member, amount:float):
     if member is ctx.author:
         await ctx.send("You cannot transfer money to yourself!")
         return

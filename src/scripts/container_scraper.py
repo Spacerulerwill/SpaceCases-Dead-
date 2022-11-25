@@ -52,6 +52,9 @@ def scrape_containers():
         "class": "margin-top-sm"
       }).text
 
+    #remove punctuation
+    container_name = sub('[^\w\s]','', container_name)
+
     price_div = container_soup.find("div", {"class": ["btn-group", "content-header-container-btn"]})
     container_price = price_div.find("a", {"class": ["btn", "btn-default", "market-button-item"]}).text
 

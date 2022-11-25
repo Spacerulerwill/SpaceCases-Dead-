@@ -9,6 +9,7 @@ async def register(ctx:Context):
             "balance": 0,
             "last-claim": 0,
             "inventory": [None for i in range(DEFAULT_INVENTORY_SIZE)],
+            "item-count": 0,
             "inventory-size": 5,
             "containers-opened": 0,
             "total-spent": 0,

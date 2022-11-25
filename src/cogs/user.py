@@ -48,7 +48,7 @@ class User(commands.Cog):
     @commands.command(description="Transfer money to another user", usage=f"""
     `{PREFIX}transfer <user> <amount>`
     **Arguments**
-    `<user>` - user to transfer money too
+    `<user>` - user to transfer money to
     `<amount>` - the amount of money to transfer
     """)
     async def transfer(self, ctx:Context, member: discord.Member, amount:float):

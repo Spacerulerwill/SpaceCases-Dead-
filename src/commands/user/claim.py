@@ -50,6 +50,7 @@ async def claim(ctx:Context):
 
     if post_doc == None:
         await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
+        return
     
     #if document modified
     if post_doc["modified"]:

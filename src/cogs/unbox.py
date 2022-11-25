@@ -4,14 +4,21 @@
 # * container
 # * containers
 
+import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
+
+from typing import Optional
 
 #command
 from src.commands.unbox.item import item
 from src.commands.unbox.containers import containers
 from src.commands.unbox.container import container
+from src.commands.unbox.inventory import inventory
+from src.commands.unbox.open import open
+
+
 
 # initialise class
 class Unboxing(commands.Cog):
@@ -47,9 +54,25 @@ class Unboxing(commands.Cog):
         await containers(ctx, page)
 
     @containers.error
-    async def containers_error(self, ctx, error):
+    async def containers_error(self, ctx:Context, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Page number must be an integer!")
+
+    # open inventory
+    @commands.command(description="See your inventory", usage=f"""
+    `{PREFIX}inventory`
+    """)
+    async def inventory(self, ctx:Context, member:Optional[discord.Member]=None, page:Optional[int]=1):
+        await inventory(ctx, member, page)
+
+    # open a container
+    @commands.command(description="Purchase and open a container, with the option to either sell it or add it to your inventory", usage=f"""
+    `{PREFIX}open <container name>`
+    **Arguments**
+    `<container name>` - the name of the container to open as a string
+    """)
+    async def open(self, ctx:Context, *args):
+        await open(ctx, *args)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
