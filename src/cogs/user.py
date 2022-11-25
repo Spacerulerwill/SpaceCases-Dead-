@@ -53,6 +53,15 @@ class User(commands.Cog):
     """)
     async def transfer(self, ctx:Context, member: discord.Member, amount:float):
         await transfer(ctx, member, amount)
+
+    @transfer.error
+    async def transfer_error(self, ctx:Context, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            error:commands.MissingRequiredArgument
+            if error.param.name == "member":
+                await ctx.send("Oops! You forget to supply a recipient user")
+            if error.param.name == "amount":
+                await ctx.send("Oops! You forget to supply an amount of money")
                 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
