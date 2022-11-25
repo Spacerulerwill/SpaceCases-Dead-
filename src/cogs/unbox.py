@@ -18,8 +18,6 @@ from src.commands.unbox.container import container
 from src.commands.unbox.inventory import inventory
 from src.commands.unbox.open import open
 
-
-
 # initialise class
 class Unboxing(commands.Cog):
     def __init__(self, bot):

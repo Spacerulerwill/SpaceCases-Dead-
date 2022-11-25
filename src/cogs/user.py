@@ -68,7 +68,7 @@ class User(commands.Cog):
             if error.param.name == "amount":
                 await ctx.send("Oops! You forget to supply an amount of money")
         elif isinstance(error, commands.BadArgument): 
-            print("Incorrect Arguments!")
+            await ctx.send("Incorrect Arguments!")
                 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
