@@ -44,6 +44,11 @@ class User(commands.Cog):
     async def balance(self, ctx: Context, member: discord.Member = None):
         await balance(ctx, member)
 
+    @balance.error
+    async def balance_error(self, ctx:Context, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Incorrect Arguments!")
+
     #send user money
     @commands.command(description="Transfer money to another user", usage=f"""
     `{PREFIX}transfer <user> <amount>`
@@ -62,6 +67,8 @@ class User(commands.Cog):
                 await ctx.send("Oops! You forget to supply a recipient user")
             if error.param.name == "amount":
                 await ctx.send("Oops! You forget to supply an amount of money")
+        elif isinstance(error, commands.BadArgument): 
+            print("Incorrect Arguments!")
                 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

@@ -56,7 +56,7 @@ class Unboxing(commands.Cog):
     @containers.error
     async def containers_error(self, ctx:Context, error):
         if isinstance(error, commands.BadArgument):
-            await ctx.send("Page number must be an integer!")
+            await ctx.send("Incorrect Arguments!")
 
     # open inventory
     @commands.command(description="See your inventory", usage=f"""
@@ -64,6 +64,11 @@ class Unboxing(commands.Cog):
     """)
     async def inventory(self, ctx:Context, member:Optional[discord.Member]=None, page:Optional[int]=1):
         await inventory(ctx, member, page)
+
+    @inventory.error
+    async def inventory_error(self, ctx:Context, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Incorrect Arguments!")
 
     # open a container
     @commands.command(description="Purchase and open a container, with the option to either sell it or add it to your inventory", usage=f"""
