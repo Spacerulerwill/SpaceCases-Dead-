@@ -21,7 +21,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
     e = discord.Embed(title=f"{member.name}'s Inventory")
 
     # if users inventory is empty
-    if user_data["item-count"] == 0:
+    if len(user_data["inventory"]) == 0:
         if member == ctx.author:
             e.description = f"Your inventory is empty! Start unboxing with `{PREFIX}open`"
         else:

@@ -69,7 +69,7 @@ class Unboxing(commands.Cog):
             await ctx.send("Incorrect Arguments!")
 
     # open a container
-    @commands.command(description="Purchase and open a container, with the option to either sell it or add it to your inventory", usage=f"""
+    @commands.command(description="Purchase and open a container, with the option to either sell the item unboxed or add it to your inventory", usage=f"""
     `{PREFIX}open <container name>`
     **Arguments**
     `<container name>` - the name of the container to open as a string
