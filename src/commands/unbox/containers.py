@@ -101,8 +101,12 @@ async def containers(ctx:Context, page:int = 1):
                 await msg.edit(embed=get_embed(), view=view)
         await interact.response.defer()
 
+    async def view_timeout_callback():
+        await msg.delete()
+
     #create next and prev page buttons
-    view = discord.ui.View()
+    view = discord.ui.View(timeout=30)
+    view.on_timeout = view_timeout_callback
 
     prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
     prev_button.callback = prev_callback
