@@ -23,6 +23,7 @@ async def item(ctx:Context, *args):
         min_float = "{:.2f}".format(weapon_data["min_float"])
         max_float = "{:.2f}".format(weapon_data["max_float"])
         inspect_url = "https://skinbaron.de/en/3dviewer?inspectLink=" + quote(weapon_data["inspect_url"])
+        
         e = discord.Embed(title=formatted_name, color=rarity_color, description=f"[Inspect In 3D]({inspect_url})")
         e.add_field(name="Current Market Value", value=price)
         e.add_field(name="Rarity", value=rarity)
