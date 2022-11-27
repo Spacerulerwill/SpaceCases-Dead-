@@ -45,7 +45,7 @@ async def on_ready():
         await bot_instance.load_extension(f'src.cogs.{extension}')
         print(f"Loaded cog: {extension}")
 
-    #set playing game to cs help open csgo weapon case
+    #set playing game to cs help
     await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
 
 def scrape_skin_data():

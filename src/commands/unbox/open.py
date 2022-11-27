@@ -3,9 +3,9 @@ import Levenshtein
 import random
 from discord.ext.commands import Context
 from src.util import database
-from src.util.constants import PREFIX, KEY_PRICE, case_rarity_odds, rarity_color_dict
+from src.util.constants import PREFIX, KEY_PRICE, case_rarity_odds, rarity_color_dict, case_wear_ranges_lower, conditions
 from src.util.format import currency_str_format
-from pymongo import ReturnDocument
+from urllib.parse import quote
 
 async def open(ctx:Context, *args):
     container_name = " ".join(args[:]).strip().lower()
@@ -65,22 +65,23 @@ async def open(ctx:Context, *args):
     #determine condition
     if float_value > 0 and float_value <= 0.1471:
         float_value = random.uniform(0.00, 0.07)
-        condition = "factory new "
     elif float_value > 0.1471 and float_value <=  0.3939:
         float_value = random.uniform(0.07, 0.15)
-        condition = "minimal wear "
     elif float_value > 0.3939 and float_value <= 0.8257:
         float_value = random.uniform(0.15, 0.38)
-        condition = "field tested "
     elif float_value > 0.8257 and float_value <=   0.9007:
         float_value = random.uniform(0.38, 0.45)
-        condition = "well worn "
     elif float_value > 0.9007 and float_value <= 1.0:
         float_value = random.uniform(0.45, 1)
-        condition = "battle scarred "
 
     #linear interpolate between max and min float
     final_float = float_value * (max_float - min_float) + min_float
+
+    skin_wear = None
+    for wear, upper in case_wear_ranges_lower.items():
+        if final_float > upper:
+            condition = conditions[wear].lower() + " "
+            break
 
     #is it stattrak?
     if random.random() < 0.1:
@@ -97,6 +98,7 @@ async def open(ctx:Context, *args):
     skin_rarity = skin_data["rarity"]
     color = rarity_color_dict[skin_rarity]
     skin_price = skin_data["price"]
+    inspect_url = "https://skinbaron.de/en/3dviewer?inspectLink=" + quote(skin_data["inspect_url"])
 
     #decrement balance, increment total spent, increase total return and containers opened
     database.user_data.find_one_and_update({"_id": ctx.author.id},{"$inc" :{
@@ -107,7 +109,7 @@ async def open(ctx:Context, *args):
     }})
 
     # create embed to show user
-    e = discord.Embed(title=formatted_name, color=color)
+    e = discord.Embed(title=formatted_name, color=color, description=f"[Inspect In 3D]({inspect_url})")
     e.add_field(name="Market Value", value=currency_str_format(skin_price))
     e.add_field(name="Rarity", value=skin_rarity)
     e.add_field(name="Float", value=str(final_float)) 
@@ -118,6 +120,7 @@ async def open(ctx:Context, *args):
 
     # callbacks
     async def sell_item():
+
         nonlocal interacted_with
         #change color to dark gray, remove footer, change balance to have balance of skin
         database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$inc" :{"balance" : skin_price}})

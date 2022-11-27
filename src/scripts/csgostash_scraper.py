@@ -226,26 +226,29 @@ def scrape_skin_link(skin_link):
         "has_souvenir_variant": has_souvenir_variant,
       }
     
-  # add the non wear versions
-  result[unformatted_name] = {
-      "formatted_name": formatted_name,
-      "rarity": rarity,
-      "min_float": min_float,
-      "max_float": max_float,
-      "condition_index": condition_index,
-      "best_condition_index": best_condition_index,
-      "worst_condition_index": worst_condition_index,
-      "has_stattrak_variant": has_stattrak_variant,
-      "has_souvenir_variant": has_souvenir_variant,
-  }
+      # add the non wear versions
+      result[unformatted_name] = {
+          "formatted_name": formatted_name,
+          "rarity": rarity,
+          "min_float": min_float,
+          "max_float": max_float,
+          "condition_index": condition_index,
+          "best_condition_index": best_condition_index,
+          "worst_condition_index": worst_condition_index,
+          "has_stattrak_variant": has_stattrak_variant,
+          "has_souvenir_variant": has_souvenir_variant,
+      }
 
-  # add images
-
-  #if its a vanilla knife, add the same image to each wear
+  # add images and inspect links
+  #if its a vanilla knife, add the same image to each wear 
   if is_vanilla_knife:
     img_url = soup.find("img", {"class": "main-skin-img"})["src"]
+    inspect_url = soup.find("a", {"class": "inspect-button-skin"})["href"]
+
     for condition in ["Factory New", "Minimal Wear", "Field Tested", "Well Worn", "Battle Scarred", "StatTrak Factory New", "StatTrak Minimal Wear", "StatTrak Field Tested", "StatTrak Well Worn", "StatTrak Battle Scarred"]:
         result[condition.lower() + " " + unformatted_name]["image_url"] = img_url
+        result[condition.lower() + " " + unformatted_name]["inspect_url"] = inspect_url
+
   else: # otherwise add different images to each wear
     image_buttons_div = soup.find("div", {"class": ["btn-group-sm", "btn-group-justified"]})
     image_buttons = image_buttons_div.find_all("a")
@@ -254,13 +257,18 @@ def scrape_skin_link(skin_link):
       text = button.text.strip()
       wear = inspect_button_condition_dict[text]
       url = button["data-hoverimg"]
+      inspect_url = button["href"]
 
       result[wear + unformatted_name]["image_url"] = url
+      result[wear + unformatted_name]["inspect_url"] = inspect_url
 
       if has_stattrak_variant:
         result["stattrak " + wear + unformatted_name]["image_url"] = url
+        result["stattrak " + wear + unformatted_name]["inspect_url"] = inspect_url
       if has_souvenir_variant:
         result["souvenir " + wear + unformatted_name]["image_url"] = url
+        result["souvenir " + wear + unformatted_name]["inspect_url"] = inspect_url
+
 
   print(formatted_name)
 

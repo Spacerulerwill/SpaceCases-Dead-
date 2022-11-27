@@ -3,6 +3,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.format import currency_str_format
 from src.util.constants import rarity_color_dict
+from urllib.parse import quote
 
 async def item(ctx:Context, *args):
     item_query = " ".join(args[:]).strip().lower()
@@ -21,7 +22,8 @@ async def item(ctx:Context, *args):
         rarity_color = rarity_color_dict[rarity]
         min_float = "{:.2f}".format(weapon_data["min_float"])
         max_float = "{:.2f}".format(weapon_data["max_float"])
-        e = discord.Embed(title=formatted_name, color=rarity_color)
+        inspect_url = "https://skinbaron.de/en/3dviewer?inspectLink=" + quote(weapon_data["inspect_url"])
+        e = discord.Embed(title=formatted_name, color=rarity_color, description=f"[Inspect In 3D]({inspect_url})")
         e.add_field(name="Current Market Value", value=price)
         e.add_field(name="Rarity", value=rarity)
         e.add_field(name="Float Range", value=f"{min_float} - {max_float}")
