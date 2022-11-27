@@ -28,7 +28,7 @@ async def container(ctx:Context, *args):
             rarities[key] = value
 
     #create select menu and left right arrow buttons
-    view = discord.ui.View()
+    view = discord.ui.View(timeout=60)
 
     select_options = [discord.SelectOption(label="All Items", value="all items")]
     for key, rarity, in container_data["items"].items():
@@ -76,9 +76,13 @@ async def container(ctx:Context, *args):
             await msg.edit(embed=get_embed(), view=view)
 
         await interact.response.defer()
+    
+    async def on_view_timeout():
+        await msg.delete()
 
-    next_button.callback = next_callback
     prev_button.callback = prev_callback
+    next_button.callback = next_callback
+    view.on_timeout = on_view_timeout
 
     view.add_item(select)
     view.add_item(prev_button)
