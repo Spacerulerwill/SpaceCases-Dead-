@@ -1,4 +1,5 @@
 import discord
+import Levenshtein
 from discord.ext.commands import Context
 from src.util import database
 from src.util.format import currency_str_format
@@ -6,17 +7,32 @@ from src.util.constants import conditions, rarity_color_dict
 
 async def container(ctx:Context, *args):
     container = " ".join(args[:]).strip().lower()
+    
+    try:
+        container_data = database.containers[container]
+        container_name = container_data["formatted_name"]
+        container_price = currency_str_format(container_data["price"])
+        container_image_url = container_data["image_url"]
+    except KeyError:
+        # try and find closest match
+        highest_ratio = 0
+        closest_match = None
+        for key in database.containers.keys():
+            ratio = Levenshtein.ratio(container, key)
+            if ratio > highest_ratio:
+                highest_ratio = ratio
+                closest_match = key
 
-    if container not in database.containers:
-        await ctx.send("Invalid container!")
+        #if match is reasonably close enough
+        if highest_ratio > 0.8:
+            container = closest_match
+            container_data = database.containers[container]
+            await ctx.send(f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
+        else:
+            await ctx.send("Container not found!")
         return
     
     item_index = 0
-
-    container_data = database.containers[container]
-    container_name = container_data["formatted_name"]
-    container_price = currency_str_format(container_data["price"])
-    container_image_url = container_data["image_url"]
     
     rarities = {}
     selected_rarity = "all items"
@@ -37,7 +53,7 @@ async def container(ctx:Context, *args):
 
     select = discord.ui.Select(options=select_options)
 
-    async def select_callback(interact):
+    async def select_callback(interact: discord.Interaction):
         nonlocal selected_rarity, item_index, rarity_len
 
         if interact.user.id == ctx.author.id:
@@ -53,7 +69,7 @@ async def container(ctx:Context, *args):
     prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
     next_button = discord.ui.Button(label="▶", style=discord.ButtonStyle.gray)
 
-    async def prev_callback(interact):
+    async def prev_callback(interact: discord.Interaction):
         nonlocal item_index
 
         if interact.user.id == ctx.author.id:
@@ -65,7 +81,7 @@ async def container(ctx:Context, *args):
 
         await interact.response.defer()
 
-    async def next_callback(interact):
+    async def next_callback(interact: discord.Interaction):
         nonlocal item_index
         
         if interact.user.id == ctx.author.id:
