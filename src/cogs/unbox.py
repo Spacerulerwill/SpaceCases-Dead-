@@ -57,8 +57,11 @@ class Unboxing(commands.Cog):
             await ctx.send("Incorrect Arguments!")
 
     # open inventory
-    @commands.command(description="See your inventory", usage=f"""
-    `{PREFIX}inventory`
+    @commands.command(description="See someones inventory", usage=f"""
+    `{PREFIX}inventory <user> <page>`
+    **Arguments**
+    `<user>` - optional - the owner of the inventory
+    `<page>` - optional - the page of the inventory
     """)
     async def inventory(self, ctx:Context, member:Optional[discord.Member]=None, page:Optional[int]=1):
         await inventory(ctx, member, page)
