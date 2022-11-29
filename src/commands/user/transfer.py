@@ -2,8 +2,8 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.util.format import currency_str_format
+from src.util.constants import PREFIX
 from decimal import Decimal
-from pymongo import ReturnDocument
 
 async def transfer(ctx:Context, member: discord.Member, amount:float):
     if member is ctx.author:
@@ -20,7 +20,7 @@ async def transfer(ctx:Context, member: discord.Member, amount:float):
     #start a session to multi docuemnt atomic transaction
     with database.mongo_client.start_session() as session:
         with session.start_transaction():
-            post_doc = database.user_data.find_one_and_update({"_id": ctx.author.id}, 
+            update_result = database.user_data.update_one({"_id": ctx.author.id}, 
             [{
             "$set": {                  
                 'balance': {
@@ -34,22 +34,16 @@ async def transfer(ctx:Context, member: discord.Member, amount:float):
                         "else": "$balance"
                     }
                 },
-                "modified": {
-                    "$cond": {
-                        "if": {
-                            "$gte": ["$balance", amount]
-                        },
-                        "then": True,
-                        
-                        "else": False
-                    }
-                }
             }
-            }], session=session, return_document=ReturnDocument.AFTER)
+            }], session=session)
 
-            if post_doc["modified"]:
-                other_user_post = database.user_data.find_one_and_update({"_id":member.id}, {"$inc": {"balance": amount}}, session=session)
-                if other_user_post == None:
+            if update_result.matched_count == 0:
+                await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
+                return
+
+            if update_result.modified_count == 1:
+                other_update_result = database.user_data.update_one({"_id":member.id}, {"$inc": {"balance": amount}}, session=session)
+                if other_update_result.matched_count == 0:
                     await ctx.send(f"{member.name} is not registered!")
                     session.abort_transaction()
                     return

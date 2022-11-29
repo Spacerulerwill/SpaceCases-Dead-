@@ -101,7 +101,7 @@ async def open(ctx:Context, *args):
     inspect_url = "https://skinbaron.de/en/3dviewer?inspectLink=" + quote(skin_data["inspect_url"])
 
     #decrement balance, increment total spent, increase total return and containers opened
-    database.user_data.find_one_and_update({"_id": ctx.author.id},{"$inc" :{
+    database.user_data.update_one({"_id": ctx.author.id},{"$inc" :{
         "balance" : -(container_price + KEY_PRICE), 
         "total-spent": container_price + KEY_PRICE, 
         "total-return": skin_price, 
@@ -123,7 +123,7 @@ async def open(ctx:Context, *args):
 
         nonlocal interacted_with
         #change color to dark gray, remove footer, change balance to have balance of skin
-        database.user_data.find_one_and_update({"_id": ctx.author.id}, {"$inc" :{"balance" : skin_price}})
+        database.user_data.update_one({"_id": ctx.author.id}, {"$inc" :{"balance" : skin_price}})
 
         e.colour = discord.colour.Color.dark_gray()
         e.set_footer(text="")
@@ -146,7 +146,7 @@ async def open(ctx:Context, *args):
 
             if len(inventory) < user["inventory-size"]:
                 # add to user inventory
-                database.user_data.find_one_and_update({"_id": ctx.author.id},{"$push" :{"inventory" : {"name": skin, "float": final_float}}})
+                database.user_data.update_one({"_id": ctx.author.id},{"$push" :{"inventory" : {"name": skin, "float": final_float}}})
                 e.colour = discord.colour.Color.green()
                 e.set_footer(text="")
                 await  msg.edit(embed=e, view=None)
