@@ -51,6 +51,12 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
     
     e.description = f"Total value: **{currency_str_format(inventory_value)}**\nSlots Used: **{len(inventory_data)}/{user_data['inventory-size']}**"
     e.add_field(name="Contents", value=string)
-    e.add_field(name="Commands", value=f"`{PREFIX}inspect <item number>` - view an item\n`{PREFIX}sell <item number>` - sell an item", inline=False)
+
+    if member is ctx.author:
+        e.add_field(name="Commands", value=f"`{PREFIX}inspect <item number>` - view an item\n`{PREFIX}sell <item number>` - sell an item", inline=False)
+    else:
+        e.add_field(name="Commands", value=f"`{PREFIX}inspect {member.name} <item number>` - see an item", inline=False)
+
+
     e.set_thumbnail(url=member.avatar.url)
     await ctx.send(embed=e)
