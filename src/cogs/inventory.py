@@ -14,6 +14,7 @@ from typing import Optional
 #command
 from src.commands.inventory.inventory import inventory
 from src.commands.inventory.inspect import inspect
+from src.commands.inventory.sell import sell
 
 # initialise class
 class Inventory(commands.Cog):
@@ -46,6 +47,20 @@ class Inventory(commands.Cog):
 
     @inspect.error
     async def inspect_error(self, ctx:Context, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Incorrect Arguments!")
+
+        
+    @commands.command(description="Sell an item from your inventory", usage=f"""
+    `{PREFIX}sell <item index>`
+    **Arguments**
+    `<item index>` - the index of the item you want to sell
+    """)
+    async def sell(self, ctx:Context, item_index:int):
+        await sell(ctx, item_index)
+
+    @sell.error
+    async def sell_error(self, ctx:Context, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Incorrect Arguments!")
 
