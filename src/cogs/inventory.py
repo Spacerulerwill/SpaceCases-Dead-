@@ -35,7 +35,12 @@ class Inventory(commands.Cog):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Incorrect Arguments!")
 
-    @commands.command(description="Inspect an item in someone's inventory")
+    @commands.command(description="Inspect an item in someone's inventory", usage=f"""
+    `{PREFIX}inspect <user> <item index>`
+    **Arguments**
+    `<user>` - optional - the user whos inventory you wish to look in
+    `<item index>` - the index of the item
+    """)
     async def inspect(self, ctx:Context, member:Optional[discord.Member]=None, item_index:int=None):
         await inspect(ctx, member, item_index)
 
@@ -43,7 +48,7 @@ class Inventory(commands.Cog):
     async def inspect_error(self, ctx:Context, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Incorrect Arguments!")
-            
+
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
     await bot.add_cog(Inventory(bot))
