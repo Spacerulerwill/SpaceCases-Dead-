@@ -9,7 +9,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
     if member == None:
         member = ctx.author
     
-    user_data = database.user_data.find_one({"_id":member.id})
+    user_data = database.user_data.find_one({"_id": member.id})
 
     # if user doesn't exist
     if user_data == None:
@@ -18,7 +18,6 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
         else:
             await ctx.send(f"{member.name} is not registered!")
         return
-    
 
     # if users inventory is empty
     if len(user_data["inventory"]) == 0:
@@ -52,6 +51,6 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
     
     e.description = f"Total value: **{currency_str_format(inventory_value)}**\nSlots Used: **{len(inventory_data)}/{user_data['inventory-size']}**"
     e.add_field(name="Contents", value=string)
-    e.set_thumbnail(url=ctx.author.avatar.url)
     e.add_field(name="Commands", value=f"`{PREFIX}inspect <item number>` - view an item\n`{PREFIX}sell <item number>` - sell an item", inline=False)
+    e.set_thumbnail(url=member.avatar.url)
     await ctx.send(embed=e)

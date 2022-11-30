@@ -15,7 +15,6 @@ from typing import Optional
 from src.commands.unbox.item import item
 from src.commands.unbox.containers import containers
 from src.commands.unbox.container import container
-from src.commands.unbox.inventory import inventory
 from src.commands.unbox.open import open
 
 # initialise class
@@ -53,21 +52,6 @@ class Unboxing(commands.Cog):
 
     @containers.error
     async def containers_error(self, ctx:Context, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send("Incorrect Arguments!")
-
-    # open inventory
-    @commands.command(description="See someones inventory", usage=f"""
-    `{PREFIX}inventory <user> <page>`
-    **Arguments**
-    `<user>` - optional - the owner of the inventory
-    `<page>` - optional - the page of the inventory
-    """)
-    async def inventory(self, ctx:Context, member:Optional[discord.Member]=None, page:Optional[int]=1):
-        await inventory(ctx, member, page)
-
-    @inventory.error
-    async def inventory_error(self, ctx:Context, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Incorrect Arguments!")
 
