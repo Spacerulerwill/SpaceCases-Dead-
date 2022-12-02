@@ -26,34 +26,40 @@ async def sell(ctx:Context, item_index:int):
             await msg.delete()
 
     async def sell_callback(interact: discord.Interaction):
- 
-        #start a session to multi docuemnt atomic transaction
-        with database.mongo_client.start_session() as session:
-            with session.start_transaction():
-                update_result = database.user_data.update_one({
-                    "_id": ctx.author.id}, 
-                    {
-                        "$pull": {"inventory": {"name": item, "float": float}},
-                    }, 
-                session=session)
+        if interact.user.id == ctx.author.id:
+    
+            #start a session to multi docuemnt atomic transaction
+            with database.mongo_client.start_session() as session:
+                with session.start_transaction():
+                    update_result = database.user_data.update_one({
+                        "_id": ctx.author.id}, 
+                        {
+                            "$pull": {"inventory": {"name": item, "float": float}},
+                        }, 
+                    session=session)
 
-                if update_result.modified_count == 0:
-                    await close_message()
-                    await ctx.send(f"Sell cancelled as the **{formatted_name}** is no longer in your inventory")
-                    session.abort_transaction()
-                    return
-                
-                database.user_data.update_one({
-                    "_id": ctx.author.id}, 
-                    {
-                        "$inc": {"balance": database.skin_data[item]["price"]}
-                    }, 
-                session=session)
+                    if update_result.modified_count == 0:
+                        await close_message()
+                        await ctx.send(f"Sell cancelled as the **{formatted_name}** is no longer in your inventory")
+                        session.abort_transaction()
+                        return
+                    
+                    database.user_data.update_one({
+                        "_id": ctx.author.id}, 
+                        {
+                            "$inc": {"balance": database.skin_data[item]["price"]}
+                        }, 
+                    session=session)
 
-        await msg.edit(content=f"Successfully sold **{formatted_name}**", view=None)
+            await msg.edit(content=f"Successfully sold **{formatted_name}**", view=None)
+        else:
+            await interact.response.defer()
 
     async def cancel_callback(interact: discord.Interaction):
-        await close_message()
+        if interact.user.id == ctx.author.id:
+            await close_message()
+        else:
+            await interact.response.defer()
 
     item_index -= 1
 
