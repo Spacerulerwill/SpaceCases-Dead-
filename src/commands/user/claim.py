@@ -5,6 +5,28 @@ from pymongo import ReturnDocument
 from datetime import datetime
 import time
 
+CLAIM_MONEY_AMOUNTS = [
+    50,
+    75,
+    100,
+    100,
+    125,
+    150,
+    175,
+    200,
+    200,
+    225,
+    250,
+    275,
+    300
+]
+
+CLAIM_EXTRA_REWARDS = {
+    4: "classified",
+    10: "covert",
+    14: "rare items"
+}
+
 async def claim(ctx:Context):
     #update balance and set last claim to now if been twelve hours since last claim
     post_doc = database.user_data.find_one_and_update({"_id": ctx.author.id},
