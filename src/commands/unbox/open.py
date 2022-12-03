@@ -118,12 +118,14 @@ async def open(ctx:Context, *args):
                     "inventory-size": 1
                 }
             }
+
             update_result = database.user_data.update_one(filter_, update)    
                     
             if update_result.modified_count == 1:
                 e.colour = discord.colour.Color.green()
                 e.set_footer(text="")
                 await  msg.edit(embed=e, view=None)
+                
             elif update_result.modified_count == 0:
                 await ctx.send("Your inventory is full! Sell an item or buy more inventory space")
         await interact.response.defer()

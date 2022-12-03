@@ -2,7 +2,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.format import currency_str_format
 from src.util.skin_func import gen_item
-from src.util.constants import TWELVE_HOURS, PREFIX, case_wear_ranges_lower, conditions, rarity_color_dict
+from src.util.constants import TWELVE_HOURS, ONE_DAY, PREFIX, case_wear_ranges_lower, conditions, rarity_color_dict
 from pymongo import ReturnDocument
 from datetime import datetime
 import discord
@@ -37,7 +37,19 @@ async def claim(ctx:Context):
     post_doc = database.user_data.find_one_and_update({"_id": ctx.author.id},
     [   
         {
-            "$set": {              
+            
+            "$set": {      
+                 'claim-streak': {
+                    "$switch": {
+                        "branches": [
+                            {"case": {"$eq": ["$last-claim", 0]}, "then": {"$add": ["$claim-streak", 1]}},
+                            {"case": {"$eq": [{"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]}, 1]}, "then": {"$add": ["$claim-streak", 1]}},
+                            {"case": {"$gt": [{"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]}, 1]}, "then": 0},
+                        ] ,
+                        "default": "$claim-streak"
+                    }
+                },
+
                 'balance': {
                     "$cond": {
                         "if": {
@@ -54,7 +66,7 @@ async def claim(ctx:Context):
                                 "in": {
                                     "$cond": {
                                         "if": {
-                                            "$gte": [int(time.time()) - TWELVE_HOURS, '$last-claim']
+                                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
                                         },
                                         "then": {
                                             "$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", "$claim-streak"]}]
@@ -67,33 +79,22 @@ async def claim(ctx:Context):
                     }
                 },
 
-                #'last-claim': {
-                #    "$cond": {
-                #        "if": {
-                #            "$gte": [int(time.time()) - TWELVE_HOURS, '$last-claim']
-                #        },
-                #        "then": int(time.time()),
-                #        
-                ##        "else": "$last-claim"
-                #    }
-                #},
-
-                'claim-streak': {
+                'last-claim': {
                     "$cond": {
                         "if": {
-                            "$gte": [int(time.time()) - TWELVE_HOURS, '$last-claim']
+                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
                         },
-                        "then": {
-                            "$add": ["$claim-streak", 1]
-                        },
-                        "else": "$claim-streak"
+                        "then": int(time.time()),
+                        
+                        "else": "$last-claim"
                     }
                 },
+
 
                 "modified": {
                     "$cond": {
                         "if": {
-                            "$gte": [int(time.time()) - TWELVE_HOURS, '$last-claim']
+                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #differnet days
                         },
                         "then": True,
                         
@@ -112,13 +113,16 @@ async def claim(ctx:Context):
     if post_doc["modified"]:
 
         #create embed
-        e = discord.Embed(title="You have successfully claimed your daily reward!", description="You can claim again in 12 hours", color=discord.Color.green())
+        e = discord.Embed(title="You have successfully claimed your daily reward!", description="You can claim again tomorrow", color=discord.Color.green())
         e.set_thumbnail(url=ctx.author.avatar.url)
-        e.set_footer(text="Note: Streaks reset 24 hours after your last claim")
+        footer = "Note: Streaks reset 24 hours after your last claim"
 
         view = None
-
-        prev_streak = post_doc["claim-streak"]-1
+        
+        
+        prev_streak = post_doc["claim-streak"]
+        if prev_streak != 0:
+            prev_streak -= 1
 
         if post_doc["claim-streak"] >= 14: 
             e.add_field(name="Amount:", value="$300.00", inline=True)
@@ -132,6 +136,8 @@ async def claim(ctx:Context):
 
         # if bonus item reward, pick random item of given quality
         if bonus_reward != None:
+           
+            footer += "\nWarning: You have 3 minutes to claim your item!"
             #pick random case
             random_container = random.choice(list(database.containers.keys()))
             item_pool = database.containers[random_container]["items"][bonus_reward]
@@ -150,16 +156,13 @@ async def claim(ctx:Context):
             view.add_item(inventory_button)
             view.add_item(sell_button)
 
-        await ctx.send(embed=e, view=view)
+        e.set_footer(text=footer)
+        msg = await ctx.send(embed=e, view=view)
 
     else:
-        time_left_seconds = TWELVE_HOURS - (int(time.time()) - post_doc["last-claim"])
-        date_time = datetime.fromtimestamp( time_left_seconds )  
-        time_left_formatted = date_time.strftime("%H:%M:%S")
-
         e = discord.Embed(
             title="You have already claimed your daily bonus!", 
-            description=f"You can claim again in {time_left_formatted}", 
+            description=f"You can claim again tomorrow", 
             color=discord.Color.red()
         )
         e.set_thumbnail(url=ctx.author.avatar.url)
