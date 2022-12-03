@@ -39,3 +39,5 @@ def gen_item(unformatted_name:str) -> Tuple[str, float]:
     else:
         stattrak = ""
     unformatted_name = stattrak + condition + unformatted_name
+
+    return unformatted_name, final_float
