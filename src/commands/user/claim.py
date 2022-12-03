@@ -1,6 +1,7 @@
 from discord.ext.commands import Context
 from src.util import database
 from src.util.format import currency_str_format
+from src.util.skin_func import gen_item
 from src.util.constants import TWELVE_HOURS, PREFIX, case_wear_ranges_lower, conditions, rarity_color_dict
 from pymongo import ReturnDocument
 from datetime import datetime
@@ -111,8 +112,11 @@ async def claim(ctx:Context):
     if post_doc["modified"]:
 
         #create embed
-        e = discord.Embed(title="You have successfully claimed your daily reward!", color=discord.Color.green())
+        e = discord.Embed(title="You have successfully claimed your daily reward!", description="You can claim again in 12 hours", color=discord.Color.green())
         e.set_thumbnail(url=ctx.author.avatar.url)
+        e.set_footer(text="Note: Streaks reset 24 hours after your last claim")
+
+        view = None
 
         prev_streak = post_doc["claim-streak"]-1
 
@@ -130,50 +134,23 @@ async def claim(ctx:Context):
         if bonus_reward != None:
             #pick random case
             random_container = random.choice(list(database.containers.keys()))
-            container_data = database.containers[random_container]["items"][bonus_reward]
-            skin = random.choice(container_data)
+            item_pool = database.containers[random_container]["items"][bonus_reward]
+            unformatted_name, float_val = gen_item(random.choice(item_pool))
 
-            skin_data = database.skin_data[skin]
-
-             # select skin float
-            min_float = skin_data["min_float"]
-            max_float = skin_data["max_float"]
-
-            float_value = random.random()
-            
-            #determine condition
-            if float_value > 0 and float_value <= 0.1471:
-                float_value = random.uniform(0.00, 0.07)
-            elif float_value > 0.1471 and float_value <=  0.3939:
-                float_value = random.uniform(0.07, 0.15)
-            elif float_value > 0.3939 and float_value <= 0.8257:
-                float_value = random.uniform(0.15, 0.38)
-            elif float_value > 0.8257 and float_value <=   0.9007:
-                float_value = random.uniform(0.38, 0.45)
-            elif float_value > 0.9007 and float_value <= 1.0:
-                float_value = random.uniform(0.45, 1)
-
-            #linear interpolate between max and min float
-            final_float = float_value * (max_float - min_float) + min_float
-
-            for wear, upper in case_wear_ranges_lower.items():
-                if final_float > upper:
-                    condition = conditions[wear].lower() + " "
-                    break
-
-            #is it stattrak?
-            if random.random() < 0.1:
-                stattrak = "stattrak "
-            else:
-                stattrak = ""
-            skin = stattrak + condition + skin
-            skin_data = database.skin_data[skin]
+            skin_data = database.skin_data[unformatted_name]
 
             e.add_field(name="You got a bonus item!", value=f"**{skin_data['formatted_name']}** - **{currency_str_format(skin_data['price'])}**", inline=False)
             e.color = rarity_color_dict[skin_data["rarity"]]
             e.set_image(url=skin_data["image_url"])         
 
-        await ctx.send(embed=e)
+            #create view
+            view = discord.ui.View()
+            inventory_button = discord.ui.Button(label="Add To Inventory", style=discord.ButtonStyle.green)
+            sell_button = discord.ui.Button(label="Sell", style=discord.ButtonStyle.red)
+            view.add_item(inventory_button)
+            view.add_item(sell_button)
+
+        await ctx.send(embed=e, view=view)
 
     else:
         time_left_seconds = TWELVE_HOURS - (int(time.time()) - post_doc["last-claim"])
@@ -182,7 +159,7 @@ async def claim(ctx:Context):
 
         e = discord.Embed(
             title="You have already claimed your daily bonus!", 
-            description=f"You have already claimed! You can claim again in {time_left_formatted}", 
+            description=f"You can claim again in {time_left_formatted}", 
             color=discord.Color.red()
         )
         e.set_thumbnail(url=ctx.author.avatar.url)

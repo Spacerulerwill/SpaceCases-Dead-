@@ -5,6 +5,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX, KEY_PRICE, case_rarity_odds, rarity_color_dict, case_wear_ranges_lower, conditions
 from src.util.format import currency_str_format
+from src.util.skin_func import gen_item
 from urllib.parse import quote
 
 async def open(ctx:Context, *args):
@@ -53,45 +54,9 @@ async def open(ctx:Context, *args):
             break
     
     skin_pool = container_data["items"][rarity]
-    skin = random.choice(skin_pool)
-    skin_data = database.skin_data[skin]
-
-    # select skin float
-    min_float = skin_data["min_float"]
-    max_float = skin_data["max_float"]
-
-    float_value = random.random()
+    unformatted_name, float_val = gen_item(random.choice(skin_pool))
     
-    #determine condition
-    if float_value > 0 and float_value <= 0.1471:
-        float_value = random.uniform(0.00, 0.07)
-    elif float_value > 0.1471 and float_value <=  0.3939:
-        float_value = random.uniform(0.07, 0.15)
-    elif float_value > 0.3939 and float_value <= 0.8257:
-        float_value = random.uniform(0.15, 0.38)
-    elif float_value > 0.8257 and float_value <=   0.9007:
-        float_value = random.uniform(0.38, 0.45)
-    elif float_value > 0.9007 and float_value <= 1.0:
-        float_value = random.uniform(0.45, 1)
-
-    #linear interpolate between max and min float
-    final_float = float_value * (max_float - min_float) + min_float
-
-    skin_wear = None
-    for wear, upper in case_wear_ranges_lower.items():
-        if final_float > upper:
-            condition = conditions[wear].lower() + " "
-            break
-
-    #is it stattrak?
-    if random.random() < 0.1:
-        stattrak = "stattrak "
-    else:
-        stattrak = ""
-
-    # unformatted name and new skin data now that it has a modifier and condition
-    skin = stattrak + condition + skin
-    skin_data = database.skin_data[skin]
+    skin_data = database.skin_data[unformatted_name]
 
     formatted_name = skin_data["formatted_name"]
     image_url = skin_data["image_url"]
@@ -112,7 +77,7 @@ async def open(ctx:Context, *args):
     e = discord.Embed(title=formatted_name, color=color, description=f"[Inspect In 3D]({inspect_url})")
     e.add_field(name="Market Value", value=currency_str_format(skin_price))
     e.add_field(name="Rarity", value=skin_rarity)
-    e.add_field(name="Float", value=str(final_float)) 
+    e.add_field(name="Float", value=str(float_val)) 
     e.set_image(url=image_url)
     e.set_footer(text="Warning! Items are automatically sold after 30 seconds")
 
@@ -146,7 +111,7 @@ async def open(ctx:Context, *args):
 
             if len(inventory) < user["inventory-size"]:
                 # add to user inventory
-                database.user_data.update_one({"_id": ctx.author.id},{"$push" :{"inventory" : {"name": skin, "float": final_float}}})
+                database.user_data.update_one({"_id": ctx.author.id},{"$push" :{"inventory" : {"name": unformatted_name, "float": float_val}}})
                 e.colour = discord.colour.Color.green()
                 e.set_footer(text="")
                 await  msg.edit(embed=e, view=None)
