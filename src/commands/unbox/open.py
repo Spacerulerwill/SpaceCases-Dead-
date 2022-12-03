@@ -4,7 +4,7 @@ import random
 from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX, KEY_PRICE, case_rarity_odds, rarity_color_dict, case_wear_ranges_lower, conditions
-from src.util.string_util import currency_str_format, get_closest_match
+from src.util.string_util import currency_str_format, get_closest_match, get_inspect_link_3D
 from src.util.skin_func import gen_item
 from urllib.parse import quote
 
@@ -56,7 +56,7 @@ async def open(ctx:Context, *args):
     skin_rarity = skin_data["rarity"]
     color = rarity_color_dict[skin_rarity]
     skin_price = skin_data["price"]
-    inspect_url = "https://skinbaron.de/en/3dviewer?inspectLink=" + quote(skin_data["inspect_url"])
+    inspect_url = get_inspect_link_3D(skin_data["inspect_url"])
 
     #decrement balance, increment total spent, increase total return and containers opened
     database.user_data.update_one({"_id": ctx.author.id},{"$inc" :{

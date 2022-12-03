@@ -1,6 +1,7 @@
 from decimal import Decimal
 from typing import List
 import Levenshtein
+from urllib.parse import quote
 
 #format skin names to a standardized formatt
 def remove_skin_name_formatting(formatted_name:str) -> str:
@@ -27,7 +28,7 @@ def round_sig_fig(number:float, sig_figs:int) -> float:
     return '{:g}'.format(float('{:.{p}g}'.format(number, p=sig_figs)))
 
 # get closest match to query using levenstein ratio from list of options
-def get_closest_match(query:str, options:List[str], threshold:float=0.8):
+def get_closest_match(query:str, options:List[str], threshold:float=0.8) -> str | None:
     highest_ratio = 0
     closest_match = None
     for option in options:
@@ -37,4 +38,7 @@ def get_closest_match(query:str, options:List[str], threshold:float=0.8):
             closest_match = option
     
     return closest_match
+
+def get_inspect_link_3D(steam_inspect_link:str) -> str:
+    return "https://skinbaron.de/en/3dviewer?inspectLink=" + quote(steam_inspect_link)
 

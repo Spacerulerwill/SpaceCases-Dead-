@@ -2,7 +2,7 @@ import discord
 from src.util import database
 from src.util.constants import PREFIX
 from src.util.constants import rarity_color_dict
-from src.util.string_util import currency_str_format
+from src.util.string_util import currency_str_format, get_inspect_link_3D
 from discord.ext.commands import Context
 from urllib.parse import quote
 
@@ -44,7 +44,7 @@ async def inspect(ctx:Context, member:discord.Member, item_index:int):
     image_url = item_data["image_url"]
     rarity = item_data["rarity"]
     rarity_color = rarity_color_dict[rarity]
-    inspect_url = "https://skinbaron.de/en/3dviewer?inspectLink=" + quote(item_data["inspect_url"])
+    inspect_url = get_inspect_link_3D(item_data["inspect_url"])
     
     e = discord.Embed(title=formatted_name, color=rarity_color, description=f"[Inspect In 3D]({inspect_url})")
     e.add_field(name="Current Market Value", value=price)
