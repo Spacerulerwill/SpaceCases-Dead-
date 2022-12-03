@@ -104,22 +104,29 @@ async def open(ctx:Context, *args):
     async def inventory_callback(interact:discord.Interaction):
         nonlocal interacted_with
         if interact.user.id == ctx.author.id:
-            user = database.user_data.find_one({"_id": ctx.author.id})
-            
-            # add to inventory if there is room
-            inventory = list(user["inventory"])
-
-            if len(inventory) < user["inventory-size"]:
-                # add to user inventory
-                database.user_data.update_one({"_id": ctx.author.id},{"$push" :{"inventory" : {"name": unformatted_name, "float": float_val}}})
+              
+            # add to user inventory
+            filter_ = {
+                '_id': ctx.author.id,
+                "$expr":{ "$lt" : ["$inventory-size", "$inventory-max-capacity"]}
+            }
+            update =  {
+                '$push': { 
+                    'inventory':  {"name": unformatted_name, "float": float_val}
+                },
+                "$inc": {
+                    "inventory-size": 1
+                }
+            }
+            update_result = database.user_data.update_one(filter_, update)    
+                    
+            if update_result.modified_count == 1:
                 e.colour = discord.colour.Color.green()
                 e.set_footer(text="")
                 await  msg.edit(embed=e, view=None)
-
-            else:
-                await ctx .send("Your inventory is full! Sell an item or buy more inventory space")
-        else:
-            await interact.response.defer()
+            elif update_result.modified_count == 0:
+                await ctx.send("Your inventory is full! Sell an item or buy more inventory space")
+        await interact.response.defer()
 
     #if not interacted with after 30 seconds, sell the item
     async def view_timeout_callback():
