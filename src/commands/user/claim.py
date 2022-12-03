@@ -42,9 +42,9 @@ async def claim(ctx:Context):
                  'claim-streak': {
                     "$switch": {
                         "branches": [
-                            {"case": {"$eq": ["$last-claim", 0]}, "then": {"$add": ["$claim-streak", 1]}},
+                            {"case": {"$eq": ["$last-claim", 0]}, "then": 1},
                             {"case": {"$eq": [{"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]}, 1]}, "then": {"$add": ["$claim-streak", 1]}},
-                            {"case": {"$gt": [{"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]}, 1]}, "then": 0},
+                            {"case": {"$gt": [{"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]}, 1]}, "then": 1},
                         ] ,
                         "default": "$claim-streak"
                     }
@@ -69,7 +69,7 @@ async def claim(ctx:Context):
                                             "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
                                         },
                                         "then": {
-                                            "$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", "$claim-streak"]}]
+                                            "$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", {"$subtract": ["$claim-streak", 1]}]}]
                                         },
                                         "else": "$balance"
                                     }
@@ -79,16 +79,16 @@ async def claim(ctx:Context):
                     }
                 },
 
-                'last-claim': {
-                    "$cond": {
-                        "if": {
-                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
-                        },
-                        "then": int(time.time()),
-                        
-                        "else": "$last-claim"
-                    }
-                },
+                #'last-claim': {
+                #    "$cond": {
+                #        "if": {
+                #            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
+                #        },
+                #        "then": int(time.time()),
+                #        
+                #        "else": "$last-claim"
+                #    }
+                #},
 
 
                 "modified": {
