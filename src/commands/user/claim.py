@@ -1,6 +1,6 @@
 from discord.ext.commands import Context
 from src.util import database
-from src.util.format import currency_str_format
+from src.util.string_util import currency_str_format
 from src.util.skin_func import gen_item
 from src.util.constants import TWELVE_HOURS, ONE_DAY, PREFIX, case_wear_ranges_lower, conditions, rarity_color_dict
 from pymongo import ReturnDocument
@@ -79,18 +79,16 @@ async def claim(ctx:Context):
                     }
                 },
 
-                #'last-claim': {
-                #    "$cond": {
-                #        "if": {
-                #            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
-                #        },
-                #        "then": int(time.time()),
-                #        
-                #        "else": "$last-claim"
-                #    }
-                #},
-
-
+                'last-claim': {
+                    "$cond": {
+                        "if": {
+                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
+                        },
+                        "then": int(time.time()),
+                        
+                        "else": "$last-claim"
+                    }
+                },
                 "modified": {
                     "$cond": {
                         "if": {
@@ -118,7 +116,6 @@ async def claim(ctx:Context):
         footer = "Note: Streaks reset 24 hours after your last claim"
 
         view = None
-        
         
         prev_streak = post_doc["claim-streak"]
         if prev_streak != 0:

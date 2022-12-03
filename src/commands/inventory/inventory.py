@@ -2,7 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX, INVENTORY_ELEMS_PER_PAGE
 from src.util import database
-from src.util.format import currency_str_format
+from src.util.string_util import currency_str_format
 
 async def inventory(ctx:Context, member:discord.Member, page:int):
 

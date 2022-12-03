@@ -1,7 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
-from src.util.format import currency_str_format
+from src.util.string_util import currency_str_format
 from src.util.constants import rarity_color_dict
 from urllib.parse import quote
 

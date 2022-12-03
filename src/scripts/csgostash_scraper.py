@@ -3,7 +3,7 @@ import requests
 import json
 import concurrent.futures
 from re import sub
-from src.util.format import remove_skin_name_formatting
+from src.util.string_util import remove_skin_name_formatting
 from src.util.constants import case_wear_ranges_lower, MAX_THREADS
 from decimal import Decimal
 

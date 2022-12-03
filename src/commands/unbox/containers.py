@@ -1,7 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX, KEY_PRICE
-from src.util.format import currency_str_format
+from src.util.string_util import currency_str_format
 from src.util import database
 
 containerlist_pages = [

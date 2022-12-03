@@ -4,6 +4,7 @@
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import Context
 from src.util.constants import PREFIX
 
 # initialise class
@@ -14,7 +15,7 @@ class Help(commands.Cog):
     # This command displays a menu with all cogs and their commands if no command is specified
     # If a command is specified with display the description and usage details of that command
     @commands.command()
-    async def help(self, ctx, *args):
+    async def help(self, ctx:Context, *args):
 
         command_name = " ".join(args[:]).strip().lower()
 

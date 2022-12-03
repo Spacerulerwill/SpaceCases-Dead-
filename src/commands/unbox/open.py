@@ -4,7 +4,7 @@ import random
 from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX, KEY_PRICE, case_rarity_odds, rarity_color_dict, case_wear_ranges_lower, conditions
-from src.util.format import currency_str_format
+from src.util.string_util import currency_str_format, get_closest_match
 from src.util.skin_func import gen_item
 from urllib.parse import quote
 
@@ -24,21 +24,14 @@ async def open(ctx:Context, *args):
         container_price = container_data["price"]
     except KeyError:
         # try and find closest match
-        highest_ratio = 0
-        closest_match = None
-        for key in database.containers.keys():
-            ratio = Levenshtein.ratio(container_name, key)
-            if ratio > highest_ratio:
-                highest_ratio = ratio
-                closest_match = key
+        closest_match = get_closest_match(container_name, database.containers.keys())
         
         #if match is reasonably close enough
-        if highest_ratio > 0.8:
-            container_name = closest_match
-            container_data = database.containers[container_name]
-            await ctx.send(f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
-        else:
+        if closest_match is None:
             await ctx.send("Container not found!")
+        else:
+            container_data = database.containers[closest_match]
+            await ctx.send(f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
         return
     
     # check user has enough balance for case

@@ -1,4 +1,6 @@
 from decimal import Decimal
+from typing import List
+import Levenshtein
 
 #format skin names to a standardized formatt
 def remove_skin_name_formatting(formatted_name:str) -> str:
@@ -23,4 +25,16 @@ def currency_str_format(amount:int) -> str:
 #round a float to a specified number on significant figures
 def round_sig_fig(number:float, sig_figs:int) -> float:
     return '{:g}'.format(float('{:.{p}g}'.format(number, p=sig_figs)))
+
+# get closest match to query using levenstein ratio from list of options
+def get_closest_match(query:str, options:List[str], threshold:float=0.8):
+    highest_ratio = 0
+    closest_match = None
+    for option in options:
+        ratio = Levenshtein.ratio(query, option)
+        if ratio > highest_ratio and ratio > threshold:
+            highest_ratio = ratio
+            closest_match = option
+    
+    return closest_match
 

@@ -3,7 +3,7 @@
 from bs4 import BeautifulSoup
 import requests
 import json
-from src.util.format import remove_skin_name_formatting
+from src.util.string_util import remove_skin_name_formatting
 from re import sub
 from decimal import Decimal
 
