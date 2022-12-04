@@ -47,7 +47,10 @@ async def sell(ctx:Context, item_index:int):
                     database.user_data.update_one({
                         "_id": ctx.author.id}, 
                         {
-                            "$inc": {"balance": database.skin_data[item]["price"]}
+                            "$inc": {
+                                "balance": database.skin_data[item]["price"],
+                                "inventory-size": -1
+                            }
                         }, 
                     session=session)
 
