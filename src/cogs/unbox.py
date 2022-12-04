@@ -3,19 +3,18 @@
 # * item
 # * container
 # * containers
-
-import discord
+# * open
+# * upgrade
 from discord.ext import commands
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
-
-from typing import Optional
 
 #command
 from src.commands.unbox.item import item
 from src.commands.unbox.containers import containers
 from src.commands.unbox.container import container
 from src.commands.unbox.open import open
+from src.commands.unbox.upgrade import upgrade
 
 # initialise class
 class Unboxing(commands.Cog):
@@ -63,6 +62,27 @@ class Unboxing(commands.Cog):
     """)
     async def open(self, ctx:Context, *args):
         await open(ctx, *args)
+
+    #upgrade a weapon
+    @commands.command(description="Upgrade a weapon in your inventory to one of higher value", usage=f"""
+    `{PREFIX}upgrade <item index> <result item>`
+    **Arguments**
+    `<item index>` - the index of the item in your inventory you want to upgrade
+    '<result item>' - the name of the item you want to upgrade too
+    """)
+    async def upgrade(self, ctx:Context, item_index:int, *args):
+        await upgrade(ctx,item_index,*args)
+
+    @upgrade.error
+    async def containers_error(self, ctx:Context, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send("Incorrect Arguments!")
+        if isinstance(error, commands.MissingRequiredArgument):
+            error:commands.MissingRequiredArgument
+            if error.param.name == "item_index":
+                await ctx.send("Oops! You forgot to supply an item index")
+            elif error.param.name == "result_item":
+                await ctx.send("Oops! You forgot to supply the result item")
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

@@ -8,6 +8,7 @@ import discord
 import time
 import random
 
+# 14 days
 CLAIM_MONEY_AMOUNTS = [
     5000,
     7500,
@@ -78,16 +79,16 @@ async def claim(ctx:Context):
                     }
                 },
 
-                #'last-claim': {
-                #    "$cond": {
-                #        "if": {
-                #            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
-                #        },
-                #        "then": int(time.time()),
-                #        
-                #        "else": "$last-claim"
-                #    }
-                #},
+                'last-claim': {
+                    "$cond": {
+                        "if": {
+                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
+                        },
+                        "then": int(time.time()),
+                        
+                        "else": "$last-claim"
+                    }
+                },
                 "modified": {
                     "$cond": {
                         "if": {
@@ -183,7 +184,6 @@ async def claim(ctx:Context):
         async def view_timeout_callback():
             if not interacted_with:
                 await sell_item()
-
         
         # if bonus item reward, pick random item of given quality
         if bonus_reward != None:
