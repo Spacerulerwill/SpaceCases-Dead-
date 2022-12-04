@@ -71,7 +71,7 @@ class Unboxing(commands.Cog):
     '<result item>' - the name of the item you want to upgrade too
     """)
     async def upgrade(self, ctx:Context, item_index:int, *args):
-        await upgrade(ctx,item_index,*args)
+        await upgrade(ctx, item_index, *args)
 
     @upgrade.error
     async def containers_error(self, ctx:Context, error):
