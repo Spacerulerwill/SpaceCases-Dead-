@@ -1,5 +1,4 @@
 import discord
-import Levenshtein
 from discord.ext.commands import Context
 from src.util import database
 from src.util.string_util import currency_str_format, get_closest_match

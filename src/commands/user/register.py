@@ -1,6 +1,6 @@
 from discord.ext.commands import Context
 from src.util import database
-from src.util.constants import PREFIX, DEFAULT_INVENTORY_SIZE
+from src.util.constants import PREFIX
 
 async def register(ctx:Context):
     if database.user_data.find_one({"_id": ctx.author.id}) == None:

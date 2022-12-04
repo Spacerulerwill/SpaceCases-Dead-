@@ -2,9 +2,8 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.string_util import currency_str_format
 from src.util.skin_func import gen_item
-from src.util.constants import TWELVE_HOURS, ONE_DAY, PREFIX, case_wear_ranges_lower, conditions, rarity_color_dict
+from src.util.constants import ONE_DAY, PREFIX, rarity_color_dict
 from pymongo import ReturnDocument
-from datetime import datetime
 import discord
 import time
 import random
@@ -79,16 +78,16 @@ async def claim(ctx:Context):
                     }
                 },
 
-                'last-claim': {
-                    "$cond": {
-                        "if": {
-                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
-                        },
-                        "then": int(time.time()),
-                        
-                        "else": "$last-claim"
-                    }
-                },
+                #'last-claim': {
+                #    "$cond": {
+                #        "if": {
+                #            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
+                #        },
+                #        "then": int(time.time()),
+                #        
+                #        "else": "$last-claim"
+                #    }
+                #},
                 "modified": {
                     "$cond": {
                         "if": {
@@ -131,6 +130,61 @@ async def claim(ctx:Context):
 
         bonus_reward = CLAIM_BONUS_REWARDS.get(post_doc["claim-streak"])
 
+        interacted_with = False
+        
+        # callbacks
+        async def sell_item():
+
+            nonlocal interacted_with
+            #change color to dark gray, remove footer, change balance to have balance of skin
+            database.user_data.update_one({"_id": ctx.author.id}, {"$inc" :{"balance" : skin_price}})
+
+            e.colour = discord.colour.Color.dark_gray()
+            e.set_footer(text="")
+
+            await msg.edit(embed=e, view=None)
+            interacted_with = True
+        
+        async def sell_callback(interact:discord.Interaction):
+            if ctx.author.id == interact.user.id:
+                await sell_item()
+            await interact.response.defer()
+        
+        async def inventory_callback(interact:discord.Interaction):
+            nonlocal interacted_with
+            if interact.user.id == ctx.author.id:
+                
+                # add to user inventory
+                filter_ = {
+                    '_id': ctx.author.id,
+                    "$expr":{ "$lt" : ["$inventory-size", "$inventory-max-capacity"]}
+                }
+                update =  {
+                    '$push': { 
+                        'inventory':  {"name": unformatted_name, "float": float_val}
+                    },
+                    "$inc": {
+                        "inventory-size": 1
+                    }
+                }
+
+                update_result = database.user_data.update_one(filter_, update)    
+                        
+                if update_result.modified_count == 1:
+                    e.colour = discord.colour.Color.green()
+                    e.set_footer(text="")
+                    await  msg.edit(embed=e, view=None)
+                    
+                elif update_result.modified_count == 0:
+                    await ctx.send("Your inventory is full! Sell an item or buy more inventory space")
+            await interact.response.defer()
+
+        #if not interacted with after 30 seconds, sell the item
+        async def view_timeout_callback():
+            if not interacted_with:
+                await sell_item()
+
+        
         # if bonus item reward, pick random item of given quality
         if bonus_reward != None:
            
@@ -141,15 +195,19 @@ async def claim(ctx:Context):
             unformatted_name, float_val = gen_item(random.choice(item_pool))
 
             skin_data = database.skin_data[unformatted_name]
+            skin_price = skin_data["price"]
 
-            e.add_field(name="You got a bonus item!", value=f"**{skin_data['formatted_name']}** - **{currency_str_format(skin_data['price'])}**", inline=False)
+            e.add_field(name="You got a bonus item!", value=f"**{skin_data['formatted_name']}** - **{currency_str_format(skin_price)}**", inline=False)
             e.color = rarity_color_dict[skin_data["rarity"]]
             e.set_image(url=skin_data["image_url"])         
 
             #create view
             view = discord.ui.View()
+            view.on_timeout = view_timeout_callback
             inventory_button = discord.ui.Button(label="Add To Inventory", style=discord.ButtonStyle.green)
+            inventory_button.callback = inventory_callback
             sell_button = discord.ui.Button(label="Sell", style=discord.ButtonStyle.red)
+            sell_button.callback = sell_callback
             view.add_item(inventory_button)
             view.add_item(sell_button)
 
@@ -164,4 +222,4 @@ async def claim(ctx:Context):
         )
         e.set_thumbnail(url=ctx.author.avatar.url)
 
-        await ctx.send(embed=e)
+        msg = await ctx.send(embed=e)
