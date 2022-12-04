@@ -54,7 +54,30 @@ async def upgrade(ctx:Context, item_index:int, *args):
         if interact.user.id == ctx.author.id:
             if random.random() < percentage_chance:
                 #upgrade successful - replace item
-                e.color = discord.Color.green()
+
+                #upgrade successful - replace item
+                #start a session to multi docuemnt atomic transaction
+                with database.mongo_client.start_session() as session:
+                    with session.start_transaction():   
+                        update_result = database.user_data.update_one({"_id": ctx.author.id}, 
+                        {
+                            "$pull": {"inventory": {"name": start_item_name, "float": start_item_float}},
+                        }, session=session)
+
+                        #failed to pull - item no longer exists abort transaction
+                        if update_result.modified_count == 0:
+                            e = discord.Embed(
+                                title="Upgrade Error",
+                                description=f'Failed to upgrade as **{start_item_data["formatted_name"]}** no longer exists in inventory',
+
+                            )
+                            e.set_thumbnail(url=ctx.author.avatar.url)
+                            session.abort_transaction()
+                        else:
+                            #successful at pull, decrement inventory size
+                            database.user_data.update_one({"_id": ctx.author.id}, {"$push": {"inventory": {"name": result_item_name, "float": 1.0}}}, session=session)
+                            e.color = discord.Color.green()
+                            e.set_footer(text=None)
             else:
                 #upgrade not successful - remove item
                 #start a session to multi docuemnt atomic transaction
