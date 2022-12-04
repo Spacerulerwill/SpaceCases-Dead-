@@ -1,6 +1,6 @@
 import discord
 from src.util import database
-from src.util.constants import PREFIX
+from src.util.constants import PREFIX, case_wear_ranges_lower, case_wear_ranges_upper
 from src.util.string_util import round_sig_fig
 from discord.ext.commands import Context
 import random
@@ -54,8 +54,6 @@ async def upgrade(ctx:Context, item_index:int, *args):
         if interact.user.id == ctx.author.id:
             if random.random() < percentage_chance:
                 #upgrade successful - replace item
-
-                #upgrade successful - replace item
                 #start a session to multi docuemnt atomic transaction
                 with database.mongo_client.start_session() as session:
                     with session.start_transaction():   
@@ -74,8 +72,20 @@ async def upgrade(ctx:Context, item_index:int, *args):
                             e.set_thumbnail(url=ctx.author.avatar.url)
                             session.abort_transaction()
                         else:
-                            #successful at pull, decrement inventory size
-                            database.user_data.update_one({"_id": ctx.author.id}, {"$push": {"inventory": {"name": result_item_name, "float": 1.0}}}, session=session)
+                            #successful at pull, push new item with a new random float
+                            worst_condition_float = case_wear_ranges_upper[result_item_data["condition_index"]]
+
+                            if result_item_data["max_float"] < worst_condition_float:
+                                worst_condition_float = result_item_data["max_float"]
+
+                            best_condition_float = case_wear_ranges_lower[result_item_data["condition_index"]]
+
+                            if result_item_data["min_float"] > best_condition_float:
+                                best_condition_float = result_item_data["min_float"]
+
+                            upgraded_item_float = random.uniform(worst_condition_float, best_condition_float)
+
+                            database.user_data.update_one({"_id": ctx.author.id}, {"$push": {"inventory": {"name": result_item_name, "float": upgraded_item_float}}}, session=session)
                             e.color = discord.Color.green()
                             e.set_footer(text=None)
             else:
