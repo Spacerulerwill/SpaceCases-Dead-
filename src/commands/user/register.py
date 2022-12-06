@@ -8,7 +8,7 @@ async def register(ctx:Context):
             "_id": ctx.author.id,
             "balance": 0,
             "last-claim": 0,
-            "claim-streak": 1,
+            "claim-streak": 0,
             "inventory": [],
             "inventory-size": 0,
             "inventory-max-capacity": 5,

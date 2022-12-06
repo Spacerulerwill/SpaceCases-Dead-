@@ -3,7 +3,6 @@ from src.util import database
 from src.util.string_util import currency_str_format
 from src.util.skin_func import gen_item
 from src.util.constants import ONE_DAY, PREFIX, rarity_color_dict
-from pymongo import ReturnDocument
 import discord
 import time
 import random
@@ -26,6 +25,8 @@ CLAIM_MONEY_AMOUNTS = [
     30000
 ]
 
+max_claim_streak = len(CLAIM_MONEY_AMOUNTS)
+
 CLAIM_BONUS_REWARDS = {
     4: "classified",
     10: "covert",
@@ -34,81 +35,96 @@ CLAIM_BONUS_REWARDS = {
 
 async def claim(ctx:Context):
     #update balance and set last claim to now if been twelve hours since last claim
-    post_doc = database.user_data.find_one_and_update({"_id": ctx.author.id},
+    update_result = database.user_data.update_one({"_id": ctx.author.id},
     [   
         {
-            
             "$set": {      
                  'claim-streak': {
-                    "$switch": {
-                        "branches": [
-                            {"case": {"$eq": ["$last-claim", 0]}, "then": 1},
-                            {"case": {"$eq": [{"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]}, 1]}, "then": {"$add": ["$claim-streak", 1]}},
-                            {"case": {"$gt": [{"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]}, 1]}, "then": 1},
-                        ] ,
-                        "default": "$claim-streak"
+                    "$let": {
+                        "vars": {"daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]}},
+                        "in": {
+                            "$switch": {
+                                "branches": [
+                                    {"case": {"$or": [
+                                        {"$eq": ["$last-claim", 0]},
+                                        {"$gt": ["$$daydiff", 1]}
+
+                                    ]}, "then": 1},
+                                    {"case": {"$eq": ["$$daydiff", 1]}, "then": {"$add": ["$claim-streak", 1]}}
+                                ] ,
+                                "default": "$claim-streak"
+                            }
+                        }
                     }
                 },
 
                 'balance': {
-                    "$cond": {
-                        "if": {
-                            "$gte": ["$claim-streak", 14]
+                    "$let": {
+                        "vars": {
+                            "daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]},
+                            "claim_money_amounts": CLAIM_MONEY_AMOUNTS
                         },
-                        "then": {
-                            "$add": ["$balance", 30000]
-                        },
-                        "else": {
-                            "$let": {
-                                "vars": {
-                                    "claim_money_amounts": CLAIM_MONEY_AMOUNTS
+                        "in": {
+                            "$cond": { # if first claim ever, or streak broken, add the first money amount
+                                "if": {
+                                    "$or": [
+                                        {"$eq": ["$last-claim", 0]},
+                                        {"$gt": ["$$daydiff", 1]}
+                                    ]
                                 },
-                                "in": {
+                                "then": {"$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", 0]}]},
+                                "else": { #otherwise if claim streak is greater than max, add the max
                                     "$cond": {
                                         "if": {
-                                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
+                                            "$eq": ["$$daydiff", 1]
                                         },
                                         "then": {
-                                            "$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", {"$subtract": ["$claim-streak", 1]}]}]
+                                            "$cond": [
+                                                {"$gte": ["$claim-streak", max_claim_streak]}, 
+                                                {"$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", max_claim_streak-1]}]},
+                                                {"$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", "$claim-streak"]}]}
+                                            ]
                                         },
                                         "else": "$balance"
                                     }
                                 }
-                            }, 
+                            }
                         }
                     }
                 },
 
                 'last-claim': {
-                    "$cond": {
-                        "if": {
-                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #different days
+                    "$let": {
+                        "vars": {
+                            "daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]},
+                            "claim_money_amounts": CLAIM_MONEY_AMOUNTS
                         },
-                        "then": int(time.time()),
-                        
-                        "else": "$last-claim"
-                    }
-                },
-                "modified": {
-                    "$cond": {
-                        "if": {
-                            "$ne": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}] #differnet days
-                        },
-                        "then": True,
-                        
-                        "else": False
+                        "in": {
+                            "$cond": {
+                                "if": {
+                                    "$or": [
+                                        {"$gte": ["$$daydiff", 1]},
+                                        {"$eq": ["$last-claim", 0]}
+                                    ]
+                                },
+                                "then": int(time.time()),
+                                "else": "$last-claim"
+                            }
+                        }
                     }
                 }
-            },
+            }
         }
-    ], return_document=ReturnDocument.AFTER)
-
-    if post_doc == None:
+    ])
+    
+    if update_result.matched_count == 0:
         await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
         return
-    
+
     #if document modified
-    if post_doc["modified"]:
+    if update_result.modified_count == 1:
+
+        post_doc = database.user_data.find_one({"_id": ctx.author.id})
 
         #create embed
         e = discord.Embed(title="You have successfully claimed your daily reward!", description="You can claim again tomorrow", color=discord.Color.green())

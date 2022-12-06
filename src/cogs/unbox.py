@@ -68,7 +68,7 @@ class Unboxing(commands.Cog):
     `{PREFIX}upgrade <item index> <result item>`
     **Arguments**
     `<item index>` - the index of the item in your inventory you want to upgrade
-    '<result item>' - the name of the item you want to upgrade too
+    `<result item>` - the name of the item you want to upgrade too
     """)
     async def upgrade(self, ctx:Context, item_index:int, *args):
         await upgrade(ctx, item_index, *args)
