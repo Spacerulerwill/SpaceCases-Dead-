@@ -49,7 +49,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
 
     e = discord.Embed(title=f"{member.name}'s Inventory - {page+1}/{len(inventory_pages)}", color=discord.Color.blue())
     
-    e.description = f"Total value: **{currency_str_format(inventory_value)}**\nSlots Used: **{len(inventory_data)}/{user_data['inventory-size']}**"
+    e.description = f"Total value: **{currency_str_format(inventory_value)}**\nSlots Used: **{user_data["inventory-size"]}/{user_data['inventory-max-capacity']}**"
     e.add_field(name="Contents", value=string)
 
     if member is ctx.author:
