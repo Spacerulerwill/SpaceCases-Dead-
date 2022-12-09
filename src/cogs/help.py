@@ -9,7 +9,7 @@ from src.util.constants import PREFIX
 
 # initialise class
 class Help(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot:commands.Bot):
         self.bot = bot
     
     # This command displays a menu with all cogs and their commands if no command is specified
@@ -36,13 +36,9 @@ class Help(commands.Cog):
                     e.add_field(name=cog, value=field_value)
 
             await ctx.send(embed=e)
-        else:
-            if command_name == "help":
-                await ctx.send("Invalid command!")
-                return
-                
+        else:         
             command = self.bot.get_command(command_name)
-            if command == None:
+            if command == None or command.name == "help":
                 await ctx.send("Invalid command!")
                 return
             e = discord.Embed(description=command.description)
