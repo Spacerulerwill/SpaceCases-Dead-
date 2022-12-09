@@ -4,6 +4,7 @@ import json
 import certifi
 
 user_data = {}# user data
+user_trade_creation = {} # store users trades while they are setting them up
 skin_data = {}
 containers = {}
 mongo_client:pymongo.MongoClient
