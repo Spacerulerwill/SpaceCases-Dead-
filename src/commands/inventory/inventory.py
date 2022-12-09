@@ -22,6 +22,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
     # if users inventory is empty
     if len(user_data["inventory"]) == 0:
         e = discord.Embed(title=f"{member.name}'s Inventory", color=discord.Color.blue())
+        e.set_thumbnail(url=member.avatar.url)
 
         if member == ctx.author:
             e.description = f"Your inventory is empty! Start unboxing with `{PREFIX}open`"
