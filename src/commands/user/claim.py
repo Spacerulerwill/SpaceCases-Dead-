@@ -178,7 +178,7 @@ async def claim(ctx:Context):
                 }
                 update =  {
                     '$push': { 
-                        'inventory':  {"name": unformatted_name, "float": float_val}
+                        'inventory':  {"name": unformatted_name, "float": float_val, "trade_locked": False}
                     },
                     "$inc": {
                         "inventory-size": 1

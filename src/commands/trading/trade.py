@@ -35,16 +35,4 @@ async def trade(ctx:Context, bot: commands.Bot, member:discord.Member):
     e.add_field(name="Your Items", value="None")
     e.add_field(name="Their Items", value="None")
 
-    async def cancel_callback(interact:discord.Interaction):
-        if ctx.author.id == interact.user.id:
-            del database.user_trade_creation[ctx.author.id]
-            await msg.delete()
-
-        await interact.response.defer()
-
-    view = discord.ui.View()
-    cancel_button = discord.ui.Button(label="Cancel", style=discord.ButtonStyle.red)
-    cancel_button.callback = cancel_callback
-    view.add_item(cancel_button)
-
-    msg = await ctx.send(embed=e, view=view) 
+    await ctx.send(embed=e) 

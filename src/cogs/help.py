@@ -16,7 +16,6 @@ class Help(commands.Cog):
     # If a command is specified with display the description and usage details of that command
     @commands.command()
     async def help(self, ctx:Context, *args):
-
         command_name = " ".join(args[:]).strip().lower()
 
         if command_name == "":
@@ -36,15 +35,30 @@ class Help(commands.Cog):
                     e.add_field(name=cog, value=field_value)
 
             await ctx.send(embed=e)
-        else:         
-            command = self.bot.get_command(command_name)
-            if command == None or command.name == "help":
-                await ctx.send("Invalid command!")
-                return
-            e = discord.Embed(description=command.description)
-            e.add_field(name="Usage", value=command.usage)
+        else:       
+            command_name = command_name.split(" ")  
+            
+            #command
+            if len(command_name) == 1:
+                command_name = command_name[0]
+                command:commands.Command = self.bot.get_command(command_name)
+                if command == None or command.name == "help":
+                    await ctx.send("Invalid command!")
+                    return
+                e = discord.Embed(description=command.description)
+                e.add_field(name="Usage", value=command.usage)
+                await ctx.send(embed=e)
 
-            await ctx.send(embed=e)
+            elif len(command_name) == 2: # command with group
+                group_name = command_name[0]
+                subcommand_name = command_name[1]
+                group:commands.Group = self.bot.get_command(group_name)
+                subcommand = group.get_command(subcommand_name)
+                e = discord.Embed(description=subcommand.description)
+                e.add_field(name="Usage", value=subcommand.usage)
+                await ctx.send(embed=e)
+            else:
+                await ctx.send("Invalid command!")
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

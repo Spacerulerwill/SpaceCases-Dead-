@@ -1,6 +1,8 @@
 # This cog is for skin unboxing related commands
 # Commands:
 # * trade
+# ** add
+# ** remove
 import discord
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -13,11 +15,16 @@ from src.commands.trading.remove import remove
 
 # initialise class
 class Trading(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot:commands.Bot):
         self.bot = bot
 
     # initialise a trade
-    @commands.group(description="", usage=f"", invoke_without_command=True)
+    @commands.group(description="Setup a trade request to send to another user", usage=f"""
+    `{PREFIX}trade <recipient>`
+    **Arguments**
+    `<recipient>` - cthe name of the recipient of the trade request
+    """, 
+    invoke_without_command=True)
     async def trade(self, ctx:Context, member:discord.Member):
         if ctx.invoked_subcommand is None:
             await trade(ctx, self.bot, member)
@@ -31,5 +38,5 @@ class Trading(commands.Cog):
         await remove(ctx,item_index)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
-async def setup(bot):
+async def setup(bot:commands.Bot):
     await bot.add_cog(Trading(bot))
