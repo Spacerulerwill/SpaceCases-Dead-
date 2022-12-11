@@ -3,30 +3,36 @@ from src.util import database
 from src.util.constants import PREFIX
 from discord.ext.commands import Context
 from pymongo import ReturnDocument
+from src.commands.trading.trade import send_trade_embed_view
 
 async def add(ctx:Context, item_index:int):
     try:
-        user_trade = database.user_trade_creation[ctx.author.id]
-        sender_inventory = database.user_data.find_one_and_update({"_id": ctx.author.id}, {
-           "$set": {
-                f"inventory.{item_index-1}.trade_locked": True
-           }
-        }, return_document=ReturnDocument.AFTER)["inventory"]
-        user_trade["sender_items"].append(sender_inventory[item_index-1])
-
-        user = await ctx.bot.fetch_user(user_trade["recipient"])
-        e = discord.Embed(title=f"Trade request to {user.name}")
-        e.set_thumbnail(url=user.avatar.url)
-
-        sender_items_str = ""
-        for count, item in enumerate(user_trade["sender_items"]):
-            item_data = database.skin_data[item["name"]]
-            sender_items_str += f"**{count+1})** {item_data['formatted_name']}\n"
-            
-        e.add_field(name="Your Items", value=sender_items_str)
-        e.add_field(name="Their Items", value="None")
-
-        await ctx.send(embed=e)
-
+        trade = database.user_trade_creation[ctx.author.id]
     except KeyError:
-        pass
+        pass # TODO add error message
+
+    user_data = database.user_data.find_one({"_id": ctx.author.id})
+    if user_data == None:
+        # TODO error message
+        return
+
+    if trade["step"] == 1:
+        sender_data = database.user_data.find_one({"_id": ctx.author.id})
+        try:
+            database.user_trade_creation[ctx.author.id]["sender_items"].add(tuple(sender_data["inventory"][item_index-1].values()))
+        except KeyError:
+            # TODO no item exists at index
+            return
+
+    elif trade["step"] == 2:
+        recipient_data = database.user_data.find_one({"_id": trade["recipient"]})
+        try:        
+            database.user_trade_creation[ctx.author.id]["recipient_items"].add(tuple(recipient_data["inventory"][item_index-1].values()))
+        except KeyError:
+            # TODO no item exists at index
+            return
+
+    recipient = await ctx.bot.fetch_user(trade["recipient"])
+    print(trade)
+    await send_trade_embed_view(ctx, ctx.author, recipient)
+    

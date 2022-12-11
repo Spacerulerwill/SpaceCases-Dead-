@@ -4,6 +4,75 @@ from src.util.constants import PREFIX
 from discord.ext import commands
 from discord.ext.commands import Context
 
+async def send_trade_embed_view(ctx: Context, sender:discord.Member, recipient:discord.Member) -> discord.Embed:
+    trade = database.user_trade_creation[sender.id]
+
+    def get_embed():
+        e = discord.Embed(title=f"Trade request to {recipient.name}", description=steps[trade["step"]])
+        e.set_thumbnail(url=recipient.avatar.url)
+
+        if len(trade["sender_items"]) == 0:
+            your_items = "None"
+        else:
+            your_items = ""
+            for count, item in enumerate(trade["sender_items"]):
+                name, float, trade_locked = item
+                your_items += f"**{count+1})** {database.skin_data[name]['formatted_name']}\n"
+        
+        if len(trade["recipient_items"]) == 0:
+            their_items = "None"
+        else:
+            their_items = ""
+            for count, item in enumerate(trade["recipient_items"]):
+                name, float, trade_locked = item
+                their_items += f"**{count+1})** {database.skin_data[name]['formatted_name']}\n"
+
+        e.add_field(name="Your Items", value=your_items)
+        e.add_field(name="Their Items", value=their_items)
+        e.add_field(name="Commands", value=f"`{PREFIX}trade add <inventory index>`\n`{PREFIX}trade remove <item number>`", inline=False)
+        e.set_footer(icon_url=sender.avatar.url, text="Warning! Trade will cancel after 10 minutes of inactivity")
+
+        return e
+    
+    def get_view():
+        view = discord.ui.View(timeout=600)
+        cancel_button = discord.ui.Button(style=discord.ButtonStyle.red, label="Cancel")
+        cancel_button.callback = cancel_callback
+        if trade["step"] == 3:
+            next_button = discord.ui.Button(style=discord.ButtonStyle.green, label="Send Trade")
+        else:
+            next_button = discord.ui.Button(style=discord.ButtonStyle.gray, label="Next Step")
+        next_button.callback = next_callback
+        view.add_item(next_button)
+        view.add_item(cancel_button)
+
+        return view
+
+    #callbacks
+    async def cancel_callback(interact:discord.Interaction):
+        if interact.user.id == sender.id:
+            await msg.delete()
+            del database.user_trade_creation[sender.id]
+        await interact.response.defer()
+    
+    async def next_callback(interact:discord.Interaction):
+        if interact.user.id == sender.id:
+            if trade["step"] != 3:
+                trade["step"] += 1
+                await msg.edit(embed=get_embed(), view=get_view())
+            else:
+                await msg.delete()
+                del database.user_trade_creation[sender.id]
+        await interact.response.defer()
+
+    msg = await ctx.send(embed=get_embed(), view=get_view())
+
+steps = {
+    1: f"**Step 1:** Choose items to **give**",
+    2: f"**Step 2:** Choose items to **recieve**",
+    3: f"**Step 3:** Review and confirm your trade"
+}
+
 async def trade(ctx:Context, bot: commands.Bot, member:discord.Member):
     if database.user_data.find_one({"_id": ctx.author.id}) == None:
         await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
@@ -29,10 +98,5 @@ async def trade(ctx:Context, bot: commands.Bot, member:discord.Member):
         await ctx.send(embed=e)
         return
 
-    database.user_trade_creation[ctx.author.id] = {"recipient": member.id, "sender_items": [], "recipient_items": []}
-    e = discord.Embed(title=f"Trade request to {member.name}")
-    e.set_thumbnail(url=member.avatar.url)
-    e.add_field(name="Your Items", value="None")
-    e.add_field(name="Their Items", value="None")
-
-    await ctx.send(embed=e) 
+    database.user_trade_creation[ctx.author.id] = {"recipient": member.id, "sender_items": set(), "recipient_items": set(), "step": 1}
+    await send_trade_embed_view(ctx, ctx.author, member)
