@@ -33,6 +33,6 @@ async def add(ctx:Context, item_index:int):
             return
 
     recipient = await ctx.bot.fetch_user(trade["recipient"])
-    print(trade)
     await send_trade_embed_view(ctx, ctx.author, recipient)
+
     

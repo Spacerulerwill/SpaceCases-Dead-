@@ -27,7 +27,7 @@ class Trading(commands.Cog):
     invoke_without_command=True)
     async def trade(self, ctx:Context, member:discord.Member):
         if ctx.invoked_subcommand is None:
-            await trade(ctx, self.bot, member)
+            await trade(ctx, member)
 
     @trade.command()
     async def add(self, ctx:Context, item_index:int):

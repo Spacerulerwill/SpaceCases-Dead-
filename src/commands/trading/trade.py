@@ -58,14 +58,29 @@ async def send_trade_embed_view(ctx: Context, sender:discord.Member, recipient:d
     async def next_callback(interact:discord.Interaction):
         if interact.user.id == sender.id:
             if trade["step"] != 3:
+                # go to next step
                 trade["step"] += 1
                 await msg.edit(embed=get_embed(), view=get_view())
             else:
-                await msg.delete()
+                #submit trade
+                e = discord.Embed(
+                    color=discord.Color.green(), 
+                    title=f"Trade request to {recipient.name} sent!",
+                    description="They have 7 days to accept your request"
+                )
+                e.set_thumbnail(url=recipient.avatar.url)
+                await msg.edit(embed=e, view=None)
                 del database.user_trade_creation[sender.id]
+
         await interact.response.defer()
 
-    msg = await ctx.send(embed=get_embed(), view=get_view())
+    if trade["msg"] is None:
+        msg = await ctx.send(embed=get_embed(), view=get_view())
+        trade["msg"] = msg
+    else:
+        msg = await trade["msg"].edit(embed=get_embed(), view=get_view())
+        trade["msg"] = msg
+
 
 steps = {
     1: f"**Step 1:** Choose items to **give**",
@@ -73,7 +88,7 @@ steps = {
     3: f"**Step 3:** Review and confirm your trade"
 }
 
-async def trade(ctx:Context, bot: commands.Bot, member:discord.Member):
+async def trade(ctx:Context, member:discord.Member):
     if database.user_data.find_one({"_id": ctx.author.id}) == None:
         await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
         return
@@ -97,6 +112,6 @@ async def trade(ctx:Context, bot: commands.Bot, member:discord.Member):
 
         await ctx.send(embed=e)
         return
-
-    database.user_trade_creation[ctx.author.id] = {"recipient": member.id, "sender_items": set(), "recipient_items": set(), "step": 1}
+    
+    database.user_trade_creation[ctx.author.id] = {"msg": None, "recipient": member.id, "sender_items": set(), "recipient_items": set(), "step": 1}
     await send_trade_embed_view(ctx, ctx.author, member)
