@@ -7,6 +7,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
+from src.util import database
 
 #command
 from src.commands.trading.trade import trade
@@ -26,8 +27,7 @@ class Trading(commands.Cog):
     """, 
     invoke_without_command=True)
     async def trade(self, ctx:Context, member:discord.Member):
-        if ctx.invoked_subcommand is None:
-            await trade(ctx, member)
+        await trade(ctx, member)
 
     @trade.command()
     async def add(self, ctx:Context, item_index:int):
@@ -35,7 +35,7 @@ class Trading(commands.Cog):
 
     @trade.command()
     async def remove(self, ctx:Context, item_index:int):
-        await remove(ctx,item_index)
+        await remove(ctx, item_index)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot:commands.Bot):

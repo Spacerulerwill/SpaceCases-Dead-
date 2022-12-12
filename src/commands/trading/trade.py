@@ -5,6 +5,7 @@ from discord.ext import commands
 from discord.ext.commands import Context
 
 async def send_trade_embed_view(ctx: Context, sender:discord.Member, recipient:discord.Member) -> discord.Embed:
+
     trade = database.user_trade_creation[sender.id]
 
     def get_embed():
@@ -16,7 +17,7 @@ async def send_trade_embed_view(ctx: Context, sender:discord.Member, recipient:d
         else:
             your_items = ""
             for count, item in enumerate(trade["sender_items"]):
-                name, float, trade_locked = item
+                name = item["name"]
                 your_items += f"**{count+1})** {database.skin_data[name]['formatted_name']}\n"
         
         if len(trade["recipient_items"]) == 0:
@@ -24,7 +25,7 @@ async def send_trade_embed_view(ctx: Context, sender:discord.Member, recipient:d
         else:
             their_items = ""
             for count, item in enumerate(trade["recipient_items"]):
-                name, float, trade_locked = item
+                name = item["name"]
                 their_items += f"**{count+1})** {database.skin_data[name]['formatted_name']}\n"
 
         e.add_field(name="Your Items", value=your_items)
@@ -50,13 +51,13 @@ async def send_trade_embed_view(ctx: Context, sender:discord.Member, recipient:d
 
     #callbacks
     async def cancel_callback(interact:discord.Interaction):
-        if interact.user.id == sender.id:
+        if interact.user.id == sender.id and msg.id == trade["msg"].id:
             await msg.delete()
             del database.user_trade_creation[sender.id]
         await interact.response.defer()
     
     async def next_callback(interact:discord.Interaction):
-        if interact.user.id == sender.id:
+        if interact.user.id == sender.id and msg.id == trade["msg"].id:
             if trade["step"] != 3:
                 # go to next step
                 trade["step"] += 1
@@ -78,7 +79,7 @@ async def send_trade_embed_view(ctx: Context, sender:discord.Member, recipient:d
         msg = await ctx.send(embed=get_embed(), view=get_view())
         trade["msg"] = msg
     else:
-        msg = await trade["msg"].edit(embed=get_embed(), view=get_view())
+        msg = await ctx.send(embed=get_embed(), view=get_view())
         trade["msg"] = msg
 
 
@@ -113,5 +114,5 @@ async def trade(ctx:Context, member:discord.Member):
         await ctx.send(embed=e)
         return
     
-    database.user_trade_creation[ctx.author.id] = {"msg": None, "recipient": member.id, "sender_items": set(), "recipient_items": set(), "step": 1}
+    database.user_trade_creation[ctx.author.id] = {"msg": None, "recipient": member.id, "sender_items": [], "recipient_items": [], "step": 1}
     await send_trade_embed_view(ctx, ctx.author, member)
