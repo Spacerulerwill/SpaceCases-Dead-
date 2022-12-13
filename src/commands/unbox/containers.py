@@ -90,7 +90,10 @@ async def containers(ctx:Context, page:int = 1):
         if interact.user.id == ctx.author.id:
             if page > 0:
                 page -= 1
-                await msg.edit(embed=get_embed(), view=view)
+            else:
+                page = len_containerlist_pages-1
+            await msg.edit(embed=get_embed(), view=view)
+
         await interact.response.defer()
 
     async def next_callback(interact: discord.Interaction):
@@ -98,7 +101,9 @@ async def containers(ctx:Context, page:int = 1):
         if interact.user.id == ctx.author.id:
             if page < len_containerlist_pages-1:
                 page += 1
-                await msg.edit(embed=get_embed(), view=view)
+            else:
+                page = 0
+            await msg.edit(embed=get_embed(), view=view)
         await interact.response.defer()
 
     async def view_timeout_callback():
