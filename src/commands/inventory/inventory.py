@@ -46,7 +46,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
     string = ""
     for count, item in enumerate(inventory_page):
         skin_data = database.skin_data[item["name"]]
-        string += f"**{count+1})** {skin_data['formatted_name']} - **{currency_str_format(skin_data['price'])}**\n"
+        string += f"**{count+1})** `{skin_data['formatted_name']}` - **{currency_str_format(skin_data['price'])}**\n"
 
     e = discord.Embed(title=f"{member.name}'s Inventory - {page+1}/{len(inventory_pages)}", color=discord.Color.blue())
     
