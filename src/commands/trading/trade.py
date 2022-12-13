@@ -1,9 +1,9 @@
 import discord
 from src.util import database
 from src.util.constants import PREFIX
-from discord.ext import commands
 from discord.ext.commands import Context
 
+# send the embed and view for the user creating the trade
 async def send_trade_embed_view(ctx: Context, sender:discord.Member, recipient:discord.Member) -> discord.Embed:
 
     trade = database.user_trade_creation[sender.id]
@@ -44,10 +44,15 @@ async def send_trade_embed_view(ctx: Context, sender:discord.Member, recipient:d
         else:
             next_button = discord.ui.Button(style=discord.ButtonStyle.gray, label="Next Step")
         next_button.callback = next_callback
+        view.on_timeout = view_timeout_callback
         view.add_item(next_button)
         view.add_item(cancel_button)
 
         return view
+
+    async def view_timeout_callback():
+        await msg.delete()
+        del database.user_trade_creation[sender.id]
 
     #callbacks
     async def cancel_callback(interact:discord.Interaction):

@@ -18,16 +18,6 @@ rarity_color_dict = {
     "Contraband": 14986809
 }
 
-rarity_emoji_dict = {
-    "Consumer": 11584473,
-    "Industrial": 6199513,
-    "Milspec": 4942335,
-    "Restricted": 8931327,
-    "Classified": 13839590,
-    "Covert": 15420235,
-    "Contraband": 14986809
-}
-
 case_rarity_odds = {
     "rare items": 0.9974,
     "covert": 0.9910,
