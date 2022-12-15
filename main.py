@@ -24,7 +24,7 @@ intents = discord.Intents().all()
 #instanciate bot with prefix, intents and disabled help command (uses custom command) 
 bot_instance = commands.Bot(command_prefix=[PREFIX, PREFIX.upper(), PREFIX.title()], intents=intents, help_command=None) #define command decorator
 
-#start the bot
+#start the bots
 def run_bot():
     database.init()
 
