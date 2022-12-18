@@ -10,6 +10,9 @@ from discord.ext.commands import Context
 from src.commands.trading.trade import view_trade_in_creation
 from src.commands.trading.trade_new import new
 from src.commands.trading.trade_cancel import cancel
+from src.commands.trading.trade_add import add
+
+from typing import Literal
 
 # initialise class
 class Trading(commands.Cog):
@@ -28,6 +31,10 @@ class Trading(commands.Cog):
     @trade.command()
     async def cancel(self, ctx:Context):
         await cancel(ctx)
+
+    @trade.command()
+    async def add(self, ctx:Context, in_out:Literal["in", "out"], item_index:int):
+        await add(ctx, in_out, item_index)
         
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot:commands.Bot):

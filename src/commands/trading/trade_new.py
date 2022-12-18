@@ -1,6 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
+from src.util.constants import PREFIX
 from src.commands.trading.trade import send_trade_embed
 
 from typing import Tuple
@@ -79,8 +80,16 @@ def try_create_trade_request(ctx:Context, recipient:discord.Member) -> Tuple[boo
     return update_result.upserted_id is not None, trade
 
 async def new(ctx:Context, recipient:discord.Member):
+    if database.user_data.find_one({"_id": ctx.author.id}) is None:
+        await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
+        return
+    
+    if database.user_data.find_one({"_id": recipient.id}) is None:
+        await ctx.send(f"{recipient.name} is not registered!")
+        return
+    
     successful, trade = try_create_trade_request(ctx, recipient)
-
+    
     if successful:
         # create new trade and show trade embed
         await send_trade_embed(ctx, recipient, trade)

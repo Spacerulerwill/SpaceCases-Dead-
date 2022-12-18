@@ -7,6 +7,6 @@ async def cancel(ctx:Context):
     successful = delete_reuslt.deleted_count >= 1
 
     if successful:
-        await ctx.send("Successfully cancelled  current trade")
+        await ctx.send("Successfully cancelled current trade")
     else:
         await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
