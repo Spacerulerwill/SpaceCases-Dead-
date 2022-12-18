@@ -4,7 +4,6 @@ import json
 import certifi
 
 user_data = {}# user data
-user_trade_creation = {} # store users trades while they are setting them up
 trade_requests = {}
 skin_data = {}
 containers = {}
