@@ -17,7 +17,7 @@ async def add(ctx:Context, in_out:str, item_index:int):
 
     item_index -= 1
 
-    if in_out == "in":
+    if in_out == "out":
         try:
             update_result = database.trade_requests.update_one(
                 {"_id": ctx.author.id, "send-timestamp": 0},
@@ -37,11 +37,11 @@ async def add(ctx:Context, in_out:str, item_index:int):
 
             recipient = await ctx.bot.fetch_user(trade["recipient-id"])
             await send_trade_embed(ctx, recipient)
-        except KeyError:
+        except IndexError:
             await ctx.send(f"No item exists in your inventory at index {item_index}")
         return
     
-    if in_out == "out":
+    if in_out == "in":
         
         recipient:discord.Member = await ctx.bot.fetch_user(trade["recipient-id"])
         recipient_data = database.user_data.find_one({"_id": recipient.id})
@@ -63,7 +63,7 @@ async def add(ctx:Context, in_out:str, item_index:int):
                 return
 
             await send_trade_embed(ctx, recipient)
-        except KeyError:
+        except IndexError:
             await ctx.send(f"No item exists in {recipient.name}'s inventory at index {item_index}")
         return
     
