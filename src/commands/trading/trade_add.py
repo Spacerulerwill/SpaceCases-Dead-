@@ -30,16 +30,12 @@ async def add(ctx:Context, in_out:str, item_index:int):
             if update_result.matched_count == 0:
                 await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
                 return
-
             if update_result.modified_count == 0:
                 await ctx.send(f"You cannot add the same item twice to a trade!")
                 return
-
-            recipient = await ctx.bot.fetch_user(trade["recipient-id"])
-            await send_trade_embed(ctx, recipient)
         except IndexError:
             await ctx.send(f"No item exists in your inventory at index {item_index}")
-        return
+            return
     
     if in_out == "in":
         
@@ -62,9 +58,11 @@ async def add(ctx:Context, in_out:str, item_index:int):
                 await ctx.send(f"You cannot add the same item twice to a trade!")
                 return
 
-            await send_trade_embed(ctx, recipient)
         except IndexError:
             await ctx.send(f"No item exists in {recipient.name}'s inventory at index {item_index}")
-        return
+            return
+
+    recipient = await ctx.bot.fetch_user(trade["recipient-id"])
+    await send_trade_embed(ctx, recipient)
     
     

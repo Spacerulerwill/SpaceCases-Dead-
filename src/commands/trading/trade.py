@@ -36,8 +36,8 @@ async def send_trade_embed(ctx:Context, recipient:discord.Member, trade:dict=Non
     e.add_field(
         name="Commands", 
         value=f"""`{PREFIX}trade cancel`
-        `{PREFIX}trade add in/out <item number>`
-        `{PREFIX}trade add in/out <item number>`
+        `{PREFIX}trade add in/out <inventory item number>`
+        `{PREFIX}trade remove in/out <trade item number>`
         """, 
         inline=False
     )
