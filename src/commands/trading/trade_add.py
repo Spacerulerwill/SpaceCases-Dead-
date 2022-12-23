@@ -59,7 +59,7 @@ async def add(ctx:Context, in_out:str, item_index:int):
                 return
 
         except IndexError:
-            await ctx.send(f"No item exists in {recipient.name}'s inventory at index {item_index}")
+            await ctx.send(f"No item exists in {recipient.name}'s inventory at index {item_index+1}")
             return
 
     recipient = await ctx.bot.fetch_user(trade["recipient-id"])

@@ -1,0 +1,29 @@
+import discord
+from discord.ext.commands import Context
+from src.util import database
+from src.util.constants import PREFIX
+from src.commands.trading.trade import send_trade_embed
+import time
+
+async def send(ctx:Context):
+
+    trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
+    if trade is None:
+        await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
+        return
+
+    update_result = database.trade_requests.update_one(
+        {"_id": ctx.author.id, "send-timestamp": 0},
+        {
+            "$set": {
+                "send-timestamp": int(time.time())
+            }
+        }
+    )
+
+    if update_result.matched_count == 0 or update_result.modified_count == 0:
+        await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
+        return
+
+    recipient = await ctx.bot.fetch_user(trade["recipient-id"])
+    await send_trade_embed(ctx, recipient, trade, True)

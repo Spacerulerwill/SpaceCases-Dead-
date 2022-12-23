@@ -3,9 +3,17 @@ from src.util import database
 from src.util.constants import PREFIX
 from discord.ext.commands import Context
 
-async def send_trade_embed(ctx:Context, recipient:discord.Member, trade:dict=None):
-    e = discord.Embed(title=f"Trade request to {recipient.name}")
+async def send_trade_embed(ctx:Context, recipient:discord.Member, trade:dict=None, confirmed:bool=False):
+
+    if confirmed:
+        title = f"Sent trade request to {recipient.name}"
+    else:
+        title = f"Trade request to {recipient.name}"
+    e = discord.Embed(title=title)
     e.set_thumbnail(url=recipient.avatar.url)
+
+    if confirmed:
+        e.color = discord.Color.green()
 
     if trade is None:
         trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
@@ -33,14 +41,16 @@ async def send_trade_embed(ctx:Context, recipient:discord.Member, trade:dict=Non
     e.add_field(name="Your Items", value=your_items)
     e.add_field(name="Their Items", value=their_items)
 
-    e.add_field(
-        name="Commands", 
-        value=f"""`{PREFIX}trade cancel`
-        `{PREFIX}trade add in/out <inventory item number>`
-        `{PREFIX}trade remove in/out <trade item number>`
-        """, 
-        inline=False
-    )
+    if not confirmed:
+        e.add_field(
+            name="Commands", 
+            value=f"""`{PREFIX}trade cancel`
+            `{PREFIX}trade add in/out <inventory item number>`
+            `{PREFIX}trade remove in/out <trade item number>`
+            `{PREFIX}trade send`
+            """, 
+            inline=False
+        )
 
     await ctx.send(embed=e)
 
