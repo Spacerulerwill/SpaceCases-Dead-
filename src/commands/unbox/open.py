@@ -76,8 +76,6 @@ async def open(ctx:Context, *args):
 
     # callbacks
     async def sell_item():
-
-        nonlocal interacted_with
         #change color to dark gray, remove footer, change balance to have balance of skin
         database.user_data.update_one({"_id": ctx.author.id}, {"$inc" :{"balance" : skin_price}})
 
@@ -85,16 +83,17 @@ async def open(ctx:Context, *args):
         e.set_footer(text="")
 
         await msg.edit(embed=e, view=None)
-        interacted_with = True
     
     async def sell_callback(interact:discord.Interaction):
-        if ctx.author.id == interact.user.id:
+        nonlocal interacted_with
+        if ctx.author.id == interact.user.id and not interacted_with:
+            interacted_with = True
             await sell_item()
         await interact.response.defer()
     
     async def inventory_callback(interact:discord.Interaction):
         nonlocal interacted_with
-        if interact.user.id == ctx.author.id:
+        if interact.user.id == ctx.author.id and not interacted_with:
               
             # add to user inventory
             filter_ = {
@@ -103,7 +102,7 @@ async def open(ctx:Context, *args):
             }
             update =  {
                 '$push': { 
-                    'inventory':  {"name": unformatted_name, "float": float_val, "trade_locked": False}
+                    'inventory':  {"name": unformatted_name, "float": float_val}
                 },
                 "$inc": {
                     "inventory-size": 1
@@ -113,17 +112,21 @@ async def open(ctx:Context, *args):
             update_result = database.user_data.update_one(filter_, update)    
                     
             if update_result.modified_count == 1:
+                interacted_with = True
                 e.colour = discord.colour.Color.green()
                 e.set_footer(text="")
                 await  msg.edit(embed=e, view=None)
                 
             elif update_result.modified_count == 0:
                 await ctx.send("Your inventory is full! Sell an item or buy more inventory space")
+
         await interact.response.defer()
 
     #if not interacted with after 30 seconds, sell the item
     async def view_timeout_callback():
+        nonlocal interacted_with
         if not interacted_with:
+            interacted_with = True
             await sell_item()
 
     #create buttons

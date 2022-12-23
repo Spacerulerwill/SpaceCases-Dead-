@@ -210,6 +210,19 @@ def scrape_skin_link(skin_link):
               "has_souvenir_variant": has_souvenir_variant,
         }
 
+      #non wear version
+      result[unformatted_name] = {
+        "formatted_name": formatted_name,
+        "rarity": rarity,
+        "min_float": min_float,
+        "max_float": max_float,
+        "condition_index": condition_index,
+        "best_condition_index": best_condition_index,
+        "worst_condition_index": worst_condition_index,
+        "has_stattrak_variant": has_stattrak_variant,
+        "has_souvenir_variant": has_souvenir_variant,
+      }
+
     else: #otherwise do as usual
       condition_index = condition_index_dict[row_unformatted_condition]
 

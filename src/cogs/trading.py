@@ -13,6 +13,7 @@ from src.commands.trading.trade_cancel import cancel
 from src.commands.trading.trade_add import add
 from src.commands.trading.trade_remove import remove
 from src.commands.trading.trade_send import send
+from src.commands.trading.trades import trades
 
 from typing import Literal
 
@@ -45,6 +46,10 @@ class Trading(commands.Cog):
     @trade.command()
     async def remove(self, ctx:Context, in_out:Literal["in", "out"], item_index:int):
         await remove(ctx, in_out, item_index)
+
+    @commands.command()
+    async def trades(self, ctx:Context, in_out:Literal["in", "out", "all"]="all"):
+        await trades(ctx, in_out)
     
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

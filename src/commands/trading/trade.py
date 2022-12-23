@@ -9,6 +9,7 @@ async def send_trade_embed(ctx:Context, recipient:discord.Member, trade:dict=Non
         title = f"Sent trade request to {recipient.name}"
     else:
         title = f"Trade request to {recipient.name}"
+        
     e = discord.Embed(title=title)
     e.set_thumbnail(url=recipient.avatar.url)
 

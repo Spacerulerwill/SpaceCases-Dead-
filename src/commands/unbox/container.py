@@ -140,9 +140,9 @@ async def container(ctx:Context, *args):
                 if price > max_modifier_price:
                     max_modifier_price = price
 
-        price_range_str = f"${min_price} - ${max_price}"
+        price_range_str = f"{currency_str_format(min_price)} - {currency_str_format(max_price)}"
         if has_modifier_price: 
-            price_range_str += f"\n${min_modifier_price} - ${max_modifier_price}"
+            price_range_str += f"\n{currency_str_format(min_modifier_price)} - {currency_str_format(max_modifier_price)}"
 
         #min max float
         min_float = "{:.2f}".format(item_data["min_float"])
