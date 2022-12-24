@@ -3,6 +3,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
 from src.commands.trading.trade import send_trade_embed
+from pymongo.errors import DuplicateKeyError
 
 from typing import Tuple
 
@@ -88,7 +89,11 @@ async def new(ctx:Context, recipient:discord.Member):
         await ctx.send(f"{recipient.name} is not registered!")
         return
     
-    successful, trade = try_create_trade_request(ctx, recipient)
+    try:
+        successful, trade = try_create_trade_request(ctx, recipient)
+    except DuplicateKeyError:
+        await ctx.send(f"You already have an outgoing trade to {recipient.name}! You cannot have mutliple trades to one user")
+        return
     
     if successful:
         # create new trade and show trade embed

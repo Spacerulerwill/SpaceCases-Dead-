@@ -4,3 +4,4 @@ pymongo
 dnspython
 requests
 urllib3
+python-Levenshtein

@@ -50,7 +50,6 @@ class Trading(commands.Cog):
     @commands.command()
     async def trades(self, ctx:Context, in_out:Literal["in", "out", "all"]="all"):
         await trades(ctx, in_out)
-    
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot:commands.Bot):
