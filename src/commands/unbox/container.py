@@ -9,13 +9,12 @@ async def container(ctx:Context, *args):
     
     try:
         container_data = database.containers[container]
-        print(container_data)
         container_name = container_data["formatted_name"]
         container_price = currency_str_format(container_data["price"])
         container_image_url = container_data["image_url"]
     except KeyError:
         #try and find closest match
-        closest_match = get_closest_match(container_name, database.containers.keys())
+        closest_match = get_closest_match(container, database.containers.keys())
         
         #if match is reasonably close enough
         if closest_match is None:
