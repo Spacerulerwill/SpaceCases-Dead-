@@ -36,7 +36,6 @@ async def trades(ctx:Context, in_out:str):
                 recipient = await ctx.bot.fetch_user(trade["recipient-id"])
                 trade_list_str += f"**OUTGOING** to {recipient.name}\n"
 
-    
     e = discord.Embed(title=title, color=discord.Color.dark_theme())
     e.set_thumbnail(url=ctx.author.avatar.url)
     e.add_field(name=f"Trade List - {len(trades)} Items", value=trade_list_str)
