@@ -1,9 +1,11 @@
 from aiohttp import ClientConnectorError
 from discord.ext import commands
+from discord.ext.commands import Context
 
 import discord
 from os import environ
 from src.util import database
+from src.util.string_util import get_closest_match
 from src.util.constants import PREFIX
 
 cogs = ["user", "help", "unbox", "inventory", "trading"]  
@@ -47,6 +49,19 @@ async def on_ready():
 
     #set playing game to cs help
     await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
+
+#handle command errors with error message
+@bot_instance.event
+async def on_command_error(ctx:Context, error):
+    if isinstance(error, commands.CommandNotFound):        
+        err_msg, = error.args
+        query = err_msg.split('"')[1]
+        options = list(bot_instance.all_commands.keys())
+        closest_match = get_closest_match(query, options, 0.5)
+        if closest_match is None:
+            await ctx.send("Command not found!")
+        else:
+            await ctx.send(f"Command not found! Did you mean `{closest_match}`?")
 
 def scrape_skin_data():
     from src.scripts.csgostash_scraper import csgostash_scrape

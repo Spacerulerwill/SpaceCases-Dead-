@@ -5,3 +5,4 @@ dnspython
 requests
 urllib3
 python-Levenshtein
+beautifulsoup4
