@@ -40,7 +40,7 @@ class User(commands.Cog):
     `{PREFIX}balance <user>`
     **Arguments**
     `<user>` - optional - user to check balance of
-    """)
+    """, aliases=["bal"])
     async def balance(self, ctx: Context, member: discord.Member = None):
         await balance(ctx, member)
 

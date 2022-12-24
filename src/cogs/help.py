@@ -19,7 +19,7 @@ class Help(commands.Cog):
         command_name = " ".join(args[:]).strip().lower()
 
         if command_name == "":
-            e = discord.Embed(description=f'Use `{PREFIX}help <command>` to gain more information about that command')
+            e = discord.Embed(description=f'Use `{PREFIX}help <command>` to gain more information about that command', color=discord.Color.dark_theme())
 
             for cog in self.bot.cogs:
                 if cog != "Help":
@@ -45,8 +45,15 @@ class Help(commands.Cog):
                 if command == None or command.name == "help":
                     await ctx.send("Invalid command!")
                     return
-                e = discord.Embed(description=command.description)
+                e = discord.Embed(description=command.description, color=discord.Color.dark_theme())
                 e.add_field(name="Usage", value=command.usage)
+
+                if len(command.aliases) > 0:
+                    alias_str = ""
+                    for alias in command.aliases:
+                        alias_str += f"\u200b\t•{alias}\n"
+                    e.add_field(name="Aliases", value=alias_str, inline=False)
+
                 await ctx.send(embed=e)
 
             elif len(command_name) == 2: # command with group
@@ -54,8 +61,15 @@ class Help(commands.Cog):
                 subcommand_name = command_name[1]
                 group:commands.Group = self.bot.get_command(group_name)
                 subcommand = group.get_command(subcommand_name)
-                e = discord.Embed(description=subcommand.description)
+                e = discord.Embed(description=subcommand.description, color=discord.Color.dark_theme())
                 e.add_field(name="Usage", value=subcommand.usage)
+
+                if len(subcommand.aliases) > 0:
+                    alias_str = ""
+                    for alias in subcommand.aliases:
+                        alias_str += f"\u200b\t•{alias}\n"
+                    e.add_field(name="Aliases", value=alias_str, inline=False)
+
                 await ctx.send(embed=e)
             else:
                 await ctx.send("Invalid command!")
