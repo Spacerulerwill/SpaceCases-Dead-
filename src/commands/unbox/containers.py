@@ -72,7 +72,8 @@ async def containers(ctx:Context, page:int = 1):
     
         e = discord.Embed(
             title=f"Page {page+1}/{len_containerlist_pages}", 
-            description=f"Use `{PREFIX}container <container>` to see a container's contents and `{PREFIX}open <container>` to open one"
+            description=f"Use `{PREFIX}container <container>` to see a container's contents and `{PREFIX}open <container>` to open one",
+            color=discord.Color.dark_theme()
         )
 
         page_field = ""

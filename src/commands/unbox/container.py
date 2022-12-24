@@ -9,11 +9,12 @@ async def container(ctx:Context, *args):
     
     try:
         container_data = database.containers[container]
+        print(container_data)
         container_name = container_data["formatted_name"]
         container_price = currency_str_format(container_data["price"])
         container_image_url = container_data["image_url"]
     except KeyError:
-        # try and find closest match
+        #try and find closest match
         closest_match = get_closest_match(container_name, database.containers.keys())
         
         #if match is reasonably close enough
@@ -23,7 +24,7 @@ async def container(ctx:Context, *args):
             container_data = database.containers[closest_match]
             await ctx.send(f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
         return
-    
+        
     item_index = 0
     
     rarities = {}
@@ -52,9 +53,9 @@ async def container(ctx:Context, *args):
             selected_rarity = select.values[0]        
             rarity_len = len(rarities[selected_rarity])
             item_index = 0
-            await msg.edit(embed=get_embed(), view=view)
-
-        await interact.response.defer()
+            await interact.response.edit_message(embed=get_embed(), view=view)
+        else:
+            await interact.response.defer()
 
     select.callback = select_callback
 
@@ -69,9 +70,9 @@ async def container(ctx:Context, *args):
                 item_index = len(rarities[selected_rarity])-1
             else:
                 item_index -= 1
-            await msg.edit(embed=get_embed(), view=view)
-
-        await interact.response.defer()
+            await interact.response.edit_message(embed=get_embed(), view=view) 
+        else:
+            await interact.response.defer()
 
     async def next_callback(interact: discord.Interaction):
         nonlocal item_index
@@ -81,9 +82,9 @@ async def container(ctx:Context, *args):
                 item_index = 0
             else:
                 item_index += 1
-            await msg.edit(embed=get_embed(), view=view)
-
-        await interact.response.defer()
+            await interact.response.edit_message(embed=get_embed(), view=view)
+        else:
+            await interact.response.defer()
     
     async def on_view_timeout():
         await msg.delete()
@@ -159,3 +160,4 @@ async def container(ctx:Context, *args):
         return e
 
     msg = await ctx.send(embed=get_embed(), view=view)
+        

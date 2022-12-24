@@ -62,6 +62,8 @@ async def on_command_error(ctx:Context, error):
             await ctx.send("Command not found!")
         else:
             await ctx.send(f"Command not found! Did you mean `{closest_match}`?")
+        return
+    raise error
 
 def scrape_skin_data():
     from src.scripts.csgostash_scraper import csgostash_scrape

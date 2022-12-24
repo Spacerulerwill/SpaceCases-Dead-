@@ -40,10 +40,10 @@ async def trades(ctx:Context, in_out:str):
     e.set_thumbnail(url=ctx.author.avatar.url)
     e.add_field(name=f"Trade List - {len(trades)} Items", value=trade_list_str)
     e.add_field(name="Commands", 
-    value=f"""`{PREFIX}trade in <user> - view incoming trade from user`
-    `{PREFIX}trade out <user> - view outgoing trade to user`
-    `{PREFIX}trade accept <user> - accept trade from user`
-    `{PREFIX}trade decline <user> - decline trade from user`
+    value=f"""`{PREFIX}trade in <user>` - view incoming trade from user
+    `{PREFIX}trade out <user>` - view outgoing trade to user
+    `{PREFIX}trade accept <user>` - accept trade from user
+    `{PREFIX}trade decline <user>` - decline trade from user
     """,
     inline=False)
 
