@@ -9,6 +9,9 @@ This cog contains the commands:
   * Send
   * Add
   * Remove
+  * In
+  * Out
+  * Delete
 * Trades
 """
 
@@ -43,8 +46,8 @@ class Trading(commands.Cog):
         await new(ctx, member)
 
     @trade.command()
-    async def cancel(self, ctx:Context):
-        await cancel(ctx)
+    async def cancel(self, ctx:Context, recipient:discord.Member=None):
+        await cancel(ctx, recipient)
 
     @trade.command()
     async def send(self, ctx:Context):
@@ -69,6 +72,7 @@ class Trading(commands.Cog):
     @trade.command()
     async def out(self, ctx:Context, recipient:discord.Member):
         await view_outgoing_trade(ctx, recipient)
+
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

@@ -35,6 +35,11 @@ async def send_trade_embed(ctx:Context, trade:dict, incoming:bool):
     e.add_field(name="Your Items", value=your_items)
     e.add_field(name="Their Items", value=their_items)
 
+    if not incoming:
+        e.add_field(name="Commands", inline=False, 
+        value=f"""`{PREFIX}trade cancel {user.name}` - cancel trade
+        """)
+
     timestamp = datetime.fromtimestamp(trade["send-timestamp"])
     datetime_str = timestamp.strftime("Trade created on %Y/%m/%d at %H:%M:%S")
 
@@ -73,7 +78,7 @@ async def send_trade_in_creation_embed(ctx:Context, recipient:discord.Member, tr
             value=f"""`{PREFIX}trade cancel` - cancel trade
             `{PREFIX}trade add in/out <inventory item number>` - add item
             `{PREFIX}trade remove in/out <trade item number>` - remove item
-            `{PREFIX}trade send` - send trade 
+            `{PREFIX}trade send` - send trade
             """, 
             inline=False
         )

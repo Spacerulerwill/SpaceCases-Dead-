@@ -44,6 +44,7 @@ async def trades(ctx:Context, in_out:str):
     `{PREFIX}trade out <user>` - view outgoing trade to user
     `{PREFIX}trade accept <user>` - accept trade from user
     `{PREFIX}trade decline <user>` - decline trade from user
+    `{PREFIX}trade cancel <user>` - cancel trade to user
     """,
     inline=False)
 
