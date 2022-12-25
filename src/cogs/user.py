@@ -1,8 +1,13 @@
-# this cog is for commands that affect the user's details and profile
-# Commands:
-# * register
-# * claim
-# * balance
+"""
+User Command Cog
+~~~~~~~~~~~~~~~~~~~
+
+This cog contains the commands:
+* Register
+* Claim
+* Balance
+* Transfer
+"""
 
 import discord
 from discord.ext import commands

@@ -1,4 +1,4 @@
-# this is a script to generate the dictionary of items for each csgo container
+# 
 
 from bs4 import BeautifulSoup
 import requests

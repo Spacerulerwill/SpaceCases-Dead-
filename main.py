@@ -38,7 +38,6 @@ def run_bot():
         
 @bot_instance.event
 async def on_ready():
-
     #print login message
     print(f'Logged in as: {bot_instance.user.name}')
   

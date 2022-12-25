@@ -1,8 +1,12 @@
-# This cog is for skin unboxing related commands
-# Commands:
-# * inventory
-# * inspect
-# * sell
+"""
+Inventory Command Cog
+~~~~~~~~~~~~~~~~~~~
+
+This cog contains the commands:
+* Inventory
+* Inspect
+* Sell
+"""
 
 import discord
 from discord.ext import commands

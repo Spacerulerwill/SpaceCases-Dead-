@@ -2,7 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
-from src.commands.trading.trade import send_trade_embed
+from src.commands.trading.trade_func import send_trade_in_creation_embed
 from pymongo.errors import DuplicateKeyError
 
 from typing import Tuple
@@ -48,7 +48,7 @@ async def send_warning(ctx:Context, recipient:discord.Member):
         )
         
         await close_message()
-        await send_trade_embed(ctx, recipient, trade)  
+        await send_trade_in_creation_embed(ctx, recipient, trade)  
 
     view = discord.ui.View(timeout=30)
     view.on_timeout = view_timeout_callback
@@ -97,7 +97,7 @@ async def new(ctx:Context, recipient:discord.Member):
     
     if successful:
         # create new trade and show trade embed
-        await send_trade_embed(ctx, recipient, trade)
+        await send_trade_in_creation_embed(ctx, recipient, trade)
     else:
         # show warning that this will override previous trade
         await send_warning(ctx, recipient)

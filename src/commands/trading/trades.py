@@ -47,6 +47,4 @@ async def trades(ctx:Context, in_out:str):
     """,
     inline=False)
 
-    database.trade_requests.find({})
-
     await ctx.send(embed=e)

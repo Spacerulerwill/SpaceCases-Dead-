@@ -1,10 +1,15 @@
-# This cog is for skin unboxing related commands
-# Commands:
-# * item
-# * container
-# * containers
-# * open
-# * upgrade
+"""
+Unbox Command Cog
+~~~~~~~~~~~~~~~~~~~
+
+This cog contains the commands:
+* Item
+* Container
+* Containers
+* Upgrade
+* Open
+"""
+
 from discord.ext import commands
 from discord.ext.commands import Context
 from src.util.constants import PREFIX

@@ -2,7 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
-from src.commands.trading.trade import send_trade_embed
+from src.commands.trading.trade_func import send_trade_in_creation_embed
 
 async def add(ctx:Context, in_out:str, item_index:int):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
@@ -63,6 +63,6 @@ async def add(ctx:Context, in_out:str, item_index:int):
             return
 
     recipient = await ctx.bot.fetch_user(trade["recipient-id"])
-    await send_trade_embed(ctx, recipient)
+    await send_trade_in_creation_embed(ctx, recipient)
     
     

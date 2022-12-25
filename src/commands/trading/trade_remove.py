@@ -1,6 +1,6 @@
 from discord.ext.commands import Context
 from src.util import database
-from src.commands.trading.trade import send_trade_embed
+from src.commands.trading.trade_func import send_trade_in_creation_embed
 from src.util.constants import PREFIX
 from pymongo.errors import WriteError
 
@@ -63,4 +63,4 @@ async def remove(ctx:Context, in_out:str, item_index:int):
             return
 
     recipient = await ctx.bot.fetch_user(trade["recipient-id"])
-    await send_trade_embed(ctx, recipient)
+    await send_trade_in_creation_embed(ctx, recipient)

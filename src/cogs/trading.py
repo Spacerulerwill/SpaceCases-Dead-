@@ -1,8 +1,17 @@
-# This cog is for skin unboxing related commands
-# Commands:
-# * trade
-# ** add
-# ** remove
+"""
+Trading Command Cog
+~~~~~~~~~~~~~~~~~~~
+
+This cog contains the commands:
+* Trade
+  * New
+  * Cancel
+  * Send
+  * Add
+  * Remove
+* Trades
+"""
+
 import discord
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -14,6 +23,8 @@ from src.commands.trading.trade_add import add
 from src.commands.trading.trade_remove import remove
 from src.commands.trading.trade_send import send
 from src.commands.trading.trades import trades
+from src.commands.trading.trade_in import view_incoming_trade
+from src.commands.trading.trade_out import view_outgoing_trade
 
 from typing import Literal
 
@@ -50,6 +61,15 @@ class Trading(commands.Cog):
     @commands.command()
     async def trades(self, ctx:Context, in_out:Literal["in", "out", "all"]="all"):
         await trades(ctx, in_out)
+
+    @trade.command(name="in")
+    async def incoming(self, ctx:Context, sender:discord.Member):
+        await view_incoming_trade(ctx, sender)
+
+    @trade.command()
+    async def out(self, ctx:Context, recipient:discord.Member):
+        await view_outgoing_trade(ctx, recipient)
+
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot:commands.Bot):
