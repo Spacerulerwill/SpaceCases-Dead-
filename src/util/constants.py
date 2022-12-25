@@ -1,3 +1,5 @@
+from src.util.emojis import *
+
 PREFIX = "cs "
 TWELVE_HOURS = 43200
 ONE_DAY = 86400
@@ -16,6 +18,16 @@ rarity_color_dict = {
     "Classified": 13839590,
     "Covert": 15420235,
     "Contraband": 14986809
+}
+
+rarity_emoji_dict = {
+    "Consumer": CONSUMER_GRADE_EMOJI,
+    "Industrial": INDUSTRIAL_GRADE_EMOJI,
+    "Milspec": MILSPEC_EMOJI,
+    "Restricted": RESTRICTED_EMOJI,
+    "Classified": CLASSIFIED_EMOJI,
+    "Covert": COVERT_EMOJI,
+    "Contraband": CONTRABAND_EMOJI 
 }
 
 case_rarity_odds = {

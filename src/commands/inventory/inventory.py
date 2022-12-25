@@ -1,6 +1,6 @@
 import discord
 from discord.ext.commands import Context
-from src.util.constants import PREFIX, INVENTORY_ELEMS_PER_PAGE
+from src.util.constants import PREFIX, INVENTORY_ELEMS_PER_PAGE, rarity_emoji_dict
 from src.util import database
 from src.util.string_util import currency_str_format
 
@@ -49,7 +49,8 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
         string = ""
         for count, item in enumerate(inventory_page):
             skin_data = database.skin_data[item["name"]]
-            string += f"**{count+1})** `{skin_data['formatted_name']}` - **{currency_str_format(skin_data['price'])}**\n"
+            emoji = rarity_emoji_dict[skin_data["rarity"]]
+            string += f"{emoji} **{count+1})** `{skin_data['formatted_name']}` - **{currency_str_format(skin_data['price'])}**\n"
 
         e = discord.Embed(title=f"{member.name}'s Inventory - {page+1}/{len(inventory_pages)}", color=discord.Color.dark_theme())
         e.set_thumbnail(url=member.avatar.url)
