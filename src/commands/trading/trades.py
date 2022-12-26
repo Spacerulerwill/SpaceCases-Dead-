@@ -37,7 +37,7 @@ async def trades(ctx:Context, in_out:str):
                 trade_list_str += f"**OUTGOING** to {recipient.name}\n"
 
     e = discord.Embed(title=title, color=discord.Color.dark_theme())
-    e.set_thumbnail(url=ctx.author.avatar.url)
+    e.set_thumbnail(url=ctx.author.display_avatar.url)
     e.add_field(name=f"Trade List - {len(trades)} Items", value=trade_list_str)
     e.add_field(name="Commands", 
     value=f"""`{PREFIX}trade in <user>` - view incoming trade from user

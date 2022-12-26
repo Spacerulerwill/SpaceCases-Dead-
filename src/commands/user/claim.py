@@ -128,7 +128,7 @@ async def claim(ctx:Context):
 
         #create embed
         e = discord.Embed(title="You have successfully claimed your daily reward!", description="You can claim again tomorrow", color=discord.Color.green())
-        e.set_thumbnail(url=ctx.author.avatar.url)
+        e.set_thumbnail(url=ctx.author.display_avatar.url)
         footer = "Note: Streaks reset 24 hours after your last claim"
 
         view = None
@@ -236,6 +236,6 @@ async def claim(ctx:Context):
             description=f"You can claim again tomorrow", 
             color=discord.Color.red()
         )
-        e.set_thumbnail(url=ctx.author.avatar.url)
+        e.set_thumbnail(url=ctx.author.display_avatar.url)
 
         msg = await ctx.send(embed=e)

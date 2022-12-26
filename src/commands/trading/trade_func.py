@@ -43,7 +43,7 @@ async def send_trade_embed(ctx:Context, trade:dict, incoming:bool):
     timestamp = datetime.fromtimestamp(trade["send-timestamp"])
     datetime_str = timestamp.strftime("Trade created on %Y/%m/%d at %H:%M:%S")
 
-    e.set_footer(icon_url=ctx.author.avatar.url, text=datetime_str)
+    e.set_footer(icon_url=ctx.author.display_avatar.url, text=datetime_str)
 
     await ctx.send(embed=e)
 
@@ -54,7 +54,7 @@ async def send_trade_in_creation_embed(ctx:Context, recipient:discord.Member, tr
         title = f"Trade request to {recipient.name}"
         
     e = discord.Embed(title=title)
-    e.set_thumbnail(url=recipient.avatar.url)
+    e.set_thumbnail(url=recipient.display_avatar.url)
 
     if confirmed:
         e.color = discord.Color.green()

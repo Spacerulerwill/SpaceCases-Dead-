@@ -22,7 +22,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
     # if users inventory is empty
     if len(user_data["inventory"]) == 0:
         e = discord.Embed(title=f"{member.name}'s Inventory", color=discord.Color.dark_theme())
-        e.set_thumbnail(url=member.avatar.url)
+        e.set_thumbnail(url=member.display_avatar.url)
 
         if member == ctx.author:
             e.description = f"Your inventory is empty! Start unboxing with `{PREFIX}open`"
@@ -53,7 +53,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
             string += f"{emoji} **{count+1})** `{skin_data['formatted_name']}` - **{currency_str_format(skin_data['price'])}**\n"
 
         e = discord.Embed(title=f"{member.name}'s Inventory - {page+1}/{len(inventory_pages)}", color=discord.Color.dark_theme())
-        e.set_thumbnail(url=member.avatar.url)
+        e.set_thumbnail(url=member.display_avatar.url)
         
         e.description = f"Total value: **{currency_str_format(inventory_value)}**\nSlots Used: **{user_data['inventory-size']}/{user_data['inventory-max-capacity']}**"
         e.add_field(name="Contents", value=string)

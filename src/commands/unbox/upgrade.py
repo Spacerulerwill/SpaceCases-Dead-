@@ -43,7 +43,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
     e.add_field(name="Chance", value=f"{round_sig_fig(percentage_chance*100, 2)}%")
     e.set_thumbnail(url=start_item_data["image_url"])
     e.set_image(url=result_item_data["image_url"])
-    e.set_footer(icon_url=ctx.author.avatar.url, text="Warning! Upgrades will cancel after 30 seconds")
+    e.set_footer(icon_url=ctx.author.display_avatar.url, text="Warning! Upgrades will cancel after 30 seconds")
 
     async def on_view_timeout():
         if not has_upgraded:
@@ -69,7 +69,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
                                 description=f'Failed to upgrade as **{start_item_data["formatted_name"]}** no longer exists in inventory',
 
                             )
-                            e.set_thumbnail(url=ctx.author.avatar.url)
+                            e.set_thumbnail(url=ctx.author.display_avatar.url)
                             session.abort_transaction()
                         else:
                             #successful at pull, push new item with a new random float
@@ -105,7 +105,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
                                 description=f'Failed to upgrade as **{start_item_data["formatted_name"]}** no longer exists in inventory',
 
                             )
-                            e.set_thumbnail(url=ctx.author.avatar.url)
+                            e.set_thumbnail(url=ctx.author.display_avatar.url)
                             session.abort_transaction()
                         else:
                             #successful at pull, decrement inventory size

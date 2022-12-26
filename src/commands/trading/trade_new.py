@@ -13,7 +13,7 @@ async def send_warning(ctx:Context, recipient:discord.Member):
         description="This trade request will be deleted. Continue?",
         color=discord.Color.red()
     )
-    e.set_thumbnail(url=ctx.author.avatar.url)
+    e.set_thumbnail(url=ctx.author.display_avatar.url)
     e.set_footer(text="Trade request creation will automatically cancel after 30 seconds of inactivity")
 
     # callback funcs

@@ -51,6 +51,6 @@ async def inspect(ctx:Context, member:discord.Member, item_index:int):
     e.add_field(name="Float", value=float_val)
     e.add_field(name="Rarity", value=rarity)
     e.set_image(url=image_url)
-    e.set_footer(icon_url=member.avatar.url, text=f"This item belongs to {member.name}")
+    e.set_footer(icon_url=member.display_avatar.url, text=f"This item belongs to {member.name}")
 
     await ctx.send(embed=e)
