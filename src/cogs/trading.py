@@ -11,7 +11,6 @@ This cog contains the commands:
   * Remove
   * In
   * Out
-  * Delete
 * Trades
 """
 
@@ -28,6 +27,7 @@ from src.commands.trading.trade_send import send
 from src.commands.trading.trades import trades
 from src.commands.trading.trade_in import view_incoming_trade
 from src.commands.trading.trade_out import view_outgoing_trade
+from src.commands.trading.trade_decline import decline
 
 from typing import Literal
 
@@ -73,7 +73,9 @@ class Trading(commands.Cog):
     async def out(self, ctx:Context, recipient:discord.Member):
         await view_outgoing_trade(ctx, recipient)
 
-
+    @trade.command()
+    async def decline(self, ctx:Context, sender:discord.Member):
+        await decline(ctx, sender)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot:commands.Bot):

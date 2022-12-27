@@ -4,6 +4,30 @@ from src.util.constants import PREFIX
 from discord.ext.commands import Context
 from datetime import datetime
 
+async def send_trade_notif_to_user(sender: discord.Member, recipient:discord.Member):
+    trade = database.trade_requests.find_one({"_id": sender.id, "recipient-id": recipient.id})
+
+    e = discord.Embed(
+        title=f"{sender.name} has sent you a trade request!",
+        color=discord.Color.dark_theme()
+    )
+    e.set_thumbnail(url=sender.display_avatar.url)
+
+    they_offer = create_item_str(trade["sender-items"])
+    for_your = create_item_str(trade["recipient-items"])
+
+    e.add_field(name="They Offer", value=they_offer)
+    e.add_field(name="For Your", value=for_your)
+    e.add_field(
+        name="Commands", 
+        value=f"""`{PREFIX}trade accept {sender.name}` - accept trade
+        `{PREFIX}trade decline {sender.name}` - decline trade
+        """,
+        inline=False
+    )
+    await recipient.send(embed=e)
+    
+
 def create_item_str(items:list) -> str:
     if len(items) == 0:
         return "None"

@@ -2,7 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
-from src.commands.trading.trade_func import send_trade_in_creation_embed
+from src.commands.trading.trade_func import send_trade_in_creation_embed, send_trade_notif_to_user
 import time
 
 async def send(ctx:Context):
@@ -25,5 +25,6 @@ async def send(ctx:Context):
         await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
         return
 
-    recipient = await ctx.bot.fetch_user(trade["recipient-id"])
+    recipient:discord.Member = await ctx.bot.fetch_user(trade["recipient-id"])
+    await send_trade_notif_to_user(ctx.author, recipient)
     await send_trade_in_creation_embed(ctx, recipient, trade, True)
