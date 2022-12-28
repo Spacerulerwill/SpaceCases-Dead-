@@ -56,8 +56,8 @@ async def send_trade_embed(ctx:Context, trade:dict, incoming:bool):
         your_items = create_item_str(trade["sender-items"])      
         their_items = create_item_str(trade["recipient-items"])
 
-    e.add_field(name="Your Items", value=your_items)
-    e.add_field(name="Their Items", value=their_items)
+    e.add_field(name="They Want", value=your_items)
+    e.add_field(name="For Their", value=their_items)
 
     if not incoming:
         e.add_field(name="Commands", inline=False, 

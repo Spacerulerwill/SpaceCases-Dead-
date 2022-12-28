@@ -16,6 +16,7 @@ async def decline(ctx:Context, sender:discord.Member):
 
         #inform original sender that their request was declined
         e = discord.Embed(title=f"Your trade request to {ctx.author.name} was declined", color=discord.Color.red())
+        e.set_thumbnail(url=sender.default_avatar.url)
 
         you_wanted = create_item_str(deleted_document["recipient-items"])
         for_your = create_item_str(deleted_document["sender-items"])

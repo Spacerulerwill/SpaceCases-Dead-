@@ -28,6 +28,7 @@ from src.commands.trading.trades import trades
 from src.commands.trading.trade_in import view_incoming_trade
 from src.commands.trading.trade_out import view_outgoing_trade
 from src.commands.trading.trade_decline import decline
+from src.commands.trading.trade_accept import accept
 
 from typing import Literal
 
@@ -72,6 +73,10 @@ class Trading(commands.Cog):
     @trade.command()
     async def out(self, ctx:Context, recipient:discord.Member):
         await view_outgoing_trade(ctx, recipient)
+
+    @trade.command()
+    async def accept(self, ctx:Context, sender:discord.Member):
+        await accept(ctx, sender)
 
     @trade.command()
     async def decline(self, ctx:Context, sender:discord.Member):
