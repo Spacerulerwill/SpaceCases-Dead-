@@ -30,7 +30,6 @@ async def accept(ctx:Context, sender:discord.Member):
             if len(sender_items_missing) == 0 and len(recipient_items_missing) == 0:
                 # no missing items, all good to trade!
 
-
                 # swap items round
                 database.user_data.update_one(
                     {"_id": ctx.author.id},
@@ -39,7 +38,7 @@ async def accept(ctx:Context, sender:discord.Member):
                             "inventory": {
                                 "$in": trade["recipient-items"]
                             }
-                        },                  
+                        },                   
                     },
                     session=session  
                 )
