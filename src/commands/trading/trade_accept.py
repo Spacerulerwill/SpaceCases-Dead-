@@ -1,5 +1,6 @@
 import discord
 from src.util import database
+from src.commands.trading.trade_func import create_item_str
 from discord.ext.commands import Context
 
 async def accept(ctx:Context, sender:discord.Member):
@@ -29,6 +30,7 @@ async def accept(ctx:Context, sender:discord.Member):
 
             if len(sender_items_missing) == 0 and len(recipient_items_missing) == 0:
                 # no missing items, all good to trade!
+                database.trade_requests.delete_one({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
 
                 # swap items round
                 database.user_data.update_one(
@@ -71,11 +73,26 @@ async def accept(ctx:Context, sender:discord.Member):
                     },
                     session=session   
                 )
-                
-                database.trade_requests.delete_one({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
 
+                #send embed person who accepted
+                recipient_embed = discord.Embed(
+                    title=f"Trade from {sender.name} accepted!",
+                    color=discord.Color.green()
+                )
+                recipient_embed.add_field(name="Your New Items", value=create_item_str(trade["sender-items"]))
+                recipient_embed.set_thumbnail(url=ctx.author.display_avatar.url)
+
+                await ctx.send(embed=recipient_embed)
+
+                sender_embed = discord.Embed(
+                    title=f"{ctx.author.name} accepted your trade request!",
+                    color=discord.Color.green()
+                )
+                sender_embed.add_field(name="Your New Items", value=create_item_str(trade["recipient-items"]))
+                recipient_embed.set_thumbnail(url=sender.display_avatar.url)
+
+                await sender.send(embed=sender_embed)
+                
             else:
                 # items missing, cannot perform trade!
                 pass
-
-            print(sender_items_missing, recipient_items_missing)
