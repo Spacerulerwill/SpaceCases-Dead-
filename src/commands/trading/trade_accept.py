@@ -95,4 +95,15 @@ async def accept(ctx:Context, sender:discord.Member):
                 
             else:
                 # items missing, cannot perform trade!
-                pass
+                e = discord.Embed(
+                    title="Trade Error",
+                    description=f"The trade to {sender.name} could not take place as items were missing from one or both participants inventories. Try again once you have these items, or decline the request.",
+                    color=discord.Color.red()
+                )
+                e.add_field()
+                e.set_thumbnail(url=ctx.author.display_avatar.url)
+
+                e.add_field(name="You Are Missing", value=create_item_str(recipient_items_missing))
+                e.add_field(name=f"{sender.name} is Missing", value=create_item_str(sender_items_missing))
+
+                await ctx.send(embed=e)
