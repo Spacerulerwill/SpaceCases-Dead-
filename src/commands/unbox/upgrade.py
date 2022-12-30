@@ -96,6 +96,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
                         update_result = database.user_data.update_one({"_id": ctx.author.id}, 
                         {
                             "$pull": {"inventory": {"name": start_item_name, "float": start_item_float}},
+                            "$inc": {"inventory-size": -1}
                         }, session=session)
 
                         #failed to pull - item no longer exists abort transaction
