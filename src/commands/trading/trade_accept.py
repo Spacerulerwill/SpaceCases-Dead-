@@ -40,6 +40,9 @@ async def accept(ctx:Context, sender:discord.Member):
                             "inventory": {
                                 "$in": trade["recipient-items"]
                             }
+                        },
+                        "$inc": {
+                            "inventory-size" -len(trade["recipient-items"])
                         },                   
                     },
                     session=session  
@@ -49,7 +52,10 @@ async def accept(ctx:Context, sender:discord.Member):
                     {
                         "$push": {
                             "inventory": { "$each": trade["sender-items"]}
-                        } 
+                        },
+                        "$inc": {
+                            "inventory-size": len(trade["sender-items"])
+                        }
                     },
                     session=session  
                 ) 
@@ -61,6 +67,9 @@ async def accept(ctx:Context, sender:discord.Member):
                                 "$in": trade["sender-items"]
                             }
                         },
+                        "$inc": {
+                            "inventory-size": -len(trade["sender-items"])
+                        }
                     }, 
                     session=session  
                 )
@@ -69,7 +78,10 @@ async def accept(ctx:Context, sender:discord.Member):
                     {
                         "$push": {
                             "inventory": { "$each": trade["recipient-items"]}
-                        }  
+                        },
+                        "$inc": {
+                            "inventory-size": len(trade["recipient-items"])
+                        }
                     },
                     session=session   
                 )
@@ -94,10 +106,12 @@ async def accept(ctx:Context, sender:discord.Member):
                 await sender.send(embed=sender_embed)
                 
             else:
+                database.trade_requests.delete_one({"_id": sender.id, "recipient": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
+
                 # items missing, cannot perform trade!
                 e = discord.Embed(
                     title="Trade Error",
-                    description=f"The trade to {sender.name} could not take place as items were missing from one or both participants inventories. Try again once you have these items, or decline the request.",
+                    description=f"The trade from {sender.name} could not take place and has been cancelled as items were missing from one or both participants inventories.",
                     color=discord.Color.red()
                 )
                 e.add_field()
