@@ -29,7 +29,17 @@ async def accept(ctx:Context, sender:discord.Member):
                     recipient_items_missing.append(item)
 
             if len(sender_items_missing) == 0 and len(recipient_items_missing) == 0:
-                # no missing items, all good to trade!
+                # no missing items, next check that the trade will not result in inventory capacity overflow
+
+                if sender_data["inventory-size"] + len(trade["sender-items"]) > sender_data["inventory-capacity"]:
+                    trade_continue = False
+
+                if recipient_data["inventory-size"] + len(trade["recipient-items"]) > sender_data["inventory-capacity"]:
+                    trade_continue = False
+
+                if not trade_continue:
+                    return
+
                 database.trade_requests.delete_one({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
 
                 # swap items round
@@ -122,16 +132,18 @@ async def accept(ctx:Context, sender:discord.Member):
 
                 await ctx.send(embed=e)
 
-                # send message to sender
-                e = discord.Embed(
-                    title="Trade Error",
-                    description=f"Your trade to {ctx.author.name} could not take place and has been cancelled as items were missing from one or both participants inventories",
-                    color=discord.Color.red()
-                )
+                # only send to the sender if they have items missing
+                if len(sender_items_missing) != 0:
+                    # send message to sender
+                    e = discord.Embed(
+                        title="Trade Error",
+                        description=f"Your trade to {ctx.author.name} could not take place and has been cancelled as items were missing from one or both participants inventories",
+                        color=discord.Color.red()
+                    )
 
-                e.set_thumbnail(url=sender.display_avatar.url)
+                    e.set_thumbnail(url=sender.display_avatar.url)
 
-                e.add_field(name=f"{ctx.author.name} is Missing", value=create_item_str(recipient_items_missing))
-                e.add_field(name="You Are Missing", value=create_item_str(sender_items_missing))
+                    e.add_field(name=f"{ctx.author.name} is Missing", value=create_item_str(recipient_items_missing))
+                    e.add_field(name="You Are Missing", value=create_item_str(sender_items_missing))
 
-                await sender.send(embed=e)
+                    await sender.send(embed=e)
