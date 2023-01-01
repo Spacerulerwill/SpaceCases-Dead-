@@ -64,6 +64,39 @@ async def on_command_error(ctx:Context, error):
         return
     raise error
 
+@bot_instance.event
+async def on_guild_join(guild: discord.Guild):
+
+    if not guild.system_channel is None and guild.system_channel.permissions_for(guild.me).send_messages:
+        channel = guild.system_channel
+        print("bruh!")
+    else:
+        for ch in guild.text_channels:
+            if ch.permissions_for(guild.me).send_messages:
+                channel = ch
+                break
+            else:
+                return
+
+    e = discord.Embed(
+        description=f"""Hello! My name is **{bot_instance.user.name}**
+
+        I am CS:GO gambling and economy bot. With me you can:
+        • Unbox your dream skins
+        • Trade them with other users
+        • Take a risk and upgrade them
+        • And more coming soon!
+
+        To setup the bot and start unboxing, ask an **admin** on the sever to the use the command `{PREFIX}setup!`
+
+        Enjoy the bot! - [Spacerulerwill](https://github.com/Spacerulerwill)
+        """,
+        color=discord.Color.dark_theme()
+    )
+
+    e.set_thumbnail(url=bot_instance.user.display_avatar.url)
+    await channel.send(embed=e)
+
 def scrape_skin_data():
     from src.scripts.csgostash_scraper import csgostash_scrape
     csgostash_scrape()
