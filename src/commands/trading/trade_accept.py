@@ -106,18 +106,32 @@ async def accept(ctx:Context, sender:discord.Member):
                 await sender.send(embed=sender_embed)
                 
             else:
-                database.trade_requests.delete_one({"_id": sender.id, "recipient": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
+                # items missing, cancel and inform participants that cnanot perform trade!
+                database.trade_requests.delete_one({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
 
-                # items missing, cannot perform trade!
+                # send message to recipient
                 e = discord.Embed(
                     title="Trade Error",
                     description=f"The trade from {sender.name} could not take place and has been cancelled as items were missing from one or both participants inventories.",
                     color=discord.Color.red()
                 )
-                e.add_field()
                 e.set_thumbnail(url=ctx.author.display_avatar.url)
 
                 e.add_field(name="You Are Missing", value=create_item_str(recipient_items_missing))
                 e.add_field(name=f"{sender.name} is Missing", value=create_item_str(sender_items_missing))
 
                 await ctx.send(embed=e)
+
+                # send message to sender
+                e = discord.Embed(
+                    title="Trade Error",
+                    description=f"Your trade to {ctx.author.name} could not take place and has been cancelled as items were missing from one or both participants inventories",
+                    color=discord.Color.red()
+                )
+
+                e.set_thumbnail(url=sender.display_avatar.url)
+
+                e.add_field(name=f"{ctx.author.name} is Missing", value=create_item_str(recipient_items_missing))
+                e.add_field(name="You Are Missing", value=create_item_str(sender_items_missing))
+
+                await sender.send(embed=e)
