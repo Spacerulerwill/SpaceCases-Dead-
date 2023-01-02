@@ -2,7 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.util.string_util import currency_str_format
-from src.commands.decorators import requires
+from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def balance(ctx: Context, member: discord.Member = None):

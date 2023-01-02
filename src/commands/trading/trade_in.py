@@ -2,7 +2,7 @@ import discord
 from src.util import database
 from src.commands.trading.trade_func import send_trade_embed
 from discord.ext.commands import Context
-from src.commands.decorators import requires
+from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def view_incoming_trade(ctx:Context, sender:discord.Member):

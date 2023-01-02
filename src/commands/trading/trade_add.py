@@ -3,7 +3,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
 from src.commands.trading.trade_func import send_trade_in_creation_embed
-from src.commands.decorators import requires
+from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def add(ctx:Context, in_out:str, item_index:int):

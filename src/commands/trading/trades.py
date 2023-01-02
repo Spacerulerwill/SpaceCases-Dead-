@@ -2,7 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
-from src.commands.decorators import requires
+from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def trades(ctx:Context, in_out:str):

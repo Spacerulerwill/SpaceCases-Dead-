@@ -2,6 +2,7 @@ import discord
 from src.util import database
 from src.commands.trading.trade_func import create_item_str
 from discord.ext.commands import Context
+from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def accept(ctx:Context, sender:discord.Member):

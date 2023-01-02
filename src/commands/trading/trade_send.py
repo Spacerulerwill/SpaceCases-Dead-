@@ -3,7 +3,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
 from src.commands.trading.trade_func import send_trade_in_creation_embed, send_trade_notif_to_user
-from src.commands.decorators import requires
+from src.util.decorators import requires
 import time
 
 @requires(users_registered=True)

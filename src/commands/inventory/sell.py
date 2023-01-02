@@ -2,7 +2,7 @@ import discord
 from src.util import database
 from src.util.string_util import currency_str_format
 from src.util.constants import PREFIX
-from src.commands.decorators import requires
+from src.util.decorators import requires
 from discord.ext.commands import Context
 
 @requires(users_registered=True)

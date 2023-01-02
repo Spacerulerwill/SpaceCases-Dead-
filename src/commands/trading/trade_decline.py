@@ -2,7 +2,7 @@ import discord
 from src.util import database
 from discord.ext.commands import Context
 from src.commands.trading.trade_func import create_item_str
-from src.commands.decorators import requires
+from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def decline(ctx:Context, sender:discord.Member):

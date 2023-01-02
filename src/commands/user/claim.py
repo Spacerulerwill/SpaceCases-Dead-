@@ -3,7 +3,7 @@ from src.util import database
 from src.util.string_util import currency_str_format
 from src.util.skin_func import gen_item
 from src.util.constants import ONE_DAY, PREFIX, rarity_color_dict
-from src.commands.decorators import requires
+from src.util.decorators import requires
 import discord
 import time
 import random

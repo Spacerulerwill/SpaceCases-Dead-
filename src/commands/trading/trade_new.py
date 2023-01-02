@@ -4,7 +4,7 @@ from src.util import database
 from src.util.constants import PREFIX
 from src.commands.trading.trade_func import send_trade_in_creation_embed
 from pymongo.errors import DuplicateKeyError
-from src.commands.decorators import requires
+from src.util.decorators import requires
 
 from typing import Tuple
 

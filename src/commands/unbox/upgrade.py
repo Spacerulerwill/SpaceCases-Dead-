@@ -2,7 +2,7 @@ import discord
 from src.util import database
 from src.util.constants import PREFIX, case_wear_ranges_lower, case_wear_ranges_upper
 from src.util.string_util import round_sig_fig
-from src.commands.decorators import requires
+from src.util.decorators import requires
 from discord.ext.commands import Context
 import random
 

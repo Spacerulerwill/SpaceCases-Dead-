@@ -10,7 +10,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
-from src.commands.decorators import requires
+from src.util.decorators import requires
 
 # initialise class
 class Help(commands.Cog):

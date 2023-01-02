@@ -2,7 +2,7 @@ import discord
 import random
 from discord.ext.commands import Context
 from src.util import database
-from src.commands.decorators import requires
+from src.util.decorators import requires
 from src.util.constants import PREFIX, KEY_PRICE, case_rarity_odds, rarity_color_dict
 from src.util.string_util import currency_str_format, get_closest_match, get_inspect_link_3D
 from src.util.skin_func import gen_item

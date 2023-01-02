@@ -1,7 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX, INVENTORY_ELEMS_PER_PAGE, rarity_emoji_dict
-from src.commands.decorators import requires
+from src.util.decorators import requires
 from src.util import database
 from src.util.string_util import currency_str_format
 

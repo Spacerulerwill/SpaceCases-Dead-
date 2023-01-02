@@ -3,6 +3,7 @@ from src.util import database
 from src.util.constants import PREFIX
 from discord.ext.commands import Context
 from src.commands.trading.trade_func import send_trade_embed
+from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def view_outgoing_trade(ctx:Context, recipient:discord.Member):

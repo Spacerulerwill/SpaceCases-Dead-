@@ -2,7 +2,7 @@ import discord
 from src.util import database
 from src.util.constants import PREFIX
 from src.util.constants import rarity_color_dict
-from src.commands.decorators import requires
+from src.util.decorators import requires
 from src.util.string_util import currency_str_format, get_inspect_link_3D
 from discord.ext.commands import Context
 
