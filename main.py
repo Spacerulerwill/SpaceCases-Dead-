@@ -1,5 +1,5 @@
 from aiohttp import ClientConnectorError
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands import Context
 
 import discord
@@ -28,9 +28,10 @@ bot_instance = commands.Bot(command_prefix=[PREFIX, PREFIX.upper(), PREFIX.title
 
 #start the bots
 def run_bot():
+    global bot_instance
+    
     database.init()
 
-    global bot_instance
     try:
         bot_instance.run(TOKEN) #run the client using using my bot's token
     except ClientConnectorError: 
@@ -48,6 +49,21 @@ async def on_ready():
 
     #set playing game to cs help
     await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
+
+    bot_status_loop.start()
+
+status_int = 0
+@tasks.loop(seconds=10)
+async def bot_status_loop():
+    global status_int
+    
+    match status_int:
+        case 0:
+            await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
+        case 1:
+            await bot_instance.change_presence(activity=discord.Game(name=f"{database.user_data.count_documents({})} users | {len(bot_instance.guilds)} guilds"))
+
+    status_int = (status_int + 1) % 2
 
 #handle command errors with error message
 @bot_instance.event
@@ -69,7 +85,6 @@ async def on_guild_join(guild: discord.Guild):
 
     if not guild.system_channel is None and guild.system_channel.permissions_for(guild.me).send_messages:
         channel = guild.system_channel
-        print("bruh!")
     else:
         for ch in guild.text_channels:
             if ch.permissions_for(guild.me).send_messages:
