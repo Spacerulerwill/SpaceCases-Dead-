@@ -2,7 +2,9 @@ import discord
 from src.util import database
 from discord.ext.commands import Context
 from src.commands.trading.trade_func import create_item_str
+from src.commands.decorators import requires
 
+@requires(users_registered=True)
 async def decline(ctx:Context, sender:discord.Member):
     deleted_document = database.trade_requests.find_one_and_delete({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}})
     

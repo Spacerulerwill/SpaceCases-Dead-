@@ -2,19 +2,16 @@ import discord
 import random
 from discord.ext.commands import Context
 from src.util import database
+from src.commands.decorators import requires
 from src.util.constants import PREFIX, KEY_PRICE, case_rarity_odds, rarity_color_dict
 from src.util.string_util import currency_str_format, get_closest_match, get_inspect_link_3D
 from src.util.skin_func import gen_item
 
+@requires(users_registered=True)
 async def open(ctx:Context, *args):
     container_name = " ".join(args[:]).strip().lower()
 
     user_data = database.user_data.find_one({"_id": ctx.author.id})
-
-    #check user exists
-    if user_data == None:
-        await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
-        return
     
     # check case exists
     try:

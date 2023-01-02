@@ -2,15 +2,12 @@ import discord
 from src.util import database
 from src.util.string_util import currency_str_format
 from src.util.constants import PREFIX
+from src.commands.decorators import requires
 from discord.ext.commands import Context
 
+@requires(users_registered=True)
 async def sell(ctx:Context, item_index:int):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
-
-    if user_data is None:
-        await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
-        return
-    
     user_inventory = list(user_data["inventory"])
 
     if item_index > len(user_inventory):

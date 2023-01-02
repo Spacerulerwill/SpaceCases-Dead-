@@ -2,7 +2,9 @@ import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
 from src.util import database
+from src.commands.decorators import requires
 
+@requires(users_registered=True)
 async def cancel(ctx:Context, recipient:discord.Member):
     # if recipient is None cancel the current trade in creation
     if recipient is None:

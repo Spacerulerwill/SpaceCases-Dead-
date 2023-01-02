@@ -4,9 +4,11 @@ from src.util import database
 from src.util.constants import PREFIX
 from src.commands.trading.trade_func import send_trade_in_creation_embed
 from pymongo.errors import DuplicateKeyError
+from src.commands.decorators import requires
 
 from typing import Tuple
 
+@requires(users_registered=True)
 async def send_warning(ctx:Context, recipient:discord.Member):
     e = discord.Embed(
         title="Warning: You already have a trade request in creation",
@@ -80,15 +82,8 @@ def try_create_trade_request(ctx:Context, recipient:discord.Member) -> Tuple[boo
 
     return update_result.upserted_id is not None, trade
 
+@requires(users_registered=True)
 async def new(ctx:Context, recipient:discord.Member):
-    if database.user_data.find_one({"_id": ctx.author.id}) is None:
-        await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
-        return
-    
-    if database.user_data.find_one({"_id": recipient.id}) is None:
-        await ctx.send(f"{recipient.name} is not registered!")
-        return
-    
     try:
         successful, trade = try_create_trade_request(ctx, recipient)
     except DuplicateKeyError:

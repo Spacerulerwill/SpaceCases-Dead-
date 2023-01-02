@@ -1,10 +1,11 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
+from src.commands.decorators import requires 
 from src.util.string_util import currency_str_format
-from src.util.constants import PREFIX
 from decimal import Decimal
 
+@requires(users_registered=True)
 async def transfer(ctx:Context, member: discord.Member, amount:float):
     if member is ctx.author:
         await ctx.send("You cannot transfer money to yourself!")
@@ -36,10 +37,6 @@ async def transfer(ctx:Context, member: discord.Member, amount:float):
                 },
             }
             }], session=session)
-
-            if update_result.matched_count == 0:
-                await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
-                return
 
             if update_result.modified_count == 1:
                 other_update_result = database.user_data.update_one({"_id":member.id}, {"$inc": {"balance": amount}}, session=session)

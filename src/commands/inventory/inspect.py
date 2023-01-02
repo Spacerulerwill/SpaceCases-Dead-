@@ -2,10 +2,11 @@ import discord
 from src.util import database
 from src.util.constants import PREFIX
 from src.util.constants import rarity_color_dict
+from src.commands.decorators import requires
 from src.util.string_util import currency_str_format, get_inspect_link_3D
 from discord.ext.commands import Context
-from urllib.parse import quote
 
+@requires(users_registered=True)
 async def inspect(ctx:Context, member:discord.Member, item_index:int):
 
     if member is None:
@@ -16,14 +17,6 @@ async def inspect(ctx:Context, member:discord.Member, item_index:int):
         return
 
     user_data = database.user_data.find_one({"_id": member.id})
-
-    if user_data is None:
-        if member is ctx.author:
-            await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
-        else:
-            await ctx.send(f"{member.name} is not registered!")
-
-            
     user_inventory = list(user_data["inventory"])
 
     if item_index > len(user_inventory):

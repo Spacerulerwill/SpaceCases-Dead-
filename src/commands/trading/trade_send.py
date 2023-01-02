@@ -3,10 +3,11 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
 from src.commands.trading.trade_func import send_trade_in_creation_embed, send_trade_notif_to_user
+from src.commands.decorators import requires
 import time
 
+@requires(users_registered=True)
 async def send(ctx:Context):
-
     trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
     if trade is None:
         await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")

@@ -3,7 +3,9 @@ from src.util import database
 from src.util.constants import PREFIX
 from discord.ext.commands import Context
 from datetime import datetime
+from src.commands.decorators import requires
 
+@requires(users_registered=True)
 async def send_trade_notif_to_user(sender: discord.Member, recipient:discord.Member):
     trade = database.trade_requests.find_one({"_id": sender.id, "recipient-id": recipient.id})
 

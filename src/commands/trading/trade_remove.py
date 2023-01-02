@@ -3,13 +3,10 @@ from src.util import database
 from src.commands.trading.trade_func import send_trade_in_creation_embed
 from src.util.constants import PREFIX
 from pymongo.errors import WriteError
+from src.commands.decorators import requires
 
+@requires(users_registered=True)
 async def remove(ctx:Context, in_out:str, item_index:int):
-    user_data = database.user_data.find_one({"_id": ctx.author.id})
-    if user_data is None:
-        await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
-        return
-
     trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
     if trade is None:
         await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")

@@ -3,6 +3,7 @@ from src.util import database
 from src.util.string_util import currency_str_format
 from src.util.skin_func import gen_item
 from src.util.constants import ONE_DAY, PREFIX, rarity_color_dict
+from src.commands.decorators import requires
 import discord
 import time
 import random
@@ -33,6 +34,7 @@ CLAIM_BONUS_REWARDS = {
     14: "rare items"
 }
 
+@requires(users_registered=True)
 async def claim(ctx:Context):
     #update balance and set last claim to now if been twelve hours since last claim
     update_result = database.user_data.update_one({"_id": ctx.author.id},
@@ -116,10 +118,6 @@ async def claim(ctx:Context):
             }
         }
     ])
-    
-    if update_result.matched_count == 0:
-        await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
-        return
 
     #if document modified
     if update_result.modified_count == 1:

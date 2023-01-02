@@ -1,23 +1,17 @@
 import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX, INVENTORY_ELEMS_PER_PAGE, rarity_emoji_dict
+from src.commands.decorators import requires
 from src.util import database
 from src.util.string_util import currency_str_format
 
+@requires(users_registered=True)
 async def inventory(ctx:Context, member:discord.Member, page:int):
 
     if member == None:
         member = ctx.author
     
     user_data = database.user_data.find_one({"_id": member.id})
-
-    # if user doesn't exist
-    if user_data == None:
-        if member == ctx.author:
-            await ctx.send(f"You are not registered! Use `{PREFIX}register` to register")
-        else:
-            await ctx.send(f"{member.name} is not registered!")
-        return
 
     # if users inventory is empty
     if len(user_data["inventory"]) == 0:

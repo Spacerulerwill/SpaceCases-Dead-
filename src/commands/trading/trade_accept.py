@@ -3,6 +3,7 @@ from src.util import database
 from src.commands.trading.trade_func import create_item_str
 from discord.ext.commands import Context
 
+@requires(users_registered=True)
 async def accept(ctx:Context, sender:discord.Member):
     with database.mongo_client.start_session() as session:
         with session.start_transaction():
