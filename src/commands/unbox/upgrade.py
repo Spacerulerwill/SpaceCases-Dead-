@@ -2,6 +2,7 @@ import discord
 from src.util import database
 from src.util.constants import PREFIX, case_wear_ranges_lower, case_wear_ranges_upper
 from src.util.string_util import round_sig_fig
+from src.util.embed_func import msg_embed
 from src.util.decorators import requires
 from discord.ext.commands import Context
 import random
@@ -13,7 +14,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
 
     if item_index > len(user_data["inventory"]):
-        await ctx.send(f"No item exists at index {item_index}")
+        await msg_embed(ctx, f"No item exists at index {item_index}")
         return
 
     item_index -= 1 
@@ -25,11 +26,11 @@ async def upgrade(ctx:Context, item_index:int, *args):
     try:
         result_item_data = database.skin_data[result_item_name]
     except KeyError:
-        await ctx.send(f"No item exists with name `{result_item_name}`")
+        await msg_embed(ctx, f"No item exists with name `{result_item_name}`")
         return
 
     if result_item_data["price"] <= start_item_data["price"]:
-        await ctx.send("Result item must be worth more than starting item!")
+        await msg_embed(ctx, "Result item must be worth more than starting item!")
         return
 
     price_multiplier = result_item_data["price"] / start_item_data["price"]

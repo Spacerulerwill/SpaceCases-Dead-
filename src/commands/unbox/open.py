@@ -6,6 +6,7 @@ from src.util.decorators import requires
 from src.util.constants import PREFIX, KEY_PRICE, case_rarity_odds, rarity_color_dict
 from src.util.string_util import currency_str_format, get_closest_match, get_inspect_link_3D
 from src.util.skin_func import gen_item
+from src.util.embed_func import msg_embed
 
 @requires(users_registered=True)
 async def open(ctx:Context, *args):
@@ -23,15 +24,15 @@ async def open(ctx:Context, *args):
         
         #if match is reasonably close enough
         if closest_match is None:
-            await ctx.send("Container not found!")
+            await msg_embed("Container not found!")
         else:
             container_data = database.containers[closest_match]
-            await ctx.send(f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
+            await msg_embed(f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
         return
     
     # check user has enough balance for case
     if user_data["balance"] < container_data["price"] + KEY_PRICE:
-        await ctx.send("You don't have enough funds for this action!")
+        await msg_embed("You don't have enough funds for this action!")
         return
 
     # select skin rarity
@@ -115,7 +116,7 @@ async def open(ctx:Context, *args):
                 await  msg.edit(embed=e, view=None)
                 
             elif update_result.modified_count == 0:
-                await ctx.send("Your inventory is full! Sell an item or buy more inventory space")
+                await msg_embed("Your inventory is full! Sell an item or buy more inventory space")
 
         await interact.response.defer()
 

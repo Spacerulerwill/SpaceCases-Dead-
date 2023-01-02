@@ -2,6 +2,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.commands.trading.trade_func import send_trade_in_creation_embed
 from src.util.constants import PREFIX
+from src.util.embed_func import msg_embed
 from pymongo.errors import WriteError
 from src.util.decorators import requires
 
@@ -9,7 +10,7 @@ from src.util.decorators import requires
 async def remove(ctx:Context, in_out:str, item_index:int):
     trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
     if trade is None:
-        await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
+        await msg_embed(ctx, f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
         return
 
     item_index -= 1
@@ -25,16 +26,16 @@ async def remove(ctx:Context, in_out:str, item_index:int):
                 }}}
             ])
         except WriteError:
-            await ctx.send(f"No item exists at index {item_index+1}")
+            await msg_embed(ctx, f"No item exists at index {item_index+1}")
             return
 
 
         if update_result.matched_count == 0:
-            await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
+            await msg_embed(ctx, f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
             return
 
         if update_result.modified_count == 0:
-            await ctx.send(f"No item exists at index {item_index+1}")
+            await msg_embed(ctx, f"No item exists at index {item_index+1}")
             return
 
     if in_out == "in":
@@ -48,15 +49,15 @@ async def remove(ctx:Context, in_out:str, item_index:int):
                 }}}
             ])
         except WriteError:
-            await ctx.send(f"No item exists at index {item_index+1}")
+            await msg_embed(ctx, f"No item exists at index {item_index+1}")
             return
 
         if update_result.matched_count == 0:
-            await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
+            await msg_embed(ctx, f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
             return
 
         if update_result.modified_count == 0:
-            await ctx.send(f"No item exists at index {item_index+1}")
+            await msg_embed(ctx, f"No item exists at index {item_index+1}")
             return
 
     recipient = await ctx.bot.fetch_user(trade["recipient-id"])

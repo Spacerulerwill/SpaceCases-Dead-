@@ -6,6 +6,7 @@ import discord
 from os import environ
 from src.util import database
 from src.util.string_util import get_closest_match
+from src.util.embed_func import msg_embed
 from src.util.constants import PREFIX
 
 cogs = ["user", "help", "unbox", "inventory", "trading"]  
@@ -74,9 +75,9 @@ async def on_command_error(ctx:Context, error):
         options = list(bot_instance.all_commands.keys())
         closest_match = get_closest_match(query, options, 0.5)
         if closest_match is None:
-            await ctx.send("Command not found!")
+            await msg_embed(ctx, "Command not found!")
         else:
-            await ctx.send(f"Command not found! Did you mean `{closest_match}`?")
+            await msg_embed(ctx, f"Command not found! Did you mean `{closest_match}`?")
         return
     raise error
 
@@ -121,4 +122,4 @@ def scrape_container_data():
     scrape_containers()
         
 if __name__ == "__main__":
-    scrape_skin_data( )
+    run_bot()

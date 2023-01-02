@@ -2,7 +2,8 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.string_util import currency_str_format
 from src.util.skin_func import gen_item
-from src.util.constants import ONE_DAY, PREFIX, rarity_color_dict
+from src.util.constants import ONE_DAY, rarity_color_dict
+from src.util.embed_func import msg_embed
 from src.util.decorators import requires
 import discord
 import time
@@ -191,7 +192,7 @@ async def claim(ctx:Context):
                     await  msg.edit(embed=e, view=None)
                     
                 elif update_result.modified_count == 0:
-                    await ctx.send("Your inventory is full! Sell an item or buy more inventory space")
+                    await msg_embed(ctx, "Your inventory is full! Sell an item or buy more inventory space")
             await interact.response.defer()
 
         #if not interacted with after 30 seconds, sell the item
@@ -229,11 +230,4 @@ async def claim(ctx:Context):
         msg = await ctx.send(embed=e, view=view)
 
     else:
-        e = discord.Embed(
-            title="You have already claimed your daily bonus!", 
-            description=f"You can claim again tomorrow", 
-            color=discord.Color.red()
-        )
-        e.set_thumbnail(url=ctx.author.display_avatar.url)
-
-        msg = await ctx.send(embed=e)
+        await msg_embed(ctx, "You have already claimed your daily bonus! You can claim again tomorrow")

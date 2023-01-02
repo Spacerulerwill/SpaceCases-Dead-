@@ -1,9 +1,10 @@
 import discord
 from src.util import database
 from src.util.string_util import currency_str_format
-from src.util.constants import PREFIX
+from src.util.embed_func import msg_embed
 from src.util.decorators import requires
 from discord.ext.commands import Context
+
 
 @requires(users_registered=True)
 async def sell(ctx:Context, item_index:int):
@@ -11,7 +12,7 @@ async def sell(ctx:Context, item_index:int):
     user_inventory = list(user_data["inventory"])
 
     if item_index > len(user_inventory):
-        await ctx.send(f"No item exists at index {item_index}")
+        await msg_embed(ctx, f"No item exists at index {item_index}")
         return
 
     #callbacks
@@ -37,7 +38,7 @@ async def sell(ctx:Context, item_index:int):
             
             if update_result.matched_count == 0:
                 await close_message()
-                await ctx.send(f"Sell cancelled as the specific **{formatted_name}** is no longer in your inventory")
+                await msg_embed(ctx, f"Sell cancelled as the specific **{formatted_name}** is no longer in your inventory")
             else:
                 await msg.edit(content=f"Successfully sold **{formatted_name}**", view=None)
         else:
@@ -68,4 +69,4 @@ async def sell(ctx:Context, item_index:int):
     view.add_item(confirm_button)
     view.add_item(cancel_button)
 
-    msg = await ctx.send(f"Are you sure you want to sell **{formatted_name}** for **{price}**?", view=view)
+    msg = await msg_embed(f"Are you sure you want to sell **{formatted_name}** for **{price}**?", view=view)

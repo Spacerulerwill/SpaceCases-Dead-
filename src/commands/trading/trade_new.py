@@ -1,7 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
-from src.util.constants import PREFIX
+from src.util.embed_func import msg_embed
 from src.commands.trading.trade_func import send_trade_in_creation_embed
 from pymongo.errors import DuplicateKeyError
 from src.util.decorators import requires
@@ -87,7 +87,7 @@ async def new(ctx:Context, recipient:discord.Member):
     try:
         successful, trade = try_create_trade_request(ctx, recipient)
     except DuplicateKeyError:
-        await ctx.send(f"You already have an outgoing trade to {recipient.name}! You cannot have mutliple trades to one user")
+        await msg_embed(ctx, f"You already have an outgoing trade to {recipient.name}! You cannot have mutliple trades to one user")
         return
     
     if successful:

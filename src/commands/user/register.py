@@ -1,6 +1,7 @@
 from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
+from src.util.embed_func import msg_embed
 
 async def register(ctx:Context):
     update_result = database.user_data.update_one(
@@ -16,13 +17,12 @@ async def register(ctx:Context):
                 "containers-opened": 0,
                 "total-spent": 0,
                 "total-return": 0,
-                "modified": False
             }
         },
         upsert=True
     )
 
     if update_result.upserted_id == None:
-        await ctx.send("You are already registered!")
+        await msg_embed(ctx, "You are already registered!")
     else:
-        await ctx.send(f"Registered! Use `{PREFIX}claim` to claim some money!")
+        await msg_embed(ctx, f"Registered! Use `{PREFIX}claim` to claim some money!")

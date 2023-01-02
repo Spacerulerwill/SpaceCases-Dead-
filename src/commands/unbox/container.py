@@ -3,6 +3,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.string_util import currency_str_format, get_closest_match
 from src.util.constants import conditions, rarity_color_dict
+from src.util.embed_func import msg_embed
 
 async def container(ctx:Context, *args):
     container = " ".join(args[:]).strip().lower()
@@ -18,10 +19,10 @@ async def container(ctx:Context, *args):
         
         #if match is reasonably close enough
         if closest_match is None:
-            await ctx.send("Container not found!")
+            await msg_embed(ctx, "Container not found!")
         else:
             container_data = database.containers[closest_match]
-            await ctx.send(f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
+            await msg_embed(ctx, f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
         return
         
     item_index = 0

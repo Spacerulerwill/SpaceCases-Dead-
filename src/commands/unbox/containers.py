@@ -2,6 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX, KEY_PRICE
 from src.util.string_util import currency_str_format
+from src.util.embed_func import msg_embed
 from src.util import database
 
 containerlist_pages = [
@@ -62,7 +63,7 @@ len_containerlist_pages = len(containerlist_pages)
 
 async def containers(ctx:Context, page:int = 1):
     if page <= 0 or page > len_containerlist_pages:
-        await ctx.send("Invalid page number!")
+        await msg_embed("Invalid page number!")
         return
 
     page -= 1

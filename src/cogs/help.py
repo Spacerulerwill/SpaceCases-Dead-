@@ -10,6 +10,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
+from src.util.embed_func import msg_embed
 
 # initialise class
 class Help(commands.Cog):
@@ -49,7 +50,7 @@ class Help(commands.Cog):
                 command_name = command_name[0]
                 command:commands.Command = self.bot.get_command(command_name)
                 if command == None or command.name == "help":
-                    await ctx.send("Invalid command!")
+                    await msg_embed(ctx, "Invalid command!")
                     return
                 e = discord.Embed(description=command.description, color=discord.Color.dark_theme())
                 e.set_thumbnail(url=self.bot.user.display_avatar.url)
@@ -80,7 +81,7 @@ class Help(commands.Cog):
 
                 await ctx.send(embed=e)
             else:
-                await ctx.send("Invalid command!")
+                await msg_embed(ctx, "Invalid command!")
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

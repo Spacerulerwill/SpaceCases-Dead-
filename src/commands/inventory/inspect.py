@@ -1,9 +1,9 @@
 import discord
 from src.util import database
-from src.util.constants import PREFIX
 from src.util.constants import rarity_color_dict
 from src.util.decorators import requires
 from src.util.string_util import currency_str_format, get_inspect_link_3D
+from src.util.embed_func import msg_embed
 from discord.ext.commands import Context
 
 @requires(users_registered=True)
@@ -13,14 +13,14 @@ async def inspect(ctx:Context, member:discord.Member, item_index:int):
         member = ctx.author
 
     if item_index is None:
-        await ctx.send("Oops! You forgot to supply an item index")
+        await msg_embed(ctx, "Oops! You forgot to supply an item index")
         return
 
     user_data = database.user_data.find_one({"_id": member.id})
     user_inventory = list(user_data["inventory"])
 
     if item_index > len(user_inventory):
-        await ctx.send(f"No item exists with item index {item_index}")
+        await msg_embed(ctx, f"No item exists with item index {item_index}")
         return
         
     item_index -= 1

@@ -3,13 +3,13 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.string_util import currency_str_format, get_inspect_link_3D
 from src.util.constants import rarity_color_dict
-from urllib.parse import quote
+from src.util.embed_func import msg_embed
 
 async def item(ctx:Context, *args):
     item_query = " ".join(args[:]).strip().lower()
 
     if item_query not in database.skin_data:
-        await ctx.send("Could not find weapon")
+        await msg_embed(ctx, "Could not find weapon")
         return
     try:
         skin_data = database.skin_data[item_query]
@@ -32,5 +32,5 @@ async def item(ctx:Context, *args):
 
         await ctx.send(embed=e)
     except KeyError:
-        await ctx.send("Could not find weapon")
+        await msg_embed(ctx, "Could not find weapon")
         return

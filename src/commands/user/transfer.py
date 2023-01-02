@@ -3,16 +3,17 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.decorators import requires 
 from src.util.string_util import currency_str_format
+from src.util.embed_func import msg_embed
 from decimal import Decimal
 
 @requires(users_registered=True)
 async def transfer(ctx:Context, member: discord.Member, amount:float):
     if member is ctx.author:
-        await ctx.send("You cannot transfer money to yourself!")
+        await msg_embed(ctx, "You cannot transfer money to yourself!")
         return
 
     if amount <= 0:
-        await ctx.send("Amount to transfer must be greater than 0")
+        await msg_embed(ctx, "Amount to transfer must be greater than 0")
         return
 
     #convert amount to cents
@@ -45,6 +46,6 @@ async def transfer(ctx:Context, member: discord.Member, amount:float):
                     session.abort_transaction()
                     return
                 
-                await ctx.send(f"Successfully transferred {currency_str_format(amount)} to {member.name}'s account")
+                await msg_embed(ctx, f"Successfully transferred {currency_str_format(amount)} to {member.name}'s account")
             else:
                 await ctx.send("You have insufficient funds!")

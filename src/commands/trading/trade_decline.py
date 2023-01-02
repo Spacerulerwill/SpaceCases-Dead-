@@ -3,18 +3,19 @@ from src.util import database
 from discord.ext.commands import Context
 from src.commands.trading.trade_func import create_item_str
 from src.util.decorators import requires
+from src.util.embed_func import msg_embed
 
 @requires(users_registered=True)
 async def decline(ctx:Context, sender:discord.Member):
     deleted_document = database.trade_requests.find_one_and_delete({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}})
     
     if deleted_document is None:
-        await ctx.send(f"You do not have an incoming trade from {sender.name}!")
+        await msg_embed(ctx, f"You do not have an incoming trade from {sender.name}!")
     else:
         #inform recipient trade has been declined
         e = discord.Embed(title=f"Trade request from {sender.name} declined", color=discord.Color.red())
         
-        await ctx.send(embed=e)
+        await msg_embed(ctx, embed=e)
 
         #inform original sender that their request was declined
         e = discord.Embed(title=f"Your trade request to {ctx.author.name} was declined", color=discord.Color.red())

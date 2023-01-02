@@ -1,5 +1,6 @@
 from src.util import database
 from src.util.constants import PREFIX
+from src.util.embed_func import msg_embed
 from discord.ext.commands import Context
 from src.commands.trading.trade_func import send_trade_in_creation_embed
 from src.util.decorators import requires
@@ -8,7 +9,7 @@ from src.util.decorators import requires
 async def view_trade_in_creation(ctx:Context):
     trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp":0})
     if trade is None:
-        await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
+        await msg_embed(ctx, f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
         return
 
     recipient = await ctx.bot.fetch_user(trade["recipient-id"])

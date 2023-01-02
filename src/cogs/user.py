@@ -19,6 +19,7 @@ from src.commands.user.register import register
 from src.commands.user.claim import claim
 from src.commands.user.balance import balance
 from src.commands.user.transfer import transfer
+from src.commands.user.stats import stats
 
 # initialise class
 class User(commands.Cog):
@@ -74,7 +75,10 @@ class User(commands.Cog):
                 await ctx.send("Oops! You forget to supply an amount of money")
         elif isinstance(error, commands.BadArgument): 
             await ctx.send("Incorrect Arguments!")
-                
+
+    @commands.command()
+    async def stats(self, ctx:Context, member:discord.Member=None):
+        await stats(ctx, member)        
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
     await bot.add_cog(User(bot))
