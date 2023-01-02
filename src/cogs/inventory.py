@@ -55,7 +55,6 @@ class Inventory(commands.Cog):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Incorrect Arguments!")
 
-        
     @commands.command(description="Sell an item from your inventory", usage=f"""
     `{PREFIX}sell <item index>`
     **Arguments**

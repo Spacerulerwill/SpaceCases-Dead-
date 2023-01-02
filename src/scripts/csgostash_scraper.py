@@ -187,11 +187,11 @@ def scrape_skin_link(skin_link):
 
     price = NO_PRICE_FOUND
 
-    if bitskins_price != "":
-      price_str = sub(r'[^\d.]', '', bitskins_price)
-      price = int(Decimal(price_str) * 100)
-    elif steam_price != "":
+    if steam_price != "":
       price_str = sub(r'[^\d.]', '', steam_price)
+      price = int(Decimal(price_str) * 100)
+    elif bitskins_price != "":
+      price_str = sub(r'[^\d.]', '', bitskins_price)
       price = int(Decimal(price_str) * 100)
 
     # if a vanilla knife, create 5 identical entries with different wear ratings in their names (circumvents difficulty later for vanilla knives)
@@ -216,7 +216,6 @@ def scrape_skin_link(skin_link):
         "rarity": rarity,
         "min_float": min_float,
         "max_float": max_float,
-        "condition_index": condition_index,
         "best_condition_index": best_condition_index,
         "worst_condition_index": worst_condition_index,
         "has_stattrak_variant": has_stattrak_variant,
@@ -259,8 +258,8 @@ def scrape_skin_link(skin_link):
     inspect_url = soup.find("a", {"class": "inspect-button-skin"})["href"]
 
     for condition in ["Factory New", "Minimal Wear", "Field Tested", "Well Worn", "Battle Scarred", "StatTrak Factory New", "StatTrak Minimal Wear", "StatTrak Field Tested", "StatTrak Well Worn", "StatTrak Battle Scarred"]:
-        result[condition.lower() + " " + unformatted_name]["image_url"] = img_url
-        result[condition.lower() + " " + unformatted_name]["inspect_url"] = inspect_url
+      result[condition.lower() + " " + unformatted_name]["image_url"] = img_url
+      result[condition.lower() + " " + unformatted_name]["inspect_url"] = inspect_url
 
   else: # otherwise add different images to each wear
     image_buttons_div = soup.find("div", {"class": ["btn-group-sm", "btn-group-justified"]})
@@ -283,7 +282,7 @@ def scrape_skin_link(skin_link):
         result["souvenir " + wear + unformatted_name]["inspect_url"] = inspect_url
 
 
-  print(formatted_name)
+  #print(formatted_name)
 
 
 def csgostash_scrape():

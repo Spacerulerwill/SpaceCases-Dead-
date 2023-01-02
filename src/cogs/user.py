@@ -34,7 +34,7 @@ class User(commands.Cog):
         await register(ctx)
 
     #claim daily allowance of money
-    @commands.command(description="Claim money every 12 hours", usage=f"""
+    @commands.command(description="Claim money every day", usage=f"""
     `{PREFIX}claim`
     """)
     async def claim(self, ctx:Context):
@@ -59,7 +59,7 @@ class User(commands.Cog):
     `{PREFIX}transfer <user> <amount>`
     **Arguments**
     `<user>` - user to transfer money to
-    `<amount>` - the amount of money to transfer
+    `<amount>` - the amount of money to transfer in dollars
     """)
     async def transfer(self, ctx:Context, member: discord.Member, amount:float):
         await transfer(ctx, member, amount)

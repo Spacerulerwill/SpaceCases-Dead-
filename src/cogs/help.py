@@ -10,7 +10,6 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
-from src.util.decorators import requires
 
 # initialise class
 class Help(commands.Cog):
@@ -25,6 +24,7 @@ class Help(commands.Cog):
 
         if command_name == "":
             e = discord.Embed(description=f'Use `{PREFIX}help <command>` to gain more information about that command', color=discord.Color.dark_theme())
+            e.set_thumbnail(url=self.bot.user.display_avatar.url)
 
             for cog in self.bot.cogs:
                 if cog != "Help":
@@ -38,6 +38,7 @@ class Help(commands.Cog):
                         else:
                             field_value += command.name + "\n"
                     e.add_field(name=cog, value=field_value)
+            
 
             await ctx.send(embed=e)
         else:       
@@ -51,6 +52,7 @@ class Help(commands.Cog):
                     await ctx.send("Invalid command!")
                     return
                 e = discord.Embed(description=command.description, color=discord.Color.dark_theme())
+                e.set_thumbnail(url=self.bot.user.display_avatar.url)
                 e.add_field(name="Usage", value=command.usage)
 
                 if len(command.aliases) > 0:
@@ -67,6 +69,7 @@ class Help(commands.Cog):
                 group:commands.Group = self.bot.get_command(group_name)
                 subcommand = group.get_command(subcommand_name)
                 e = discord.Embed(description=subcommand.description, color=discord.Color.dark_theme())
+                e.set_thumbnail(url=self.bot.user.display_avatar.url)
                 e.add_field(name="Usage", value=subcommand.usage)
 
                 if len(subcommand.aliases) > 0:

@@ -91,7 +91,7 @@ async def on_guild_join(guild: discord.Guild):
                 channel = ch
                 break
             else:
-                return
+                channel = guild.owner
 
     e = discord.Embed(
         description=f"""Hello! My name is **{bot_instance.user.name}**
@@ -121,4 +121,4 @@ def scrape_container_data():
     scrape_containers()
         
 if __name__ == "__main__":
-    run_bot()
+    scrape_skin_data( )

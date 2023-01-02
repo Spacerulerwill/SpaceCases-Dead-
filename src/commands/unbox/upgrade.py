@@ -26,6 +26,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
         result_item_data = database.skin_data[result_item_name]
     except KeyError:
         await ctx.send(f"No item exists with name `{result_item_name}`")
+        return
 
     if result_item_data["price"] <= start_item_data["price"]:
         await ctx.send("Result item must be worth more than starting item!")
@@ -93,7 +94,6 @@ async def upgrade(ctx:Context, item_index:int, *args):
                         update_result = database.user_data.update_one({"_id": ctx.author.id}, 
                         {
                             "$pull": {"inventory": {"name": start_item_name, "float": start_item_float}},
-                            "$inc": {"inventory-size": -1}
                         }, session=session)
 
                         #failed to pull - item no longer exists abort transaction

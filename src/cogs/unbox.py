@@ -34,6 +34,8 @@ class Unboxing(commands.Cog):
     **Additional Information**
     Different items have different naming conventions, such as:
     `Weapons - <modifier> <condition> <weapon name> <skin name>`
+    **Example**
+    `{PREFIX}item stattrak minimal wear mp7 bloodsport`
     """)
     async def item(self, ctx:Context, *args):
         await item(ctx, *args)
@@ -42,7 +44,7 @@ class Unboxing(commands.Cog):
     @commands.command(description="View a container's price and contents", usage=f"""
     `{PREFIX}container <container name>`
     **Arguments**
-    `<container name>` - container name as a string
+    `<container name>` - container name
     """)
     async def container(self, ctx:Context, *args):
         await container(ctx, *args)
@@ -63,7 +65,7 @@ class Unboxing(commands.Cog):
     @commands.command(description="Purchase and open a container, with the option to either sell the item unboxed or add it to your inventory", usage=f"""
     `{PREFIX}open <container name>`
     **Arguments**
-    `<container name>` - the name of the container to open as a string
+    `<container name>` - the name of the container to open
     """)
     async def open(self, ctx:Context, *args):
         await open(ctx, *args)
@@ -74,6 +76,11 @@ class Unboxing(commands.Cog):
     **Arguments**
     `<item index>` - the index of the item in your inventory you want to upgrade
     `<result item>` - the name of the item you want to upgrade too
+    **Additional Information**
+    Different items have different naming conventions, such as:
+    `Weapons - <modifier> <condition> <weapon name> <skin name>`
+    **Example**
+    `{PREFIX}upgrade 1 stattrak minimal wear mp7 bloodsport`
     """)
     async def upgrade(self, ctx:Context, item_index:int, *args):
         await upgrade(ctx, item_index, *args)
