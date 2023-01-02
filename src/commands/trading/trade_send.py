@@ -9,6 +9,7 @@ import time
 
 @requires(users_registered=True)
 async def send(ctx:Context):
+    
     trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
     if trade is None:
         await msg_embed(ctx, f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")

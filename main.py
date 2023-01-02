@@ -62,7 +62,7 @@ async def bot_status_loop():
         case 0:
             await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
         case 1:
-            await bot_instance.change_presence(activity=discord.Game(name=f"{database.user_data.count_documents({})} users | {len(bot_instance.guilds)} guilds"))
+            await bot_instance.change_presence(activity=discord.Game(name=f"{database.user_data.count_documents({})} users | {len(bot_instance.guilds)} servers"))
 
     status_int = (status_int + 1) % 2
 

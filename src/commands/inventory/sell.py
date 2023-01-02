@@ -1,7 +1,7 @@
 import discord
 from src.util import database
 from src.util.string_util import currency_str_format
-from src.util.embed_func import msg_embed
+from src.util.embed_func import msg_embed, msg_embed_edit
 from src.util.decorators import requires
 from discord.ext.commands import Context
 
@@ -40,7 +40,7 @@ async def sell(ctx:Context, item_index:int):
                 await close_message()
                 await msg_embed(ctx, f"Sell cancelled as the specific **{formatted_name}** is no longer in your inventory")
             else:
-                await msg.edit(content=f"Successfully sold **{formatted_name}**", view=None)
+                await msg_embed_edit(msg, f"Successfully sold **{formatted_name}**", view=None)
         else:
             await interact.response.defer()
 
@@ -69,4 +69,4 @@ async def sell(ctx:Context, item_index:int):
     view.add_item(confirm_button)
     view.add_item(cancel_button)
 
-    msg = await msg_embed(f"Are you sure you want to sell **{formatted_name}** for **{price}**?", view=view)
+    msg = await msg_embed(ctx, f"Are you sure you want to sell **{formatted_name}** for **{price}**?", view=view)

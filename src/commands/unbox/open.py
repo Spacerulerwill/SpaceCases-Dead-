@@ -24,15 +24,15 @@ async def open(ctx:Context, *args):
         
         #if match is reasonably close enough
         if closest_match is None:
-            await msg_embed("Container not found!")
+            await msg_embed(ctx, "Container not found!")
         else:
             container_data = database.containers[closest_match]
-            await msg_embed(f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
+            await msg_embed(ctx, f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
         return
     
     # check user has enough balance for case
     if user_data["balance"] < container_data["price"] + KEY_PRICE:
-        await msg_embed("You don't have enough funds for this action!")
+        await msg_embed(ctx, "You don't have enough funds for this action!")
         return
 
     # select skin rarity
@@ -116,7 +116,7 @@ async def open(ctx:Context, *args):
                 await  msg.edit(embed=e, view=None)
                 
             elif update_result.modified_count == 0:
-                await msg_embed("Your inventory is full! Sell an item or buy more inventory space")
+                await msg_embed(ctx, "Your inventory is full! Sell an item or buy more inventory space")
 
         await interact.response.defer()
 
