@@ -25,14 +25,12 @@ class Inventory(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # open inventory
-    @commands.command(description="See someones inventory", usage=f"""
-    `{PREFIX}inventory <user> <page>`
-    **Arguments**
-    `<user>` - optional - the owner of the inventory
-    `<page>` - optional - the page of the inventory
-    """,
-    aliases=["inv"])
+    @commands.command(description="View a user's inventory", usage=
+    {
+        "Syntax": f"`{PREFIX}inventory <user>`",
+        "Arguments": """`<user>` - optional - the owner of the inventory
+        `<page>` - optional - the page of the inventory""",
+    }, aliases=["inv"])
     async def inventory(self, ctx:Context, member:Optional[discord.Member]=None, page:Optional[int]=1):
         await inventory(ctx, member, page)
 
@@ -41,12 +39,13 @@ class Inventory(commands.Cog):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Incorrect Arguments!")
 
-    @commands.command(description="Inspect an item in someone's inventory", usage=f"""
-    `{PREFIX}inspect <user> <item index>`
-    **Arguments**
-    `<user>` - optional - the user whos inventory you wish to look in
-    `<item index>` - the index of the item
-    """)
+    @commands.command(description="Inspect an item in someone's inventory", usage=
+    {
+        "Syntax": f"`{PREFIX}inspect <user> <item index>`",
+        "Arguments": """`<user>` - optional - the user whos inventory you wish to look in
+        `<item index>` - the index of the item"""
+    })
+
     async def inspect(self, ctx:Context, member:Optional[discord.Member]=None, item_index:int=None):
         await inspect(ctx, member, item_index)
 
@@ -55,11 +54,11 @@ class Inventory(commands.Cog):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Incorrect Arguments!")
 
-    @commands.command(description="Sell an item from your inventory", usage=f"""
-    `{PREFIX}sell <item index>`
-    **Arguments**
-    `<item index>` - the index of the item you want to sell
-    """)
+    @commands.command(description="Sell an item from your inventory", usage=
+    {
+        "Syntax": f"`{PREFIX}sell <item index>`",
+        "Arguments": "`<item index>` - the index of the item you want to sell"
+    })
     async def sell(self, ctx:Context, item_index:int):
         await sell(ctx, item_index)
 

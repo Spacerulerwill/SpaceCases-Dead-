@@ -7,6 +7,7 @@ This cog contains the commands:
 * Claim
 * Balance
 * Transfer
+* Stats
 """
 
 import discord
@@ -28,25 +29,27 @@ class User(commands.Cog):
         self.bot = bot
     
     #register for a bank account
-    @commands.command(description="Register for a bank account", usage=f"""
-    `{PREFIX}register`
-    """)
+    @commands.command(description="Register for a bank account", usage=
+    {
+        "Syntax": f"`{PREFIX}register`"
+    })
     async def register(self, ctx:Context):
         await register(ctx)
 
     #claim daily allowance of money
-    @commands.command(description="Claim money every day", usage=f"""
-    `{PREFIX}claim`
-    """)
+    @commands.command(description="Claim daily allowance", usage=
+    {
+        "Syntax": f"`{PREFIX}claim`"
+    })
     async def claim(self, ctx:Context):
         await claim(ctx)
 
     #check user balance
-    @commands.command(description="Check a user's balance", usage=f"""
-    `{PREFIX}balance <user>`
-    **Arguments**
-    `<user>` - optional - user to check balance of
-    """, aliases=["bal"])
+    @commands.command(description="Check a user's balance", usage=
+    {
+        "Syntax": f"`{PREFIX}balance <user>`",
+        "Arguments": "`<user>` - user to check balance of - optional"
+    }, aliases=["bal"])
     async def balance(self, ctx: Context, member: discord.Member = None):
         await balance(ctx, member)
 
@@ -56,12 +59,14 @@ class User(commands.Cog):
             await ctx.send("Incorrect Arguments!")
 
     #send user money
-    @commands.command(description="Transfer money to another user", usage=f"""
-    `{PREFIX}transfer <user> <amount>`
-    **Arguments**
-    `<user>` - user to transfer money to
-    `<amount>` - the amount of money to transfer in dollars
-    """)
+    @commands.command(description="Transfer money to another user", usage=
+    {
+        "Syntax": f"`{PREFIX}transfer <user> <amount>`",
+        "Arguments": """
+        `<user>` - user to transfer money to
+        `<amount>` - the amount of money to transfer in dollars
+        """
+    })
     async def transfer(self, ctx:Context, member: discord.Member, amount:float):
         await transfer(ctx, member, amount)
 
@@ -76,9 +81,14 @@ class User(commands.Cog):
         elif isinstance(error, commands.BadArgument): 
             await ctx.send("Incorrect Arguments!")
 
-    @commands.command()
+    @commands.command(description="Check a user's statistics", usage=
+    {
+        "Syntax": f"`{PREFIX}stats <user>`",
+        "Arguments": "`<user>` - user to check stats of - optional"
+    })
     async def stats(self, ctx:Context, member:discord.Member=None):
-        await stats(ctx, member)        
+        await stats(ctx, member)       
+
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
     await bot.add_cog(User(bot))

@@ -24,7 +24,10 @@ class Help(commands.Cog):
         command_name = " ".join(args[:]).strip().lower()
 
         if command_name == "":
-            e = discord.Embed(description=f'Use `{PREFIX}help <command>` to gain more information about that command', color=discord.Color.dark_theme())
+            e = discord.Embed(
+                description=f'Use `{PREFIX}help <command>` to gain more information about that command', 
+                color=discord.Color.dark_theme()
+            )
             e.set_thumbnail(url=self.bot.user.display_avatar.url)
 
             for cog in self.bot.cogs:
@@ -39,8 +42,6 @@ class Help(commands.Cog):
                         else:
                             field_value += command.name + "\n"
                     e.add_field(name=cog, value=field_value)
-            
-
             await ctx.send(embed=e)
         else:       
             command_name = command_name.split(" ")  
@@ -52,9 +53,12 @@ class Help(commands.Cog):
                 if command == None or command.name == "help":
                     await msg_embed(ctx, "Invalid command!")
                     return
-                e = discord.Embed(description=command.description, color=discord.Color.dark_theme())
+                
+                e = discord.Embed(title=f"{PREFIX}{command_name}", description=command.description, color=discord.Color.dark_theme())
                 e.set_thumbnail(url=self.bot.user.display_avatar.url)
-                e.add_field(name="Usage", value=command.usage)
+
+                for name, value in command.usage.items():
+                    e.add_field(name=name, value=value, inline=False)
 
                 if len(command.aliases) > 0:
                     alias_str = ""
@@ -69,9 +73,12 @@ class Help(commands.Cog):
                 subcommand_name = command_name[1]
                 group:commands.Group = self.bot.get_command(group_name)
                 subcommand = group.get_command(subcommand_name)
-                e = discord.Embed(description=subcommand.description, color=discord.Color.dark_theme())
+
+                e = discord.Embed(title=f"{PREFIX}{group_name} {subcommand_name}", description=subcommand.description, color=discord.Color.dark_theme())
                 e.set_thumbnail(url=self.bot.user.display_avatar.url)
-                e.add_field(name="Usage", value=subcommand.usage)
+
+                for name, value in subcommand.usage.items():
+                    e.add_field(name=name, value=value, inline=False)
 
                 if len(subcommand.aliases) > 0:
                     alias_str = ""

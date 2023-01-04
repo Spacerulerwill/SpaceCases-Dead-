@@ -9,9 +9,6 @@ def requires(users_registered:bool=False):
             ctx, *_ = args
             ctx:Context
 
-            print(ctx, _)
-            print("bruh")
-
             # ensure all users in call are registered before proceeding
             if users_registered:
                 if database.user_data.find_one({"_id": ctx.author.id}) is None:
