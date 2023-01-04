@@ -2,6 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX, INVENTORY_ELEMS_PER_PAGE, rarity_emoji_dict
 from src.util.decorators import requires
+from src.util.embed_func import msg_embed
 from src.util import database
 from src.util.string_util import currency_str_format
 
@@ -30,7 +31,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
     inventory_pages = [inventory_data[x:x+INVENTORY_ELEMS_PER_PAGE] for x in range(0, len(inventory_data), INVENTORY_ELEMS_PER_PAGE)]
 
     if page <= 0 or page > len(inventory_pages):
-        await ctx.send("Invalid inventory page!")
+        await msg_embed(ctx, "Invalid inventory page!")
         return
     
     page -= 1
@@ -44,7 +45,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
         for count, item in enumerate(inventory_page):
             skin_data = database.skin_data[item["name"]]
             emoji = rarity_emoji_dict[skin_data["rarity"]]
-            string += f"{emoji} **{count+1})** `{skin_data['formatted_name']}` - **{currency_str_format(skin_data['price'])}**\n"
+            string += f"{emoji} **{count+ (page*INVENTORY_ELEMS_PER_PAGE) + 1})** `{skin_data['formatted_name']}` - **{currency_str_format(skin_data['price'])}**\n"
 
         e = discord.Embed(title=f"{member.name}'s Inventory - {page+1}/{len(inventory_pages)}", color=discord.Color.dark_theme())
         e.set_thumbnail(url=member.display_avatar.url)
