@@ -63,7 +63,7 @@ len_containerlist_pages = len(containerlist_pages)
 
 async def containers(ctx:Context, page:int = 1):
     if page <= 0 or page > len_containerlist_pages:
-        await msg_embed("Invalid page number!")
+        await msg_embed(ctx, "Invalid page number!")
         return
 
     page -= 1

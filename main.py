@@ -6,10 +6,10 @@ import discord
 from os import environ
 from src.util import database
 from src.util.string_util import get_closest_match
-from src.util.embed_func import msg_embed
+from src.util.embed_func import msg_embed, welcome_embed
 from src.util.constants import PREFIX
 
-cogs = ["user", "help", "unbox", "inventory", "trading"]  
+cogs = ["user", "help", "unbox", "inventory", "trading", "config"]  
 
 #try read token from text file, if failed read token from server environment variable
 try:
@@ -60,7 +60,7 @@ async def bot_status_loop():
     
     match status_int:
         case 0:
-            await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
+            await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help | {PREFIX}info"))
         case 1:
             await bot_instance.change_presence(activity=discord.Game(name=f"{database.user_data.count_documents({})} users | {len(bot_instance.guilds)} servers"))
 
@@ -94,24 +94,7 @@ async def on_guild_join(guild: discord.Guild):
             else:
                 channel = guild.owner
 
-    e = discord.Embed(
-        description=f"""Hello! My name is **{bot_instance.user.name}**
-
-        I am CS:GO gambling and economy bot. With me you can:
-        • Unbox your dream skins
-        • Trade them with other users
-        • Take a risk and upgrade them
-        • And more coming soon!
-
-        To setup the bot and start unboxing, ask an **admin** on the sever to the use the command `{PREFIX}setup!`
-
-        Enjoy the bot! - [Spacerulerwill](https://github.com/Spacerulerwill)
-        """,
-        color=discord.Color.dark_theme()
-    )
-
-    e.set_thumbnail(url=bot_instance.user.display_avatar.url)
-    await channel.send(embed=e)
+    await channel.send(embed=welcome_embed(bot_instance))
 
 def scrape_skin_data():
     from src.scripts.csgostash_scraper import csgostash_scrape

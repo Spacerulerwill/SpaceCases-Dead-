@@ -5,6 +5,7 @@ import certifi
 
 user_data = {}# user data
 trade_requests = {}
+guild_data = {}
 skin_data = {}
 containers = {}
 mongo_client:pymongo.MongoClient
@@ -12,7 +13,7 @@ mongo_client:pymongo.MongoClient
 # setup database and data
 def init():
 
-  global user_data, trade_requests, mongo_client, skin_data, containers
+  global user_data, trade_requests, mongo_client, skin_data, containers, guild_data
 
   #try read mongodb database password from database_pass.txt, if fails read from environment variable
   try:
@@ -35,6 +36,7 @@ def init():
   #user data collection
   user_data = db["user-data"]
   trade_requests = db["trade-requests"]
+  guild_data = db["guild-data"]
 
   print("Loaded user data")
 
