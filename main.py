@@ -91,8 +91,6 @@ async def on_guild_join(guild: discord.Guild):
             if ch.permissions_for(guild.me).send_messages:
                 channel = ch
                 break
-            else:
-                channel = guild.owner
 
     await channel.send(embed=welcome_embed(bot_instance))
 

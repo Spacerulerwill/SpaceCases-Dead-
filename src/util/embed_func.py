@@ -3,9 +3,12 @@ from discord.ext.commands import Context
 from src.util.constants import PREFIX
 from discord.ext import commands
 
-# default message embed
+# default message embed - send and return message
 async def msg_embed(ctx:Context, msg_content:str, view:discord.ui.View=None):
     return await ctx.send(embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()), view=view)
+
+def create_msg_embed(msg_content:str) -> discord.Embed:
+    return discord.Embed(description=msg_content, color=discord.Color.dark_theme())
 
 # edit existing message to be the default message embed
 async def msg_embed_edit(msg:discord.Message, msg_content:str, view:discord.ui.View=None):
