@@ -99,7 +99,7 @@ class Unboxing(commands.Cog):
                 await ctx.send("Oops! You forgot to supply an item index")
             elif error.param.name == "result_item":
                 await ctx.send("Oops! You forgot to supply the result item")
-
+    
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
     await bot.add_cog(Unboxing(bot))

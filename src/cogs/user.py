@@ -21,6 +21,7 @@ from src.commands.user.claim import claim
 from src.commands.user.balance import balance
 from src.commands.user.transfer import transfer
 from src.commands.user.stats import stats
+from src.commands.user.room import room
 
 # initialise class
 class User(commands.Cog):
@@ -88,6 +89,11 @@ class User(commands.Cog):
     })
     async def stats(self, ctx:Context, member:discord.Member=None):
         await stats(ctx, member)       
+
+    
+    @commands.command()
+    async def room(self, ctx:Context):
+        await room(ctx)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

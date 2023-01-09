@@ -25,9 +25,9 @@ def welcome_embed(bot: commands.Bot) -> discord.Embed:
         • Take a risk and upgrade them
         • And more coming soon!
 
-        To setup the bot and start unboxing, ask an **admin** on the sever to the use the command `{PREFIX}config`!
+        By default, users can open cases in any channel where they can type. This can cause a lot of clutter, so it is recommended you use `{PREFIX}config` to set up a room creation channel so users can unbox in their own threads
 
-        Enjoy the bot! - [Spacerulerwill](https://github.com/Spacerulerwill)
+        Enjoy! - [Spacerulerwill](https://github.com/Spacerulerwill)
 
         Use `{PREFIX}info` to see this message again at anytime
         """,

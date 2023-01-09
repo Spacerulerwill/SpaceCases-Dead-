@@ -16,15 +16,6 @@ config_options = [
         "response-embed": create_msg_embed("Respond to this message with name of text channel within **30 seconds**"),
         "post-func": lambda result: result.id
     },
-    {
-        "name": "Daily Claim Channel",
-        "value": "claim-channel-id",
-        "type": discord.TextChannel,
-        "description": "Channel used to claim daily rewards. If set to `None` users can unbox anywhere I can message in the server",
-        "options": [],
-        "response-embed": create_msg_embed("Respond to this message with name of text channel within **30 seconds**"),
-        "post-func": lambda result: result.id
-    }
 ]
 
 async def config_menu(bot:Bot, ctx:Context):
@@ -38,7 +29,6 @@ async def config_menu(bot:Bot, ctx:Context):
             {
                 "$setOnInsert": {
                     "unbox-room-creation-channel-id": None,
-                    "claim-channel-id": None
                 }
             },
             upsert=True,
@@ -51,16 +41,20 @@ async def config_menu(bot:Bot, ctx:Context):
         match option["type"]:
             case discord.TextChannel:
                 if current_value is not None:
-                    current_value = bot.get_channel(post_doc[option["value"]]).mention
+                    try:
+                        current_value = bot.get_channel(post_doc[option["value"]]).mention
+                    except AttributeError:
+                        # channel no longer exists
+                        current_value = "`None`"
+                        database.guild_data.update_one({"_id": ctx.guild.id}, {"$set": {option["value"]: None}})
+                else:
+                    current_value = "`None`"
             case _:
                 current_value = f"`{current_value}`"
                     
         description = f'''{option["description"]}
         
-        **Current Value**: {current_value}
-        
-        Press **Auto Setup** to create a default channel category for this bot'''
-
+        **Current Value**: {current_value}'''
         e = discord.Embed(
             title=f'**{option["name"]}**', 
             description=description, 
@@ -87,6 +81,10 @@ async def config_menu(bot:Bot, ctx:Context):
 
     # SELECT MENU
     async def select_callback(interact:discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await interact.response.defer()
+            return
+            
         nonlocal option_index
         option_index = int(select.values[0])
 
@@ -97,6 +95,10 @@ async def config_menu(bot:Bot, ctx:Context):
     edit_button = discord.ui.Button(label="Edit", style=discord.ButtonStyle.gray)
 
     async def edit_callback(interact:discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await interact.response.defer()
+            return
+
         selected_option = config_options[option_index]
         
         #send response embed
@@ -142,10 +144,7 @@ async def config_menu(bot:Bot, ctx:Context):
 
     edit_button.callback = edit_callback
 
-    auto_setup = discord.ui.Button(label="Auto Setup", style=discord.ButtonStyle.green)
-
     view.add_item(select)
     view.add_item(edit_button)
-    view.add_item(auto_setup)
 
     msg = await ctx.send(embed=await get_config_embed(), view=view)

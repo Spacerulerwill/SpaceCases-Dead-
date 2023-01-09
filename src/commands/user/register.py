@@ -17,6 +17,7 @@ async def register(ctx:Context):
                 "containers-opened": 0,
                 "total-spent": 0,
                 "total-return": 0,
+                "room-id": None
             }
         },
         upsert=True
