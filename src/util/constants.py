@@ -9,6 +9,8 @@ DEFAULT_INVENTORY_SIZE = 5
 INVENTORY_ELEMS_PER_PAGE = 10
 MAX_THREADS = 30
 
+ROOM_DELETION_TIME = 900
+
 #rarity to color 
 rarity_color_dict = {
     "Consumer": 11584473,

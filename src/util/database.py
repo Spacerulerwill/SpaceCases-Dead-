@@ -3,9 +3,10 @@ import pymongo
 import json
 import certifi
 
-user_data = {}# user data
-trade_requests = {}
-guild_data = {}
+user_data = {} # user data - mongodb
+trade_requests = {} # trade requests - mongodb
+guild_data = {} # guild data - mongodb
+rooms = {}
 skin_data = {}
 containers = {}
 mongo_client:pymongo.MongoClient

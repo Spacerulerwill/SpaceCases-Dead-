@@ -3,11 +3,12 @@ from discord.ext import commands, tasks
 from discord.ext.commands import Context
 
 import discord
+import asyncio
 from os import environ
 from src.util import database
 from src.util.string_util import get_closest_match
 from src.util.embed_func import msg_embed, welcome_embed
-from src.util.constants import PREFIX
+from src.util.constants import PREFIX, ROOM_DELETION_TIME
 
 cogs = ["user", "help", "unbox", "inventory", "trading", "config"]  
 
@@ -93,6 +94,31 @@ async def on_guild_join(guild: discord.Guild):
                 break
 
     await channel.send(embed=welcome_embed(bot_instance))
+
+async def delete_room(owner_id:int, thread:discord.Thread):
+    await asyncio.sleep(ROOM_DELETION_TIME)
+
+    #try delete thread
+    try:
+        await thread.delete()
+        del database.rooms[owner_id]
+    except:
+        pass
+
+@bot_instance.event
+async def on_message(message:discord.Message):
+
+    room_data = database.rooms.get(message.author.id)
+
+    if room_data is not None:
+        room = room_data[0]
+        task = room_data[1]
+
+        if message.channel == room:
+            task.cancel()
+            task = asyncio.create_task(delete_room(message.author.id, room))
+
+    await bot_instance.process_commands(message)
 
 def scrape_skin_data():
     from src.scripts.csgostash_scraper import csgostash_scrape
