@@ -97,13 +97,8 @@ async def on_guild_join(guild: discord.Guild):
 
 async def delete_room(owner_id:int, thread:discord.Thread):
     await asyncio.sleep(ROOM_DELETION_TIME)
-
-    #try delete thread
-    try:
-        await thread.delete()
-        del database.rooms[owner_id]
-    except:
-        pass
+    await thread.delete()
+    database.rooms.pop(owner_id, None)
 
 @bot_instance.event
 async def on_message(message:discord.Message):
