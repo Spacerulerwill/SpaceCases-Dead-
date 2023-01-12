@@ -28,9 +28,9 @@ async def room(ctx:Context):
             await msg_embed(ctx, f"{room[0].mention} already exists")
             return
 
-    thread:discord.Thread = await ctx.channel.create_thread(name=f"{ctx.author.name}'s room", type=discord.ChannelType.private_thread, auto_archive_duration=60)
-
-    await msg_embed(ctx, f"{thread.mention} has been created. It will be deleted after 15 minutes of inactivity")
+    thread:discord.Thread = await ctx.channel.create_thread(name=f"{ctx.author.name}'s room", type=discord.ChannelType.public_thread)
+    await msg_embed(thread, f"Welcome to your thread {ctx.author.mention}! It will be deleted after 15 minutes of inactivity")
+    await thread.add_user(ctx.author)
 
     async def delete_thread():
         await asyncio.sleep(ROOM_DELETION_TIME)

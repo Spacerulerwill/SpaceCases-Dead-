@@ -109,7 +109,7 @@ async def on_message(message:discord.Message):
         room = room_data[0]
         task = room_data[1]
 
-        if message.channel == room:
+        if message.channel:
             task.cancel()
             task = asyncio.create_task(delete_room(message.author.id, room))
 
