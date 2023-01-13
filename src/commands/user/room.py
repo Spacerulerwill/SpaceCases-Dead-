@@ -6,7 +6,8 @@ import discord
 import asyncio
 
 
-async def room(ctx:Context):
+async def room(ctx:Context, public_private:str):
+
     try:
         guild_data = database.guild_data.find_one({"_id": ctx.guild.id})
     except AttributeError:
@@ -31,8 +32,17 @@ async def room(ctx:Context):
         else:
             await msg_embed(ctx, f"{room[0].mention} already exists")
             return
+    
+    if public_private == "public":
+        thread_type = discord.ChannelType.public_thread
+    else:
+        thread_type = discord.ChannelType.private_thread
 
-    thread:discord.Thread = await ctx.channel.create_thread(name=f"{ctx.author.name}'s room", type=discord.ChannelType.public_thread)
+    thread:discord.Thread = await ctx.channel.create_thread(name=f"{ctx.author.name}'s room", type=thread_type)
+
+    if public_private == "private":
+        await msg_embed(ctx, "Your private thread has been created!")
+        
     await msg_embed(thread, f"Welcome to your thread {ctx.author.mention}! It will be deleted after 15 minutes of inactivity")
     await thread.add_user(ctx.author)
 

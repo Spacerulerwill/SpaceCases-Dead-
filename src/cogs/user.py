@@ -8,6 +8,7 @@ This cog contains the commands:
 * Balance
 * Transfer
 * Stats
+* Room
 """
 
 import discord
@@ -22,6 +23,8 @@ from src.commands.user.balance import balance
 from src.commands.user.transfer import transfer
 from src.commands.user.stats import stats
 from src.commands.user.room import room
+
+from typing import Literal
 
 # initialise class
 class User(commands.Cog):
@@ -91,9 +94,9 @@ class User(commands.Cog):
         await stats(ctx, member)       
 
     
-    @commands.command()
-    async def room(self, ctx:Context):
-        await room(ctx)
+    @commands.command(description="Create a room for unboxing items")
+    async def room(self, ctx:Context, public_private:Literal["public", "private"]="public"):
+        await room(ctx, public_private)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

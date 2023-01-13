@@ -11,13 +11,13 @@ async def stats(ctx:Context, member:discord.Member):
 
     user_data = database.user_data.find_one({"_id": member.id})
 
-    if user_data["total-spent"] == 0:
+    if user_data["stats"]["total-spent"] == 0:
         total_return = 0
     else:
-        total_return = round_sig_fig((user_data["total-return"] * 100) / user_data["total-spent"], 2)
+        total_return = round_sig_fig((user_data["stats"]["total-return"] * 100) / user_data["stats"]["total-spent"], 2)
     
     e = discord.Embed(title=f"{member.name}'s Statistics", 
-        description=f"""**Containers Opened** - {user_data['containers-opened']}
+        description=f"""**Containers Opened** - {user_data["stats"]['containers-opened']}
         **Return** - {total_return}%
         """,
         color=discord.Color.dark_theme()
