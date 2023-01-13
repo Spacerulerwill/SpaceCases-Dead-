@@ -7,7 +7,11 @@ import asyncio
 
 
 async def room(ctx:Context):
-    guild_data = database.guild_data.find_one({"_id": ctx.guild.id})
+    try:
+        guild_data = database.guild_data.find_one({"_id": ctx.guild.id})
+    except AttributeError:
+        await msg_embed(ctx, "You cannot create rooms here!")
+        return
 
     if guild_data is None or guild_data["unbox-room-creation-channel-id"] is None:
         await msg_embed(ctx, f"This server does not have rooms set up yet. You can either unbox without a room, or ask an **admin** to use `{PREFIX} room` to set it up")
