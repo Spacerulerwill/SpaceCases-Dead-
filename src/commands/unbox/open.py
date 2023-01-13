@@ -57,9 +57,9 @@ async def open(ctx:Context, *args):
     #decrement balance, increment total spent, increase total return and containers opened
     database.user_data.update_one({"_id": ctx.author.id},{"$inc" :{
         "balance" : -(container_price + KEY_PRICE), 
-        "total-spent": container_price + KEY_PRICE, 
-        "total-return": skin_price, 
-        "containers-opened": 1
+        "stats.total-spent": container_price + KEY_PRICE, 
+        "stats.total-return": skin_price, 
+        "stats.containers-opened": 1
     }})
 
     # create embed to show user

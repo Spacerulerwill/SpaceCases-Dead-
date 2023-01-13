@@ -14,10 +14,11 @@ async def register(ctx:Context):
                 "inventory": [],
                 "inventory-size": 0,
                 "inventory-max-capacity": 5,
-                "containers-opened": 0,
-                "total-spent": 0,
-                "total-return": 0,
-                "room-id": None
+                "stats": {
+                    "containers-opened": 0,
+                    "total-spent": 0,
+                    "total-return": 0,
+                },
             }
         },
         upsert=True
