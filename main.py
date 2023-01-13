@@ -11,7 +11,7 @@ from src.util.embed_func import msg_embed, welcome_embed
 from src.util.constants import PREFIX, ROOM_DELETION_TIME
 
 # cogs to load
-cogs = ["user", "help", "unbox", "inventory", "trading", "config"]  
+cogs = ["user", "help", "unbox", "inventory", "rankings", "trading", "config"]  
 
 #try read token from text file, if failed read token from server environment variable
 try:
@@ -49,6 +49,7 @@ async def on_ready():
         print(f"Loaded cog: {extension}")
 
     bot_status_loop.start()
+    leaderboard_loop.start()
 
 # task to run every 10 seconds - cycle bot status inbetween values
 status_int = 0
@@ -63,6 +64,10 @@ async def bot_status_loop():
             await bot_instance.change_presence(activity=discord.Game(name=f"{database.user_data.count_documents({})} users | {len(bot_instance.guilds)} servers"))
 
     status_int = (status_int + 1) % 2
+
+@tasks.loop(hours=1)
+async def leaderboard_loop():
+    database.get_leaderboard()
 
 #handle command errors with error message
 @bot_instance.event

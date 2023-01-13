@@ -2,14 +2,33 @@ from os import environ
 import pymongo
 import json
 import certifi
+from pymongo.collection import Collection
+from timeit import default_timer as timer
+from datetime import timedelta
 
-user_data = {} # user data - mongodb
-trade_requests = {} # trade requests - mongodb
-guild_data = {} # guild data - mongodb
+user_data: Collection # user data - mongodb
+trade_requests:Collection # trade requests - mongodb
+guild_data:Collection # guild data - mongodb
+
+mongo_client:pymongo.MongoClient
+
+leaderboard = [] # user leaderboard
 rooms = {}
 skin_data = {}
 containers = {}
-mongo_client:pymongo.MongoClient
+
+# update the leaderboard
+def get_leaderboard():
+  global leaderboard
+
+  all_users_data = user_data.find({})
+
+  start = timer()
+  leaderboard = sorted([(user_data["_id"], sum([skin_data[item["name"]]["price"] for item in user_data["inventory"]])) for user_data in all_users_data], key=lambda x: x[1], reverse=True)
+  end = timer()
+
+  print(f"Generated leaderboard in {timedelta(seconds=end-start)}")
+  print(leaderboard)
 
 # setup database and data
 def init():
