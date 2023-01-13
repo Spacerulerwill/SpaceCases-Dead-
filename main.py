@@ -10,6 +10,7 @@ from src.util.string_util import get_closest_match
 from src.util.embed_func import msg_embed, welcome_embed
 from src.util.constants import PREFIX, ROOM_DELETION_TIME
 
+# cogs to load
 cogs = ["user", "help", "unbox", "inventory", "trading", "config"]  
 
 #try read token from text file, if failed read token from server environment variable
@@ -28,10 +29,8 @@ intents = discord.Intents().all()
 #instanciate bot with prefix, intents and disabled help command (uses custom command) 
 bot_instance = commands.Bot(command_prefix=[PREFIX, PREFIX.upper(), PREFIX.title()], intents=intents, help_command=None) #define command decorator
 
-#start the bots
-def run_bot():
-    global bot_instance
-    
+#start the bot
+def run_bot():    
     database.init()
 
     try:
@@ -49,11 +48,9 @@ async def on_ready():
         await bot_instance.load_extension(f'src.cogs.{extension}')
         print(f"Loaded cog: {extension}")
 
-    #set playing game to cs help
-    await bot_instance.change_presence(activity=discord.Game(name=f"{PREFIX}help"))
-
     bot_status_loop.start()
 
+# task to run every 10 seconds - cycle bot status inbetween values
 status_int = 0
 @tasks.loop(seconds=10)
 async def bot_status_loop():
@@ -74,6 +71,7 @@ async def on_command_error(ctx:Context, error):
         err_msg, = error.args
         query = err_msg.split('"')[1]
         options = list(bot_instance.all_commands.keys())
+
         closest_match = get_closest_match(query, options, 0.5)
         if closest_match is None:
             await msg_embed(ctx, "Command not found!")
@@ -85,16 +83,18 @@ async def on_command_error(ctx:Context, error):
 @bot_instance.event
 async def on_guild_join(guild: discord.Guild):
 
+    # first try welcome channel, if can't just find the first available text channel.
     if not guild.system_channel is None and guild.system_channel.permissions_for(guild.me).send_messages:
         channel = guild.system_channel
+        await channel.send(embed=welcome_embed(bot_instance))
     else:
         for ch in guild.text_channels:
             if ch.permissions_for(guild.me).send_messages:
                 channel = ch
+                await channel.send(embed=welcome_embed(bot_instance))
                 break
 
-    await channel.send(embed=welcome_embed(bot_instance))
-
+# task to delete room after time
 async def delete_room(owner_id:int, thread:discord.Thread):
     await asyncio.sleep(ROOM_DELETION_TIME)
     await thread.delete()
@@ -103,6 +103,7 @@ async def delete_room(owner_id:int, thread:discord.Thread):
 @bot_instance.event
 async def on_message(message:discord.Message):
 
+    # if message sent from a room, cancel the room deletion task for it and restart it
     room_data = database.rooms.get(message.author.id)
 
     if room_data is not None:
@@ -113,6 +114,7 @@ async def on_message(message:discord.Message):
             task.cancel()
             task = asyncio.create_task(delete_room(message.author.id, room))
 
+    # process commands as usual
     await bot_instance.process_commands(message)
 
 def scrape_skin_data():
