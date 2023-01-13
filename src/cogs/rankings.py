@@ -25,7 +25,10 @@ class Rankings(commands.Cog):
     async def leaderboard(self, ctx:Context):
         await leaderboard(ctx)
 
-    @commands.command()
+    @commands.command(description="View your position on the leaderboard", usage={
+        "Syntax": f"`{PREFIX}ranking <user>`",
+        "Arguments": "`<user>` - user to check ranking of - optional"
+    })
     async def ranking(self, ctx:Context, user:discord.Member=None):
         await ranking(ctx, user)
 

@@ -3,7 +3,7 @@ from discord.ext.commands import Context, Bot, TextChannelConverter, ChannelNotF
 from src.util import database
 from pymongo import ReturnDocument
 from src.util.constants import PREFIX
-from src.util.embed_func import create_msg_embed
+from src.util.embed_func import msg_embed, create_msg_embed
 import asyncio
 
 config_options = [
@@ -137,7 +137,7 @@ async def config_menu(bot:Bot, ctx:Context):
                     except:
                         await response.reply(embed=create_msg_embed("Conversion Failiure"))
             except asyncio.TimeoutError:
-                await interact.followup.send(embed=create_msg_embed(f'Editing **{selected_option["name"]}** cancelled due to no response'))
+                await msg_embed(interact.followup, f'Editing **{selected_option["name"]}** cancelled due to no response')
         else:
             # if has options provide an option menu embed
             pass

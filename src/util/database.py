@@ -21,14 +21,13 @@ containers = {}
 def get_leaderboard():
   global leaderboard
 
-  all_users_data = user_data.find({})
-
   start = timer()
+  all_users_data = user_data.find({}).batch_size(4)
+
   leaderboard = sorted([(user_data["_id"], sum([skin_data[item["name"]]["price"] for item in user_data["inventory"]])) for user_data in all_users_data], key=lambda x: x[1], reverse=True)
   end = timer()
 
   print(f"Generated leaderboard in {timedelta(seconds=end-start)}")
-  print(leaderboard)
 
 # setup database and data
 def init():

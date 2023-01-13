@@ -2,10 +2,11 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX, ROOM_DELETION_TIME
 from src.util.embed_func import msg_embed
+from src.util.decorators import requires
 import discord
 import asyncio
 
-
+@requires(users_registered=True)
 async def room(ctx:Context, public_private:str):
 
     try:
