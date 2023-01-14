@@ -14,6 +14,6 @@ async def balance(ctx: Context, member: discord.Member = None):
     e = discord.Embed(title=f"{member.name}'s Balance", color=discord.Color.dark_theme())
     e.set_thumbnail(url=member.display_avatar.url)
     e.add_field(name="Current Balance", value=currency_str_format(user_data["balance"]))
-    e.add_field(name="Total Earned", value="$0.00")
-    e.add_field(name="Total Spent", value="$0.00")
+    e.add_field(name="Total Earned", value=currency_str_format(user_data["stats"]["total-return"]))
+    e.add_field(name="Total Spent", value=currency_str_format(user_data["stats"]["total-spent"]))
     await ctx.send(embed=e)

@@ -22,8 +22,8 @@ class Rankings(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def leaderboard(self, ctx:Context):
-        await leaderboard(ctx)
+    async def leaderboard(self, ctx:Context, page:int=1):
+        await leaderboard(ctx, page)
 
     @commands.command(description="View your position on the leaderboard", usage={
         "Syntax": f"`{PREFIX}ranking <user>`",
