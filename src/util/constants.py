@@ -49,6 +49,10 @@ conditions = [
     "Battle Scarred"
 ]
 
+err_msg_type_dict = {
+    "int": "an integer"
+}
+
 #index of each condition in above list mapped to the lower bound of their ranges
 case_wear_ranges_lower = {
     4: 0.45,

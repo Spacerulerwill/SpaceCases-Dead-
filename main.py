@@ -8,7 +8,8 @@ from os import environ
 from src.util import database
 from src.util.string_util import get_closest_match
 from src.util.embed_func import msg_embed, welcome_embed
-from src.util.constants import PREFIX, ROOM_DELETION_TIME
+from src.util.constants import PREFIX, ROOM_DELETION_TIME, err_msg_type_dict
+from typing import get_args
 
 # cogs to load
 cogs = ["user", "help", "unbox", "inventory", "rankings", "trading", "config"]  
@@ -72,6 +73,7 @@ async def leaderboard_loop():
 #handle command errors with error message
 @bot_instance.event
 async def on_command_error(ctx:Context, error):
+
     if isinstance(error, commands.CommandNotFound):        
         err_msg, = error.args
         query = err_msg.split('"')[1]
@@ -83,6 +85,32 @@ async def on_command_error(ctx:Context, error):
         else:
             await msg_embed(ctx, f"Command not found! Did you mean `{closest_match}`?")
         return
+        
+    if isinstance(error, commands.BadArgument):
+        err_msg, = error.args
+        query = err_msg.split('"')
+
+        try:
+            desired_type = err_msg_type_dict[query[1]]
+        except KeyError:
+            # if could not find type, its a user not found
+            await msg_embed(ctx, "**Error!** Could not find user!")
+            return
+
+        param_name = query[3].replace("_", " ")
+        print(param_name, desired_type)
+        await msg_embed(ctx, f"**Error!** Argument `{param_name}` must be {desired_type}")
+        return
+
+    if isinstance(error, commands.MissingRequiredArgument):
+        await msg_embed(ctx, f"**Oops!** You forgot to supply the argument `{error.param.name}`")
+        return
+
+    if isinstance(error, commands.BadLiteralArgument):
+        param_name = error.param.name.replace("_", "/")
+        await msg_embed(ctx, f"**Error!** Argument must be one of the following options: `{param_name}`")
+        return
+
     raise error
 
 @bot_instance.event

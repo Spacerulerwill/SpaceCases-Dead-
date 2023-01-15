@@ -1,16 +1,19 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
-from src.util.string_util import currency_str_format, get_inspect_link_3D
+from src.util.string_util import currency_str_format, get_inspect_link_3D, get_closest_match
 from src.util.constants import rarity_color_dict
 from src.util.embed_func import msg_embed
+from timeit import default_timer as timer
+from datetime import timedelta
 
 async def item(ctx:Context, *args):
     item_query = " ".join(args[:]).strip().lower()
 
     if item_query not in database.skin_data:
-        await msg_embed(ctx, "Could not find weapon")
+        await msg_embed(ctx, "Could not find item!")
         return
+        
     try:
         skin_data = database.skin_data[item_query]
 

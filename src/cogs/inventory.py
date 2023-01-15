@@ -34,11 +34,6 @@ class Inventory(commands.Cog):
     async def inventory(self, ctx:Context, member:Optional[discord.Member]=None, page:Optional[int]=1):
         await inventory(ctx, member, page)
 
-    @inventory.error
-    async def inventory_error(self, ctx:Context, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send("Incorrect Arguments!")
-
     @commands.command(description="Inspect an item in someone's inventory", usage=
     {
         "Syntax": f"`{PREFIX}inspect <user> <item index>`",
@@ -49,11 +44,6 @@ class Inventory(commands.Cog):
     async def inspect(self, ctx:Context, member:Optional[discord.Member]=None, item_index:int=None):
         await inspect(ctx, member, item_index)
 
-    @inspect.error
-    async def inspect_error(self, ctx:Context, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send("Incorrect Arguments!")
-
     @commands.command(description="Sell an item from your inventory", usage=
     {
         "Syntax": f"`{PREFIX}sell <item index>`",
@@ -61,11 +51,6 @@ class Inventory(commands.Cog):
     })
     async def sell(self, ctx:Context, item_index:int):
         await sell(ctx, item_index)
-
-    @sell.error
-    async def sell_error(self, ctx:Context, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send("Incorrect Arguments!")
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

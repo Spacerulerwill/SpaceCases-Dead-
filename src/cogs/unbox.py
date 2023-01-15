@@ -62,11 +62,6 @@ class Unboxing(commands.Cog):
     async def containers(self, ctx:Context, page:int = 1):
         await containers(ctx, page)
 
-    @containers.error
-    async def containers_error(self, ctx:Context, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send("Incorrect Arguments!")
-
     # open a container
     @commands.command(description="Purchase and open a container, with the option to either sell the item unboxed or add it to your inventory", usage=
     {
@@ -88,17 +83,6 @@ class Unboxing(commands.Cog):
     })
     async def upgrade(self, ctx:Context, item_index:int, *args):
         await upgrade(ctx, item_index, *args)
-
-    @upgrade.error
-    async def containers_error(self, ctx:Context, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send("Incorrect Arguments!")
-        if isinstance(error, commands.MissingRequiredArgument):
-            error:commands.MissingRequiredArgument
-            if error.param.name == "item_index":
-                await ctx.send("Oops! You forgot to supply an item index")
-            elif error.param.name == "result_item":
-                await ctx.send("Oops! You forgot to supply the result item")
     
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

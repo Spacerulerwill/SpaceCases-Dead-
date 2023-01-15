@@ -24,7 +24,7 @@ from src.commands.user.transfer import transfer
 from src.commands.user.stats import stats
 from src.commands.user.room import room
 
-from typing import Literal
+from typing import Literal, Optional
 
 # initialise class
 class User(commands.Cog):
@@ -54,13 +54,8 @@ class User(commands.Cog):
         "Syntax": f"`{PREFIX}balance <user>`",
         "Arguments": "`<user>` - user to check balance of - optional"
     }, aliases=["bal"])
-    async def balance(self, ctx: Context, member: discord.Member = None):
+    async def balance(self, ctx: Context, member:discord.Member = None):
         await balance(ctx, member)
-
-    @balance.error
-    async def balance_error(self, ctx:Context, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send("Incorrect Arguments!")
 
     #send user money
     @commands.command(description="Transfer money to another user", usage=
@@ -73,17 +68,6 @@ class User(commands.Cog):
     })
     async def transfer(self, ctx:Context, member: discord.Member, amount:float):
         await transfer(ctx, member, amount)
-
-    @transfer.error
-    async def transfer_error(self, ctx:Context, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            error:commands.MissingRequiredArgument
-            if error.param.name == "member":
-                await ctx.send("Oops! You forget to supply a recipient user")
-            if error.param.name == "amount":
-                await ctx.send("Oops! You forget to supply an amount of money")
-        elif isinstance(error, commands.BadArgument): 
-            await ctx.send("Incorrect Arguments!")
 
     @commands.command(description="Check a user's statistics", usage=
     {
