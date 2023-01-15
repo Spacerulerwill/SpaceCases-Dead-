@@ -6,7 +6,7 @@ from src.util.decorators import requires
 from src.util.constants import KEY_PRICE, case_rarity_odds, rarity_color_dict
 from src.util.string_util import currency_str_format, get_closest_match, get_inspect_link_3D
 from src.util.skin_func import gen_item
-from src.util.embed_func import msg_embed
+from src.util.embed_func import msg_embed, msg_embed_response
 
 @requires(users_registered=True)
 async def open(ctx:Context, *args):
@@ -83,15 +83,26 @@ async def open(ctx:Context, *args):
         await msg.edit(embed=e, view=None)
     
     async def sell_callback(interact:discord.Interaction):
+        if ctx.author.id != interact.user.id:
+            await msg_embed_response(interact.response, "This is not your unbox menu!", ephemeral=True)
+            return
+
         nonlocal interacted_with
-        if ctx.author.id == interact.user.id and not interacted_with:
+
+        if not interacted_with:
             interacted_with = True
             await sell_item()
-        await interact.response.defer()
+        else:
+            await interact.response.defer()
     
     async def inventory_callback(interact:discord.Interaction):
+        if ctx.author.id != interact.user.id:
+            await msg_embed_response(interact.response, "This is not your unbox menu!", ephemeral=True)
+            return
+
         nonlocal interacted_with
-        if interact.user.id == ctx.author.id and not interacted_with:
+        
+        if not interacted_with:
               
             # add to user inventory
             filter_ = {
@@ -117,8 +128,8 @@ async def open(ctx:Context, *args):
                 
             elif update_result.modified_count == 0:
                 await msg_embed(ctx, "Your inventory is full! Sell an item or buy more inventory space")
-
-        await interact.response.defer()
+        else:
+            await interact.response.defer()
 
     #if not interacted with after 30 seconds, sell the item
     async def view_timeout_callback():

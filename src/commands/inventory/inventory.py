@@ -2,7 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX, INVENTORY_ELEMS_PER_PAGE, rarity_emoji_dict
 from src.util.decorators import requires
-from src.util.embed_func import msg_embed
+from src.util.embed_func import msg_embed, msg_embed_response
 from src.util import database
 from src.util.string_util import currency_str_format
 
@@ -62,6 +62,10 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
 
     # view and button callbacks
     async def prev_callback(interact:discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your inventory!", ephemeral=True)
+            return
+
         nonlocal page
 
         if page == 0:
@@ -72,6 +76,10 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
         await interact.response.edit_message(embed=await get_inventory_embed(), view=view)
 
     async def next_callback(interact:discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your inventory!", ephemeral=True)
+            return
+            
         nonlocal page
 
         if page == len(inventory_pages) - 1:

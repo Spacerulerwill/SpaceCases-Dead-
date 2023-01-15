@@ -1,7 +1,7 @@
 import discord
 from src.util import database
 from src.util.string_util import currency_str_format
-from src.util.embed_func import msg_embed, msg_embed_edit
+from src.util.embed_func import msg_embed, msg_embed_edit, msg_embed_response
 from src.util.decorators import requires
 from discord.ext.commands import Context
 
@@ -24,31 +24,34 @@ async def sell(ctx:Context, item_index:int):
             await msg.delete()
 
     async def sell_callback(interact: discord.Interaction):
-        if interact.user.id == ctx.author.id:
-            update_result = database.user_data.update_one(
-                {"_id": ctx.author.id, "inventory": {"name": item, "float": float}},
-                {
-                    "$pull": {"inventory": {"name": item, "float": float}},
-                    "$inc": {
-                        "balance": database.skin_data[item]["price"],
-                        "inventory-size": -1
-                    }
-                },
-            )
-            
-            if update_result.matched_count == 0:
-                await close_message()
-                await msg_embed(ctx, f"Sell cancelled as the specific **{formatted_name}** is no longer in your inventory")
-            else:
-                await msg_embed_edit(msg, f"Successfully sold **{formatted_name}**", view=None)
+
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your sell menu!", ephemeral=True)
+            return
+
+        update_result = database.user_data.update_one(
+            {"_id": ctx.author.id, "inventory": {"name": item, "float": float}},
+            {
+                "$pull": {"inventory": {"name": item, "float": float}},
+                "$inc": {
+                    "balance": database.skin_data[item]["price"],
+                    "inventory-size": -1
+                }
+            },
+        )
+        
+        if update_result.matched_count == 0:
+            await close_message()
+            await msg_embed(ctx, f"Sell cancelled as the specific **{formatted_name}** is no longer in your inventory")
         else:
-            await interact.response.defer()
+            await msg_embed_edit(msg, f"Successfully sold **{formatted_name}**", view=None)
 
     async def cancel_callback(interact: discord.Interaction):
-        if interact.user.id == ctx.author.id:
-            await close_message()
-        else:
-            await interact.response.defer()
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your sell menu!", ephemeral=True)
+            return
+
+        await close_message()
 
     item_index -= 1
 

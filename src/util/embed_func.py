@@ -7,6 +7,10 @@ from discord.ext import commands
 async def msg_embed(ctx:Context, msg_content:str, view:discord.ui.View=None):
     return await ctx.send(embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()), view=view)
 
+#msg embed as a interaction response
+async def msg_embed_response(response:discord.InteractionResponse, msg_content:str, ephemeral:bool=False):
+    return await response.send_message(embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()), ephemeral=ephemeral)
+
 def create_msg_embed(msg_content:str) -> discord.Embed:
     return discord.Embed(description=msg_content, color=discord.Color.dark_theme())
 

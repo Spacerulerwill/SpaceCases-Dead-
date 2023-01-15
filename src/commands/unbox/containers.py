@@ -2,7 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX, KEY_PRICE
 from src.util.string_util import currency_str_format
-from src.util.embed_func import msg_embed
+from src.util.embed_func import msg_embed, msg_embed_response
 from src.util import database
 
 containerlist_pages = [
@@ -88,25 +88,30 @@ async def containers(ctx:Context, page:int = 1):
 
     # callbacks
     async def prev_callback(interact: discord.Interaction):
-        nonlocal page
-        if interact.user.id == ctx.author.id:
-            if page > 0:
-                page -= 1
-            else:
-                page = len_containerlist_pages-1
-            await msg.edit(embed=get_embed(), view=view)
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your containers menu!", ephemeral=True)
+            return
 
-        await interact.response.defer()
+        nonlocal page
+
+        if page > 0:
+            page -= 1
+        else:
+            page = len_containerlist_pages-1
+        await msg.edit(embed=get_embed(), view=view)
 
     async def next_callback(interact: discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your containers menu!", ephemeral=True)
+            return
+
         nonlocal page
-        if interact.user.id == ctx.author.id:
-            if page < len_containerlist_pages-1:
-                page += 1
-            else:
-                page = 0
-            await msg.edit(embed=get_embed(), view=view)
-        await interact.response.defer()
+
+        if page < len_containerlist_pages-1:
+            page += 1
+        else:
+            page = 0
+        await msg.edit(embed=get_embed(), view=view)
 
     async def view_timeout_callback():
         await msg.delete()

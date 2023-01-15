@@ -1,7 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
-from src.util.embed_func import msg_embed
+from src.util.embed_func import msg_embed, msg_embed_response
 from src.commands.trading.trade_func import send_trade_in_creation_embed
 from pymongo.errors import DuplicateKeyError
 from src.util.decorators import requires
@@ -29,10 +29,17 @@ async def send_warning(ctx:Context, recipient:discord.Member):
             pass
 
     async def cancel_callback(interact: discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your trade menu!", ephemeral=True)
+            return
+
         await close_message()
-        await interact.response.defer()
 
     async def continue_callback(interact: discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your trade menu!", ephemeral=True)
+            return
+            
         trade =  {
             "_id": ctx.author.id,
             "send-timestamp": 0,

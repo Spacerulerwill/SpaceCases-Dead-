@@ -1,9 +1,9 @@
 import discord
-from discord.ext.commands import Context, Bot, TextChannelConverter, ChannelNotFound
+from discord.ext.commands import Context, Bot, TextChannelConverter
 from src.util import database
 from pymongo import ReturnDocument
 from src.util.constants import PREFIX
-from src.util.embed_func import msg_embed, create_msg_embed
+from src.util.embed_func import msg_embed, create_msg_embed, msg_embed_response
 import asyncio
 
 config_options = [
@@ -23,7 +23,6 @@ async def config_menu(bot:Bot, ctx:Context):
     option_index = 0
 
     async def get_config_embed() -> discord.Embed:
-
         post_doc = database.guild_data.find_one_and_update(
             {"_id": ctx.guild.id},
             {
@@ -82,7 +81,7 @@ async def config_menu(bot:Bot, ctx:Context):
     # SELECT MENU
     async def select_callback(interact:discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await interact.response.defer()
+            await msg_embed_response(interact.response, "This is not your config menu!", ephemeral=True)
             return
             
         nonlocal option_index
@@ -96,7 +95,7 @@ async def config_menu(bot:Bot, ctx:Context):
 
     async def edit_callback(interact:discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await interact.response.defer()
+            await msg_embed_response(interact.response, "This is not your config menu!", ephemeral=True)
             return
 
         selected_option = config_options[option_index]

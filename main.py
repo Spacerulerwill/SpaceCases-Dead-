@@ -9,7 +9,6 @@ from src.util import database
 from src.util.string_util import get_closest_match
 from src.util.embed_func import msg_embed, welcome_embed
 from src.util.constants import PREFIX, ROOM_DELETION_TIME, err_msg_type_dict
-from typing import get_args
 
 # cogs to load
 cogs = ["user", "help", "unbox", "inventory", "rankings", "trading", "config"]  
@@ -85,7 +84,7 @@ async def on_command_error(ctx:Context, error):
         else:
             await msg_embed(ctx, f"Command not found! Did you mean `{closest_match}`?")
         return
-        
+
     if isinstance(error, commands.BadArgument):
         err_msg, = error.args
         query = err_msg.split('"')
@@ -103,7 +102,7 @@ async def on_command_error(ctx:Context, error):
         return
 
     if isinstance(error, commands.MissingRequiredArgument):
-        await msg_embed(ctx, f"**Oops!** You forgot to supply the argument `{error.param.name}`")
+        await msg_embed(ctx, f"**Oops!** You forgot to supply the argument: `{error.param.name}`")
         return
 
     if isinstance(error, commands.BadLiteralArgument):

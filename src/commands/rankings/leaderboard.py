@@ -35,4 +35,5 @@ async def leaderboard(ctx:Context, page:int):
         string += f"**{page * LEADERBOARD_ELEMS_PER_PAGE + count+1})** {names[_id]}: {currency_str_format(inv_value)}\n"
     e = discord.Embed(title=f"Leaderboard - #{page * LEADERBOARD_ELEMS_PER_PAGE + 1} - {(page+1) * LEADERBOARD_ELEMS_PER_PAGE}", color=discord.Color.dark_theme(), description=string)
     e.set_thumbnail(url=ctx.bot.user.display_avatar.url)
+    e.set_footer(text="Leaderboard updates every hour")
     await ctx.send(embed=e)

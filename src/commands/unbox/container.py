@@ -3,7 +3,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.string_util import currency_str_format, get_closest_match
 from src.util.constants import conditions, rarity_color_dict
-from src.util.embed_func import msg_embed
+from src.util.embed_func import msg_embed, msg_embed_response
 
 async def container(ctx:Context, *args):
     container = " ".join(args[:]).strip().lower()
@@ -47,15 +47,16 @@ async def container(ctx:Context, *args):
     select = discord.ui.Select(options=select_options)
 
     async def select_callback(interact: discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your container menu!", ephemeral=True)
+            return
+
         nonlocal selected_rarity, item_index, rarity_len
 
-        if interact.user.id == ctx.author.id:
-            selected_rarity = select.values[0]        
-            rarity_len = len(rarities[selected_rarity])
-            item_index = 0
-            await interact.response.edit_message(embed=get_embed(), view=view)
-        else:
-            await interact.response.defer()
+        selected_rarity = select.values[0]        
+        rarity_len = len(rarities[selected_rarity])
+        item_index = 0
+        await interact.response.edit_message(embed=get_embed(), view=view)
 
     select.callback = select_callback
 
@@ -63,28 +64,30 @@ async def container(ctx:Context, *args):
     next_button = discord.ui.Button(label="▶", style=discord.ButtonStyle.gray)
 
     async def prev_callback(interact: discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your container menu!", ephemeral=True)
+            return
+        
         nonlocal item_index
 
-        if interact.user.id == ctx.author.id:
-            if item_index == 0:
-                item_index = len(rarities[selected_rarity])-1
-            else:
-                item_index -= 1
-            await interact.response.edit_message(embed=get_embed(), view=view) 
+        if item_index == 0:
+            item_index = len(rarities[selected_rarity])-1
         else:
-            await interact.response.defer()
+            item_index -= 1
+        await interact.response.edit_message(embed=get_embed(), view=view) 
 
     async def next_callback(interact: discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your container menu!", ephemeral=True)
+            return
+
         nonlocal item_index
-        
-        if interact.user.id == ctx.author.id:
-            if item_index == len(rarities[selected_rarity])-1:
-                item_index = 0
-            else:
-                item_index += 1
-            await interact.response.edit_message(embed=get_embed(), view=view)
+
+        if item_index == len(rarities[selected_rarity])-1:
+            item_index = 0
         else:
-            await interact.response.defer()
+            item_index += 1
+        await interact.response.edit_message(embed=get_embed(), view=view)
     
     async def on_view_timeout():
         await msg.delete()
