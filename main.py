@@ -11,7 +11,7 @@ from src.util.embed_func import msg_embed, welcome_embed
 from src.util.constants import PREFIX, ROOM_DELETION_TIME, err_msg_type_dict
 
 # cogs to load
-cogs = ["user", "help", "unbox", "inventory", "rankings", "trading", "config"]  
+cogs = ["help", "user", "unbox", "trading", "inventory", "rankings", "config"]  
 
 #try read token from text file, if failed read token from server environment variable
 try:
