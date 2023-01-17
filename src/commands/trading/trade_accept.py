@@ -33,16 +33,25 @@ async def accept(ctx:Context, sender:discord.Member):
 
             if len(sender_items_missing) == 0 and len(recipient_items_missing) == 0:
                 # no missing items, next check that the trade will not result in inventory capacity overflow
-
                 if sender_data["inventory-size"] + len(trade["sender-items"]) > sender_data["inventory-capacity"]:
-                    trade_continue = False
-
-                if recipient_data["inventory-size"] + len(trade["recipient-items"]) > sender_data["inventory-capacity"]:
-                    trade_continue = False
-
-                if not trade_continue:
+                    e = discord.Embed(
+                        title="Trade Error",
+                        description=f"Your trade to {ctx.author.name} could not take place as you don't have enough inventory space to recieve the items from the trade!",
+                        color=discord.Color.red()
+                    )
+                    await ctx.send(embed=e)
                     return
 
+                if recipient_data["inventory-size"] + len(trade["recipient-items"]) > sender_data["inventory-capacity"]:
+                    e = discord.Embed(
+                        title="Trade Error",
+                        description=f"Your trade to {ctx.author.name} could not take place {ctx.author.name} does not have enough inventory space to recieve the items from the trade!",
+                        color=discord.Color.red()
+                    )
+                    await ctx.send(embed=e)
+                    return
+                
+                # delete trade document - no longer needed
                 database.trade_requests.delete_one({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
 
                 # swap items round
