@@ -1,7 +1,3 @@
-from aiohttp import ClientConnectorError
-from discord.ext import commands, tasks
-from discord.ext.commands import Context
-
 import discord
 import asyncio
 from os import environ
@@ -9,6 +5,10 @@ from src.util import database
 from src.util.string_util import get_closest_match
 from src.util.embed_func import msg_embed, welcome_embed
 from src.util.constants import PREFIX, ROOM_DELETION_TIME, err_msg_type_dict
+
+from aiohttp import ClientConnectorError
+from discord.ext import commands, tasks
+from discord.ext.commands import Context
 
 # cogs to load
 cogs = ["help", "user", "unbox", "trading", "inventory", "rankings", "config"]  
