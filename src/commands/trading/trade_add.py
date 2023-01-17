@@ -34,7 +34,7 @@ async def add(ctx:Context, in_out:str, item_index:int):
                 await msg_embed(ctx, f"You cannot add the same item twice to a trade!")
                 return
         except IndexError:
-            await msg_embed(ctx, f"No item exists in your inventory at index {item_index}")
+            await msg_embed(ctx, f"No item exists in your inventory at index {item_index+1}")
             return
     
     if in_out == "in":

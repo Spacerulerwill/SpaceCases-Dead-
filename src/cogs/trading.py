@@ -31,7 +31,7 @@ from src.commands.trading.trade_out import view_outgoing_trade
 from src.commands.trading.trade_decline import decline
 from src.commands.trading.trade_accept import accept
 
-from typing import Literal
+from typing import Literal, Optional
 
 # initialise class
 class Trading(commands.Cog):
@@ -99,8 +99,8 @@ class Trading(commands.Cog):
         "Syntax": f"`{PREFIX}trades in/out/all`",
         "Arguments": "`in/out/all` - whether to view incoming, outgoing or all trades - optional"
     })
-    async def trades(self, ctx:Context, in_out:Literal["in", "out", "all"]="all"):
-        await trades(ctx, in_out)
+    async def trades(self, ctx:Context, in_out:Optional[Literal["in", "out", "all"]], page:Optional[int]=1):
+        await trades(ctx, in_out, page)
 
     @trade.command(name="in", description="View an incoming trade request", usage=
     {
