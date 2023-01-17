@@ -4,7 +4,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import MAX_TRADES_PER_PAGE
 from src.util.constants import PREFIX
-from src.util.embed_func import msg_embed
+from src.util.embed_func import msg_embed, msg_embed_response
 from src.util.decorators import requires
 
 @requires(users_registered=True)
@@ -116,6 +116,11 @@ async def trades(ctx:Context, in_out:str, page:int):
 
     # if more than one page, create view
     async def next_callback(interact:discord.Interaction):
+
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your trades menu!", ephemeral=True)
+            return
+
         nonlocal page
 
         if page < num_pages - 1:
@@ -126,6 +131,10 @@ async def trades(ctx:Context, in_out:str, page:int):
         await interact.response.edit_message(embed=await get_trades_embed())
 
     async def prev_callback(interact:discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your trades menu!", ephemeral=True)
+            return
+            
         nonlocal page
 
         if page > 0:
