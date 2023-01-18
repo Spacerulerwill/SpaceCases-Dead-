@@ -127,7 +127,7 @@ async def open(ctx:Context, *args):
                 await  msg.edit(embed=e, view=None)
                 
             elif update_result.modified_count == 0:
-                await msg_embed(ctx, "Your inventory is full! Sell an item or buy more inventory space")
+                await msg_embed_response(interact.response, "Your inventory is full! Sell an item or buy more inventory space")
         else:
             await interact.response.defer()
 
