@@ -110,6 +110,10 @@ async def on_command_error(ctx:Context, error):
         await msg_embed(ctx, f"**Error!** Argument must be one of the following options: `{param_name}`")
         return
 
+    if isinstance(error, commands.MissingPermissions):
+        await msg_embed(ctx, f"**Error!** You are missing the following permissions to use this command: `{', '.join(error.missing_permissions)}`")
+        return
+
     raise error
 
 @bot_instance.event
