@@ -53,7 +53,8 @@ def scrape_containers():
       }).text
 
     #remove punctuation
-    container_name = remove_skin_name_formatting(container_name)
+    container_name = container_name.replace("&", "and")
+    container_name = sub('[^\w\s]','', container_name)
 
     price_div = container_soup.find("div", {"class": ["btn-group", "content-header-container-btn"]})
     container_price = price_div.find("a", {"class": ["btn", "btn-default", "market-button-item"]}).text

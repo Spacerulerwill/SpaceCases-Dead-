@@ -4,14 +4,14 @@ import Levenshtein
 from urllib.parse import quote
 
 #format skin names to a standardized formatt
-def remove_skin_name_formatting(formatted_name:str) -> str:
+def remove_skin_name_formatting(formatted_name:str, preserve_case:bool=False) -> str:
     allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 "
     replace_chars = {
         "&": "and",
         "-": " ",
         "ö": "o"
     }
-
+    
     unformatted_name = formatted_name.lower() #lowercase
     for char,replace in replace_chars.items(): #replacements
         unformatted_name = unformatted_name.replace(char, replace)
