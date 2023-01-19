@@ -42,9 +42,9 @@ async def room(ctx:Context, public_private:str):
     thread:discord.Thread = await ctx.channel.create_thread(name=f"{ctx.author.name}'s room", type=thread_type)
 
     if public_private == "private":
-        await msg_embed(ctx, "Your private thread has been rooms!")
+        await msg_embed(ctx, "Your private room has been created!")
         
-    await msg_embed(thread, f"Welcome to your rooms {ctx.author.mention}! It will be deleted after 15 minutes of inactivity")
+    await msg_embed(thread, f"Welcome to your room {ctx.author.mention}! It will be deleted after 15 minutes of inactivity")
     await thread.add_user(ctx.author)
 
     async def delete_thread():

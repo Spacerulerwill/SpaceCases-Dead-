@@ -151,7 +151,7 @@ async def on_message(message:discord.Message):
             task = asyncio.create_task(delete_room(message.author.id, room))
 
     # process commands as usual
-    await bot_instance.process_commands(message)
+    await bot_instance.process_commands(message.content.lower())
 
 def scrape_skin_data():
     from src.scripts.csgostash_scraper import csgostash_scrape
