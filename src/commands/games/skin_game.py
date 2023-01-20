@@ -26,7 +26,8 @@ async def skin_game(ctx:Context):
     }])
 
     if update_result.modified_count == 0:
-        await msg_embed("You do not have enough funds for this action. You need **$10** to play!")
+        await msg_embed(ctx, "You do not have enough funds for this action. You need **$10** to play!")
+        return
 
     e = discord.Embed(
         title="Guess the Skin!",
@@ -53,7 +54,7 @@ async def skin_game(ctx:Context):
 
         guess = response.content.strip().lower()
 
-        if Levenshtein.ratio(guess, skin_name) > 0.9:
+        if Levenshtein.ratio(guess, skin_name) > 0.8:
             await msg_embed(ctx, "You guessed correctly!")
             database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": 2000}})
         else:
