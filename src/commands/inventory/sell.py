@@ -34,7 +34,7 @@ async def sell(ctx:Context, item_index:int):
             {
                 "$pull": {"inventory": {"name": item, "float": float}},
                 "$inc": {
-                    "balance": database.skin_data[item]["price"],
+                    "balance": database.skin_data["skins"][item]["price"],
                     "inventory-size": -1
                 }
             },
@@ -57,7 +57,7 @@ async def sell(ctx:Context, item_index:int):
 
     item = user_inventory[item_index]["name"]
     float = user_inventory[item_index]["float"]
-    item_data = database.skin_data[item]
+    item_data = database.skin_data["skins"][item]
     formatted_name = item_data["formatted_name"]
     price = currency_str_format(item_data["price"])
 

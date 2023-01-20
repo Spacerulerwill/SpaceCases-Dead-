@@ -102,13 +102,13 @@ async def container(ctx:Context, *args):
 
     def get_embed():
         item = rarities[selected_rarity][item_index]
-        formatted_item_name = database.skin_data[item]["formatted_name"]
+        formatted_item_name = database.skin_data["no_wear_skins"][item]["formatted_name"]
 
-        best_condition_index = database.skin_data[item]["best_condition_index"]
-        worst_condition_index = database.skin_data[item]["worst_condition_index"]
+        best_condition_index = database.skin_data["no_wear_skins"][item]["best_condition_index"]
+        worst_condition_index = database.skin_data["no_wear_skins"][item]["worst_condition_index"]
 
         best_condition = conditions[best_condition_index].lower()
-        item_data = database.skin_data[best_condition + " " + item]
+        item_data = database.skin_data["skins"][best_condition + " " + item]
         rarity = item_data["rarity"]
         rarity_color = rarity_color_dict[rarity]
 
@@ -121,7 +121,7 @@ async def container(ctx:Context, *args):
         min_price = float('inf')
         max_price = 0
         for i in range(best_condition_index, worst_condition_index+1):
-            price = database.skin_data[conditions[i].lower() + " " + item]["price"]
+            price = database.skin_data["skins"][conditions[i].lower() + " " + item]["price"]
             if price < min_price:
                 min_price = price
             if price > max_price:
@@ -138,7 +138,7 @@ async def container(ctx:Context, *args):
             min_modifier_price = float('inf')
             max_modifier_price = 0.0
             for i in range(best_condition_index, worst_condition_index+1):
-                price = database.skin_data[modifier + conditions[i].lower() + " " + item]["price"]
+                price = database.skin_data["skins"][modifier + conditions[i].lower() + " " + item]["price"]
                 if price < min_modifier_price:
                     min_modifier_price = price
                 if price > max_modifier_price:

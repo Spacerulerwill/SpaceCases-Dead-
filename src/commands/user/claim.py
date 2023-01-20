@@ -209,7 +209,7 @@ async def claim(ctx:Context):
             item_pool = database.containers[random_container]["items"][bonus_reward]
             unformatted_name, float_val = gen_item(random.choice(item_pool))
 
-            skin_data = database.skin_data[unformatted_name]
+            skin_data = database.skin_data["skins"][unformatted_name]
             skin_price = skin_data["price"]
 
             e.add_field(name="You got a bonus item!", value=f"**{skin_data['formatted_name']}** - **{currency_str_format(skin_price)}**", inline=False)

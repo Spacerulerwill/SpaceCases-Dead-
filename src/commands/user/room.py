@@ -49,7 +49,7 @@ async def room(ctx:Context, public_private:str):
 
     async def delete_thread():
         await asyncio.sleep(ROOM_DELETION_TIME)
-        await thread.delete()
+        await thread.delete()        
         database.rooms.pop(ctx.author.id, None)
     
     task = asyncio.create_task(delete_thread())

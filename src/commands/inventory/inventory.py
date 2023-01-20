@@ -35,7 +35,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
         return
     
     page -= 1
-    inventory_value = sum([database.skin_data[item["name"]]["price"] for item in inventory_data])
+    inventory_value = sum([database.skin_data["skins"][item["name"]]["price"] for item in inventory_data])
 
     # get inventory embed by function
     async def get_inventory_embed() -> discord.Embed:
@@ -43,7 +43,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
 
         string = ""
         for count, item in enumerate(inventory_page):
-            skin_data = database.skin_data[item["name"]]
+            skin_data = database.skin_data["skins"][item["name"]]
             emoji = rarity_emoji_dict[skin_data["rarity"]]
             string += f"{emoji} **{count+ (page*INVENTORY_ELEMS_PER_PAGE) + 1})** `{skin_data['formatted_name']}` - **{currency_str_format(skin_data['price'])}**\n"
 

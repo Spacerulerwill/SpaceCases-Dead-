@@ -9,7 +9,7 @@ from decimal import Decimal
 
 NO_PRICE_FOUND = 300000
 
-result = {}
+result = {"skins": {}, "no_wear_skins": {}}
 
 skin_links = []
 
@@ -148,7 +148,6 @@ def scrape_skin_link(skin_link):
     min_float = 0.0
     max_float = 1.0
 
-
   # best and worst conditions
   for index, lower_value in case_wear_ranges_lower.items():
       if min_float >= lower_value:
@@ -197,7 +196,7 @@ def scrape_skin_link(skin_link):
     # if a vanilla knife, create 5 identical entries with different wear ratings in their names (circumvents difficulty later for vanilla knives)
     if is_vanilla_knife:
       for condition in ["Factory New", "Minimal Wear", "Field Tested", "Well Worn", "Battle Scarred", "StatTrak Factory New", "StatTrak Minimal Wear", "StatTrak Field Tested", "StatTrak Well Worn", "StatTrak Battle Scarred"]:
-        result[condition.lower() + " " + unformatted_name] = {
+        result["skins"][condition.lower() + " " + unformatted_name] = {
               "formatted_name": condition + " " + formatted_name,
               "price": price,
               "rarity": rarity,
@@ -211,7 +210,7 @@ def scrape_skin_link(skin_link):
         }
 
       #non wear version
-      result[unformatted_name] = {
+      result["no_wear_skins"][unformatted_name] = {
         "formatted_name": formatted_name,
         "rarity": rarity,
         "min_float": min_float,
@@ -225,7 +224,7 @@ def scrape_skin_link(skin_link):
     else: #otherwise do as usual
       condition_index = condition_index_dict[row_unformatted_condition]
 
-      result[row_unformatted_condition + " " + unformatted_name] = {
+      result["skins"][row_unformatted_condition + " " + unformatted_name] = {
         "formatted_name": row_formatted_condition + " " + formatted_name,
         "price": price,
         "rarity": rarity,
@@ -239,7 +238,7 @@ def scrape_skin_link(skin_link):
       }
     
       # add the non wear versions
-      result[unformatted_name] = {
+      result["no_wear_skins"][unformatted_name] = {
           "formatted_name": formatted_name,
           "rarity": rarity,
           "min_float": min_float,
@@ -258,8 +257,8 @@ def scrape_skin_link(skin_link):
     inspect_url = soup.find("a", {"class": "inspect-button-skin"})["href"]
 
     for condition in ["Factory New", "Minimal Wear", "Field Tested", "Well Worn", "Battle Scarred", "StatTrak Factory New", "StatTrak Minimal Wear", "StatTrak Field Tested", "StatTrak Well Worn", "StatTrak Battle Scarred"]:
-      result[condition.lower() + " " + unformatted_name]["image_url"] = img_url
-      result[condition.lower() + " " + unformatted_name]["inspect_url"] = inspect_url
+      result["skins"][condition.lower() + " " + unformatted_name]["image_url"] = img_url
+      result["skins"][condition.lower() + " " + unformatted_name]["inspect_url"] = inspect_url
 
   else: # otherwise add different images to each wear
     image_buttons_div = soup.find("div", {"class": ["btn-group-sm", "btn-group-justified"]})
@@ -271,18 +270,18 @@ def scrape_skin_link(skin_link):
       url = button["data-hoverimg"]
       inspect_url = button["href"]
 
-      result[wear + unformatted_name]["image_url"] = url
-      result[wear + unformatted_name]["inspect_url"] = inspect_url
+      result["skins"][wear + unformatted_name]["image_url"] = url
+      result["skins"][wear + unformatted_name]["inspect_url"] = inspect_url
 
       if has_stattrak_variant:
-        result["stattrak " + wear + unformatted_name]["image_url"] = url
-        result["stattrak " + wear + unformatted_name]["inspect_url"] = inspect_url
+        result["skins"]["stattrak " + wear + unformatted_name]["image_url"] = url
+        result["skins"]["stattrak " + wear + unformatted_name]["inspect_url"] = inspect_url
       if has_souvenir_variant:
-        result["souvenir " + wear + unformatted_name]["image_url"] = url
-        result["souvenir " + wear + unformatted_name]["inspect_url"] = inspect_url
+        result["skins"]["souvenir " + wear + unformatted_name]["image_url"] = url
+        result["skins"]["souvenir " + wear + unformatted_name]["inspect_url"] = inspect_url
 
 
-  #print(formatted_name)
+  print(formatted_name)
 
 
 def csgostash_scrape():

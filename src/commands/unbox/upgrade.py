@@ -21,10 +21,10 @@ async def upgrade(ctx:Context, item_index:int, *args):
     start_item_name = user_data["inventory"][item_index]["name"]
     start_item_float = user_data["inventory"][item_index]["float"]
     
-    start_item_data = database.skin_data[start_item_name]
+    start_item_data = database.skin_data["skins"][start_item_name]
 
     try:
-        result_item_data = database.skin_data[result_item_name]
+        result_item_data = database.skin_data["skins"][result_item_name]
     except KeyError:
         await msg_embed(ctx, f"No item exists with name `{result_item_name}`")
         return

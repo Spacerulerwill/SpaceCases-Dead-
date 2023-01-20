@@ -11,7 +11,7 @@ from discord.ext import commands, tasks
 from discord.ext.commands import Context
 
 # cogs to load
-cogs = ["help", "user", "unbox", "trading", "inventory", "rankings", "config"]  
+cogs = ["help", "user", "unbox", "trading", "inventory", "rankings", "games", "config"]  
 
 #try read token from text file, if failed read token from server environment variable
 try:

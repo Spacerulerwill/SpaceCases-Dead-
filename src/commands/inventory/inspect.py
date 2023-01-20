@@ -30,7 +30,7 @@ async def inspect(ctx:Context, member:discord.Member, item_index:int):
     unformatted_name = item["name"]
     float_val = str(item["float"])
 
-    item_data = database.skin_data[unformatted_name]
+    item_data = database.skin_data["skins"][unformatted_name]
     formatted_name = item_data["formatted_name"]
     price = currency_str_format(item_data["price"])
 

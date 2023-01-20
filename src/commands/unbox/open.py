@@ -45,7 +45,7 @@ async def open(ctx:Context, *args):
     skin_pool = container_data["items"][rarity]
     unformatted_name, float_val = gen_item(random.choice(skin_pool))
     
-    skin_data = database.skin_data[unformatted_name]
+    skin_data = database.skin_data["skins"][unformatted_name]
 
     formatted_name = skin_data["formatted_name"]
     image_url = skin_data["image_url"]

@@ -5,7 +5,7 @@ import random
 
 # given the items unformatted name, it will generate a the float value and condition and whether it is stattrak
 def gen_item(unformatted_name:str) -> Tuple[str, float]:
-    skin_data = database.skin_data[unformatted_name]
+    skin_data = database.skin_data["no_wear_skins"][unformatted_name]
 
     # select skin float
     min_float = skin_data["min_float"]
