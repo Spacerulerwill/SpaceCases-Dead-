@@ -24,7 +24,8 @@ from src.commands.user.transfer import transfer
 from src.commands.user.stats import stats
 from src.commands.user.room import room
 
-from typing import Literal, Optional
+from typing import Literal
+from decimal import Decimal
 
 # initialise class
 class User(commands.Cog):
@@ -66,7 +67,7 @@ class User(commands.Cog):
         `<amount>` - the amount of money to transfer in dollars
         """
     })
-    async def transfer(self, ctx:Context, member: discord.Member, amount:float):
+    async def transfer(self, ctx:Context, member: discord.Member, amount:Decimal):
         await transfer(ctx, member, amount)
 
     @commands.command(description="Check a user's statistics", usage=

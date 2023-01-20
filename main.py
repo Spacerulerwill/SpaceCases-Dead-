@@ -87,7 +87,7 @@ async def on_command_error(ctx:Context, error):
 
     if isinstance(error, commands.BadArgument):
         err_msg, = error.args
-        query = err_msg.split('"')
+        print(query)
 
         try:
             desired_type = err_msg_type_dict[query[1]]
@@ -97,7 +97,6 @@ async def on_command_error(ctx:Context, error):
             return
 
         param_name = query[3].replace("_", " ")
-        print(param_name, desired_type)
         await msg_embed(ctx, f"**Error!** Argument `{param_name}` must be {desired_type}")
         return
 

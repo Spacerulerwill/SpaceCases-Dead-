@@ -51,7 +51,8 @@ conditions = [
 ]
 
 err_msg_type_dict = {
-    "int": "an integer"
+    "int": "an integer",
+    "Decimal": "a positive number"
 }
 
 #index of each condition in above list mapped to the lower bound of their ranges

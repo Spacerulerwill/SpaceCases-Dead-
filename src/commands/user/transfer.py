@@ -7,7 +7,8 @@ from src.util.embed_func import msg_embed
 from decimal import Decimal
 
 @requires(users_registered=True)
-async def transfer(ctx:Context, member: discord.Member, amount:float):
+async def transfer(ctx:Context, member: discord.Member, amount:Decimal):
+
     if member is ctx.author:
         await msg_embed(ctx, "You cannot transfer money to yourself!")
         return
@@ -17,7 +18,7 @@ async def transfer(ctx:Context, member: discord.Member, amount:float):
         return
 
     #convert amount to cents
-    amount = int(Decimal(amount) * 100)
+    amount = int(amount * Decimal('100'))
 
     #start a session to multi docuemnt atomic transaction
     with database.mongo_client.start_session() as session:
