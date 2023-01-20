@@ -56,7 +56,7 @@ async def skin_game(ctx:Context):
 
         if Levenshtein.ratio(guess, skin_name) > 0.8:
             await msg_embed(ctx, "You guessed correctly!")
-            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": 2000}})
+            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": 4000}})
         else:
             await msg_embed(ctx, f"You guessed incorrectly, the correct answer was `{skin_name}`")
 

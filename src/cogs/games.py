@@ -23,7 +23,7 @@ class Games(commands.Cog):
         "Syntax": f"{PREFIX}skin?",
         "How To Play": """Use the command and reply to the message with the name of the skin **within 10 seconds!** Do **not** include the condition or the name of the weapon, just the skin name. 
         
-        It costs **$10** to play, winning rewards you with **$20!**"""
+        It costs **$10** to play, winning rewards you with **$40!**"""
     })
     async def skin_game(self, ctx:Context):
         await skin_game(ctx)
