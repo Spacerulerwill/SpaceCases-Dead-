@@ -87,10 +87,10 @@ async def on_command_error(ctx:Context, error):
 
     if isinstance(error, commands.BadArgument):
         err_msg, = error.args
-        print(query)
+        query = err_msg.split('"')[1]
 
         try:
-            desired_type = err_msg_type_dict[query[1]]
+            desired_type = err_msg_type_dict[query]
         except KeyError:
             # if could not find type, its a user not found
             await msg_embed(ctx, "**Error!** Could not find user!")
