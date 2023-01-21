@@ -6,7 +6,14 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed
-from src.util.string_util import remove_skin_name_formatting
+from src.util.string_util import remove_skin_name_formatting, currency_str_format
+
+# GAME PRICES
+SKIN_GAME_PRICE = 250
+SKIN_GAME_REWARD = 1000
+
+NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{currency_str_format(SKIN_GAME_PRICE)}** to play!"
+WIN_MSG = f"You guessed **correctly!** You win **{currency_str_format(SKIN_GAME_REWARD)}**"
 
 @requires(users_registered=True)
 async def skin_game(ctx:Context):
@@ -17,8 +24,8 @@ async def skin_game(ctx:Context):
         "$set": {
             "balance": {
                 "$cond": {
-                    "if": {"$gte": ["$balance", 1000]},
-                    "then": {"$subtract": ["$balance", 1000]},
+                    "if": {"$gte": ["$balance", SKIN_GAME_PRICE]},
+                    "then": {"$subtract": ["$balance", SKIN_GAME_PRICE]},
                     "else": "$balance"
                 }
             }
@@ -26,12 +33,12 @@ async def skin_game(ctx:Context):
     }])
 
     if update_result.modified_count == 0:
-        await msg_embed(ctx, "You do not have enough funds for this action. You need **$10** to play!")
+        await msg_embed(ctx, NOT_ENOUGH_FUNDS_MSG)
         return
 
     e = discord.Embed(
         title="Guess the Skin!",
-        description="Reply with the name of the skin within 10 seconds!\nDo **not** include the wear of the weapon name!",
+        description="Reply with the name of the skin within 10 seconds!\nDo **not** include the wear or the weapon name!",
         color=discord.Color.dark_theme()
     )
 
@@ -55,11 +62,11 @@ async def skin_game(ctx:Context):
         guess = response.content.strip().lower()
 
         if Levenshtein.ratio(guess, skin_name) > 0.8:
-            await msg_embed(ctx, "You guessed correctly!")
-            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": 4000}})
+            await msg_embed(ctx, WIN_MSG)
+            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": SKIN_GAME_REWARD}})
         else:
-            await msg_embed(ctx, f"You guessed incorrectly, the correct answer was `{skin_name}`")
+            await msg_embed(ctx, f"You guessed **incorrectly!** The correct answer was `{skin_name}`")
 
     except asyncio.TimeoutError:
-        await msg_embed(ctx, "You did not reply in time!")
+        await msg_embed(ctx, f"You did not reply in time! The correct answer was `{skin_name}`")
     
