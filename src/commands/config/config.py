@@ -10,6 +10,7 @@ config_options = [
     {
         "name": "Unboxing Room Creation Channel",
         "value": "unbox-room-creation-channel-id",
+        "default-value": None,
         "type": discord.TextChannel,
         "description": "Channel used to create rooms to unbox cases in. If set to `None` users can unbox anywhere I can message in the server",
         "options": [],
@@ -143,7 +144,24 @@ async def config_menu(bot:Bot, ctx:Context):
 
     edit_button.callback = edit_callback
 
+    clear_button = discord.ui.Button(style=discord.ButtonStyle.red, label="Clear")
+    
+    async def clear_callback(interact:discord.Interaction):
+        if interact.user.id != ctx.author.id:
+            await msg_embed_response(interact.response, "This is not your config menu!", ephemeral=True)
+            return
+
+        selected_option = config_options[option_index]
+        database.guild_data.update_one({"_id": ctx.guild.id}, {"$set": {selected_option["value"]: selected_option["default-value"]}})
+
+        await interact.message.edit(embed=await get_config_embed())
+
+        await msg_embed_response(interact.response, f'Set **{selected_option["name"]}** to default value: `{selected_option["default-value"]}`')
+
+    clear_button.callback = clear_callback
+
     view.add_item(select)
     view.add_item(edit_button)
+    view.add_item(clear_button)
 
     msg = await ctx.send(embed=await get_config_embed(), view=view)
