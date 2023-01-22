@@ -34,7 +34,7 @@ def create_item_str(items:list) -> str:
     else:
         string = ""
         for count, item in enumerate(items):
-            item_data = database.skin_data[item["name"]]
+            item_data = database.skin_data["skins"][item["name"]]
             string += f"**{count+1})** `{item_data['formatted_name']}`\n"
         return string
 
