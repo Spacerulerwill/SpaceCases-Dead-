@@ -9,7 +9,9 @@ from decimal import Decimal
 
 async def coinflip(ctx:Context, t_ct:str, amount:Decimal):
 
-    if amount < 0:
+    integer_amount = int(amount * Decimal('100'))
+
+    if integer_amount <= 0:
         await msg_embed(ctx, "Amount to bet must be a positive number!")
         return
 
@@ -20,12 +22,9 @@ async def coinflip(ctx:Context, t_ct:str, amount:Decimal):
         winner = "ct"
         url = CT_LOGO
 
-    integer_amount = int(amount * Decimal('100'))
-
     if t_ct == winner:
-        # they won!
-        e = discord.Embed(title=f"You Won {currency_str_format(integer_amount)}!", color=discord.Color.green()) 
 
+        # they won!
         update_result = database.user_data.update_one({"_id": ctx.author.id},
         [{
             "$set": {
@@ -42,10 +41,10 @@ async def coinflip(ctx:Context, t_ct:str, amount:Decimal):
         if update_result.modified_count == 0:
             await msg_embed(ctx, "You don't have enough balance to bet this much!")
             return
-    else:
-        # they lost
-        e = discord.Embed(title=f"You Lost {currency_str_format(integer_amount)}!", color=discord.Color.red()) 
 
+        e = discord.Embed(title=f"You Won {currency_str_format(integer_amount)}!", color=discord.Color.green()) 
+
+    else:
         update_result = database.user_data.update_one({"_id": ctx.author.id},
         [{
             "$set": {
@@ -63,7 +62,11 @@ async def coinflip(ctx:Context, t_ct:str, amount:Decimal):
             await msg_embed(ctx, "You don't have enough balance to bet this much!")
             return
 
+        # they lost
+        e = discord.Embed(title=f"You Lost {currency_str_format(integer_amount)}!", color=discord.Color.red())
+
+        e.set_footer(text="Better luck next time!", icon_url=ctx.author.display_avatar.url)
+
     e.set_image(url=url)
-    e.set_footer(text="Better luck next time!", icon_url=ctx.author.display_avatar.url)
 
     await ctx.send(embed=e)

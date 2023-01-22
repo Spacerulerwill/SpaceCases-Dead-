@@ -10,7 +10,7 @@ from src.util.string_util import remove_skin_name_formatting, currency_str_forma
 
 # GAME PRICES
 SKIN_GAME_PRICE = 250
-SKIN_GAME_REWARD = 1000
+SKIN_GAME_REWARD = 750
 
 NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{currency_str_format(SKIN_GAME_PRICE)}** to play!"
 WIN_MSG = f"You guessed **correctly!** You win **{currency_str_format(SKIN_GAME_REWARD)}**"
