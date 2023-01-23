@@ -4,9 +4,11 @@ from discord.ext.commands import Context
 from src.util.images import CT_LOGO, T_LOGO
 from src.util.embed_func import msg_embed
 from src.util.string_util import currency_str_format
+from src.util.decorators import requires
 from src.util import database
 from decimal import Decimal
 
+@requires(users_registered=True)
 async def coinflip(ctx:Context, t_ct:str, amount:Decimal):
 
     integer_amount = int(amount * Decimal('100'))
