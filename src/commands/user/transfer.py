@@ -49,4 +49,4 @@ async def transfer(ctx:Context, member: discord.Member, amount:Decimal):
                 
                 await msg_embed(ctx, f"Successfully transferred {currency_str_format(amount)} to {member.name}'s account")
             else:
-                await ctx.send("You have insufficient funds!")
+                await msg_embed(ctx, "You have insufficient funds!")
