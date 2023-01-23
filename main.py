@@ -103,7 +103,8 @@ async def on_command_error(ctx:Context, error):
         return
 
     if isinstance(error, commands.MissingRequiredArgument):
-        await msg_embed(ctx, f"**Oops!** You forgot to supply the argument: `{error.param.name}`")
+        param_name = error.param.name.replace("_", "/")
+        await msg_embed(ctx, f"**Oops!** You forgot to supply the argument: `{param_name}`")
         return
 
     if isinstance(error, commands.BadLiteralArgument):
