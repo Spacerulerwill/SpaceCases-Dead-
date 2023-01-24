@@ -19,6 +19,8 @@ async def higher_lower(ctx:Context, difficulty:int):
     initial_item = random.choice(list(database.skin_data["skins"].keys()))
     initial_item_data = database.skin_data["skins"][initial_item]
 
+    game_started = False
+
     e = discord.Embed(
         title=f"Higher or Lower", 
         description=f"""
@@ -37,7 +39,8 @@ async def higher_lower(ctx:Context, difficulty:int):
 
     async def view_timeout_callback():
         try:
-            await msg.delete()
+            if not game_started:
+                await msg.delete()
         except NotFound:
             pass
 
@@ -50,7 +53,9 @@ async def higher_lower(ctx:Context, difficulty:int):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(interact.response, "This is not your game!")
             return
-
+        
+        nonlocal game_started
+        game_started = True
         await interact.response.defer()
         await start_game(ctx, difficulty, initial_item_data, msg)
 
@@ -69,10 +74,13 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
     # view
     view = discord.ui.View(timeout=10)
 
+    game_over = False
+
     # if button times out, the player has lost
     async def view_timeout_callback():
-        e = discord.Embed(title="You Lost", description="You ran out of time!", color=discord.Color.red())
-        await msg.edit(embed=e, view=None)
+        if not game_over:
+            e = discord.Embed(title="You Lost", description="You ran out of time!", color=discord.Color.red())
+            await msg.edit(embed=e, view=None)
 
     view.on_timeout = view_timeout_callback
 
@@ -81,7 +89,7 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
 
     #call backs
     async def less_callback(interact:discord.Interaction):
-        nonlocal guess_num
+        nonlocal guess_num, game_over
 
         if interact.user.id != ctx.author.id:
             await msg_embed_response(interact.response, "This is not your game!")
@@ -93,15 +101,17 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
                 guess_num += 1
                 await interact.response.edit_message(embed=get_embed(), view=view)
             else:
+                game_over = True
                 e = discord.Embed(title="You Lost!", description="You chose incorrectly!", color=discord.Color.red())
                 await msg.edit(embed=e, view=None)
         else:
             # they made it to last one - they have won!
+            game_over = True
             e = discord.Embed(title="You Won!", color=discord.Color.green())
             await msg.edit(embed=e, view=None)
 
     async def more_callback(interact:discord.Interaction):
-        nonlocal guess_num
+        nonlocal guess_num, game_over
         if interact.user.id != ctx.author.id:
             await msg_embed_response(interact.response, "This is not your game!")
             return
@@ -111,9 +121,11 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
                 guess_num += 1
                 await interact.response.edit_message(embed=get_embed(), view=view)
             else:
+                game_over = True
                 e = discord.Embed(title="You Lost!", description="You chose incorrectly!", color=discord.Color.red())
                 await msg.edit(embed=e, view=None)
         else:
+            game_over = True
             # they made it to last one - they have won!
             e = discord.Embed(title="You Won!", color=discord.Color.green())
             await msg.edit(embed=e, view=None)
