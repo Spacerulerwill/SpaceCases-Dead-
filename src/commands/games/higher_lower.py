@@ -51,7 +51,7 @@ async def higher_lower(ctx:Context, difficulty:int):
     # start game
     async def start_callback(interact:discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your game!")
+            await msg_embed_response(interact.response, "This is not your game!", ephemeral=True)
             return
         
         nonlocal game_started
@@ -92,7 +92,7 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
         nonlocal guess_num, game_over
 
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your game!")
+            await msg_embed_response(interact.response, "This is not your game!", ephemeral=True)
             return
 
         if guess_num + 1 < difficulty:
@@ -113,7 +113,7 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
     async def more_callback(interact:discord.Interaction):
         nonlocal guess_num, game_over
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your game!")
+            await msg_embed_response(interact.response, "This is not your game!", ephemeral=True)
             return
 
         if guess_num + 1 < difficulty:
