@@ -18,6 +18,7 @@ from decimal import Decimal
 # commands
 from src.commands.games.skin_game import skin_game, SKIN_GAME_PRICE, SKIN_GAME_REWARD
 from src.commands.games.coinflip import coinflip
+from src.commands.games.higher_lower import higher_lower
 
 # initialise class
 class Games(commands.Cog):
@@ -44,6 +45,14 @@ class Games(commands.Cog):
     }, aliases=["flip", "coin"])
     async def coinflip(self, ctx:Context, t_ct:Literal["t", "ct"], amount:Decimal):
         await coinflip(ctx, t_ct, amount)
+
+    @commands.command(description="Play the higher or lower game!", usage={
+        "Syntax": f"`{PREFIX}hl <difficulty>`",
+        "Arguments": "`<difficulty>` - the amount of correct guessed needed before receiving prize",
+        "How To Play": "Try and figure out if the price of the skin is more or less expensive than the previous one! Choose a difficulty from 3 to 10, which dictates the amount of correct guessed needed before winning"
+    })
+    async def hl(self, ctx:Context, difficulty:int=3):
+        await higher_lower(ctx, difficulty)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
