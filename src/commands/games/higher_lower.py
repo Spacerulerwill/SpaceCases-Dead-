@@ -140,11 +140,16 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
                 await interact.response.edit_message(embed=get_embed(), view=view)
             else:
                 game_over = True
-                e = discord.Embed(title="You Lost!", description="You chose incorrectly!", color=discord.Color.red())
+                e = discord.Embed(title="You Lost!", description=f"""
+                Previous Item: **{skin_data[guess_num]['formatted_name']} - {currency_str_format(skin_data[guess_num]['price'])}**
+                Your Choice: **{skin_data[guess_num+1]['formatted_name']} - {currency_str_format(skin_data[guess_num+1]['price'])}**
+                """, color=discord.Color.red())
                 await msg.edit(embed=e, view=None)
         else:
             # they made it to last one - they have won!
             game_over = True
+            amount_won = HL_REWARD(difficulty)
+
             e = discord.Embed(title="Congratulations!", description=f"You won **{currency_str_format(amount_won)}**", color=discord.Color.green())
             database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": amount_won}})
             await msg.edit(embed=e, view=None)
@@ -161,7 +166,10 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
                 await interact.response.edit_message(embed=get_embed(), view=view)
             else:
                 game_over = True
-                e = discord.Embed(title="You Lost!", description="You chose incorrectly!", color=discord.Color.red())
+                e = discord.Embed(title="You Lost!", description=f"""
+                Previous Item: **{skin_data[guess_num]['formatted_name']} - {currency_str_format(skin_data[guess_num]['price'])}**
+                Your Choice: **{skin_data[guess_num+1]['formatted_name']} - {currency_str_format(skin_data[guess_num+1]['price'])}**
+                """, color=discord.Color.red())
                 await msg.edit(embed=e, view=None)
         else:
             game_over = True
