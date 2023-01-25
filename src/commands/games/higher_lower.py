@@ -4,10 +4,17 @@ import random
 from discord.ext.commands import Context
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.util.decorators import requires
+from src.util.string_util import currency_str_format
 from src.util import database
 
 COSTS_MORE = True
 COSTS_LESS = False
+
+HL_PRICE = 250
+HL_REWARD = lambda difficulty: difficulty * 250
+
+PRICE_STR = currency_str_format(HL_PRICE)
+NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{PRICE_STR}** to play!"
 
 @requires(users_registered=True)
 async def higher_lower(ctx:Context, difficulty:int):
@@ -16,8 +23,8 @@ async def higher_lower(ctx:Context, difficulty:int):
         return
 
     # create start embed
-    initial_item = random.choice(list(database.skin_data["skins"].keys()))
-    initial_item_data = database.skin_data["skins"][initial_item]
+    initial_item = random.choice(list(database.skin_data_hl.keys()))
+    initial_item_data = database.skin_data_hl[initial_item]
 
     game_started = False
 
@@ -26,7 +33,7 @@ async def higher_lower(ctx:Context, difficulty:int):
         description=f"""
         Welcome to the **Higher or Lower** game!
         
-        In this game you must guess if the skin you see is more or less expensive than the previous one. Get all **{difficulty}** correct and you will win balance! 
+        In this game you must guess if the skin you see is more or less expensive than the previous one. Get all **{difficulty}** correct and you will win balance! The game costs **{PRICE_STR}**.
         
         The first skin is shown to you below. Press the **Start** button to begin.
         """,
@@ -66,9 +73,27 @@ async def higher_lower(ctx:Context, difficulty:int):
 
 async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:discord.Message):
 
+    # check user has enough to play
+    update_result = database.user_data.update_one({"_id": ctx.author.id},
+    [{
+        "$set": {
+            "balance": {
+                "$cond": {
+                    "if": {"$gte": ["$balance", HL_PRICE]},
+                    "then": {"$subtract": ["$balance", HL_PRICE]},
+                    "else": "$balance"
+                }
+            }
+        }
+    }])
+
+    if update_result.modified_count == 0:
+        await msg_embed(ctx, NOT_ENOUGH_FUNDS_MSG)
+        return
+
     # get all skins prices
-    random_skins = [random.choice(list(database.skin_data["skins"].keys())) for x in range(difficulty)]
-    skin_data = [initial_skin_data] + [database.skin_data["skins"][skin] for skin in random_skins]
+    random_skins = [random.choice(list(database.skin_data_hl.keys())) for x in range(difficulty)]
+    skin_data = [initial_skin_data] + [database.skin_data_hl[skin] for skin in random_skins]
     correct_guesses = [skin_data[x]["price"] > skin_data[x-1]["price"] for x in range(1, difficulty + 1)]
 
     # view
@@ -126,8 +151,12 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
                 await msg.edit(embed=e, view=None)
         else:
             game_over = True
+            amount_won = HL_REWARD(difficulty)
+
             # they made it to last one - they have won!
-            e = discord.Embed(title="You Won!", color=discord.Color.green())
+            e = discord.Embed(title="Congratulations!", description=f"You won **{currency_str_format(amount_won)}**", color=discord.Color.green())
+            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": amount_won}})
+
             await msg.edit(embed=e, view=None)
     
     less_button.callback = less_callback
@@ -140,6 +169,11 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
 
     def get_embed() -> discord.Embed:
         e = discord.Embed(title=f"Higher or Lower - {guess_num+1}/{difficulty}", description="Does this skin cost more or less than the previous?\nDecide within **10 seconds**")
+
+        if "Souvenir" in skin_data[guess_num+1]["formatted_name"]:
+            e.description += "\nThis item is **Souvenir!**"
+        if "StatTrak" in skin_data[guess_num+1]["formatted_name"]:
+            e.description += "\nThis item is **StatTrak!**"
         e.set_image(url=skin_data[guess_num+1]["image_url"])
         return e
 

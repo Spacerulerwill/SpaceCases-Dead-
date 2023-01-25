@@ -48,7 +48,7 @@ class Games(commands.Cog):
 
     @commands.command(description="Play the higher or lower game!", usage={
         "Syntax": f"`{PREFIX}hl <difficulty>`",
-        "Arguments": "`<difficulty>` - the amount of correct guessed needed before receiving prize",
+        "Arguments": "`<difficulty>` - the amount of correct guessed needed to win in range 3 to 10 - optional",
         "How To Play": "Try and figure out if the price of the skin is more or less expensive than the previous one! Choose a difficulty from 3 to 10, which dictates the amount of correct guessed needed before winning"
     })
     async def hl(self, ctx:Context, difficulty:int=3):

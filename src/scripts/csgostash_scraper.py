@@ -134,6 +134,7 @@ def scrape_skin_link(skin_link):
 
   unformatted_name = remove_skin_name_formatting(formatted_name)
 
+
   # check if available in stattrak, souvenir or none and choose the right condition prefixes
   has_stattrak_variant = soup.find("div", {"class": "stattrak"}) != None
   has_souvenir_variant = soup.find("div", {"class": "souvenir"}) != None
@@ -163,6 +164,9 @@ def scrape_skin_link(skin_link):
   #rarity
   rarity_div = soup.find("div", {"class": ["quality"]})
   rarity = rarity_div["class"][1].replace("color-", "").title()
+
+  weapon_type = rarity_div.text.split(" ")[-1].strip()
+  print(weapon_type)
 
   # add prices
   table = soup.find(
@@ -200,6 +204,7 @@ def scrape_skin_link(skin_link):
               "formatted_name": condition + " " + formatted_name,
               "price": price,
               "rarity": rarity,
+              "type": weapon_type,
               "min_float": min_float,
               "max_float": max_float,
               "condition_index": condition_index_dict[condition.lower()],
@@ -213,6 +218,7 @@ def scrape_skin_link(skin_link):
       result["no_wear_skins"][unformatted_name] = {
         "formatted_name": formatted_name,
         "rarity": rarity,
+        "type": weapon_type,
         "min_float": min_float,
         "max_float": max_float,
         "best_condition_index": best_condition_index,
@@ -228,6 +234,7 @@ def scrape_skin_link(skin_link):
         "formatted_name": row_formatted_condition + " " + formatted_name,
         "price": price,
         "rarity": rarity,
+        "type": weapon_type,
         "min_float": min_float,
         "max_float": max_float,
         "condition_index": condition_index,
@@ -241,6 +248,7 @@ def scrape_skin_link(skin_link):
       result["no_wear_skins"][unformatted_name] = {
           "formatted_name": formatted_name,
           "rarity": rarity,
+          "type": weapon_type,
           "min_float": min_float,
           "max_float": max_float,
           "condition_index": condition_index,
