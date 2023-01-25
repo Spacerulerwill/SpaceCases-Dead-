@@ -10,16 +10,20 @@ from src.util import database
 COSTS_MORE = True
 COSTS_LESS = False
 
+HL_MIN_GUESS = 5
+HL_MAX_GUESS = 10
+
 HL_PRICE = 250
-HL_REWARD = lambda difficulty: difficulty * 250
+HL_REWARD = lambda difficulty: (difficulty * 100) + HL_PRICE
 
 PRICE_STR = currency_str_format(HL_PRICE)
 NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{PRICE_STR}** to play!"
+DIFFICULTY_NOT_IN_RANGE_MSG = f"Amount must be in range {HL_MIN_GUESS} to {HL_MAX_GUESS}"
 
 @requires(users_registered=True)
 async def higher_lower(ctx:Context, difficulty:int):
-    if not 3 <= difficulty <= 10:
-        await msg_embed(ctx, "Amount must be in range 3 to 10")
+    if not HL_MIN_GUESS <= difficulty <= HL_MAX_GUESS:
+        await msg_embed(ctx, DIFFICULTY_NOT_IN_RANGE_MSG)
         return
 
     # create start embed

@@ -18,14 +18,14 @@ from decimal import Decimal
 # commands
 from src.commands.games.skin_game import skin_game, SKIN_GAME_PRICE, SKIN_GAME_REWARD
 from src.commands.games.coinflip import coinflip
-from src.commands.games.higher_lower import higher_lower
+from src.commands.games.higher_lower import higher_lower, HL_MIN_GUESS, HL_MAX_GUESS, HL_PRICE
 
 # initialise class
 class Games(commands.Cog):
     def __init__(self, bot:commands.Bot):
         self.bot = bot
 
-    @commands.command(name="skin?", description="Play the skin guessing game!", usage=
+    @commands.command(name="skin?", description=f"Play the skin guessing game! Costs", usage=
     {
         "Syntax": f"`{PREFIX}skin?`",
         "How To Play": f"""Use the command and reply to the message with the name of the skin **within 10 seconds!** Do **not** include the condition or the name of the weapon, just the skin name. 
@@ -35,7 +35,7 @@ class Games(commands.Cog):
     async def skin_game(self, ctx:Context):
         await skin_game(ctx)
 
-    @commands.command(description="Bet money and flip a coin!", usage={
+    @commands.command(description="Bet money and flip a coin! ", usage={
         "Syntax": f"`{PREFIX}coinflip <t/ct> <amount>`",
         "Arguments": """
         `<t/ct>` - whether to bet on the coin landing on the t or ct side
@@ -48,10 +48,13 @@ class Games(commands.Cog):
 
     @commands.command(description="Play the higher or lower game!", usage={
         "Syntax": f"`{PREFIX}hl <difficulty>`",
-        "Arguments": "`<difficulty>` - the amount of correct guessed needed to win in range 3 to 10 - optional",
-        "How To Play": "Try and figure out if the price of the skin is more or less expensive than the previous one! Choose a difficulty from 3 to 10, which dictates the amount of correct guessed needed before winning"
+        "Arguments": f"`<difficulty>` - the amount of correct guessed needed to win in range **{HL_MIN_GUESS}** to **{HL_MAX_GUESS}** - optional",
+        "How To Play": f"""
+        Try and figure out if the price of the skin is more or less expensive than the previous one! 
+        Choose a difficulty from 3 to 10, which dictates the amount of correct guessed needed before winning
+        It costs **{currency_str_format(HL_PRICE)}** to play!"""
     })
-    async def hl(self, ctx:Context, difficulty:int=3):
+    async def hl(self, ctx:Context, difficulty:int=HL_MIN_GUESS):
         await higher_lower(ctx, difficulty)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
