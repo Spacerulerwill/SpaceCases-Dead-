@@ -5,6 +5,7 @@ from discord.ext.commands import Context
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.util.decorators import requires
 from src.util.string_util import currency_str_format
+from src.util.constants import conditions
 from src.util import database
 
 COSTS_MORE = True
@@ -14,7 +15,7 @@ HL_MIN_GUESS = 5
 HL_MAX_GUESS = 10
 
 HL_PRICE = 250
-HL_REWARD = lambda difficulty: (difficulty * 100) + HL_PRICE
+HL_REWARD = lambda difficulty: (difficulty * 150) + HL_PRICE
 
 PRICE_STR = currency_str_format(HL_PRICE)
 NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{PRICE_STR}** to play!"
@@ -39,9 +40,17 @@ async def higher_lower(ctx:Context, difficulty:int):
         
         In this game you must guess if the skin you see is more or less expensive than the previous one. Get all **{difficulty}** correct and you will win balance! The game costs **{PRICE_STR}**.
         
-        The first skin is shown to you below. Press the **Start** button to begin.
+        The first skin is shown to you below. Press the **Start** button to begin.\n
         """,
         color=discord.Color.dark_theme())
+
+    e.description += "**"
+    if "Souvenir" in initial_item_data["formatted_name"]:
+        e.description += "Souvenir "
+    if "StatTrak" in initial_item_data["formatted_name"]:
+        e.description += "StatTrak "
+    e.description += f'{conditions[initial_item_data["condition_index"]]}'
+    e.description += "**"
     
     e.set_image(url=initial_item_data["image_url"])
     e.set_footer(icon_url=ctx.author.display_avatar.url, text="Warning! Menu will close after 30 seconds")
@@ -172,12 +181,14 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
     guess_num = 0
 
     def get_embed() -> discord.Embed:
-        e = discord.Embed(title=f"Higher or Lower - {guess_num+1}/{difficulty}", description="Does this skin cost more or less than the previous?\nDecide within **10 seconds**")
-
+        e = discord.Embed(title=f"Higher or Lower - {guess_num+1}/{difficulty}", description="Does this skin cost more or less than the previous?\nDecide within **10 seconds**\n\n")
+        e.description += "**"
         if "Souvenir" in skin_data[guess_num+1]["formatted_name"]:
-            e.description += "\nThis item is **Souvenir!**"
+            e.description += "Souvenir "
         if "StatTrak" in skin_data[guess_num+1]["formatted_name"]:
-            e.description += "\nThis item is **StatTrak!**"
+            e.description += "StatTrak "
+        e.description += f'{conditions[skin_data[guess_num+1]["condition_index"]]}'
+        e.description += "**"
         e.set_image(url=skin_data[guess_num+1]["image_url"])
         return e
 
