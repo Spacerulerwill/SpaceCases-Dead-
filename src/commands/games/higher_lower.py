@@ -145,7 +145,8 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
         else:
             # they made it to last one - they have won!
             game_over = True
-            e = discord.Embed(title="You Won!", color=discord.Color.green())
+            e = discord.Embed(title="Congratulations!", description=f"You won **{currency_str_format(amount_won)}**", color=discord.Color.green())
+            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": amount_won}})
             await msg.edit(embed=e, view=None)
 
     async def more_callback(interact:discord.Interaction):
