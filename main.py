@@ -150,7 +150,7 @@ async def on_message(message:discord.Message):
         task.cancel()
         room_data[1] = asyncio.create_task(delete_room(message.author.id, room))
 
-    # process commands as usual
+    # process commands as usual - lower case message before sending
     message.content = message.content.lower()
     await bot_instance.process_commands(message)
 
