@@ -18,10 +18,15 @@ def requires(room:bool=False, users_registered:bool=False):
             if room:
                 guild_data = database.guild_data.find_one({"_id": ctx.guild.id})
 
-                if (guild_data is not None or guild_data["unbox-room-creation-channel-id"] is not None) and (not hasattr(ctx.channel, "parent") or ctx.channel.parent.id != guild_data["unbox-room-creation-channel-id"]):
-                    channel = ctx.guild.get_channel(guild_data["unbox-room-creation-channel-id"])
-                    await msg_embed(ctx, f"This command must be used in a room! Go to {channel.mention} and use `{PREFIX}room`")
-                    return
+                HAS_GUILD_DATA = guild_data is not None and guild_data["unbox-room-creation-channel-id"] is not None
+                if HAS_GUILD_DATA:
+                    INVALID_PARENT_CHANNEL = hasattr(ctx.channel, "parent") and ctx.channel.parent.id != guild_data["unbox-room-creation-channel-id"]
+                    NO_PARENT_CHANNEL = hasattr(ctx.channel, "parent") is False
+
+                    if INVALID_PARENT_CHANNEL or NO_PARENT_CHANNEL:
+                        channel = ctx.guild.get_channel(guild_data["unbox-room-creation-channel-id"])
+                        await msg_embed(ctx, f"This command must be used in a room! Go to {channel.mention} and use `{PREFIX}room`")
+                        return
 
             # ensure all users in call are registered before proceeding
             if users_registered:
