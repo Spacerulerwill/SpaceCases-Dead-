@@ -8,7 +8,7 @@ from src.util.string_util import currency_str_format, get_closest_match, get_ins
 from src.util.skin_func import gen_item
 from src.util.embed_func import msg_embed, msg_embed_response
 
-@requires(users_registered=True)
+@requires(room=True, users_registered=True)
 async def open(ctx:Context, *args):
     container_name = " ".join(args[:]).strip().lower()
 
