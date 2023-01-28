@@ -3,8 +3,9 @@ import asyncio
 from os import environ
 from src.util import database
 from src.util.string_util import get_closest_match
+from src.util.room_func import delete_room
 from src.util.embed_func import msg_embed, welcome_embed
-from src.util.constants import PREFIX, ROOM_DELETION_TIME, err_msg_type_dict
+from src.util.constants import PREFIX, err_msg_type_dict
 
 from aiohttp import ClientConnectorError
 from discord.ext import commands, tasks
@@ -131,12 +132,6 @@ async def on_guild_join(guild: discord.Guild):
                 channel = ch
                 await channel.send(embed=welcome_embed(bot_instance))
                 break
-
-# task to delete room after time
-async def delete_room(owner_id:int, thread:discord.Thread):
-    await asyncio.sleep(ROOM_DELETION_TIME)
-    await thread.delete()
-    database.rooms.pop(owner_id, None)
 
 @bot_instance.event
 async def on_message(message:discord.Message):

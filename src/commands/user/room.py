@@ -3,6 +3,7 @@ from src.util import database
 from src.util.constants import PREFIX, ROOM_DELETION_TIME
 from src.util.embed_func import msg_embed
 from src.util.decorators import requires
+from src.util.room_func import delete_room, get_guild_room_create_channel
 import discord
 import asyncio
 
@@ -15,13 +16,13 @@ async def room(ctx:Context, public_private:str):
         await msg_embed(ctx, "You cannot create rooms here!")
         return
 
-    if guild_data is None or guild_data["unbox-room-creation-channel-id"] is None:
+    room_creation_channel = get_guild_room_create_channel(ctx.guild, guild_data)
+    if guild_data is None or guild_data["unbox-room-creation-channel-id"] is None or room_creation_channel is None:
         await msg_embed(ctx, f"This server does not have rooms set up yet. You can either unbox without a room, or ask an **admin** to use `{PREFIX}room` to set it up")
         return
 
     if ctx.channel.id != guild_data["unbox-room-creation-channel-id"]:
-        channel = ctx.bot.get_channel(guild_data["unbox-room-creation-channel-id"])
-        await msg_embed(ctx, f"You must be in {channel.mention} to create a room!")
+        await msg_embed(ctx, f"You must be in {room_creation_channel.mention} to create a room!")
         return
 
     room = database.rooms.get(ctx.author.id)
@@ -46,11 +47,6 @@ async def room(ctx:Context, public_private:str):
         
     await msg_embed(thread, f"Welcome to your room {ctx.author.mention}! It will be deleted after 15 minutes of inactivity")
     await thread.add_user(ctx.author)
-
-    async def delete_thread():
-        await asyncio.sleep(ROOM_DELETION_TIME)
-        await thread.delete()        
-        database.rooms.pop(ctx.author.id, None)
     
-    task = asyncio.create_task(delete_thread())
+    task = asyncio.create_task(delete_room(ctx.author.id, thread))
     database.rooms[ctx.author.id] = [thread, task]

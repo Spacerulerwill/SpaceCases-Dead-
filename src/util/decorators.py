@@ -1,6 +1,7 @@
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
+from src.util.room_func import get_guild_room_create_channel
 from src.util import database
 import discord
 
@@ -24,9 +25,10 @@ def requires(room:bool=False, users_registered:bool=False):
                     NO_PARENT_CHANNEL = hasattr(ctx.channel, "parent") is False
 
                     if INVALID_PARENT_CHANNEL or NO_PARENT_CHANNEL:
-                        channel = ctx.guild.get_channel(guild_data["unbox-room-creation-channel-id"])
-                        await msg_embed(ctx, f"This command must be used in a room! Go to {channel.mention} and use `{PREFIX}room`")
-                        return
+                        channel = get_guild_room_create_channel(ctx.guild, guild_data)
+                        if channel is not None:
+                            await msg_embed(ctx, f"This command must be used in a room! Go to {channel.mention} and use `{PREFIX}room`")
+                            return
 
             # ensure all users in call are registered before proceeding
             if users_registered:
