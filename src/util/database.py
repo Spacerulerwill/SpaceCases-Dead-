@@ -2,6 +2,7 @@ from os import environ
 import pymongo
 import json
 import certifi
+from src.scripts.csgostash_scraper import NO_PRICE_FOUND
 from pymongo.collection import Collection
 from timeit import default_timer as timer
 from datetime import timedelta
@@ -68,6 +69,4 @@ def init():
   with open('res/skin_data.json', encoding="utf-8") as f:
     skin_data = json.load(f)
   
-  skin_data_hl = {key: value for key, value in skin_data["skins"].items() if value["type"] not in ["Gloves", "Knife"]}
-
-
+  skin_data_hl = {key: value for key, value in skin_data["skins"].items() if value["type"] not in ["Gloves", "Knife"] or value["price"] == NO_PRICE_FOUND}

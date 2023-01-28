@@ -19,6 +19,7 @@ from decimal import Decimal
 from src.commands.games.skin_game import skin_game, SKIN_GAME_PRICE, SKIN_GAME_REWARD
 from src.commands.games.coinflip import coinflip
 from src.commands.games.higher_lower import higher_lower, HL_MIN_GUESS, HL_MAX_GUESS, HL_PRICE
+from src.commands.games.wordle import wordle
 
 # initialise class
 class Games(commands.Cog):
@@ -56,6 +57,10 @@ class Games(commands.Cog):
     })
     async def hl(self, ctx:Context, difficulty:int=HL_MIN_GUESS):
         await higher_lower(ctx, difficulty)
+
+    @commands.command()
+    async def wordle(self, ctx:Context):
+        await wordle(ctx)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):
