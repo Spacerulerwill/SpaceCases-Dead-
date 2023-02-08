@@ -18,6 +18,7 @@ rooms = {}
 skin_data = {}
 skin_data_hl = {} # SKIN DATA for higher lower game - does not include knives, glov
 containers = {}
+word_list = []
 
 # update the leaderboard
 def get_leaderboard():
@@ -34,7 +35,7 @@ def get_leaderboard():
 # setup database and data
 def init():
 
-  global user_data, trade_requests, mongo_client, skin_data, skin_data_hl, containers, guild_data
+  global user_data, trade_requests, mongo_client, skin_data, skin_data_hl, containers, guild_data, word_list
 
   #try read mongodb database password from database_pass.txt, if fails read from environment variable
   try:
@@ -69,4 +70,9 @@ def init():
   with open('res/skin_data.json', encoding="utf-8") as f:
     skin_data = json.load(f)
   
+  # skin data for higher lower gamae
   skin_data_hl = {key: value for key, value in skin_data["skins"].items() if value["type"] not in ["Gloves", "Knife"] or value["price"] == NO_PRICE_FOUND}
+
+  # word list
+  with open("res/wordlist.txt") as f:
+    word_list = f.read().splitlines()
