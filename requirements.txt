@@ -4,5 +4,6 @@ pymongo
 dnspython
 requests
 urllib3
+pillow
 python-Levenshtein
 beautifulsoup4

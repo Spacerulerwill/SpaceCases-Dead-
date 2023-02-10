@@ -1,4 +1,6 @@
-# 
+"""
+Webscraper script used to scrape all the containers items and container prices
+"""
 
 from bs4 import BeautifulSoup
 import requests
@@ -9,7 +11,7 @@ from decimal import Decimal
 
 result = {}
 container_endpoints = [
-  "case/355/Recoil-Case", "case/339/Dreams-&-Nightmares-Case", 
+  "case/376/Revolution-Case", "case/355/Recoil-Case", "case/339/Dreams-&-Nightmares-Case", 
   "case/321/Operation-Riptide-Case", "case/315/Snakebite-Case",
   "case/308/Operation-Broken-Fang-Case", "case/307/Fracture-Case",
   "case/303/Prisma-2-Case", "case/277/Shattered-Web-Case",

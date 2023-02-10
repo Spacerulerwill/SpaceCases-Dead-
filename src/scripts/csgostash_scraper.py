@@ -1,3 +1,7 @@
+"""
+Webscraper script used to data for the skins in csgo
+"""
+
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -166,7 +170,6 @@ def scrape_skin_link(skin_link):
   rarity = rarity_div["class"][1].replace("color-", "").title()
 
   weapon_type = rarity_div.text.split(" ")[-1].strip()
-  print(weapon_type)
 
   # add prices
   table = soup.find(
