@@ -9,7 +9,7 @@ containerlist_pages = [
     (
         "Cases",
         [
-            "revolution case"
+            "revolution case",
             "operation riptide case",
             "snakebite case",
             "operation broken fang case",
