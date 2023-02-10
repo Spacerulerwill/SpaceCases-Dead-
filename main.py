@@ -117,6 +117,10 @@ async def on_command_error(ctx:Context, error):
         await msg_embed(ctx, f"**Error!** You are missing the following permissions to use this command: `{', '.join(error.missing_permissions)}`")
         return
 
+    if isinstance(error, commands.CommandOnCooldown):
+        await msg_embed(ctx, f"**Command is on cooldown!** Try again after {round(error.retry_after, 2)} seconds")
+        return
+
     raise error
 
 @bot_instance.event
