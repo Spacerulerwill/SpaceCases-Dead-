@@ -7,4 +7,4 @@ urllib3
 pillow
 python-Levenshtein
 beautifulsoup4
-pyenchant
+pyspellchecker

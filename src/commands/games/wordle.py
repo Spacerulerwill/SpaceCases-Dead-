@@ -1,6 +1,5 @@
 import discord
 import random
-import enchant
 import collections
 from discord.ext.commands import Context
 from src.util.decorators import requires
@@ -8,9 +7,10 @@ from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
 from src.util import database
 from src.util.emojis import green_letters, yellow_letters, gray_letters, BLANK_LETTER
+from spellchecker import SpellChecker
 
 BLANK_ROW = BLANK_LETTER * 5 + "\n"
-word_dict = enchant.Dict("en_US")
+spellchecker = SpellChecker()
 guess_result_default = [None for x in range(5)]
 
 def get_wordle_embed(ctx:Context, game_data:dict, won:bool=False, lost:bool=False) -> discord.Embed:
@@ -82,7 +82,7 @@ async def guess_word(ctx:Context, guess:str):
         await msg_embed(ctx, "Guess must be a 5 letter word!")
         return
 
-    if not word_dict.check(guess):
+    if guess != spellchecker.correction(guess):
         await msg_embed(ctx, "Guess must be a real word!")
         return        
 
