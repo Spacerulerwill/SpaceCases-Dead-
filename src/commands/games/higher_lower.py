@@ -15,7 +15,7 @@ HL_MIN_GUESS = 5
 HL_MAX_GUESS = 10
 
 HL_PRICE = 250
-HL_REWARD = lambda difficulty: (difficulty * 150) + HL_PRICE
+HL_REWARD = lambda difficulty: ((difficulty - HL_MIN_GUESS) * 250) + HL_PRICE + 750
 
 PRICE_STR = currency_str_format(HL_PRICE)
 NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{PRICE_STR}** to play!"

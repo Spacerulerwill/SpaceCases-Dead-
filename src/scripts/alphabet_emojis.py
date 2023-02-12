@@ -30,7 +30,6 @@ def create_letter_emoji(letter:str, bg_color:str):
     image.save(f"res/images/emoji/wordle_letters/{letter}_{colors[bg_color]}.png")
     
 if __name__ == "__main__":
-    #for color in colors.keys():
-        #for letter in ascii_uppercase:
-            #create_letter_emoji(letter, color)
-    create_letter_emoji("", gray)
+    for color in colors.keys():
+        for letter in ascii_uppercase:
+            create_letter_emoji(letter, color)
