@@ -4,6 +4,7 @@ import collections
 from discord.ext.commands import Context
 from src.util.decorators import requires
 from src.util.constants import PREFIX
+from src.util.string_util import currency_str_format
 from src.util.embed_func import msg_embed
 from src.util import database
 from src.util.emojis import green_letters, yellow_letters, gray_letters, BLANK_LETTER
@@ -13,15 +14,24 @@ BLANK_ROW = BLANK_LETTER * 5 + "\n"
 spellchecker = SpellChecker()
 guess_result_default = [None for x in range(5)]
 
+WORLDE_PRICE = 250
+WORLD_REWARD = lambda remaining_guesses: WORLDE_PRICE + 500 + (remaining_guesses * 250)
+
+NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{currency_str_format(WORLDE_PRICE)}** to play!"
+
 def get_wordle_embed(ctx:Context, game_data:dict, won:bool=False, lost:bool=False) -> discord.Embed:
     description = ""
 
     if won:
-        title="You Won!"
+        title=f"You Won {currency_str_format(WORLD_REWARD(game_data['remaining_guesses']))}!"
+        color = discord.Color.green()
     elif lost:
-        title="You Lost!"
+        title=f"You Lost!"
+        description += f"The word was `{game_data['answer']}`\n"
+        color = discord.Color.red()
     else:
         title=""
+        color = discord.Color.dark_theme()
 
     for guess in game_data["guesses"]:
         description += guess + "\n"
@@ -31,21 +41,37 @@ def get_wordle_embed(ctx:Context, game_data:dict, won:bool=False, lost:bool=Fals
 
     e = discord.Embed(
         title=title,
-        color=discord.Color.dark_theme(),
+        color=color,
         description=description
     )
 
     return e
 
-def new_game(ctx:Context) -> dict:
+async def new_game(ctx:Context) -> dict:
+    # check user has enough to play
+    update_result = database.user_data.update_one({"_id": ctx.author.id},
+    [{
+        "$set": {
+            "balance": {
+                "$cond": {
+                    "if": {"$gte": ["$balance", WORLDE_PRICE]},
+                    "then": {"$subtract": ["$balance", WORLDE_PRICE]},
+                    "else": "$balance"
+                }
+            }
+        }
+    }])
+
+    if update_result.modified_count == 0:
+        await msg_embed(ctx, NOT_ENOUGH_FUNDS_MSG)
+        return
+
     game_data = {
         "user-id": ctx.author.id,
         "answer": random.choice(database.word_list),
         "remaining-guesses": 6,
         "guesses": []
     }
-
-    print(game_data["answer"])
 
     database.wordle_games[ctx.author.id] = game_data
 
@@ -59,7 +85,7 @@ async def wordle(ctx:Context, guess:str):
         try:
             game_data = database.wordle_games[ctx.author.id]
         except KeyError:
-            game_data = new_game(ctx)
+            game_data = await new_game(ctx)
     
         await ctx.send(embed=get_wordle_embed(ctx, game_data))
     else:
@@ -67,7 +93,7 @@ async def wordle(ctx:Context, guess:str):
         try:
             await guess_word(ctx, guess)
         except KeyError:
-            game_data = new_game(ctx)
+            game_data = await new_game(ctx)
             await guess_word(ctx, guess)
 
 # guess word logic
@@ -124,4 +150,7 @@ async def guess_word(ctx:Context, guess:str):
     await ctx.send(embed=get_wordle_embed(ctx, game_data, won, lost))
 
     if won or lost:
+        if won:
+            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": WORLD_REWARD(game_data["remaining_guesses"])}})
+
         del database.wordle_games[ctx.author.id]
