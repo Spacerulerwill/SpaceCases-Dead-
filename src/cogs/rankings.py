@@ -23,14 +23,14 @@ class Rankings(commands.Cog):
 
     @commands.command(description="View a page on the leaderboard", usage={
         "Syntax": f"`{PREFIX}leaderboard <page number>`",
-        "Arguments": "`<page number>` - the page of the leaderboard - optional"
+        "Arguments": "`<page number>` - the page of the leaderboard - **optional**"
     })
     async def leaderboard(self, ctx:Context, page:int=1):
         await leaderboard(ctx, page)
 
     @commands.command(description="View your position on the leaderboard", usage={
         "Syntax": f"`{PREFIX}ranking <user>`",
-        "Arguments": "`<user>` - user to check ranking of - optional"
+        "Arguments": "`<user>` - user to check ranking of - **optional**"
     })
     async def ranking(self, ctx:Context, user:discord.Member=None):
         await ranking(ctx, user)

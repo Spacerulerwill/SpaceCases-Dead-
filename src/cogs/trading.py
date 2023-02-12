@@ -97,7 +97,7 @@ class Trading(commands.Cog):
     @commands.command(description="View your incoming or outgoing trade requests", usage=
     {
         "Syntax": f"`{PREFIX}trades in/out/all`",
-        "Arguments": "`in/out/all` - whether to view incoming, outgoing or all trades - optional"
+        "Arguments": "`in/out/all` - whether to view incoming, outgoing or all trades - **optional**"
     })
     async def trades(self, ctx:Context, in_out:Optional[Literal["in", "out", "all"]], page:Optional[int]=1):
         await trades(ctx, in_out, page)

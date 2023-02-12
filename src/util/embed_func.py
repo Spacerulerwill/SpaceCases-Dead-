@@ -23,7 +23,7 @@ def welcome_embed(bot: commands.Bot) -> discord.Embed:
     e = discord.Embed(
         description=f"""Hello! My name is **{bot.user.name}**
 
-        I am CS:GO gambling and economy bot. With me you can:
+        I am CS:GO case unboxing and economy bot. With me you can:
         • Unbox your dream skins
         • Trade them with other users
         • Take a risk and upgrade them

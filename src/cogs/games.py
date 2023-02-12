@@ -5,6 +5,8 @@ Games Command Cog
 This cog contains the commands:
 * skin?
 * coinflip
+* hl 
+* wordle
 """
 
 from discord.ext import commands
@@ -49,7 +51,7 @@ class Games(commands.Cog):
 
     @commands.command(description="Play the higher or lower game!", usage={
         "Syntax": f"`{PREFIX}hl <difficulty>`",
-        "Arguments": f"`<difficulty>` - the amount of correct guessed needed to win in range **{HL_MIN_GUESS}** to **{HL_MAX_GUESS}** - optional",
+        "Arguments": f"`<difficulty>` - the amount of correct guessed needed to win in range **{HL_MIN_GUESS}** to **{HL_MAX_GUESS}** - **optional**",
         "How To Play": f"""
         Try and figure out if the price of the skin is more or less expensive than the previous one! 
         Choose a difficulty from 3 to 10, which dictates the amount of correct guessed needed before winning
@@ -58,9 +60,19 @@ class Games(commands.Cog):
     async def hl(self, ctx:Context, difficulty:int=HL_MIN_GUESS):
         await higher_lower(ctx, difficulty)
 
-    @commands.command()
-    async def wordle(self, ctx:Context):
-        await wordle(ctx)
+    @commands.command(description="Play the wordle word guessing game!", usage={
+        "Syntax": f"`{PREFIX}wordle <guess>`",
+        "Arguments": f"`<guess>` - the word you guess - **optional**",
+        "How To Play": f"""
+        Try and guess the 5 letter word in 6 guesses! When you guess a word, a letter will show:
+        • **Green** if it is the correct letter in the correct place
+        • **Yellow** if the letter is in the word but is in the wrong place
+        • **Gray** if the letter is not in the word at all
+        """
+    })
+    async def wordle(self, ctx:Context, guess:str=None):
+        if ctx.invoked_subcommand is None:
+            await wordle(ctx, guess)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

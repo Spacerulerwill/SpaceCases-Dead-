@@ -27,9 +27,10 @@ def create_letter_emoji(letter:str, bg_color:str):
     position = ((128-text_width)/2-1,(128-text_height)/2 - 5)
     draw.text(position, letter, "white", font=font)
 
-    image.save(f"res/images/emoji/wordle_letters/{letter}_{colors[color]}.png")
+    image.save(f"res/images/emoji/wordle_letters/{letter}_{colors[bg_color]}.png")
     
 if __name__ == "__main__":
-    for color in colors.keys():
-        for letter in ascii_uppercase:
-            create_letter_emoji(letter, color)
+    #for color in colors.keys():
+        #for letter in ascii_uppercase:
+            #create_letter_emoji(letter, color)
+    create_letter_emoji("", gray)

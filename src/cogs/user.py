@@ -53,7 +53,7 @@ class User(commands.Cog):
     @commands.command(description="Check a user's balance", usage=
     {
         "Syntax": f"`{PREFIX}balance <user>`",
-        "Arguments": "`<user>` - user to check balance of - optional"
+        "Arguments": "`<user>` - user to check balance of - **optional**"
     }, aliases=["bal"])
     async def balance(self, ctx: Context, member:discord.Member = None):
         await balance(ctx, member)
@@ -73,7 +73,7 @@ class User(commands.Cog):
     @commands.command(description="Check a user's statistics", usage=
     {
         "Syntax": f"`{PREFIX}stats <user>`",
-        "Arguments": "`<user>` - user to check stats of - optional"
+        "Arguments": "`<user>` - user to check stats of - **optional**"
     })
     async def stats(self, ctx:Context, member:discord.Member=None):
         await stats(ctx, member)       
@@ -81,7 +81,7 @@ class User(commands.Cog):
     
     @commands.command(description="Create a room for unboxing items", usage={
         "Syntax": f"`{PREFIX}room public/private`",
-        "Arguments": "`public/private - whether room is public or private thread - optional",
+        "Arguments": "`public/private - whether room is public or private thread - **optional**",
     })
     async def room(self, ctx:Context, public_private:Literal["public", "private"]="public"):
         await room(ctx, public_private)

@@ -28,8 +28,8 @@ class Inventory(commands.Cog):
     @commands.command(description="View a user's inventory", usage=
     {
         "Syntax": f"`{PREFIX}inventory <user>`",
-        "Arguments": """`<user>` - the owner of the inventory - optional
-        `<page>` - optional - the page of the inventory""",
+        "Arguments": """`<user>` - the owner of the inventory - **optional**
+        `<page>` - the page of the inventory - **optional**""",
     }, aliases=["inv"])
     async def inventory(self, ctx:Context, member:Optional[discord.Member]=None, page:Optional[int]=1):
         await inventory(ctx, member, page)
@@ -37,7 +37,7 @@ class Inventory(commands.Cog):
     @commands.command(description="Inspect an item in someone's inventory", usage=
     {
         "Syntax": f"`{PREFIX}inspect <user> <item index>`",
-        "Arguments": """`<user>` - the user whos inventory you wish to look in - optional
+        "Arguments": """`<user>` - the user whos inventory you wish to look in - **optional**
         `<item index>` - the index of the item"""
     })
 

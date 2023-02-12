@@ -15,6 +15,7 @@ mongo_client:pymongo.MongoClient
 
 leaderboard = [] # user leaderboard
 rooms = {}
+wordle_games = {}
 skin_data = {}
 skin_data_hl = {} # SKIN DATA for higher lower game - does not include knives, glov
 containers = {}
