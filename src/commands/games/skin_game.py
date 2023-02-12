@@ -58,7 +58,6 @@ async def skin_game(ctx:Context):
     try:
         response:discord.Message = await ctx.bot.wait_for('message', check=check, timeout=10)
         
-
         guess = response.content.strip().lower()
 
         if Levenshtein.ratio(guess, skin_name) > 0.8:

@@ -8,10 +8,8 @@ from src.util.string_util import currency_str_format
 from src.util.embed_func import msg_embed
 from src.util import database
 from src.util.emojis import green_letters, yellow_letters, gray_letters, BLANK_LETTER
-from spellchecker import SpellChecker
 
 BLANK_ROW = BLANK_LETTER * 5 + "\n"
-spellchecker = SpellChecker()
 guess_result_default = [None for x in range(5)]
 
 WORLDE_PRICE = 250
@@ -23,7 +21,7 @@ def get_wordle_embed(ctx:Context, game_data:dict, won:bool=False, lost:bool=Fals
     description = ""
 
     if won:
-        title=f"You Won {currency_str_format(WORLD_REWARD(game_data['remaining_guesses']))}!"
+        title=f"You Won {currency_str_format(WORLD_REWARD(game_data['remaining-guesses']))}!"
         color = discord.Color.green()
     elif lost:
         title=f"You Lost!"
@@ -73,8 +71,6 @@ async def new_game(ctx:Context) -> dict:
         "guesses": []
     }
 
-    database.wordle_games[ctx.author.id] = game_data
-
     return game_data
 
 @requires(users_registered=True)
@@ -86,6 +82,7 @@ async def wordle(ctx:Context, guess:str):
             game_data = database.wordle_games[ctx.author.id]
         except KeyError:
             game_data = await new_game(ctx)
+            database.wordle_games[ctx.author.id] = game_data
     
         await ctx.send(embed=get_wordle_embed(ctx, game_data))
     else:
@@ -94,6 +91,7 @@ async def wordle(ctx:Context, guess:str):
             await guess_word(ctx, guess)
         except KeyError:
             game_data = await new_game(ctx)
+            database.wordle_games[ctx.author.id] = game_data
             await guess_word(ctx, guess)
 
 # guess word logic
@@ -108,9 +106,9 @@ async def guess_word(ctx:Context, guess:str):
         await msg_embed(ctx, "Guess must be a 5 letter word!")
         return
 
-    if guess != spellchecker.correction(guess):
-        await msg_embed(ctx, "Guess must be a real word!")
-        return        
+    if guess not in database.word_list:
+        await msg_embed(ctx, "Word must be a valid english word!")
+        return
 
     #get amount of each letter in guess
     d = dict(collections.Counter(answer))
@@ -151,6 +149,6 @@ async def guess_word(ctx:Context, guess:str):
 
     if won or lost:
         if won:
-            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": WORLD_REWARD(game_data["remaining_guesses"])}})
+            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": WORLD_REWARD(game_data["remaining-guesses"])}})
 
         del database.wordle_games[ctx.author.id]
