@@ -7,3 +7,4 @@ urllib3
 pillow
 python-Levenshtein
 beautifulsoup4
+numpy
