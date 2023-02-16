@@ -2,6 +2,7 @@ import discord
 import random
 import numpy as np
 from discord.ext.commands import Context
+from discord.errors import NotFound
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed_response, msg_embed
 
@@ -16,13 +17,23 @@ async def ttt(ctx:Context, player2:discord.Member):
         title="Tic Tac Toe", 
         description=f"""
         **{ctx.author.name}** vs **{player2.name}**
+        Each player will have 10 seconds to make their move.
         **{player2.name}** must click the button below to accept!
         """,
         color=discord.Color.dark_theme()) 
 
     e.set_thumbnail(url=ctx.bot.user.display_avatar.url)
+    e.set_footer(icon_url=ctx.author.display_avatar.url, text="Warning! Menu will close after 3 minutes!")
 
-    view = discord.ui.View()
+    view = discord.ui.View(timeout=180)
+
+    async def view_timeout_callback():
+        try:
+            await msg.delete()
+        except NotFound:
+            pass
+
+    view.on_timeout = view_timeout_callback
 
     opponent_accept = discord.ui.Button(style=discord.ButtonStyle.gray, label=player2.name, emoji="✅")
     opponent_ready = False
@@ -33,14 +44,14 @@ async def ttt(ctx:Context, player2:discord.Member):
             await msg_embed_response(interact.response, "This is not your button!", ephemeral=True)
             return
 
-        await start_game(ctx, player2, interact)
+        await start_game(ctx, player2, msg, interact)
     opponent_accept.callback = opponent_callback
 
     view.add_item(opponent_accept)
 
     msg = await ctx.send(embed=e, view=view)
 
-async def start_game(ctx:Context, player2:discord.User, interact:discord.Interaction):
+async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, interact:discord.Interaction):
 
     players = [ctx.author, player2]
     random.shuffle(players)
@@ -77,22 +88,43 @@ async def start_game(ctx:Context, player2:discord.User, interact:discord.Interac
         moves += 1
         
         winner = checkWin(board)
-        print(winner)
         if winner is not None:
             winner_user = players[counters.index(winner)]
+            for button in buttons:
+                button.disabled = True
             await interact.response.edit_message(content=f"{winner_user.name} won!", view=view)
             game_over = True
             return
         elif moves == 9:
             game_over = True
+            for button in buttons:
+                button.disabled = True
             await interact.response.edit_message(content=f"Draw!", view=view)
             return
 
         turn_index = (turn_index+1) % 2
-
+        
         await interact.response.edit_message(content=f"{players[turn_index].name}'s turn", view=view)
 
-    view = discord.ui.View()
+    view = discord.ui.View(timeout=10)
+    
+    #whoever it times out on, the other player wins
+    async def view_timeout_callback():
+
+        nonlocal game_over, turn_index
+        game_over = True
+
+        turn_index = (turn_index+1) % 2
+        winner = counters[turn_index]
+        winner_user = players[counters.index(winner)]
+
+        for button in buttons:
+            button.disabled = True
+
+        await msg.edit(content=f"{winner_user.name} won!", view=view)
+        return
+
+    view.on_timeout = view_timeout_callback
     buttons = [discord.ui.Button(label="\u200b", style=discord.ButtonStyle.gray, row=i%3, custom_id=str(i)) for i in range(9)]
 
     for i in range(9):
