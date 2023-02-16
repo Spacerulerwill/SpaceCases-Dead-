@@ -103,15 +103,18 @@ async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, int
             return
 
         turn_index = (turn_index+1) % 2
-        
+
         await interact.response.edit_message(content=f"{players[turn_index].name}'s turn", view=view)
 
     view = discord.ui.View(timeout=10)
     
     #whoever it times out on, the other player wins
     async def view_timeout_callback():
+        if game_over:
+            return
 
         nonlocal game_over, turn_index
+
         game_over = True
 
         turn_index = (turn_index+1) % 2
