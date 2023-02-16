@@ -110,10 +110,10 @@ async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, int
     
     #whoever it times out on, the other player wins
     async def view_timeout_callback():
+                nonlocal game_over, turn_index
+
         if game_over:
             return
-
-        nonlocal game_over, turn_index
 
         game_over = True
 
