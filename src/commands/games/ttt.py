@@ -27,9 +27,15 @@ async def ttt(ctx:Context, player2:discord.Member):
 
     view = discord.ui.View(timeout=180)
 
+    game_started = False
+
     async def view_timeout_callback():
+        if game_started:
+            return
+
         try:
             await msg.delete()
+            print("Deleted")
         except NotFound:
             pass
 
@@ -38,12 +44,13 @@ async def ttt(ctx:Context, player2:discord.Member):
     opponent_accept = discord.ui.Button(style=discord.ButtonStyle.gray, label=player2.name, emoji="✅")
     opponent_ready = False
     async def opponent_callback(interact:discord.Interaction):
-        nonlocal opponent_ready
+        nonlocal opponent_ready, game_started
 
         if interact.user.id != player2.id:
             await msg_embed_response(interact.response, "This is not your button!", ephemeral=True)
             return
-
+            
+        game_started = True
         await start_game(ctx, player2, msg, interact)
     opponent_accept.callback = opponent_callback
 
@@ -89,11 +96,11 @@ async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, int
         
         winner = checkWin(board)
         if winner is not None:
+            game_over = True
             winner_user = players[counters.index(winner)]
             for button in buttons:
                 button.disabled = True
             await interact.response.edit_message(content=f"{winner_user.name} won!", view=view)
-            game_over = True
             return
         elif moves == 9:
             game_over = True
@@ -109,7 +116,7 @@ async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, int
     view = discord.ui.View(timeout=10)
     
     #whoever it times out on, the other player wins
-    async def view_timeout_callback():
+    async def game_timeout():
         nonlocal game_over, turn_index
 
         if game_over:
@@ -127,7 +134,7 @@ async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, int
         await msg.edit(content=f"{winner_user.name} won!", view=view)
         return
 
-    view.on_timeout = view_timeout_callback
+    view.on_timeout = game_timeout
     buttons = [discord.ui.Button(label="\u200b", style=discord.ButtonStyle.gray, row=i%3, custom_id=str(i)) for i in range(9)]
 
     for i in range(9):
