@@ -17,7 +17,7 @@ WORLD_REWARD = lambda remaining_guesses: WORLDE_PRICE + 500 + (remaining_guesses
 
 NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{currency_str_format(WORLDE_PRICE)}** to play!"
 
-def get_wordle_embed(ctx:Context, game_data:dict, won:bool=False, lost:bool=False) -> discord.Embed:
+def get_wordle_embed(game_data:dict, won:bool=False, lost:bool=False) -> discord.Embed:
     description = ""
 
     if won:
@@ -62,7 +62,7 @@ async def new_game(ctx:Context) -> dict:
 
     if update_result.modified_count == 0:
         await msg_embed(ctx, NOT_ENOUGH_FUNDS_MSG)
-        return
+        return None
 
     game_data = {
         "user-id": ctx.author.id,
@@ -82,15 +82,22 @@ async def wordle(ctx:Context, guess:str):
             game_data = database.wordle_games[ctx.author.id]
         except KeyError:
             game_data = await new_game(ctx)
+            if game_data is None:
+                return
+                
             database.wordle_games[ctx.author.id] = game_data
     
-        await ctx.send(embed=get_wordle_embed(ctx, game_data))
+        await ctx.send(embed=get_wordle_embed(game_data))
     else:
         # they made a guess - play the game
         try:
             await guess_word(ctx, guess)
         except KeyError:
             game_data = await new_game(ctx)
+
+            if game_data is None:
+                return
+
             database.wordle_games[ctx.author.id] = game_data
             await guess_word(ctx, guess)
 
@@ -145,7 +152,7 @@ async def guess_word(ctx:Context, guess:str):
     won = guess == answer
     lost = game_data["remaining-guesses"] == 0 and not won
 
-    await ctx.send(embed=get_wordle_embed(ctx, game_data, won, lost))
+    await ctx.send(embed=get_wordle_embed(game_data, won, lost))
 
     if won or lost:
         if won:
