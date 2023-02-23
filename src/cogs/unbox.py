@@ -63,7 +63,7 @@ class Unboxing(commands.Cog):
         await containers(ctx, page)
 
     # open a container
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(description="Purchase and open a container, with the option to either sell the item unboxed or add it to your inventory", usage=
     {
         "Syntax": f"`{PREFIX}open <container name>`",
