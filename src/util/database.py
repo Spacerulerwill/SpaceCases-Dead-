@@ -43,7 +43,7 @@ def init():
       #read local bot_info
       f = open("database_pass.txt", "r")
       PASS = f.read()
-  except:
+  except FileNotFoundError:
       #read password from environment variable
       PASS = environ["MONGO_DB_PASS"]
 
