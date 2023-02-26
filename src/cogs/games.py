@@ -68,7 +68,7 @@ class Games(commands.Cog):
     @commands.command(description="Play the wordle word guessing game!", usage={
         "Syntax": f"`{PREFIX}wordle <guess>`",
         "Arguments": f"`<guess>` - the word you guess - **optional**",
-        "How To Play": f"""
+        "How To Play": """
         Try and guess the 5 letter word in 6 guesses! When you guess a word, a letter will show:
         • **Green** if it is the correct letter in the correct place
         • **Yellow** if the letter is in the word but is in the wrong place
@@ -82,7 +82,14 @@ class Games(commands.Cog):
     async def connect4(self, ctx:Context, column:int=None):
         await connect4(ctx, column)
 
-    @commands.command()
+    @commands.command(description="Play Tic Tac Toe against another player!", usage={
+        "Syntax": f"`{PREFIX}ttt <player2> <bet>`",
+        "Arguments": f"""`<player2>` - the opponent 
+        `<bet>` - amount to bet on the game""",
+        "How To Play": """
+        Take turns to place a naught or a cross on the board. Whoever gets 3 in a row wins the bet! If it is a draw, both players keep their money.
+        """
+    })
     async def ttt(self, ctx:Context, player2:discord.Member, bet:Decimal=0):
         await ttt(ctx, player2, bet)
 

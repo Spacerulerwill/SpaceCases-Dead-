@@ -30,18 +30,19 @@ intents = discord.Intents().all()
 #instanciate bot with prefix, intents and disabled help command (uses custom command) 
 bot_instance = commands.Bot(command_prefix=[PREFIX, PREFIX.upper(), PREFIX.title()], intents=intents, help_command=None) #define command decorator
 
-#start the bot
-def run_bot():    
+# Connect to database, try run using token
+def run_bot():  
     database.init()
 
     try:
-        bot_instance.run(TOKEN) #run the client using using my bot's token
+        bot_instance.run(TOKEN)
     except ClientConnectorError: 
         print("Failed to connect to discord.py")
-        
+        return
+
+# When the bot is ready, load each command cog and start background tasks  
 @bot_instance.event
 async def on_ready():
-    #print login message
     print(f'Logged in as: {bot_instance.user.name}')
   
     #load each cog
@@ -52,8 +53,9 @@ async def on_ready():
     bot_status_loop.start()
     leaderboard_loop.start()
 
-# task to run every 10 seconds - cycle bot status inbetween values
 status_int = 0
+
+# loop that cycles the bot status every 10 seconds
 @tasks.loop(seconds=10)
 async def bot_status_loop():
     global status_int
@@ -66,11 +68,12 @@ async def bot_status_loop():
 
     status_int = (status_int + 1) % 2
 
+# loop that updates the leaderboard every hour
 @tasks.loop(hours=1)
 async def leaderboard_loop():
     database.get_leaderboard()
 
-#handle command errors with error message
+#handle command errors with an appriopriate error messages
 @bot_instance.event
 async def on_command_error(ctx:Context, error):
 
@@ -123,10 +126,10 @@ async def on_command_error(ctx:Context, error):
 
     raise error
 
+#send welcome message on joining a server
 @bot_instance.event
 async def on_guild_join(guild: discord.Guild):
-
-    # first try welcome channel, if can't just find the first available text channel.
+    #try system channel, otherwise loop through all otherchannels to find one
     if not guild.system_channel is None and guild.system_channel.permissions_for(guild.me).send_messages:
         channel = guild.system_channel
         await channel.send(embed=welcome_embed(bot_instance))
@@ -139,7 +142,6 @@ async def on_guild_join(guild: discord.Guild):
 
 @bot_instance.event
 async def on_message(message:discord.Message):
-
     # if message sent from a room, cancel the room deletion task for it and restart it
     room_data = database.rooms.get(message.author.id)
 
