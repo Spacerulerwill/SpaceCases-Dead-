@@ -83,8 +83,8 @@ class Games(commands.Cog):
         await connect4(ctx, column)
 
     @commands.command()
-    async def ttt(self, ctx:Context, player2:discord.Member):
-        await ttt(ctx, player2)
+    async def ttt(self, ctx:Context, player2:discord.Member, bet:Decimal=0):
+        await ttt(ctx, player2, bet)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

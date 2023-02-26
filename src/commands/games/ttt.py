@@ -1,26 +1,39 @@
 import discord
 import random
 import numpy as np
+from decimal import Decimal
 from discord.ext.commands import Context
 from discord.errors import NotFound
+from src.util import database
+from src.util.string_util import currency_str_format
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed_response, msg_embed
 
 @requires(users_registered=True)
-async def ttt(ctx:Context, player2:discord.Member):
+async def ttt(ctx:Context, player2:discord.Member, bet:Decimal):
+    if bet < 0:
+        await msg_embed(ctx, "You cannot bet less than **$0**")
+        return
+
+    amount = int(bet * Decimal('100'))
 
     if ctx.author.id == player2.id:
         await msg_embed(ctx, "You can't play this game against yourself!")
         return
 
     e = discord.Embed(
-        title="Tic Tac Toe", 
+        title=f"Tic Tac Toe", 
         description=f"""
         **{ctx.author.name}** vs **{player2.name}**
         Each player will have 10 seconds to make their move.
         **{player2.name}** must click the button below to accept!
         """,
         color=discord.Color.dark_theme()) 
+    
+    has_wager = amount != 0
+
+    if has_wager:
+        e.description += f"\nThe fee for playing this game is **{currency_str_format(amount)}**. Winner takes all!"
 
     e.set_thumbnail(url=ctx.bot.user.display_avatar.url)
     e.set_footer(icon_url=ctx.author.display_avatar.url, text="Warning! Menu will close after 3 minutes!")
@@ -35,14 +48,19 @@ async def ttt(ctx:Context, player2:discord.Member):
 
         try:
             await msg.delete()
-            print("Deleted")
         except NotFound:
             pass
 
     view.on_timeout = view_timeout_callback
+    
+    if has_wager:
+        button_label = f"{player2.name} - {currency_str_format(amount)}"
+    else:
+        button_label = player2.name
 
-    opponent_accept = discord.ui.Button(style=discord.ButtonStyle.gray, label=player2.name, emoji="✅")
+    opponent_accept = discord.ui.Button(style=discord.ButtonStyle.gray, label=button_label, emoji="✅")
     opponent_ready = False
+
     async def opponent_callback(interact:discord.Interaction):
         nonlocal opponent_ready, game_started
 
@@ -51,14 +69,42 @@ async def ttt(ctx:Context, player2:discord.Member):
             return
             
         game_started = True
-        await start_game(ctx, player2, msg, interact)
+
+
+        if has_wager:
+            #try and take money from both players, if it fails, then someone hasn't got enough money
+            update_result = database.user_data.update_many(
+                {"_id": { "$in": [ctx.author.id, player2.id] } },
+                
+                [{
+                    "$set": {                  
+                        'balance': {
+                            "$cond": {
+                                "if": {
+                                    "$gte": ["$balance", amount]
+                                },
+                                "then": {
+                                    "$subtract": ["$balance", amount],
+                                },
+                                "else": "$balance"
+                            }
+                        },
+                    }
+                }]
+            )
+
+            if update_result.modified_count != 2:
+                await msg_embed_response(interact.response, f"Both players must have **{currency_str_format(amount)}** to play")
+                return
+    
+        await start_game(ctx, player2, amount, has_wager, msg, interact)
     opponent_accept.callback = opponent_callback
 
     view.add_item(opponent_accept)
 
     msg = await ctx.send(embed=e, view=view)
 
-async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, interact:discord.Interaction):
+async def start_game(ctx:Context, player2:discord.User, amount:int, has_wager:bool, msg:discord.Message, interact:discord.Interaction):
 
     players = [ctx.author, player2]
     random.shuffle(players)
@@ -80,6 +126,7 @@ async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, int
         if interact.user not in players:
             await msg_embed_response(interact.response, "You are not a part of this game!", ephemeral=True)
             return
+        
         elif interact.user != players[turn_index]:
             await interact.response.defer()
             return
@@ -95,20 +142,52 @@ async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, int
         moves += 1
         
         winner = checkWin(board)
+
+        #check for win
         if winner is not None:
             game_over = True
             winner_user = players[counters.index(winner)]
             for button in buttons:
                 button.disabled = True
+
             await interact.response.edit_message(content=f"{winner_user.name} won!", view=view)
+
+            if not has_wager:
+                return
+            
+            # give money to winner user
+            database.user_data.update_many(
+            {"_id": winner_user.id },
+                {
+                    "$inc": {                  
+                        'balance': amount * 2
+                    }
+                }
+            )
             return
+        
         elif moves == 9:
             game_over = True
             for button in buttons:
                 button.disabled = True
+                
             await interact.response.edit_message(content=f"Draw!", view=view)
-            return
 
+            if not has_wager:
+                return
+            
+            # give both players money back
+            database.user_data.update_many(
+            {"_id": { "$in": [ctx.author.id, player2.id] } },
+                {
+                    "$inc": {                  
+                        'balance': amount
+                    }
+                }
+            )
+            return
+        
+        #if no win continue
         turn_index = (turn_index+1) % 2
 
         await interact.response.edit_message(content=f"{players[turn_index].name}'s turn", view=view)
@@ -131,6 +210,20 @@ async def start_game(ctx:Context, player2:discord.User, msg:discord.Message, int
         for button in buttons:
             button.disabled = True
 
+        if not has_wager:
+                return
+            
+        # give money to winner user
+        database.user_data.update_many(
+        {"_id": winner_user.id },
+            {
+                "$inc": {                  
+                    'balance': amount * 2
+                }
+            }
+        )
+        return
+    
         await msg.edit(content=f"{winner_user.name} won!", view=view)
         return
 

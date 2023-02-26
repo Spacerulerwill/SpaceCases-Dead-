@@ -99,7 +99,7 @@ async def on_command_error(ctx:Context, error):
             return
 
         param_name = query[3].replace("_", " ")
-        print()
+
         await msg_embed(ctx, f"**Error!** Argument `{param_name}` must be {desired_type}")
         return
 
