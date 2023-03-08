@@ -25,7 +25,6 @@ from src.commands.games.skin_game import skin_game, SKIN_GAME_PRICE, SKIN_GAME_R
 from src.commands.games.coinflip import coinflip
 from src.commands.games.higher_lower import higher_lower, HL_MIN_GUESS, HL_MAX_GUESS, HL_PRICE
 from src.commands.games.wordle import wordle
-from src.commands.games.connect4 import connect4
 from src.commands.games.ttt import ttt
 
 # initialise class
@@ -78,14 +77,10 @@ class Games(commands.Cog):
     async def wordle(self, ctx:Context, guess:str=None):
         await wordle(ctx, guess)
 
-    @commands.command()
-    async def connect4(self, ctx:Context, column:int=None):
-        await connect4(ctx, column)
-
     @commands.command(description="Play Tic Tac Toe against another player!", usage={
         "Syntax": f"`{PREFIX}ttt <player2> <bet>`",
         "Arguments": f"""`<player2>` - the opponent 
-        `<bet>` - amount to bet on the game""",
+        `<bet>` - amount to bet on the game - **optional**""",
         "How To Play": """
         Take turns to place a naught or a cross on the board. Whoever gets 3 in a row wins the bet! If it is a draw, both players keep their money.
         """
