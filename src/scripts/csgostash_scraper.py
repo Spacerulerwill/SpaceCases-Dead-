@@ -10,10 +10,11 @@ from re import sub
 from src.util.string_util import remove_skin_name_formatting
 from src.util.constants import case_wear_ranges_lower, MAX_THREADS
 from decimal import Decimal
+from src.util import database
 
 NO_PRICE_FOUND = 300000
 
-result = {"skins": {}, "no_wear_skins": {}}
+result = {"_id": "skin-data", "skins": {}, "no_wear_skins": {}}
 
 skin_links = []
 
@@ -304,5 +305,4 @@ def csgostash_scrape():
       max_workers=MAX_THREADS) as executor:
     executor.map(scrape_skin_link, skin_links)
 
-  with open("res/skin_data.json", "w+", encoding="utf-8") as file:
-    json.dump(result, file, indent=4, ensure_ascii=False)
+  database.skin_data_collection.replace_one({"_id": "skin-data"}, result, upsert=True)

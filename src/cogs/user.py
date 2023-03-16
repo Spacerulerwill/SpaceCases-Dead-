@@ -81,7 +81,7 @@ class User(commands.Cog):
     
     @commands.command(description="Create a room for unboxing items", usage={
         "Syntax": f"`{PREFIX}room public/private`",
-        "Arguments": "`public/private - whether room is public or private thread - **optional**",
+        "Arguments": "`public/private` - whether room is public or private thread - **optional**",
     })
     async def room(self, ctx:Context, public_private:Literal["public", "private"]="public"):
         await room(ctx, public_private)

@@ -4,12 +4,12 @@ Webscraper script used to scrape all the containers items and container prices
 
 from bs4 import BeautifulSoup
 import requests
-import json
 from src.util.string_util import remove_skin_name_formatting
 from re import sub
 from decimal import Decimal
+from src.util import database
 
-result = {}
+result = {"_id": "container-data"}
 container_endpoints = [
   "case/376/Revolution-Case", "case/355/Recoil-Case", "case/339/Dreams-&-Nightmares-Case", 
   "case/321/Operation-Riptide-Case", "case/315/Snakebite-Case",
@@ -108,5 +108,5 @@ def scrape_containers():
     result[remove_skin_name_formatting(container_name)] = container_data
     print(f"Scraped {container_name}")
 
-  with open("res/containers.json", "w+", encoding="utf-8") as file:
-    json.dump(result, file, indent=4, ensure_ascii=False)
+  # upload to mongodb
+  database.skin_data_collection.replace_one({"_id": "container-data"}, result, upsert=True)

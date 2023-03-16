@@ -32,7 +32,8 @@ bot_instance = commands.Bot(command_prefix=[PREFIX, PREFIX.upper(), PREFIX.title
 
 # Connect to database, try run using token
 def run_bot():  
-    database.init()
+    database.init_collections()
+    database.load_data()
 
     try:
         bot_instance.run(TOKEN)
@@ -157,10 +158,12 @@ async def on_message(message:discord.Message):
 
 def scrape_skin_data():
     from src.scripts.csgostash_scraper import csgostash_scrape
+    database.init_collections()
     csgostash_scrape()
 
 def scrape_container_data():
     from src.scripts.container_scraper import scrape_containers
+    database.init_collections()
     scrape_containers()
         
 if __name__ == "__main__":

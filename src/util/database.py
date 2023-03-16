@@ -10,6 +10,7 @@ from datetime import timedelta
 user_data: Collection # user data - mongodb
 trade_requests:Collection # trade requests - mongodb
 guild_data:Collection # guild data - mongodb
+skin_data_collection:Collection # skin data - mongodb
 
 mongo_client:pymongo.MongoClient
 
@@ -34,9 +35,9 @@ def get_leaderboard():
   print(f"Generated leaderboard in {timedelta(seconds=end-start)}")
 
 # setup database and data
-def init():
+def init_collections():
 
-  global user_data, trade_requests, mongo_client, skin_data, skin_data_hl, containers, guild_data, word_list
+  global user_data, trade_requests, skin_data_collection, mongo_client, guild_data, word_list
 
   #try read mongodb database password from database_pass.txt, if fails read from environment variable
   try:
@@ -53,23 +54,26 @@ def init():
 
   print("Connected to MongoDB database!")
 
-  #load the csgo bot database
+  # load the csgo bot database
   db = mongo_client['csgo-case-bot']
 
-  #user data collection
+  # load collections
   user_data = db["user-data"]
   trade_requests = db["trade-requests"]
   guild_data = db["guild-data"]
+  skin_data_collection = db["skin-data"]
 
-  print("Loaded user data")
+  print("Loaded collections")
+
+def load_data():
+
+  global containers, skin_data, skin_data_hl, word_list
 
   # load container data
-  with open('res/containers.json', encoding="utf-8") as f:
-    containers = json.load(f)
+  containers = skin_data_collection.find_one({"_id": "container-data"})
 
   # load skin data
-  with open('res/skin_data.json', encoding="utf-8") as f:
-    skin_data = json.load(f)
+  skin_data = skin_data_collection.find_one({"_id": "skin-data"})
   
   # skin data for higher lower gamae
   skin_data_hl = {key: value for key, value in skin_data["skins"].items() if value["type"] not in ["Gloves", "Knife"] or value["price"] == NO_PRICE_FOUND}
@@ -77,3 +81,5 @@ def init():
   # word list
   with open("res/wordlist.txt") as f:
     word_list = f.read().splitlines()
+
+  print("Loaded data")
