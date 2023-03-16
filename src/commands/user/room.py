@@ -18,7 +18,7 @@ async def room(ctx:Context, public_private:str):
 
     room_creation_channel = get_guild_room_create_channel(ctx.guild, guild_data)
     if guild_data is None or guild_data["unbox-room-creation-channel-id"] is None or room_creation_channel is None:
-        await msg_embed(ctx, f"This server does not have rooms set up yet. You can either unbox without a room, or ask an **admin** to use `{PREFIX}room` to set it up")
+        await msg_embed(ctx, f"This server does not have rooms set up yet. You can either unbox without a room, or ask an **admin** to use `{PREFIX}config` to set it up")
         return
 
     if ctx.channel.id != guild_data["unbox-room-creation-channel-id"]:
