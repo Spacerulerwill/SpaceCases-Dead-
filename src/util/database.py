@@ -1,11 +1,11 @@
 from os import environ
 import pymongo
-import json
 import certifi
 from src.scripts.csgostash_scraper import NO_PRICE_FOUND
 from pymongo.collection import Collection
 from timeit import default_timer as timer
 from datetime import timedelta
+from src.util.constants import ONE_WEEK
 
 user_data: Collection # user data - mongodb
 trade_requests:Collection # trade requests - mongodb
@@ -62,6 +62,8 @@ def init_collections():
   trade_requests = db["trade-requests"]
   guild_data = db["guild-data"]
   skin_data_collection = db["skin-data"]
+
+  trade_requests.create_index([( "send-timestamp", pymongo.ASCENDING )], expireAfterSeconds=ONE_WEEK)
 
   print("Loaded collections")
 

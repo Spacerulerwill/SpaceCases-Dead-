@@ -3,6 +3,7 @@ from src.util.emojis import *
 PREFIX = "cs "
 TWELVE_HOURS = 43200
 ONE_DAY = 86400
+ONE_WEEK = ONE_DAY * 7
 KEY_PRICE = 250
 
 DEFAULT_INVENTORY_SIZE = 5

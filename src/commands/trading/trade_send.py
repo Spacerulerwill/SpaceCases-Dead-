@@ -1,11 +1,11 @@
 import discord
+from datetime import datetime
 from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
 from src.commands.trading.trade_func import send_trade_in_creation_embed, send_trade_notif_to_user
 from src.util.decorators import requires
-import time
 
 @requires(users_registered=True)
 async def send(ctx:Context):
@@ -19,7 +19,7 @@ async def send(ctx:Context):
         {"_id": ctx.author.id, "send-timestamp": 0},
         {
             "$set": {
-                "send-timestamp": int(time.time())
+                "send-timestamp": datetime.utcnow()
             }
         }
     )
