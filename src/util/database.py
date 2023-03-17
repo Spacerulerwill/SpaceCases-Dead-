@@ -63,7 +63,7 @@ def init_collections():
   guild_data = db["guild-data"]
   skin_data_collection = db["skin-data"]
 
-  trade_requests.create_index([( "send-timestamp", pymongo.ASCENDING )], expireAfterSeconds=ONE_WEEK)
+  trade_requests.create_index([("send-timestamp", pymongo.ASCENDING )], expireAfterSeconds=ONE_WEEK)
 
   print("Loaded collections")
 

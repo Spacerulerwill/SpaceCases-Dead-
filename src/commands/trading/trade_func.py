@@ -2,7 +2,8 @@ import discord
 from src.util import database
 from src.util.constants import PREFIX
 from discord.ext.commands import Context
-from datetime import datetime
+from datetime import datetime, timedelta
+
 
 async def send_trade_notif_to_user(sender: discord.Member, recipient:discord.Member):
     trade = database.trade_requests.find_one({"_id": sender.id, "recipient-id": recipient.id})
@@ -47,7 +48,7 @@ async def send_trade_embed(ctx:Context, trade:dict, incoming:bool):
         title = f"Outgoing trade to {user.name}"
 
     e = discord.Embed(title=title, color=discord.Color.dark_theme())
-    e.set_thumbnail(url=user.avatar.url)
+    e.set_thumbnail(url=user.display_avatar.url)
 
     if incoming:
         your_items = create_item_str(trade["recipient-items"])      
@@ -64,10 +65,10 @@ async def send_trade_embed(ctx:Context, trade:dict, incoming:bool):
         value=f"""`{PREFIX}trade cancel {user.name}` - cancel trade
         """)
 
-    timestamp = datetime.fromtimestamp(trade["send-timestamp"])
-    datetime_str = timestamp.strftime("Trade created on %Y/%m/%d at %H:%M:%S")
+    timestamp = trade["send-timestamp"] + timedelta(weeks=1)
+    datetime_str = timestamp.strftime("Trade expires on %Y/%m/%d at %H:%M:%S")
 
-    e.set_footer(icon_url=ctx.author.display_avatar.url, text=datetime_str)
+    e.set_footer(text=datetime_str)
 
     await ctx.send(embed=e)
 
@@ -106,5 +107,8 @@ async def send_trade_in_creation_embed(ctx:Context, recipient:discord.Member, tr
             """, 
             inline=False
         )
+
+    else:
+        e.set_footer(text="Warning! Trade will expire in 1 week")
 
     await ctx.send(embed=e)
