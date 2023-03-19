@@ -1,5 +1,31 @@
 {
     "lang.current": "Current Language: `English`",
     "lang.embed.select.placeholder": "Select Language",
-    "lang.not_found": "Langauge is not supported! Choose your language using the [ISO Language Codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)"
+    "lang.not_found": "Langauge is not supported! Choose your language using the [ISO Language Codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)",
+
+    "balance.embed.title": "{}'s Balance",
+    "balance.current": "Current Balance",
+    "balance.return": "Total Return",
+
+    "register.already_registered": "You are already registered!",
+
+    "transfer.cant_transfer_to_self": "You can't transfer money to yourself!",
+    "transfer.amount_greater_than_0": "The amount must be greater than $0!",
+    "transfer.insufficient_funds": "You have insufficient funds!",
+    "transfer.successfull": "Successfully transferred {} to {}'s account",
+
+    "claim.embed.title": "You have successfully claimed your daily reward!",
+    "claim.embed.description": "You can claim again tomorrow",
+    "claim.embed.footer": "Warning: Streaks reset 24 hours after your last claim",
+    "claim.embed.footer.bonus_item": "\nWarning: You have 3 minutes to claim your item!",
+    "claim.already": "You have already claimed your daily reward! You can claim again tomorrow",
+    "claim.embed.amount": "Amount",
+    "claim.embed.new_balance": "New Balance",
+    "claim.embed.streak": "Streak 🔥",
+    "claim.embed.bonus_item": "You got a bonus item!",
+
+    "inventory.full": "Your inventory is full! Sell an item or buy more inventory space",
+
+    "button.add_to_inventory": "Add To Inventory",
+    "button.sell": "Sell"
 }

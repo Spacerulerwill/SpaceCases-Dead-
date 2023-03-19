@@ -1,5 +1,6 @@
 from discord.ext.commands import Context
 from src.util import database
+from src.util.lang import get_locale
 from src.util.string_util import currency_str_format
 from src.util.skin_func import gen_item
 from src.util.constants import ONE_DAY, rarity_color_dict
@@ -124,11 +125,13 @@ async def claim(ctx:Context):
     if update_result.modified_count == 1:
 
         post_doc = database.user_data.find_one({"_id": ctx.author.id})
+        lang = post_doc["language"]
 
         #create embed
-        e = discord.Embed(title="You have successfully claimed your daily reward!", description="You can claim again tomorrow", color=discord.Color.green())
+        e = discord.Embed(title=get_locale(lang, "claim.embed.title"), description=get_locale(lang, "claim.embed.description"), color=discord.Color.green())
         e.set_thumbnail(url=ctx.author.display_avatar.url)
-        footer = "Note: Streaks reset 24 hours after your last claim"
+
+        footer = get_locale(lang, "claim.embed.footer")
 
         view = None
         
@@ -136,13 +139,13 @@ async def claim(ctx:Context):
         if prev_streak != 0:
             prev_streak -= 1
 
-        if post_doc["claim-streak"] >= 14: 
-            e.add_field(name="Amount:", value="$300.00", inline=True)
+        if post_doc["claim-streak"] >= max_claim_streak: 
+            e.add_field(name=get_locale(lang, "claim.embed.amount"), value="$300.00", inline=True)
         else:      
-            e.add_field(name="Amount:", value=currency_str_format(CLAIM_MONEY_AMOUNTS[prev_streak]), inline=True)
+            e.add_field(name=get_locale(lang, "claim.embed.amount"), value=currency_str_format(CLAIM_MONEY_AMOUNTS[prev_streak]), inline=True)
 
-        e.add_field(name="New Balance:", value=currency_str_format(post_doc["balance"]), inline=True)
-        e.add_field(name="Streak 🔥", value=post_doc["claim-streak"], inline=True)
+        e.add_field(name=get_locale(lang, "claim.embed.new_balance"), value=currency_str_format(post_doc["balance"]), inline=True)
+        e.add_field(name=get_locale(lang, "claim.embed.streak"), value=post_doc["claim-streak"], inline=True)
 
         bonus_reward = CLAIM_BONUS_REWARDS.get(post_doc["claim-streak"])
 
@@ -192,7 +195,7 @@ async def claim(ctx:Context):
                     await  msg.edit(embed=e, view=None)
                     
                 elif update_result.modified_count == 0:
-                    await msg_embed(ctx, "Your inventory is full! Sell an item or buy more inventory space")
+                    await msg_embed(ctx, get_locale(lang, "inventory.full"))
             await interact.response.defer()
 
         #if not interacted with after 30 seconds, sell the item
@@ -203,7 +206,8 @@ async def claim(ctx:Context):
         # if bonus item reward, pick random item of given quality
         if bonus_reward != None:
            
-            footer += "\nWarning: You have 3 minutes to claim your item!"
+            footer += get_locale(lang, "claim.embed.footer.bonus_item")
+
             #pick random case
             random_container = random.choice(list(database.containers.keys()))
             item_pool = database.containers[random_container]["items"][bonus_reward]
@@ -212,16 +216,16 @@ async def claim(ctx:Context):
             skin_data = database.skin_data["skins"][unformatted_name]
             skin_price = skin_data["price"]
 
-            e.add_field(name="You got a bonus item!", value=f"**{skin_data['formatted_name']}** - **{currency_str_format(skin_price)}**", inline=False)
+            e.add_field(name=get_locale(lang, "claim.embed.bonus_item"), value=f"**{skin_data['formatted_name']}** - **{currency_str_format(skin_price)}**", inline=False)
             e.color = rarity_color_dict[skin_data["rarity"]]
             e.set_image(url=skin_data["image_url"])         
 
             #create view
             view = discord.ui.View()
             view.on_timeout = view_timeout_callback
-            inventory_button = discord.ui.Button(label="Add To Inventory", style=discord.ButtonStyle.green)
+            inventory_button = discord.ui.Button(label=get_locale(lang, "button.add_to_inventory"), style=discord.ButtonStyle.green)
             inventory_button.callback = inventory_callback
-            sell_button = discord.ui.Button(label="Sell", style=discord.ButtonStyle.red)
+            sell_button = discord.ui.Button(label=get_locale(lang, "button.sell"), style=discord.ButtonStyle.red)
             sell_button.callback = sell_callback
             view.add_item(inventory_button)
             view.add_item(sell_button)
@@ -230,4 +234,5 @@ async def claim(ctx:Context):
         msg = await ctx.send(embed=e, view=view)
 
     else:
-        await msg_embed(ctx, "You have already claimed your daily bonus! You can claim again tomorrow")
+        lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+        await msg_embed(ctx, get_locale(lang, "claim.already"))

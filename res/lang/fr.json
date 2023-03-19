@@ -1,5 +1,31 @@
 {
     "lang.current": "Langue Courante: `Français`",
     "lang.embed.select.placeholder": "Choisissez la langue",
-    "lang.not_found": "La langue n'est pas prise en charge! Choisissez votre langue à l'aide des [Codes de Langue ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)"
+    "lang.not_found": "Cette langue n’a pas supporté! Choisissez votre langue ici: [Codes de Langue ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)",
+
+    "balance.embed.title": "Le Solde de {}",
+    "balance.current": "Solde Actuel",
+    "balance.return": "Pourcentage de Rendement",
+
+    "register.already_registered": "Vous êtes déjà inscrit!",
+
+    "transfer.cant_transfer_to_self": "Vous ne pouvez pas vous transférer de l'argent",
+    "transfer.amount_greater_than_0": "Le somme doit être supérieure à $0",
+    "transfer.insufficient_funds": "Vous ñ'avez pas suffisamment de fonds!",
+    "transfer.successfull": "Transfert de {} vers le compte de {} effectué avec succès",
+
+    "claim.embed.title": "Vous avez réussi à réclamer votre récompense quotidienne avec succès!",
+    "claim.embed.description": "Vous pouvez réclamer à nouveau demain",
+    "claim.embed.footer": "Alerte: les séries sont réinitialisées 24 heures après votre dernière réclamation",
+    "claim.embed.footer.bonus_item": "\nIl vous reste 3 minutes pour réclamer votre objet!",
+    "claim.already": "Vous avez déjà réclamé votre récompense quotidienne! Vous pouvez réclamer à nouveau demain",
+    "claim.embed.amount": "Somme ",
+    "claim.embed.new_balance": "Nouveau Solde",
+    "claim.embed.streak": "Série 🔥",
+    "claim.embed.bonus_item": "Vous avez reçu un objet bonus!",
+
+    "inventory.full": "Votre inventaire est plein! Vendez un objet ou acheter plus d'espace d'inventaire",
+
+    "button.add_to_inventory": "Ajouter à L'inventaire",
+    "button.sell": "Vendre"
 }

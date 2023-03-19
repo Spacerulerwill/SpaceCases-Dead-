@@ -1,5 +1,6 @@
 from discord.ext.commands import Context
 from src.util import database
+from src.util.lang import get_locale
 from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
 
@@ -9,6 +10,7 @@ async def register(ctx:Context):
         {
             "$setOnInsert": {
                 "balance": 0,
+                "language": "en",
                 "last-claim": 0,
                 "claim-streak": 0,
                 "inventory": [],
@@ -25,6 +27,7 @@ async def register(ctx:Context):
     )
 
     if update_result.upserted_id == None:
-        await msg_embed(ctx, "You are already registered!")
+        user_data = database.user_data.find_one({"_id": ctx.author.id})
+        await msg_embed(ctx, get_locale(user_data["language"], "register.already_registered"))
     else:
         await msg_embed(ctx, f"Registered! Use `{PREFIX}claim` to claim some money!")
