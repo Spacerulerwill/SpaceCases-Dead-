@@ -68,16 +68,7 @@ class User(commands.Cog):
         """
     })
     async def transfer(self, ctx:Context, member: discord.Member, amount:Decimal):
-        await transfer(ctx, member, amount)
-
-    @commands.command(description="Check a user's statistics", usage=
-    {
-        "Syntax": f"`{PREFIX}stats <user>`",
-        "Arguments": "`<user>` - user to check stats of - **optional**"
-    })
-    async def stats(self, ctx:Context, member:discord.Member=None):
-        await stats(ctx, member)       
-
+        await transfer(ctx, member, amount)    
     
     @commands.command(description="Create a room for unboxing items", usage={
         "Syntax": f"`{PREFIX}room public/private`",

@@ -1,7 +1,7 @@
 import discord
 import asyncio
 from os import environ
-from src.util import database
+from src.util import database, lang
 from src.util.string_util import get_closest_match
 from src.util.room_func import delete_room
 from src.util.embed_func import msg_embed, welcome_embed
@@ -34,6 +34,7 @@ bot_instance = commands.Bot(command_prefix=[PREFIX, PREFIX.upper(), PREFIX.title
 def run_bot():  
     database.init_collections()
     database.load_data()
+    lang.init()
 
     try:
         bot_instance.run(TOKEN)

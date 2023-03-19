@@ -20,7 +20,6 @@ config_options = [
 ]
 
 async def config_menu(bot:Bot, ctx:Context):
-
     option_index = 0
 
     async def get_config_embed() -> discord.Embed:
