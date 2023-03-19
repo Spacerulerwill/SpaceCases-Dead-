@@ -65,8 +65,8 @@ async def send_trade_embed(ctx:Context, trade:dict, incoming:bool):
         value=f"""`{PREFIX}trade cancel {user.name}` - cancel trade
         """)
 
-    timestamp = trade["send-timestamp"] + timedelta(weeks=1)
-    datetime_str = timestamp.strftime("Trade expires on %Y/%m/%d at %H:%M:%S")
+    time_left:timedelta = (trade["send-timestamp"] + timedelta(weeks=1)) - datetime.utcnow()
+    datetime_str = f"Trade expires in {time_left.days} days, {time_left.seconds // 3600} hours and {(time_left.seconds//60)%60} minutes"
 
     e.set_footer(text=datetime_str)
 

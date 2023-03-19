@@ -1,5 +1,6 @@
 import discord
 import asyncio
+from datetime import datetime, timedelta
 from discord.ext.commands import Context
 from src.util import database
 from src.util.constants import MAX_TRADES_PER_PAGE
@@ -73,12 +74,14 @@ async def trades(ctx:Context, in_out:str, page:int):
 
 
                 for trade in current_trade_page:
+                    time_left:timedelta = (trade["send-timestamp"] + one_week) - now
+                    
                     if trade["_id"] == ctx.author.id:
                         recipient = id_name_dict[trade["recipient-id"]]
-                        trade_list_str += f"**OUTGOING** to {recipient}\n"
+                        trade_list_str += f"**OUTGOING** to {recipient}: **{time_left.days}** days left\n"
                     elif trade["recipient-id"] == ctx.author.id:
                         sender = id_name_dict[trade["_id"]]
-                        trade_list_str += f"**INCOMING** from {sender}\n"
+                        trade_list_str += f"**INCOMING** from {sender}: **{time_left.days}** days left\n"
 
             elif in_out == "in":
 
@@ -87,8 +90,9 @@ async def trades(ctx:Context, in_out:str, page:int):
                         tg.create_task(get_name(trade["_id"]))
 
                 for trade in current_trade_page:
+                    time_left:timedelta = (trade["send-timestamp"] + one_week) - now
                     sender = id_name_dict[trade["_id"]]
-                    trade_list_str += f"**INCOMING** from {sender}\n"
+                    trade_list_str += f"**INCOMING** from {sender}: **{time_left.days}** days left\n"
 
             elif in_out == "out":
 
@@ -97,8 +101,9 @@ async def trades(ctx:Context, in_out:str, page:int):
                         tg.create_task(get_name(trade["recipient-id"]))
 
                 for trade in current_trade_page:
+                    time_left:timedelta = (trade["send-timestamp"] + one_week) - now
                     recipient = id_name_dict[trade["recipient-id"]]
-                    trade_list_str += f"**OUTGOING** to {recipient}\n"
+                    trade_list_str += f"**OUTGOING** to {recipient}: **{time_left.days}** days left\n"
 
         e = discord.Embed(title=title, color=discord.Color.dark_theme())
         e.set_thumbnail(url=ctx.author.display_avatar.url)
@@ -157,5 +162,7 @@ async def trades(ctx:Context, in_out:str, page:int):
         next_button.callback = next_callback
         view.add_item(prev_button)
         view.add_item(next_button)
-
+    
+    now = datetime.utcnow()
+    one_week = timedelta(weeks=1)
     msg = await ctx.send(embed=await get_trades_embed(), view=view)
