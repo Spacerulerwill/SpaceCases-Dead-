@@ -7,7 +7,7 @@ This cog contains the commands:
 * Claim
 * Balance
 * Transfer
-* Stats
+* Lang
 * Room
 """
 
@@ -21,8 +21,8 @@ from src.commands.user.register import register
 from src.commands.user.claim import claim
 from src.commands.user.balance import balance
 from src.commands.user.transfer import transfer
-from src.commands.user.stats import stats
 from src.commands.user.room import room
+from src.commands.user.lang import lang
 
 from typing import Literal
 from decimal import Decimal
@@ -76,6 +76,10 @@ class User(commands.Cog):
     })
     async def room(self, ctx:Context, public_private:Literal["public", "private"]="public"):
         await room(ctx, public_private)
+
+    @commands.command()
+    async def lang(self, ctx:Context, language:str=None):
+        await lang(ctx, language)
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

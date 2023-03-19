@@ -1,9 +1,12 @@
 import os
 import json
 
-language_data = {
+language_data = {}
 
-}
+supported_languages = [
+    "en",
+    "fr"
+]
 
 # get correct string and format it with arguments
 def get_locale(lang, str, *args):
@@ -12,7 +15,7 @@ def get_locale(lang, str, *args):
 def init():
     # go through lang files and load their data into language_data
     for lang_file in os.scandir("res/lang"):
-        with open(lang_file.path) as f:
+        with open(lang_file.path, encoding="utf-8") as f:
             language_data[os.path.splitext(os.path.basename(f.name))[0]] = json.load(f)
     
     print("Loaded language data")

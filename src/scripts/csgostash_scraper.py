@@ -291,8 +291,6 @@ def scrape_skin_link(skin_link):
       if has_souvenir_variant:
         result["skins"]["souvenir " + wear + unformatted_name]["image_url"] = url
         result["skins"]["souvenir " + wear + unformatted_name]["inspect_url"] = inspect_url
-
-
   print(formatted_name)
 
 

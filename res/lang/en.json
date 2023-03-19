@@ -1,0 +1,5 @@
+{
+    "lang.current": "Current Language: `English`",
+    "lang.embed.select.placeholder": "Select Language",
+    "lang.not_found": "Langauge is not supported! Choose your language using the [ISO Language Codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)"
+}
