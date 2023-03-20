@@ -1,6 +1,6 @@
 # Contributing
 
-WARNING! All new features that contain text must be implemented in at least ENGLISH. See [here](##Crosslanguagecompatibility) on how to implement text so it can have cross language support.
+WARNING! All new features that contain text must be implemented in at least ENGLISH. See [here](#cross-language-compatibility) on how to implement text so it can have cross language support.
 
 ## Cross language compatibility
 All phrases of text for the bot are stored in language specific JSON files with their own unqiue key identifier. For example:
