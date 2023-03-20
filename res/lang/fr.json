@@ -19,7 +19,7 @@
     "claim.embed.footer": "Alerte: les séries sont réinitialisées 24 heures après votre dernière réclamation",
     "claim.embed.footer.bonus_item": "\nIl vous reste 3 minutes pour réclamer votre objet!",
     "claim.already": "Vous avez déjà réclamé votre récompense quotidienne! Vous pouvez réclamer à nouveau demain",
-    "claim.embed.amount": "Somme ",
+    "claim.embed.amount": "Somme",
     "claim.embed.new_balance": "Nouveau Solde",
     "claim.embed.streak": "Série 🔥",
     "claim.embed.bonus_item": "Vous avez reçu un objet bonus!",
