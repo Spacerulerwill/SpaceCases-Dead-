@@ -24,8 +24,23 @@
     "claim.embed.streak": "Série 🔥",
     "claim.embed.bonus_item": "Vous avez reçu un objet bonus!",
 
+    "room.cant_create_here": "You cannot create rooms here!",
+    "room.not_setup": "This server does not have rooms set up yet. You can either unbox without a room, or ask an **admin** to use `{}config` to set it up",
+    "room.not_in_channel": "You must be in {} to create a room!",
+    "room.exists": "{} already exists",
+    "room.private_created": "Your private room has been created!",
+    "room.greeting": "Welcome to your room {}! It will be deleted after 15 minutes of inactivity",
+
     "inventory.full": "Votre inventaire est plein! Vendez un objet ou acheter plus d'espace d'inventaire",
 
     "button.add_to_inventory": "Ajouter à L'inventaire",
-    "button.sell": "Vendre"
+    "button.sell": "Vendre",
+
+    "container.not_found": "Container not found!",
+    "container.not_found_suggest": "'Container not found! Did you mean: `{}`?'",
+    "container.not_your_menu": "This is not your container menu!",
+    "container.select.all_items": "All Items",
+    "container.embed.price_range": "Price Range",
+    "container.embed.rarity": "Rarity",
+    "container.embed.float_range": "Float Range"
 }

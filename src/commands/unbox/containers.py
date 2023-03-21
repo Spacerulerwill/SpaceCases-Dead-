@@ -3,6 +3,7 @@ from discord.ext.commands import Context
 from src.util.constants import PREFIX, KEY_PRICE
 from src.util.string_util import currency_str_format
 from src.util.embed_func import msg_embed, msg_embed_response
+from src.util.lang import get_locale
 from src.util import database
 
 containerlist_pages = [
@@ -63,8 +64,15 @@ containerlist_pages = [
 len_containerlist_pages = len(containerlist_pages)
 
 async def containers(ctx:Context, page:int = 1):
+    user_data = database.user_data.find_one({"_id": ctx.author.id})
+
+    if user_data is None:
+        lang = "en"
+    else:
+        lang = user_data["language"]
+
     if page <= 0 or page > len_containerlist_pages:
-        await msg_embed(ctx, "Invalid page number!")
+        await msg_embed(ctx, get_locale(lang, "invalid_page"))
         return
 
     page -= 1
@@ -73,8 +81,8 @@ async def containers(ctx:Context, page:int = 1):
         container_type, containers = containerlist_pages[page]
     
         e = discord.Embed(
-            title=f"Page {page+1}/{len_containerlist_pages}", 
-            description=f"Use `{PREFIX}container <container>` to see a container's contents and `{PREFIX}open <container>` to open one",
+            title=get_locale(lang, "containers.embed.title", page+1, len_containerlist_pages), 
+            description=get_locale(lang, "containers.embed.description", PREFIX, PREFIX),
             color=discord.Color.dark_theme()
         )
 
@@ -84,13 +92,13 @@ async def containers(ctx:Context, page:int = 1):
 
             page_field += f'{container_data["formatted_name"]} - **{currency_str_format(container_data["price"])}**\n'
         e.add_field(name=container_type, value=page_field)
-        e.set_footer(text=f"Warning! Case prices do not include price of case key ({currency_str_format(KEY_PRICE)})")
+        e.set_footer(text=get_locale(lang, "containers.embed.footer", currency_str_format(KEY_PRICE)))
         return e
 
     # callbacks
     async def prev_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your containers menu!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "containers.not_your_menu"), ephemeral=True)
             return
 
         nonlocal page
@@ -103,7 +111,7 @@ async def containers(ctx:Context, page:int = 1):
 
     async def next_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your containers menu!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "containers.not_your_menu"), ephemeral=True)
             return
 
         nonlocal page

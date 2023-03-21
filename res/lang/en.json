@@ -1,4 +1,25 @@
 {
+    "milspec": "Mil-Spec",
+    "restricted": "Restricted",
+    "classified": "Classified",
+    "covert": "Covert",
+    "rare items": "Rare Items",
+
+    "Factory New": "Factory New",
+    "Minimal Wear": "Minimal Wear",
+    "Field Tested": "Field Tested",
+    "Well Worn": "Well Worn",
+    "Battle Scarred": "Battle Scarred",
+
+    "invalid_page": "Invalid page number!",
+
+    "rarity": "Rarity",
+    "price_range": "Price Range",
+    "float_range": "Float Range",
+    "market_value": "Market Value",
+
+    "inspect_in_3d": "[Inspect In 3D]({})",
+
     "lang.current": "Current Language: `English`",
     "lang.embed.select.placeholder": "Select Language",
     "lang.not_found": "Langauge is not supported! Choose your language using the [ISO Language Codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)",
@@ -24,8 +45,28 @@
     "claim.embed.streak": "Streak 🔥",
     "claim.embed.bonus_item": "You got a bonus item!",
 
+    "room.cant_create_here": "You cannot create rooms here!",
+    "room.not_setup": "This server does not have rooms set up yet. You can either unbox without a room, or ask an **admin** to use `{}config` to set it up",
+    "room.not_in_channel": "You must be in {} to create a room!",
+    "room.exists": "{} already exists",
+    "room.private_created": "Your private room has been created!",
+    "room.greeting": "Welcome to your room {}! It will be deleted after 15 minutes of inactivity",
+
     "inventory.full": "Your inventory is full! Sell an item or buy more inventory space",
 
     "button.add_to_inventory": "Add To Inventory",
-    "button.sell": "Sell"
+    "button.sell": "Sell",
+
+    "container.not_found": "Container not found!",
+    "container.not_found_suggest": "'Container not found! Did you mean: `{}`?'",
+    "container.not_your_menu": "This is not your container menu!",
+    "container.select.all_items": "All Items",
+
+    "containers.embed.title": "Page {}/{}",
+    "containers.embed.description": "Use `{}container <container>` to see a container's contents and `{}open <container>` to open one",
+    "containers.embed.footer": "Warning! Case prices do not include price of case key ({})",
+    "containers.not_your_menu": "This is not your containers menu!",
+
+    "item.could_not_find": "Could not find item!"
+
 }

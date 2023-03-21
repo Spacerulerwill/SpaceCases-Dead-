@@ -1,5 +1,6 @@
 import discord
 from src.util import database
+from src.util.decorators import requires
 from src.util.embed_func import msg_embed
 from src.util.lang import get_locale, supported_languages
 from discord.ext.commands import Context
@@ -10,6 +11,7 @@ def get_lang_embed(lang:str) -> discord.Embed:
         color=discord.Color.dark_theme()
     )
 
+@requires(users_registered=True)
 async def lang(ctx:Context, lang:str):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
     if lang is None:
