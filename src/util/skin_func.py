@@ -3,8 +3,14 @@ from src.util import database
 from src.util.constants import case_wear_ranges_lower, conditions
 import random
 
-# given the items unformatted name, it will generate a the float value and condition and whether it is stattrak
 def gen_item(unformatted_name:str) -> Tuple[str, float]:
+    """Randomly generate a float and condition for a skin given its name, and determine if it's statrak
+
+    Args:
+        unformatted_name: the unformatted name of the skin
+    Returns:
+        a tuple of the new skin name and its float value
+    """
     skin_data = database.skin_data["no_wear_skins"][unformatted_name]
 
     # select skin float
