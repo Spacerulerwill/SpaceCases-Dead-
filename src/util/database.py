@@ -7,13 +7,15 @@ from timeit import default_timer as timer
 from datetime import timedelta
 from src.util.constants import ONE_WEEK
 
-user_data: Collection # user data - mongodb
-trade_requests:Collection # trade requests - mongodb
-guild_data:Collection # guild data - mongodb
-skin_data_collection:Collection # skin data - mongodb
+# MongoDB collections
+user_data: Collection
+trade_requests:Collection
+guild_data:Collection
+skin_data_collection:Collection
 
 mongo_client:pymongo.MongoClient
 
+# Bot data 
 leaderboard = [] # user leaderboard
 rooms = {}
 wordle_games = {}
@@ -22,8 +24,8 @@ skin_data_hl = {} # SKIN DATA for higher lower game - does not include knives, g
 containers = {}
 word_list = []
 
-# update the leaderboard
 def get_leaderboard():
+  """Regenerate the leaderboard"""
   global leaderboard
 
   start = timer()
@@ -36,7 +38,6 @@ def get_leaderboard():
 
 # setup database and data
 def init_collections():
-
   global user_data, trade_requests, skin_data_collection, mongo_client, guild_data, word_list
 
   #try read mongodb database password from database_pass.txt, if fails read from environment variable
@@ -63,7 +64,8 @@ def init_collections():
   guild_data = db["guild-data"]
   skin_data_collection = db["skin-data"]
 
-  trade_requests.create_index([("send-timestamp", pymongo.ASCENDING )], expireAfterSeconds=ONE_WEEK)
+  # create indexes
+  trade_requests.create_index([("send-timestamp", pymongo.ASCENDING )], expireAfterSeconds=ONE_WEEK) # TRADES DELETE AFTER ONE WEEK
 
   print("Loaded collections")
 

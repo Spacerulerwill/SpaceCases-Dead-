@@ -3,7 +3,6 @@ from typing import List
 import Levenshtein
 from urllib.parse import quote
 
-#format skin names to a standardized formatt
 def remove_skin_name_formatting(formatted_name:str) -> str:
     """Remove formatting from a skin name
 

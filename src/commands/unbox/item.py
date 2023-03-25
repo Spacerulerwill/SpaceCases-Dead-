@@ -34,7 +34,7 @@ async def item(ctx:Context, *args):
     
     e = discord.Embed(title=formatted_name, color=rarity_color, description=get_locale(lang, "inspect_in_3d", inspect_url))
     e.add_field(name=get_locale(lang, "market_value"), value=price)
-    e.add_field(name=get_locale(lang, "rarity"), value=rarity)
+    e.add_field(name=get_locale(lang, "rarity"), value=get_locale(lang, rarity))
     e.add_field(name=get_locale(lang, "float_range"), value=f"{min_float} - {max_float}")
     e.set_image(url=image_url)
 

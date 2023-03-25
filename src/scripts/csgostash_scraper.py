@@ -168,7 +168,7 @@ def scrape_skin_link(skin_link):
 
   #rarity
   rarity_div = soup.find("div", {"class": ["quality"]})
-  rarity = rarity_div["class"][1].replace("color-", "").title()
+  rarity = rarity_div["class"][1].replace("color-", "").lower()
 
   weapon_type = rarity_div.text.split(" ")[-1].strip()
 

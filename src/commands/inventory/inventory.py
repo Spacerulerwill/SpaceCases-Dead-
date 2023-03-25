@@ -4,6 +4,7 @@ from src.util.constants import PREFIX, INVENTORY_ELEMS_PER_PAGE, rarity_emoji_di
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.util import database
+from src.util.lang import get_locale
 from src.util.string_util import currency_str_format
 
 @requires(users_registered=True)
@@ -13,16 +14,17 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
         member = ctx.author
     
     user_data = database.user_data.find_one({"_id": member.id})
+    lang = user_data["language"]
 
     # if users inventory is empty
     if len(user_data["inventory"]) == 0:
-        e = discord.Embed(title=f"{member.name}'s Inventory", color=discord.Color.dark_theme())
+        e = discord.Embed(title=get_locale(lang, "inventory.embed.empty_title", member.name), color=discord.Color.dark_theme())
         e.set_thumbnail(url=member.display_avatar.url)
 
         if member == ctx.author:
-            e.description = f"Your inventory is empty! Start unboxing with `{PREFIX}open`"
+            e.description = get_locale(lang, "inventory.empty_1", PREFIX)
         else:
-            e.description = f"{member.name}'s inventory is empty!"
+            e.description = get_locale(lang, "inventory.empty_2", member.name)
         await ctx.send(embed=e)
         return
 
@@ -31,7 +33,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
     inventory_pages = [inventory_data[x:x+INVENTORY_ELEMS_PER_PAGE] for x in range(0, len(inventory_data), INVENTORY_ELEMS_PER_PAGE)]
 
     if page <= 0 or page > len(inventory_pages):
-        await msg_embed(ctx, "Invalid inventory page!")
+        await msg_embed(ctx, get_locale(lang, "invalid_page_number"))
         return
     
     page -= 1
@@ -45,25 +47,28 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
         for count, item in enumerate(inventory_page):
             skin_data = database.skin_data["skins"][item["name"]]
             emoji = rarity_emoji_dict[skin_data["rarity"]]
-            string += f"{emoji} **{count+ (page*INVENTORY_ELEMS_PER_PAGE) + 1})** `{skin_data['formatted_name']}` - **{currency_str_format(skin_data['price'])}**\n"
+            string += get_locale(lang, "inventory.item_string", emoji, count+ (page*INVENTORY_ELEMS_PER_PAGE) + 1, skin_data['formatted_name'], currency_str_format(skin_data["price"]))
 
-        e = discord.Embed(title=f"{member.name}'s Inventory - {page+1}/{len(inventory_pages)}", color=discord.Color.dark_theme())
+        e = discord.Embed(
+            title=get_locale(lang, "inventory.embed.title", member.name, page+1, len(inventory_pages)), 
+            description = get_locale(lang, "inventory.embed.description", currency_str_format(inventory_value), user_data['inventory-size'], user_data['inventory-max-capacity']),
+            color=discord.Color.dark_theme()
+        )
+         
         e.set_thumbnail(url=member.display_avatar.url)
-        
-        e.description = f"Total value: **{currency_str_format(inventory_value)}**\nSlots Used: **{user_data['inventory-size']}/{user_data['inventory-max-capacity']}**"
         e.add_field(name="Contents", value=string)
 
         if member is ctx.author:
-            e.add_field(name="Commands", value=f"`{PREFIX}inspect <item number>` - view an item\n`{PREFIX}sell <item number>` - sell an item", inline=False)
+            e.add_field(name=get_locale(lang, "commands"), value=get_locale(lang, "inventory.embed.commands_1", PREFIX, PREFIX), inline=False)
         else:
-            e.add_field(name="Commands", value=f"`{PREFIX}inspect {member.name} <item number>` - see an item", inline=False)
+            e.add_field(name=get_locale(lang, "commands"), value=get_locale(lang, "inventory.embed.commands_1", PREFIX, PREFIX), inline=False)
 
         return e
 
     # view and button callbacks
     async def prev_callback(interact:discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your inventory!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         nonlocal page
@@ -77,7 +82,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
 
     async def next_callback(interact:discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your inventory!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
             
         nonlocal page
@@ -89,7 +94,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
 
         await interact.response.edit_message(embed=await get_inventory_embed(), view=view)
 
-    view = None
+    view = None 
 
     #only need buttons if inventory pages greater than 1
     if len(inventory_pages) > 1:

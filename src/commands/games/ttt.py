@@ -5,38 +5,37 @@ from decimal import Decimal
 from discord.ext.commands import Context
 from discord.errors import NotFound
 from src.util import database
+from src.util.lang import get_locale
 from src.util.string_util import currency_str_format
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed_response, msg_embed
 
 @requires(users_registered=True)
 async def ttt(ctx:Context, player2:discord.Member, bet:Decimal):
+    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+
     if bet < 0:
-        await msg_embed(ctx, "You cannot bet less than **$0**")
+        await msg_embed(ctx, get_locale(lang, "cannot_bet_negative"))
         return
 
     amount = int(bet * Decimal('100'))
 
     if ctx.author.id == player2.id:
-        await msg_embed(ctx, "You can't play this game against yourself!")
+        await msg_embed(ctx, get_locale(lang, "cannot_play_against_self"))
         return
 
     e = discord.Embed(
-        title=f"Tic Tac Toe", 
-        description=f"""
-        **{ctx.author.name}** vs **{player2.name}**
-        Each player will have 10 seconds to make their move.
-        **{player2.name}** must click the button below to accept!
-        """,
+        title=get_locale(lang, "ttt.embed.title"), 
+        description=get_locale(lang, "ttt.embed.description"),
         color=discord.Color.dark_theme()) 
     
     has_wager = amount != 0
 
     if has_wager:
-        e.description += f"\nThe fee for playing this game is **{currency_str_format(amount)}**. Winner takes all!"
+        e.description += get_locale(lang, "ttt.embed.description_wager", currency_str_format(amount))
 
     e.set_thumbnail(url=ctx.bot.user.display_avatar.url)
-    e.set_footer(icon_url=ctx.author.display_avatar.url, text="Warning! Menu will close after 3 minutes!")
+    e.set_footer(icon_url=ctx.author.display_avatar.url, text=get_locale(lang, "ttt.embed.footer"))
 
     view = discord.ui.View(timeout=180)
 
@@ -65,7 +64,7 @@ async def ttt(ctx:Context, player2:discord.Member, bet:Decimal):
         nonlocal opponent_ready, game_started
 
         if interact.user.id != player2.id:
-            await msg_embed_response(interact.response, "This is not your button!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
             
         game_started = True
@@ -94,17 +93,18 @@ async def ttt(ctx:Context, player2:discord.Member, bet:Decimal):
             )
 
             if update_result.modified_count != 2:
-                await msg_embed_response(interact.response, f"Both players must have **{currency_str_format(amount)}** to play")
+                await msg_embed_response(interact.response, get_locale(lang, "ttt.both_players_not_enough_funds", currency_str_format(amount)))
                 return
     
-        await start_game(ctx, player2, amount, has_wager, msg, interact)
+        await start_game(lang, ctx, player2, amount, has_wager, msg, interact)
+        
     opponent_accept.callback = opponent_callback
 
     view.add_item(opponent_accept)
 
     msg = await ctx.send(embed=e, view=view)
 
-async def start_game(ctx:Context, player2:discord.User, amount:int, has_wager:bool, msg:discord.Message, interact:discord.Interaction):
+async def start_game(lang:str, ctx:Context, player2:discord.User, amount:int, has_wager:bool, msg:discord.Message, interact:discord.Interaction):
 
     players = [ctx.author, player2]
     random.shuffle(players)
@@ -124,7 +124,7 @@ async def start_game(ctx:Context, player2:discord.User, amount:int, has_wager:bo
             return
 
         if interact.user not in players:
-            await msg_embed_response(interact.response, "You are not a part of this game!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
         
         elif interact.user != players[turn_index]:
@@ -150,7 +150,7 @@ async def start_game(ctx:Context, player2:discord.User, amount:int, has_wager:bo
             for button in buttons:
                 button.disabled = True
 
-            await interact.response.edit_message(content=f"{winner_user.name} won!", view=view)
+            await interact.response.edit_message(content=get_locale(lang, "ttt.player_won", winner_user.name), view=view)
 
             if not has_wager:
                 return
@@ -171,7 +171,7 @@ async def start_game(ctx:Context, player2:discord.User, amount:int, has_wager:bo
             for button in buttons:
                 button.disabled = True
                 
-            await interact.response.edit_message(content=f"Draw!", view=view)
+            await interact.response.edit_message(content=get_locale(lang, "ttt.draw"), view=view)
 
             if not has_wager:
                 return
@@ -190,7 +190,7 @@ async def start_game(ctx:Context, player2:discord.User, amount:int, has_wager:bo
         #if no win continue
         turn_index = (turn_index+1) % 2
 
-        await interact.response.edit_message(content=f"{players[turn_index].name}'s turn", view=view)
+        await interact.response.edit_message(content=get_locale(lang, "ttt.player_turn", players[turn_index].name), view=view)
 
     view = discord.ui.View(timeout=10)
     
@@ -223,9 +223,6 @@ async def start_game(ctx:Context, player2:discord.User, amount:int, has_wager:bo
             }
         )
         return
-    
-        await msg.edit(content=f"{winner_user.name} won!", view=view)
-        return
 
     view.on_timeout = game_timeout
     buttons = [discord.ui.Button(label="\u200b", style=discord.ButtonStyle.gray, row=i%3, custom_id=str(i)) for i in range(9)]
@@ -234,7 +231,7 @@ async def start_game(ctx:Context, player2:discord.User, amount:int, has_wager:bo
         buttons[i].callback = button_callback
         view.add_item(buttons[i])
 
-    await interact.response.edit_message(content=f"{players[turn_index].name}'s turn", embed=None, view=view)
+    await interact.response.edit_message(content=get_locale(lang, "ttt.player_turn", players[turn_index].name), embed=None, view=view)
 
 def checkRows(board):
     for row in board:

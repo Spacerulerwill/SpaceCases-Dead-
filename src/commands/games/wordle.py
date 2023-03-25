@@ -7,6 +7,7 @@ from src.util.constants import PREFIX
 from src.util.string_util import currency_str_format
 from src.util.embed_func import msg_embed
 from src.util import database
+from src.util.lang import get_locale
 from src.util.emojis import green_letters, yellow_letters, gray_letters, BLANK_LETTER
 
 BLANK_ROW = BLANK_LETTER * 5 + "\n"
@@ -15,22 +16,19 @@ guess_result_default = [None for x in range(5)]
 WORLDE_PRICE = 250
 WORLD_REWARD = lambda remaining_guesses: WORLDE_PRICE + 500 + (remaining_guesses * 250)
 
-NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{currency_str_format(WORLDE_PRICE)}** to play!"
-
-def get_wordle_embed(game_data:dict, won:bool=False, lost:bool=False) -> discord.Embed:
+def get_wordle_embed(lang:str, game_data:dict, won:bool=False, lost:bool=False) -> discord.Embed:
     description = ""
 
     if won:
-        title=f"You Won {currency_str_format(WORLD_REWARD(game_data['remaining-guesses']))}!"
+        title=get_locale(lang, "wordle.won.embed.title", currency_str_format(WORLD_REWARD(game_data['remaining-guesses'])))
         color = discord.Color.green()
     elif lost:
-        title=f"You Lost!"
-        description += f"The word was `{game_data['answer']}`\n"
+        title=get_locale(lang, "wordle.loss.embed.title")
+        description += get_locale(lang, "wordle.loss.embed.description", game_data['answer'])
         color = discord.Color.red()
     else:
         title=""
         color = discord.Color.dark_theme()
-
     for guess in game_data["guesses"]:
         description += guess + "\n"
 
@@ -45,7 +43,7 @@ def get_wordle_embed(game_data:dict, won:bool=False, lost:bool=False) -> discord
 
     return e
 
-async def new_game(ctx:Context) -> dict:
+async def new_game(lang:str, ctx:Context) -> dict:
     # check user has enough to play
     update_result = database.user_data.update_one({"_id": ctx.author.id},
     [{
@@ -61,7 +59,7 @@ async def new_game(ctx:Context) -> dict:
     }])
 
     if update_result.modified_count == 0:
-        await msg_embed(ctx, NOT_ENOUGH_FUNDS_MSG)
+        await msg_embed(ctx, get_locale(lang, "not_enough_funds"))
         return None
 
     game_data = {
@@ -75,34 +73,35 @@ async def new_game(ctx:Context) -> dict:
 
 @requires(users_registered=True)
 async def wordle(ctx:Context, guess:str):
+    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
 
     # no guess - just see current game, or create new one if none is started
     if guess is None:
         try:
             game_data = database.wordle_games[ctx.author.id]
         except KeyError:
-            game_data = await new_game(ctx)
+            game_data = await new_game(lang, ctx)
             if game_data is None:
                 return
                 
             database.wordle_games[ctx.author.id] = game_data
     
-        await ctx.send(embed=get_wordle_embed(game_data))
+        await ctx.send(embed=get_wordle_embed(lang, game_data))
     else:
         # they made a guess - play the game
         try:
-            await guess_word(ctx, guess)
+            await guess_word(lang, ctx, guess)
         except KeyError:
-            game_data = await new_game(ctx)
+            game_data = await new_game(lang, ctx)
 
             if game_data is None:
                 return
 
             database.wordle_games[ctx.author.id] = game_data
-            await guess_word(ctx, guess)
+            await guess_word(lang, ctx, guess)
 
 # guess word logic
-async def guess_word(ctx:Context, guess:str):
+async def guess_word(lang:str, ctx:Context, guess:str):
     game_data = database.wordle_games[ctx.author.id]
     answer = game_data["answer"]
 
@@ -110,11 +109,11 @@ async def guess_word(ctx:Context, guess:str):
 
     #preliminary checks
     if len(guess) != 5:
-        await msg_embed(ctx, "Guess must be a 5 letter word!")
+        await msg_embed(ctx, get_locale(lang, "wordle.word_wrong_length"))
         return
 
     if guess not in database.word_list:
-        await msg_embed(ctx, "Word must be a valid english word!")
+        await msg_embed(ctx, get_locale(lang, "wordle.word_not_found"))
         return
 
     #get amount of each letter in guess
@@ -152,7 +151,7 @@ async def guess_word(ctx:Context, guess:str):
     won = guess == answer
     lost = game_data["remaining-guesses"] == 0 and not won
 
-    await ctx.send(embed=get_wordle_embed(game_data, won, lost))
+    await ctx.send(embed=get_wordle_embed(lang, game_data, won, lost))
 
     if won or lost:
         if won:

@@ -16,23 +16,23 @@ ROOM_DELETION_TIME = 900
 
 #rarity to color 
 rarity_color_dict = {
-    "Consumer": 11584473,
-    "Industrial": 6199513,
-    "Milspec": 4942335,
-    "Restricted": 8931327,
-    "Classified": 13839590,
-    "Covert": 15420235,
-    "Contraband": 14986809
+    "consumer": 11584473,
+    "industrial": 6199513,
+    "milspec": 4942335,
+    "restricted": 8931327,
+    "classified": 13839590,
+    "covert": 15420235,
+    "contraband": 14986809
 }
 
 rarity_emoji_dict = {
-    "Consumer": CONSUMER_GRADE_EMOJI,
-    "Industrial": INDUSTRIAL_GRADE_EMOJI,
-    "Milspec": MILSPEC_EMOJI,
-    "Restricted": RESTRICTED_EMOJI,
-    "Classified": CLASSIFIED_EMOJI,
-    "Covert": COVERT_EMOJI,
-    "Contraband": CONTRABAND_EMOJI 
+    "consumer": CONSUMER_GRADE_EMOJI,
+    "industrial": INDUSTRIAL_GRADE_EMOJI,
+    "milspec": MILSPEC_EMOJI,
+    "restricted": RESTRICTED_EMOJI,
+    "classified": CLASSIFIED_EMOJI,
+    "covert": COVERT_EMOJI,
+    "contraband": CONTRABAND_EMOJI 
 }
 
 case_rarity_odds = {

@@ -1,6 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
+from src.util.lang import get_locale
 from src.util.embed_func import msg_embed
 
 async def ranking(ctx:Context, user:discord.Member):
@@ -9,6 +10,7 @@ async def ranking(ctx:Context, user:discord.Member):
         user = ctx.author
 
     user_data = database.user_data.find_one({"_id": user.id})
+    lang = user_data["language"]
 
     user_inv_value = sum([database.skin_data["skins"][item["name"]]["price"] for item in user_data["inventory"]])
     
@@ -19,4 +21,4 @@ async def ranking(ctx:Context, user:discord.Member):
         if inv_value > user_inv_value:
             position += 1
 
-    await msg_embed(ctx, f"{user.name} is at position **#{position}** on the leaderboard")
+    await msg_embed(ctx, get_locale(lang, "ranking.text", user.name, position))

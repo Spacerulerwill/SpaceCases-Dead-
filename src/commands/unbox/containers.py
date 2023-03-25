@@ -98,7 +98,7 @@ async def containers(ctx:Context, page:int = 1):
     # callbacks
     async def prev_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "containers.not_your_menu"), ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         nonlocal page
@@ -111,7 +111,7 @@ async def containers(ctx:Context, page:int = 1):
 
     async def next_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "containers.not_your_menu"), ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         nonlocal page

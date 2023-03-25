@@ -56,7 +56,7 @@ async def container(ctx:Context, *args):
 
     async def select_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "container.not_your_menu"), ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_select"), ephemeral=True)
             return
 
         nonlocal selected_rarity, item_index, rarity_len
@@ -73,7 +73,7 @@ async def container(ctx:Context, *args):
 
     async def prev_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "container.not_your_menu"), ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
         
         nonlocal item_index
@@ -86,7 +86,7 @@ async def container(ctx:Context, *args):
 
     async def next_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "container.not_your_menu"), ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         nonlocal item_index
@@ -164,7 +164,7 @@ async def container(ctx:Context, *args):
 
         e = discord.Embed(title=f"{container_name} - ${container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})", color=rarity_color)
         e.add_field(name=get_locale(lang, "price_range"), value=price_range_str)
-        e.add_field(name=get_locale(lang, "rarity"), value=rarity)
+        e.add_field(name=get_locale(lang, "rarity"), value=get_locale(lang, rarity))
         e.add_field(name=get_locale(lang, "float_range"), value=f"{min_float} - {max_float}")
         e.set_image(url=image_url)
         e.set_thumbnail(url=container_image_url)

@@ -41,7 +41,7 @@ class Inventory(commands.Cog):
         `<item index>` - the index of the item"""
     })
 
-    async def inspect(self, ctx:Context, member:Optional[discord.Member]=None, item_index:int=None):
+    async def inspect(self, ctx:Context, member:Optional[discord.Member], item_index:int):
         await inspect(ctx, member, item_index)
 
     @commands.command(description="Sell an item from your inventory", usage=

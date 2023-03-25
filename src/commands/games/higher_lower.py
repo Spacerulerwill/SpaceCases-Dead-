@@ -1,6 +1,7 @@
 import discord
 from discord.errors import NotFound
 import random
+from src.util.lang import get_locale 
 from discord.ext.commands import Context
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.util.decorators import requires
@@ -18,13 +19,13 @@ HL_PRICE = 250
 HL_REWARD = lambda difficulty: ((difficulty - HL_MIN_GUESS) * 250) + HL_PRICE + 750
 
 PRICE_STR = currency_str_format(HL_PRICE)
-NOT_ENOUGH_FUNDS_MSG = f"You do not have enough funds for this action. You need **{PRICE_STR}** to play!"
-DIFFICULTY_NOT_IN_RANGE_MSG = f"Amount must be in range {HL_MIN_GUESS} to {HL_MAX_GUESS}"
 
 @requires(users_registered=True)
 async def higher_lower(ctx:Context, difficulty:int):
+    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+
     if not HL_MIN_GUESS <= difficulty <= HL_MAX_GUESS:
-        await msg_embed(ctx, DIFFICULTY_NOT_IN_RANGE_MSG)
+        await msg_embed(ctx, get_locale(lang, "hl.invalid_difficulty", HL_MIN_GUESS, HL_MAX_GUESS))
         return
 
     # create start embed
@@ -34,15 +35,10 @@ async def higher_lower(ctx:Context, difficulty:int):
     game_started = False
 
     e = discord.Embed(
-        title=f"Higher or Lower", 
-        description=f"""
-        Welcome to the **Higher or Lower** game!
-        
-        In this game you must guess if the skin you see is more or less expensive than the previous one. Get all **{difficulty}** correct and you will win balance! The game costs **{PRICE_STR}**.
-        
-        The first skin is shown to you below. Press the **Start** button to begin.\n
-        """,
-        color=discord.Color.dark_theme())
+        title=get_locale(lang, "hl.embed.title"), 
+        description=get_locale(lang, "hl.embed.description", difficulty, PRICE_STR),
+        color=discord.Color.dark_theme()
+    )
 
     e.description += "**"
     if "Souvenir" in initial_item_data["formatted_name"]:
@@ -53,7 +49,7 @@ async def higher_lower(ctx:Context, difficulty:int):
     e.description += "**"
     
     e.set_image(url=initial_item_data["image_url"])
-    e.set_footer(icon_url=ctx.author.display_avatar.url, text="Warning! Menu will close after 30 seconds")
+    e.set_footer(icon_url=ctx.author.display_avatar.url, text=get_locale(lang, "hl.embed.footer"))
 
     view = discord.ui.View(timeout=30)
 
@@ -66,25 +62,25 @@ async def higher_lower(ctx:Context, difficulty:int):
 
     view.on_timeout = view_timeout_callback
 
-    start_button = discord.ui.Button(label="Start",style=discord.ButtonStyle.green)
+    start_button = discord.ui.Button(label=get_locale(lang, "button.start"),style=discord.ButtonStyle.green)
 
     # start game
     async def start_callback(interact:discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your game!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
         
         nonlocal game_started
         game_started = True
         await interact.response.defer()
-        await start_game(ctx, difficulty, initial_item_data, msg)
+        await start_game(lang, ctx, difficulty, initial_item_data, msg)
 
     start_button.callback = start_callback
     view.add_item(start_button)
 
     msg = await ctx.send(embed=e, view=view)
 
-async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:discord.Message):
+async def start_game(lang:str, ctx:Context, difficulty:int, initial_skin_data:dict, msg:discord.Message):
 
     # check user has enough to play
     update_result = database.user_data.update_one({"_id": ctx.author.id},
@@ -101,7 +97,7 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
     }])
 
     if update_result.modified_count == 0:
-        await msg_embed(ctx, NOT_ENOUGH_FUNDS_MSG)
+        await msg_embed(ctx, get_locale(lang, "not_enough_funds"))
         return
 
     # get all skins prices
@@ -117,20 +113,20 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
     # if button times out, the player has lost
     async def view_timeout_callback():
         if not game_over:
-            e = discord.Embed(title="You Lost", description="You ran out of time!", color=discord.Color.red())
+            e = discord.Embed(title=get_locale(lang, "hl.playing.lost.embed.title"), description=get_locale(lang, "hl.playing.lost.embed.out_of_time"), color=discord.Color.red())
             await msg.edit(embed=e, view=None)
 
     view.on_timeout = view_timeout_callback
 
-    less_button = discord.ui.Button(label="Less", style=discord.ButtonStyle.red)
-    more_button = discord.ui.Button(label="More", style=discord.ButtonStyle.green)
+    less_button = discord.ui.Button(label=get_locale(lang, "button.less"), style=discord.ButtonStyle.red)
+    more_button = discord.ui.Button(label=get_locale(lang, "button.more"), style=discord.ButtonStyle.green)
 
     #call backs
     async def less_callback(interact:discord.Interaction):
         nonlocal guess_num, game_over
 
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your game!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         if guess_num + 1 < difficulty:
@@ -140,24 +136,31 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
                 await interact.response.edit_message(embed=get_embed(), view=view)
             else:
                 game_over = True
-                e = discord.Embed(title="You Lost!", description=f"""
-                Previous Item: **{skin_data[guess_num]['formatted_name']} - {currency_str_format(skin_data[guess_num]['price'])}**
-                Your Choice: **{skin_data[guess_num+1]['formatted_name']} - {currency_str_format(skin_data[guess_num+1]['price'])}**
-                """, color=discord.Color.red())
+                e = discord.Embed(
+                    title=get_locale(lang, "hl.playing.lost.embed.title"), 
+                    description=get_locale(lang, "hl.playing.lost.embed.incorrect_guess", 
+                                           skin_data[guess_num]['formatted_name'], currency_str_format(skin_data[guess_num]['price']), 
+                                           skin_data[guess_num+1]['formatted_name'], currency_str_format(skin_data[guess_num+1]['price'])),
+                    color=discord.Color.red())
                 await msg.edit(embed=e, view=None)
         else:
             # they made it to last one - they have won!
             game_over = True
             amount_won = HL_REWARD(difficulty)
 
-            e = discord.Embed(title="Congratulations!", description=f"You won **{currency_str_format(amount_won)}**", color=discord.Color.green())
+            e = discord.Embed(
+                title=get_locale(lang, "hl.playing.won.embed.title"), 
+                description=get_locale(lang, "hl.playing.won.embed.description", currency_str_format(amount_won)),
+                color=discord.Color.green()
+            )
+            
             database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": amount_won}})
             await msg.edit(embed=e, view=None)
 
     async def more_callback(interact:discord.Interaction):
         nonlocal guess_num, game_over
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your game!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         if guess_num + 1 < difficulty:
@@ -166,19 +169,26 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
                 await interact.response.edit_message(embed=get_embed(), view=view)
             else:
                 game_over = True
-                e = discord.Embed(title="You Lost!", description=f"""
-                Previous Item: **{skin_data[guess_num]['formatted_name']} - {currency_str_format(skin_data[guess_num]['price'])}**
-                Your Choice: **{skin_data[guess_num+1]['formatted_name']} - {currency_str_format(skin_data[guess_num+1]['price'])}**
-                """, color=discord.Color.red())
+                e = discord.Embed(
+                    title=get_locale(lang, "hl.playing.lost.embed.title"), 
+                    description=get_locale(lang, "hl.playing.lost.embed.incorrect_guess", 
+                                           skin_data[guess_num]['formatted_name'], currency_str_format(skin_data[guess_num]['price']), 
+                                           skin_data[guess_num+1]['formatted_name'], currency_str_format(skin_data[guess_num+1]['price'])),
+                    color=discord.Color.red()
+                )
                 await msg.edit(embed=e, view=None)
         else:
+            # they made it to last one - they have won!
             game_over = True
             amount_won = HL_REWARD(difficulty)
 
-            # they made it to last one - they have won!
-            e = discord.Embed(title="Congratulations!", description=f"You won **{currency_str_format(amount_won)}**", color=discord.Color.green())
+            e = discord.Embed(
+                title=get_locale(lang, "hl.playing.won.embed.title"), 
+                description=get_locale(lang, "hl.playing.won.embed.description", currency_str_format(amount_won)),
+                color=discord.Color.green()
+            )
+            
             database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": amount_won}})
-
             await msg.edit(embed=e, view=None)
     
     less_button.callback = less_callback
@@ -190,7 +200,11 @@ async def start_game(ctx:Context, difficulty:int, initial_skin_data:dict, msg:di
     guess_num = 0
 
     def get_embed() -> discord.Embed:
-        e = discord.Embed(title=f"Higher or Lower - {guess_num+1}/{difficulty}", description="Does this skin cost more or less than the previous?\nDecide within **10 seconds**\n\n")
+        e = discord.Embed(
+            title=get_locale(lang, "hl.playing.embed.title", guess_num+1, difficulty),
+            description=get_locale(lang, "hl.playing.embed.description")
+        )
+
         e.description += "**"
         if "Souvenir" in skin_data[guess_num+1]["formatted_name"]:
             e.description += "Souvenir "

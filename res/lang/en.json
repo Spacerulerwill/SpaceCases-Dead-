@@ -12,13 +12,30 @@
     "Battle Scarred": "Battle Scarred",
 
     "invalid_page": "Invalid page number!",
+    "not_enough_funds": "You don't have enough funds for this action!",
 
     "rarity": "Rarity",
     "price_range": "Price Range",
     "float_range": "Float Range",
+    "float": "Float",
     "market_value": "Market Value",
+    "chance": "Chance",
+    "price_multiplier": "Price Mulitplier",
+    "commands": "Commands",
 
     "inspect_in_3d": "[Inspect In 3D]({})",
+
+    "not_your_button": "This is not your button!",
+    "not_your_select": "This is not your select menu!",
+
+    "button.add_to_inventory": "Add To Inventory",
+    "button.sell": "Sell",
+    "button.cancel": "Cancel",
+    "button.upgrade": "Upgrade",
+    "button.start": "Start",
+    "button.less": "Less",
+    "button.more": "More",
+
 
     "lang.current": "Current Language: `English`",
     "lang.embed.select.placeholder": "Select Language",
@@ -52,21 +69,86 @@
     "room.private_created": "Your private room has been created!",
     "room.greeting": "Welcome to your room {}! It will be deleted after 15 minutes of inactivity",
 
+    "inventory.embed.empty_title": "{}'s Inventory",
+    "inventory.embed.title": "{}'s Inventory - {}/{}",
+    "inventory.embed.description": "Total value: **{}**\nSlots Used: **{}/{}**",
+    "inventory.item_string": "{} **{})** `{}` - **{}**\n",
     "inventory.full": "Your inventory is full! Sell an item or buy more inventory space",
-
-    "button.add_to_inventory": "Add To Inventory",
-    "button.sell": "Sell",
+    "inventory.empty_1": "Your inventory is empty! Start unboxing with `{}open`",
+    "inventory.empty_2":  "{}'s inventory is empty!",
+    "inventory.not_found_index": "No item exists at index {}",
+    "inventory.not_found_name": "No item exists with name `{}`",
+    "inventory.embed.commands_1": "`{}inspect <item number>` - view an item\n`{}sell <item number>` - sell an item",
+    "inventory.embed.commands_2": "`{}inspect {member.name} <item number>` - see an item",
 
     "container.not_found": "Container not found!",
     "container.not_found_suggest": "'Container not found! Did you mean: `{}`?'",
-    "container.not_your_menu": "This is not your container menu!",
     "container.select.all_items": "All Items",
 
     "containers.embed.title": "Page {}/{}",
     "containers.embed.description": "Use `{}container <container>` to see a container's contents and `{}open <container>` to open one",
     "containers.embed.footer": "Warning! Case prices do not include price of case key ({})",
-    "containers.not_your_menu": "This is not your containers menu!",
 
-    "item.could_not_find": "Could not find item!"
+    "item.could_not_find": "Could not find item!",
 
+    "open.embed.footer": "Warning! Items are automatically sold after 30 seconds",
+
+    "upgrade.cant_upgrade_to_cheaper_item": "Result item must be worth more than starting item!",
+    "upgrade.embed.title": "**Upgrading**: {}\n**To**: {}",
+    "upgrade.embed.footer": "Warning! Upgrades will cancel after 30 seconds",
+    "upgrade.error.title": "Upgrade Error",
+    "upgrade.error.item_missing": "Failed to upgrade as **{}** no longer exists in inventory",
+
+    "sell.item_missing": "Sell cancelled as the specific **{}** is no longer in your inventory",
+    "sell.are_you_sure": "Are you sure you want to sell **{}** for **{}**?",
+    "sell.success": "Successfully sold **{}**",
+
+    "leaderboard.embed.title": "Leaderboard - #{} - {}",
+    "leaderboard.footer": "Leaderboard updates every hour",
+
+    "ranking.text": "{} is at position **#{}** on the leaderboard",
+
+    "greater_than_0": "You must bet more than **$0**!",
+    "cannot_be_negative": "You cannot bet negative!",
+    "cannot_play_against_self": "You cannot play this game against yourself!",
+
+    "coinflip.win.embed.title": "You Won {}!",
+    "coinflip.loss.embed.title": "You Lost {}!",
+    "coinflip.loss.embed.description": "Better luck next time",
+
+    "hl.embed.title": "Higher or Lower",
+    "hl.embed.description": " Welcome to the **Higher or Lower** game!\n\nIn this game you must guess if the skin you see is more or less expensive than the previous one. Get all **{}** correct and you will win balance! The game costs **{}**.\n\nThe first skin is shown to you below. Press the **Start** button to begin.\n",
+    "hl.embed.footer": "Warning! Menu will close after 30 seconds",
+    "hl.invalid_difficulty": "Amount must be in range {} to {}",
+
+    "hl.playing.embed.title": "Higher or Lower - {}/{}",
+    "hl.playing.embed.description": "Does this skin cost more or less than the previous?\nDecide within **10 seconds**\n\n",
+    
+    "hl.playing.won.embed.title": "Congratulations!",
+    "hl.playing.won.embed.description": "You won **{}**",
+
+    "hl.playing.lost.embed.title": "You Lost!",
+    "hl.playing.lost.embed.out_of_time": "You ran out of time!",
+    "hl.playing.lost.embed.incorrect_guess": "Previous Item: **{} - {}**\nYour Choice: **{} - {}**",
+
+    "skin_game.embed.title": "Guess the skin!",
+    "skin_game.embed.description": "Reply with the name of the skin within 10 seconds!\nDo **not** include the wear or the weapon name!",
+    "skin_game.won": "You guessed **correctly!** You win **{}**",
+    "skin_game.lost.incorrect_guess": "You guessed **incorrectly!** The correct answer was `{}`",
+    "skin_game.lost.out_of_time": "You did not reply in time! The correct answer was `{}`",
+
+    "ttt.embed.title": "Tic Tac Toe",
+    "ttt.embed.description": "**{}** vs **{}**\nEach player will have 10 seconds to make their move.\n**{}** must click the button below to accept!",
+    "ttt.embed.description_wager": "\nThe fee for playing this game is **{}**. Winner takes all!",
+    "ttt.embed.footer": "Warning! Menu will close after 3 minutes!",
+    "ttt.both_players_not_enough_funds": "Both players must have **{}** to play",
+    "ttt.player_won": "{} won!",
+    "ttt.draw": "Draw!",
+    "ttt.player_turn": "{}'s turn",
+
+    "wordle.word_wrong_length": "Guess must be a 5 letter word!",
+    "wordle.word_not_found": "Word must be a valid english word!",
+    "wordle.won.embed.title": "You Won {}!",
+    "wordle.loss.embed.title": "You Lost!",
+    "wordle.loss.embed.description": "The word was `{}`\n"
 }

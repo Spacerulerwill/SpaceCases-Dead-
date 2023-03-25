@@ -2,6 +2,7 @@ import discord
 import random
 from discord.ext.commands import Context
 from src.util import database
+from src.util.lang import get_locale
 from src.util.decorators import requires
 from src.util.constants import KEY_PRICE, case_rarity_odds, rarity_color_dict
 from src.util.string_util import currency_str_format, get_closest_match, get_inspect_link_3D
@@ -13,6 +14,7 @@ async def open(ctx:Context, *args):
     container_name = " ".join(args[:]).strip().lower()
 
     user_data = database.user_data.find_one({"_id": ctx.author.id})
+    lang = user_data["language"]
     
     # check case exists
     try:
@@ -24,15 +26,14 @@ async def open(ctx:Context, *args):
         
         #if match is reasonably close enough
         if closest_match is None:
-            await msg_embed(ctx, "Container not found!")
+            await msg_embed(ctx, get_locale(lang, "container.not_found"))
         else:
             container_data = database.containers[closest_match]
-            await msg_embed(ctx, f'Container not found! Did you mean: `{container_data["formatted_name"]}`?')
-        return
+            await msg_embed(ctx, get_locale(lang, "container.not_found_suggest",{container_data["formatted_name"]}))
     
     # check user has enough balance for case
     if user_data["balance"] < container_data["price"] + KEY_PRICE:
-        await msg_embed(ctx, "You don't have enough funds for this action!")
+        await msg_embed(ctx, get_locale(lang, "not_enough_funds"))
         return
 
     # select skin rarity
@@ -63,12 +64,12 @@ async def open(ctx:Context, *args):
     }})
 
     # create embed to show user
-    e = discord.Embed(title=formatted_name, color=color, description=f"[Inspect In 3D]({inspect_url})")
-    e.add_field(name="Market Value", value=currency_str_format(skin_price))
-    e.add_field(name="Rarity", value=skin_rarity)
-    e.add_field(name="Float", value=str(float_val)) 
+    e = discord.Embed(title=formatted_name, color=color, description=get_locale(lang, "inspect_in_3d", inspect_url))
+    e.add_field(name=get_locale(lang, "market_value"), value=currency_str_format(skin_price))
+    e.add_field(name=get_locale(lang, "rarity"), value=get_locale(lang, skin_rarity))
+    e.add_field(name=get_locale(lang, "float"), value=str(float_val)) 
     e.set_image(url=image_url)
-    e.set_footer(text="Warning! Items are automatically sold after 30 seconds")
+    e.set_footer(text=get_locale(lang, "open.embed.footer"))
 
     interacted_with = False
 
@@ -84,7 +85,7 @@ async def open(ctx:Context, *args):
     
     async def sell_callback(interact:discord.Interaction):
         if ctx.author.id != interact.user.id:
-            await msg_embed_response(interact.response, "This is not your unbox menu!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         nonlocal interacted_with
@@ -97,7 +98,7 @@ async def open(ctx:Context, *args):
     
     async def inventory_callback(interact:discord.Interaction):
         if ctx.author.id != interact.user.id:
-            await msg_embed_response(interact.response, "This is not your unbox menu!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         nonlocal interacted_with
@@ -127,7 +128,7 @@ async def open(ctx:Context, *args):
                 await  msg.edit(embed=e, view=None)
                 
             elif update_result.modified_count == 0:
-                await msg_embed_response(interact.response, "Your inventory is full! Sell an item or buy more inventory space")
+                await msg_embed_response(interact.response, get_locale(lang, "inventory.full"))
         else:
             await interact.response.defer()
 
@@ -141,9 +142,9 @@ async def open(ctx:Context, *args):
     #create buttons
     view = discord.ui.View(timeout=30)
     view.on_timeout= view_timeout_callback
-    inventory_button = discord.ui.Button(label="Add To Inventory", style=discord.ButtonStyle.green)
+    inventory_button = discord.ui.Button(label=get_locale(lang, "button.add_to_inventory"), style=discord.ButtonStyle.green)
     inventory_button.callback=inventory_callback
-    sell_button = discord.ui.Button(label="Sell", style=discord.ButtonStyle.red)
+    sell_button = discord.ui.Button(label=get_locale(lang, "button.sell"), style=discord.ButtonStyle.red)
     sell_button.callback=sell_callback
     view.add_item(inventory_button)
     view.add_item(sell_button)

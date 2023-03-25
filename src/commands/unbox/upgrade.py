@@ -1,5 +1,6 @@
 import discord
 from src.util import database
+from src.util.lang import get_locale
 from src.util.constants import case_wear_ranges_lower, case_wear_ranges_upper
 from src.util.string_util import round_sig_fig
 from src.util.embed_func import msg_embed, msg_embed_response
@@ -12,9 +13,10 @@ async def upgrade(ctx:Context, item_index:int, *args):
     result_item_name = " ".join(args[:]).strip().lower()
 
     user_data = database.user_data.find_one({"_id": ctx.author.id})
+    lang = user_data["language"]
 
     if item_index > len(user_data["inventory"]):
-        await msg_embed(ctx, f"No item exists at index {item_index}")
+        await msg_embed(ctx, get_locale(lang, "inventory.not_at_index", item_index))
         return
 
     item_index -= 1 
@@ -26,23 +28,23 @@ async def upgrade(ctx:Context, item_index:int, *args):
     try:
         result_item_data = database.skin_data["skins"][result_item_name]
     except KeyError:
-        await msg_embed(ctx, f"No item exists with name `{result_item_name}`")
+        await msg_embed(ctx, get_locale(lang, "inventory.not_found_name", result_item_name))
         return
 
     if result_item_data["price"] <= start_item_data["price"]:
-        await msg_embed(ctx, "Result item must be worth more than starting item!")
+        await msg_embed(ctx, get_locale(lang, "upgrade.cant_upgrade_to_cheaper"))
         return
 
     price_multiplier = result_item_data["price"] / start_item_data["price"]
     percentage_chance = 1 / price_multiplier
     has_upgraded = False
 
-    e = discord.Embed(description=f'**Upgrading**: {start_item_data["formatted_name"]}\n**To**: {result_item_data["formatted_name"]}')
-    e.add_field(name="Price Multiplier", value=f"{round_sig_fig(price_multiplier, 2)}X")
-    e.add_field(name="Chance", value=f"{round_sig_fig(percentage_chance*100, 2)}%")
+    e = discord.Embed(description=get_locale(lang, "upgrade.embed.title", start_item_data["formatted_name"], result_item_data["formatted_name"]))
+    e.add_field(name=get_locale(lang, "price_multiplier"), value=f"{round_sig_fig(price_multiplier, 2)}X")
+    e.add_field(name=get_locale(lang, "chance"), value=f"{round_sig_fig(percentage_chance*100, 2)}%")
     e.set_thumbnail(url=start_item_data["image_url"])
     e.set_image(url=result_item_data["image_url"])
-    e.set_footer(icon_url=ctx.author.display_avatar.url, text="Warning! Upgrades will cancel after 30 seconds")
+    e.set_footer(icon_url=ctx.author.display_avatar.url, text=get_locale(lang, "upgrade.embed.footer"))
 
     async def on_view_timeout():
         if not has_upgraded:
@@ -52,7 +54,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
         nonlocal has_upgraded, e
         
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your upgrade menu!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         if random.random() < percentage_chance:
@@ -68,8 +70,8 @@ async def upgrade(ctx:Context, item_index:int, *args):
                     #failed to pull - item no longer exists abort transaction
                     if update_result.modified_count == 0:
                         e = discord.Embed(
-                            title="Upgrade Error",
-                            description=f'Failed to upgrade as **{start_item_data["formatted_name"]}** no longer exists in inventory',
+                            title=get_locale(lang, "upgrade.error.title"),
+                            description=get_locale(lang, "upgrade.error.item_missing", start_item_data["formatted_name"]),
 
                         )
                         e.set_thumbnail(url=ctx.author.display_avatar.url)
@@ -104,8 +106,8 @@ async def upgrade(ctx:Context, item_index:int, *args):
                     #failed to pull - item no longer exists abort transaction
                     if update_result.modified_count == 0:
                         e = discord.Embed(
-                            title="Upgrade Error",
-                            description=f'Failed to upgrade as **{start_item_data["formatted_name"]}** no longer exists in inventory',
+                            title=get_locale(lang, "upgrade.error.title"),
+                            description=get_locale(lang, "upgrade.error.item_missing", result_item_data["formatted_name"]),
 
                         )
                         e.set_thumbnail(url=ctx.author.display_avatar.url)
@@ -122,7 +124,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
     view = discord.ui.View(timeout=30)
     view.on_timeout = on_view_timeout
 
-    upgrade_button = discord.ui.Button(label="Upgrade", style=discord.ButtonStyle.green)
+    upgrade_button = discord.ui.Button(label=get_locale(lang, "button.upgrade"), style=discord.ButtonStyle.green)
     upgrade_button.callback = upgrade_callback
     view.add_item(upgrade_button)
 
