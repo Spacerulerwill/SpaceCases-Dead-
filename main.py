@@ -136,12 +136,12 @@ async def on_guild_join(guild: discord.Guild):
     #try system channel, otherwise loop through all otherchannels to find one
     if not guild.system_channel is None and guild.system_channel.permissions_for(guild.me).send_messages:
         channel = guild.system_channel
-        await channel.send(embed=welcome_embed(bot_instance))
+        await channel.send(embed=welcome_embed("en", bot_instance))
     else:
         for ch in guild.text_channels:
             if ch.permissions_for(guild.me).send_messages:
                 channel = ch
-                await channel.send(embed=welcome_embed(bot_instance))
+                await channel.send(embed=welcome_embed("en", bot_instance))
                 break
 
 @bot_instance.event

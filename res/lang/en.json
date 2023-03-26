@@ -1,4 +1,6 @@
 {
+    "welcome_message": "Hello! My name is **{}**\n\nI am CS:GO case unboxing and economy bot. With me you can:\n• Unbox your dream skins\n• Trade them with other users\n• Take a risk and upgrade them\n• And more coming soon!\n\nBy default, users can open cases in any channel where they can type. This can cause a lot of clutter, so it is recommended you use `{}config` to set up a room creation channel so users can unbox in their own threads\n\nEnjoy! - [Spacerulerwill](https://github.com/Spacerulerwill)\n\nUse `{}info` to see this message again at anytime",
+
     "milspec": "Mil-Spec",
     "restricted": "Restricted",
     "classified": "Classified",
@@ -44,6 +46,10 @@
     "command_error.invalid_option": "**Error!** Argument must be one of the following options: `{}`",
     "command_error.missing_permissions": "**Error!** You are missing the following permissions to use this command: `{}`",
     "command_error.cooldown": "**Command is on cooldown!** Try again after {} seconds",
+    "command_error.room": "This command must be used in a room! Go to {} and use `{}room`",
+
+    "author_not_registered": "You are not registered! Use `{}register` to register",
+    "user_not_registeed": "{} is not registered!",
 
     "lang.current": "Current Language: `English`",
     "lang.embed.select.placeholder": "Select Language",

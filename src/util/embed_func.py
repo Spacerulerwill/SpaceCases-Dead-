@@ -1,6 +1,8 @@
 import discord
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
+from src.util.lang import get_locale
+from src.util import database
 from discord.ext import commands
 
 async def msg_embed(ctx:Context, msg_content:str, view:discord.ui.View=None) -> discord.Message:
@@ -47,7 +49,7 @@ async def msg_embed_edit(msg:discord.Message, msg_content:str, view:discord.ui.V
     """
     await msg.edit(embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()), view=view)
 
-def welcome_embed(bot: commands.Bot) -> discord.Embed:
+def welcome_embed(lang:str, bot:commands.Bot) -> discord.Embed:
     """
     send the bots welcome message
 
@@ -60,20 +62,7 @@ def welcome_embed(bot: commands.Bot) -> discord.Embed:
         view: optional: a view to send with the message 
     """
     e = discord.Embed(
-        description=f"""Hello! My name is **{bot.user.name}**
-
-        I am CS:GO case unboxing and economy bot. With me you can:
-        • Unbox your dream skins
-        • Trade them with other users
-        • Take a risk and upgrade them
-        • And more coming soon!
-
-        By default, users can open cases in any channel where they can type. This can cause a lot of clutter, so it is recommended you use `{PREFIX}config` to set up a room creation channel so users can unbox in their own threads
-
-        Enjoy! - [Spacerulerwill](https://github.com/Spacerulerwill)
-
-        Use `{PREFIX}info` to see this message again at anytime
-        """,
+        description=get_locale(lang, "welcome_message", bot.user.name, PREFIX, PREFIX),
         color=discord.Color.dark_theme()
     )
 

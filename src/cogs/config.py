@@ -10,6 +10,7 @@ This cog contains the commands:
 from discord.ext import commands
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
+from src.util import database
 from src.util.embed_func import welcome_embed
 
 # commandsz 
@@ -25,7 +26,14 @@ class Config(commands.Cog):
         "Syntax": f"{PREFIX}info"
     })
     async def info(self, ctx:Context):
-        await ctx.send(embed=welcome_embed(self.bot))
+        user_data = database.user_data.find_one({"_id": ctx.author.id})
+
+        if user_data is None:
+            lang = "en"
+        else:
+            lang = user_data["language"]
+
+        await ctx.send(embed=welcome_embed(lang, ctx.bot))
 
     @commands.command()
     @commands.has_permissions(administrator=True)
