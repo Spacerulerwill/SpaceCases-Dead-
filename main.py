@@ -2,6 +2,7 @@ import discord
 import asyncio
 from os import environ
 from src.util import database, lang
+from src.util.lang import get_locale
 from src.util.string_util import get_closest_match
 from src.util.room_func import delete_room
 from src.util.embed_func import msg_embed, welcome_embed
@@ -78,6 +79,7 @@ async def leaderboard_loop():
 #handle command errors with an appriopriate error messages
 @bot_instance.event
 async def on_command_error(ctx:Context, error):
+    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
 
     if isinstance(error, commands.CommandNotFound):        
         err_msg, = error.args
@@ -86,9 +88,9 @@ async def on_command_error(ctx:Context, error):
 
         closest_match = get_closest_match(query, options, 0.5)
         if closest_match is None:
-            await msg_embed(ctx, "Command not found!")
+            await msg_embed(ctx, get_locale(lang, "command_not_found"))
         else:
-            await msg_embed(ctx, f"Command not found! Did you mean `{closest_match}`?")
+            await msg_embed(ctx, get_locale(lang, "command_not_found_suggest", closest_match))
         return
 
     if isinstance(error, commands.BadArgument):
@@ -100,30 +102,30 @@ async def on_command_error(ctx:Context, error):
             desired_type = err_msg_type_dict[query[1]]
         except KeyError:
             # if could not find type, its a user not found
-            await msg_embed(ctx, "**Error!** Could not find user!")
+            await msg_embed(ctx, get_locale(lang, "command_error.no_user"))
             return
 
         param_name = query[3].replace("_", " ")
 
-        await msg_embed(ctx, f"**Error!** Argument `{param_name}` must be {desired_type}")
+        await msg_embed(ctx, get_locale(lang, "command_error.incorrect_type", param_name, desired_type))
         return
 
     if isinstance(error, commands.MissingRequiredArgument):
         param_name = error.param.name.replace("_", " ")
-        await msg_embed(ctx, f"**Oops!** You forgot to supply the argument: `{param_name}`")
+        await msg_embed(ctx, get_locale(lang, "command_error.missing_required_argument", param_name))
         return
 
     if isinstance(error, commands.BadLiteralArgument):
         param_name = error.param.name.replace("_", "/")
-        await msg_embed(ctx, f"**Error!** Argument must be one of the following options: `{param_name}`")
+        await msg_embed(ctx, get_locale(lang, "command_error.invalid_option", param_name))
         return
 
     if isinstance(error, commands.MissingPermissions):
-        await msg_embed(ctx, f"**Error!** You are missing the following permissions to use this command: `{', '.join(error.missing_permissions)}`")
+        await msg_embed(ctx, get_locale(lang, "command_error.missing_permissions", ', '.join(error.missing_permissions)))
         return
 
     if isinstance(error, commands.CommandOnCooldown):
-        await msg_embed(ctx, f"**Command is on cooldown!** Try again after {round(error.retry_after, 2)} seconds")
+        await msg_embed(ctx, get_locale(lang, "command_error.cooldown", round(error.retry_after, 2)))
         return
 
     raise error

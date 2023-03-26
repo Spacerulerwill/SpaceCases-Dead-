@@ -36,6 +36,14 @@
     "button.less": "Less",
     "button.more": "More",
 
+    "command_not_found": "Command not found!",
+    "command_not_found_suggest": "Command not found! Did you mean `{}`?",
+    "command_error.no_user": "**Error!** Could not find user!",
+    "command_error.incorrect_type": "**Error!** Argument `{}` must be {}",
+    "command_error.missing_required_argument": "**Oops!** You forgot to supply the argument: `{}`",
+    "command_error.invalid_option": "**Error!** Argument must be one of the following options: `{}`",
+    "command_error.missing_permissions": "**Error!** You are missing the following permissions to use this command: `{}`",
+    "command_error.cooldown": "**Command is on cooldown!** Try again after {} seconds",
 
     "lang.current": "Current Language: `English`",
     "lang.embed.select.placeholder": "Select Language",
