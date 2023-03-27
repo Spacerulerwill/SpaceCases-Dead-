@@ -1,37 +1,36 @@
 import discord
 from src.util import database
+from src.util.lang import get_locale
 from src.util.constants import PREFIX
 from discord.ext.commands import Context
 from datetime import datetime, timedelta
 
 
-async def send_trade_notif_to_user(sender: discord.Member, recipient:discord.Member):
+async def send_trade_notif_to_user(lang:str, sender: discord.Member, recipient:discord.Member):
     trade = database.trade_requests.find_one({"_id": sender.id, "recipient-id": recipient.id})
 
     e = discord.Embed(
-        title=f"{sender.name} has sent you a trade request!",
+        title=get_locale(lang, "trade_notif.title"),
         color=discord.Color.dark_theme()
     )
     e.set_thumbnail(url=sender.display_avatar.url)
 
-    they_offer = create_item_str(trade["sender-items"])
-    for_your = create_item_str(trade["recipient-items"])
+    they_offer = create_item_str(lang, trade["sender-items"])
+    for_your = create_item_str(lang, trade["recipient-items"])
 
-    e.add_field(name="They Offer", value=they_offer)
-    e.add_field(name="For Your", value=for_your)
+    e.add_field(name=get_locale(lang, "they_offer"), value=they_offer)
+    e.add_field(name=get_locale(lang, "for_your"), value=for_your)
     e.add_field(
-        name="Commands", 
-        value=f"""`{PREFIX}trade accept {sender.name}` - accept trade
-        `{PREFIX}trade decline {sender.name}` - decline trade
-        """,
+        name=get_locale(lang, "commands"), 
+        value=get_locale(lang, "trade_notif.commands.value", PREFIX, sender.name, PREFIX, sender.name),
         inline=False
     )
     await recipient.send(embed=e)
     
 
-def create_item_str(items:list) -> str:
+def create_item_str(lang:str, items:list) -> str:
     if len(items) == 0:
-        return "None"
+        return get_locale(lang, "none")
     else:
         string = ""
         for count, item in enumerate(items):
@@ -39,44 +38,41 @@ def create_item_str(items:list) -> str:
             string += f"**{count+1})** `{item_data['formatted_name']}`\n"
         return string
 
-async def send_trade_embed(ctx:Context, trade:dict, incoming:bool):
+async def send_trade_embed(lang:str, ctx:Context, trade:dict, incoming:bool):
     if incoming:
         user:discord.Member = await ctx.bot.fetch_user(trade["_id"])
-        title = f"Incoming trade from {user.name}"
+        title = get_locale(lang, "trade_embed.incoming_title", user.name) 
     else:
         user:discord.Member = await ctx.bot.fetch_user(trade["recipient-id"])
-        title = f"Outgoing trade to {user.name}"
+        title = get_locale(lang, "trade_embed.outgoing_title", user.name) 
 
     e = discord.Embed(title=title, color=discord.Color.dark_theme())
     e.set_thumbnail(url=user.display_avatar.url)
 
     if incoming:
-        your_items = create_item_str(trade["recipient-items"])      
-        their_items = create_item_str(trade["sender-items"])
+        your_items = create_item_str(lang, trade["recipient-items"])      
+        their_items = create_item_str(lang, trade["sender-items"])
     else:
-        your_items = create_item_str(trade["sender-items"])      
-        their_items = create_item_str(trade["recipient-items"])
+        your_items = create_item_str(lang, trade["sender-items"])      
+        their_items = create_item_str(lang, trade["recipient-items"])
 
-    e.add_field(name="They Want", value=your_items)
-    e.add_field(name="For Their", value=their_items)
+    e.add_field(name=get_locale(lang, "they_offer"), value=their_items)
+    e.add_field(name=get_locale(lang, "for_your"), value=your_items)
 
     if not incoming:
-        e.add_field(name="Commands", inline=False, 
-        value=f"""`{PREFIX}trade cancel {user.name}` - cancel trade
-        """)
+        e.add_field(name=get_locale(lang, "commands"), inline=False, 
+        value=get_locale(lang, "trade_embed.commands.value", PREFIX, user.name))
 
     time_left:timedelta = (trade["send-timestamp"] + timedelta(weeks=1)) - datetime.utcnow()
-    datetime_str = f"Trade expires in {time_left.days} days, {time_left.seconds // 3600} hours and {(time_left.seconds//60)%60} minutes"
-
-    e.set_footer(text=datetime_str)
+    e.set_footer(text=get_locale(lang, "trade_embed.footer", time_left.days, time_left.seconds // 3600, (time_left.seconds//60)%60))
 
     await ctx.send(embed=e)
 
-async def send_trade_in_creation_embed(ctx:Context, recipient:discord.Member, trade:dict=None, confirmed:bool=False):
+async def send_trade_in_creation_embed(lang:str, ctx:Context, recipient:discord.Member, trade:dict=None, confirmed:bool=False):
     if confirmed:
-        title = f"Sent trade request to {recipient.name}"
+        title = get_locale(lang, "trade_in_creation_embed.sent.title", recipient.name)
     else:
-        title = f"Trade request to {recipient.name}"
+        title = get_locale(lang, "trade_in_creation_embed.unsent.title", recipient.name)
         
     e = discord.Embed(title=title)
     e.set_thumbnail(url=recipient.display_avatar.url)
@@ -88,27 +84,23 @@ async def send_trade_in_creation_embed(ctx:Context, recipient:discord.Member, tr
         trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
 
         if trade is None:
-            await ctx.send(f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
+            await ctx.send(get_locale(lang, "no_trade_in_creation", PREFIX))
             return
 
-    your_items = create_item_str(trade["sender-items"])      
-    their_items = create_item_str(trade["recipient-items"])
+    your_items = create_item_str(lang, trade["sender-items"])      
+    their_items = create_item_str(lang, trade["recipient-items"])
 
-    e.add_field(name="Your Items", value=your_items)
-    e.add_field(name="Their Items", value=their_items)
+    e.add_field(name=get_locale(lang, "your_items"), value=your_items)
+    e.add_field(name=get_locale(lang, "their_items"), value=their_items)
 
     if not confirmed:
         e.add_field(
-            name="Commands", 
-            value=f"""`{PREFIX}trade cancel` - cancel trade
-            `{PREFIX}trade add in/out <inventory item number>` - add item
-            `{PREFIX}trade remove in/out <trade item number>` - remove item
-            `{PREFIX}trade send` - send trade
-            """, 
+            name=get_locale(lang, "commands"), 
+            value=get_locale(lang, "trade_in_creation_embed.unsent.commands.value", PREFIX, PREFIX, PREFIX, PREFIX), 
             inline=False
         )
 
     else:
-        e.set_footer(text="Warning! Trade will expire in 1 week")
+        e.set_footer(text=get_locale(lang, "trade_in_creation_embed.sent.footer"))
 
     await ctx.send(embed=e)

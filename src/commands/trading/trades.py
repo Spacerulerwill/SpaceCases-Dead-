@@ -3,6 +3,7 @@ import asyncio
 from datetime import datetime, timedelta
 from discord.ext.commands import Context
 from src.util import database
+from src.util.lang import get_locale
 from src.util.constants import MAX_TRADES_PER_PAGE
 from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed, msg_embed_response
@@ -10,23 +11,24 @@ from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def trades(ctx:Context, in_out:str, page:int):
+    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
 
     if in_out is None:
         in_out = "all"
     if page is None:
         page = 1
     elif page < 1:
-        await msg_embed(ctx, "Invalid page number!")
+        await msg_embed(ctx, get_locale(lang, "invalid_page"))
         return
     
     if in_out == "all":
-        title = "All Trade Requests"
+        title = get_locale(lang, "trades.all.embed.title")
         trades = list(database.trade_requests.find({"$or": [{"_id": ctx.author.id, "send-timestamp": {"$ne": 0}}, {"recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}]}))
     elif in_out == "in":
-        title = "Incoming Trade Requests"
+        title = get_locale(lang, "trades.in.embed.title")
         trades = list(database.trade_requests.find({"recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}))
     elif in_out == "out":
-        title = "Outgoing Trade Requests"
+        title = get_locale(lang, "trades.out.embed.title")
         trades = list(database.trade_requests.find({"_id": ctx.author.id, "send-timestamp": {"$ne": 0}}))
 
     trades_pages = [trades[x:x+MAX_TRADES_PER_PAGE] for x in range(0, len(trades), MAX_TRADES_PER_PAGE)]
@@ -42,13 +44,13 @@ async def trades(ctx:Context, in_out:str, page:int):
         nonlocal num_pages, page
 
         if len(trades) == 0:
-            trade_list_str = "None"
+            trade_list_str = get_locale(lang, "none")
         else:
 
             try:
                 current_trade_page = trades_pages[page]
             except IndexError:
-                await msg_embed(ctx, "Invalid page number!")
+                await msg_embed(ctx, get_locale(lang, "invalid_page"))
                 return
             
             trade_list_str = ""
@@ -78,10 +80,10 @@ async def trades(ctx:Context, in_out:str, page:int):
                     
                     if trade["_id"] == ctx.author.id:
                         recipient = id_name_dict[trade["recipient-id"]]
-                        trade_list_str += f"**OUTGOING** to {recipient}: **{time_left.days}** days left\n"
+                        trade_list_str += get_locale(lang, "trades.outgoing_to", recipient, time_left.days)
                     elif trade["recipient-id"] == ctx.author.id:
                         sender = id_name_dict[trade["_id"]]
-                        trade_list_str += f"**INCOMING** from {sender}: **{time_left.days}** days left\n"
+                        trade_list_str += get_locale(lang, "trades.incoming_from", sender, time_left.days)
 
             elif in_out == "in":
 
@@ -92,7 +94,7 @@ async def trades(ctx:Context, in_out:str, page:int):
                 for trade in current_trade_page:
                     time_left:timedelta = (trade["send-timestamp"] + one_week) - now
                     sender = id_name_dict[trade["_id"]]
-                    trade_list_str += f"**INCOMING** from {sender}: **{time_left.days}** days left\n"
+                    trade_list_str += get_locale(lang, "trades.incoming_from", sender, time_left.days)
 
             elif in_out == "out":
 
@@ -103,19 +105,12 @@ async def trades(ctx:Context, in_out:str, page:int):
                 for trade in current_trade_page:
                     time_left:timedelta = (trade["send-timestamp"] + one_week) - now
                     recipient = id_name_dict[trade["recipient-id"]]
-                    trade_list_str += f"**OUTGOING** to {recipient}: **{time_left.days}** days left\n"
+                    trade_list_str += get_locale(lang, "trades.outgoing_to", recipient, time_left.days)
 
         e = discord.Embed(title=title, color=discord.Color.dark_theme())
         e.set_thumbnail(url=ctx.author.display_avatar.url)
-        e.add_field(name=f"Trade List - {len(trades)} Items - Page {page+1}/{num_pages}", value=trade_list_str)
-        e.add_field(name="Commands", 
-        value=f"""`{PREFIX}trade in <user>` - view incoming trade from user
-        `{PREFIX}trade out <user>` - view outgoing trade to user
-        `{PREFIX}trade accept <user>` - accept trade from user
-        `{PREFIX}trade decline <user>` - decline trade from user
-        `{PREFIX}trade cancel <user>` - cancel trade to user
-        """,
-        inline=False)
+        e.add_field(name=get_locale(lang, "trades.embed.trade_list", len(trades), page+1, num_pages), value=trade_list_str)
+        e.add_field(name="Commands", value=get_locale(lang, "trades.embed.commands.value", PREFIX, PREFIX, PREFIX, PREFIX, PREFIX), inline=False)
         
         return e
 
@@ -123,7 +118,7 @@ async def trades(ctx:Context, in_out:str, page:int):
     async def next_callback(interact:discord.Interaction):
 
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your trades menu!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         nonlocal page
@@ -137,7 +132,7 @@ async def trades(ctx:Context, in_out:str, page:int):
 
     async def prev_callback(interact:discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your trades menu!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
             
         nonlocal page

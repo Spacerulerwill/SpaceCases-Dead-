@@ -1,6 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
+from src.util.lang import get_locale
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.commands.trading.trade_func import send_trade_in_creation_embed
 from pymongo.errors import DuplicateKeyError
@@ -8,15 +9,14 @@ from src.util.decorators import requires
 
 from typing import Tuple
 
-@requires(users_registered=True)
-async def send_warning(ctx:Context, recipient:discord.Member):
+async def send_warning(lang:str, ctx:Context, recipient:discord.Member):
     e = discord.Embed(
-        title="Warning: You already have a trade request in creation",
-        description="This trade request will be deleted. Continue?",
+        title=get_locale(lang, "trade_new.warning.embed.footer"),
+        description=get_locale(lang, "trade_new.warning.embed.description"),
         color=discord.Color.red()
     )
     e.set_thumbnail(url=ctx.author.display_avatar.url)
-    e.set_footer(text="Trade request creation will automatically cancel after 30 seconds of inactivity")
+    e.set_footer(text=get_locale(lang, "trade_new.warning.embed.footer"))
 
     # callback funcs
     async def view_timeout_callback():
@@ -30,14 +30,14 @@ async def send_warning(ctx:Context, recipient:discord.Member):
 
     async def cancel_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your trade menu!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
 
         await close_message()
 
     async def continue_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, "This is not your trade menu!", ephemeral=True)
+            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
             return
             
         trade =  {
@@ -57,14 +57,14 @@ async def send_warning(ctx:Context, recipient:discord.Member):
         )
         
         await close_message()
-        await send_trade_in_creation_embed(ctx, recipient, trade)  
+        await send_trade_in_creation_embed(lang, ctx, recipient, trade)  
 
     view = discord.ui.View(timeout=30)
     view.on_timeout = view_timeout_callback
 
-    continue_button = discord.ui.Button(label="Continue", style=discord.ButtonStyle.green)
+    continue_button = discord.ui.Button(label=get_locale(lang, "button.continue"), style=discord.ButtonStyle.green)
     continue_button.callback = continue_callback
-    cancel_button = discord.ui.Button(label="Cancel", style=discord.ButtonStyle.red)
+    cancel_button = discord.ui.Button(label=get_locale(lang, "button.cancel"), style=discord.ButtonStyle.red)
     cancel_button.callback = cancel_callback
     view.add_item(continue_button)
     view.add_item(cancel_button)
@@ -91,15 +91,17 @@ def try_create_trade_request(ctx:Context, recipient:discord.Member) -> Tuple[boo
 
 @requires(users_registered=True)
 async def new(ctx:Context, recipient:discord.Member):
+    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+
     try:
         successful, trade = try_create_trade_request(ctx, recipient)
     except DuplicateKeyError:
-        await msg_embed(ctx, f"You already have an outgoing trade to {recipient.name}! You cannot have mutliple trades to one user")
+        await msg_embed(ctx, get_locale(lang, "trade_error.already_have_trade_with_user", recipient.name))
         return
     
     if successful:
         # create new trade and show trade embed
-        await send_trade_in_creation_embed(ctx, recipient, trade)
+        await send_trade_in_creation_embed(lang, ctx, recipient, trade)
     else:
         # show warning that this will override previous trade
-        await send_warning(ctx, recipient)
+        await send_warning(lang, ctx, recipient)

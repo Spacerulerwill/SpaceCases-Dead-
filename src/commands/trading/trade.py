@@ -1,4 +1,5 @@
 from src.util import database
+from src.util.lang import get_locale
 from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
 from discord.ext.commands import Context
@@ -7,10 +8,11 @@ from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def view_trade_in_creation(ctx:Context):
+    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
     trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp":0})
     if trade is None:
-        await msg_embed(ctx, f"You have no trade in creation! Use `{PREFIX}trade new <user>` to start a new trade")
+        await msg_embed(ctx, get_locale(lang, "no_trade_in_creation", PREFIX))
         return
 
     recipient = await ctx.bot.fetch_user(trade["recipient-id"])
-    await send_trade_in_creation_embed(ctx, recipient, trade)
+    await send_trade_in_creation_embed(lang, ctx, recipient, trade)

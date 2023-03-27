@@ -25,6 +25,8 @@
     "price_multiplier": "Price Mulitplier",
     "commands": "Commands",
 
+    "none": "None",
+
     "inspect_in_3d": "[Inspect In 3D]({})",
 
     "not_your_button": "This is not your button!",
@@ -33,6 +35,7 @@
     "button.add_to_inventory": "Add To Inventory",
     "button.sell": "Sell",
     "button.cancel": "Cancel",
+    "button.continue": "Continue",
     "button.upgrade": "Upgrade",
     "button.start": "Start",
     "button.less": "Less",
@@ -94,7 +97,7 @@
     "inventory.not_found_name": "No item exists with name `{}`",
     "inventory.embed.commands_1": "`{}inspect <item number>` - view an item\n`{}sell <item number>` - sell an item",
     "inventory.embed.commands_2": "`{}inspect {member.name} <item number>` - see an item",
-
+ 
     "container.not_found": "Container not found!",
     "container.not_found_suggest": "'Container not found! Did you mean: `{}`?'",
     "container.select.all_items": "All Items",
@@ -164,5 +167,60 @@
     "wordle.word_not_found": "Word must be a valid english word!",
     "wordle.won.embed.title": "You Won {}!",
     "wordle.loss.embed.title": "You Lost!",
-    "wordle.loss.embed.description": "The word was `{}`\n"
+    "wordle.loss.embed.description": "The word was `{}`\n",
+
+    "no_incoming_trade": "You do not have an incoming trade from {}",
+    "no_outgoing_trade": "You have no outgoing trade with {}",
+    "no_trade_in_creation": "You have no trade in creation! Use `{}trade new <user>` to start a new trade",
+
+    "trade_error": "Trade Error",
+    "trade_error.author_not_enough_space": "Your trade to {} could not take place as you don't have enough inventory space to recieve the items from the trade!",
+    "trade_error.sender_not_enough_space": "Your trade to {} could not take place {} does not have enough inventory space to recieve the items from the trade!",
+    "trade_error.missing_items": "The trade from {} could not take place and has been cancelled as items were missing from one or both participants inventories",
+    "trade_error.already_have_trade_with_user": "You already have an outgoing trade to {}! You cannot have mutliple trades to one user",
+
+    "you_are_missing": "You Are Missing",
+    "sender_is_missing": "{} is Missing",
+    "trade_accept.author_embed.description": "Trade request from {} accepted!",
+    "trade_accept.sender_embed.title": "{} accepted your trade request!",
+    "your_new_items": "Your new items",
+
+    "trade_add.cannot_add_item_twice": "You cannot add the same item twice to a trade!",
+
+    "trade_cancel.cancelled_trade_to_user": "Successfully cancelled trade to {}",
+    "trade_cancel.cancelled_current": "Successfully cancelled trade in creation",
+    
+    "trade_decline.author_embed.description": "Trade request from {} declined",
+    "trade_decline.sender_embed.title": "Your trade request to {} was declined",
+    
+    "your_items": "Your Items",
+    "their_items": "Their Items",
+    "you_wanted": "You Wanted",
+    "for_your": "For Your",
+    "they_offer": "They Offer",
+
+    "trade_new.warning.embed.title": "Warning: You already have a trade request in creation",
+    "trade_new.warning.embed.description": "This trade request will be deleted. Continue?",
+    "trade_new.warning.embed.footer": "Trade request creation will automatically cancel after 30 seconds of inactivity",
+
+    "trades.in.embed.title": "Incoming Trade Requests",
+    "trades.out.embed.title": "Outgoing Trade Requests",
+    "trades.all.embed.title": "All Trade Requests",
+    "trades.incoming_from": "**INCOMING** from {}: **{}** days left\n",
+    "trades.outgoing_to": "**OUTGOING** to {}: **{}** days left\n",
+    "trades.embed.trade_list": "Trade List - {} Items - Page {}/{}",
+    "trades.embed.commands.value": "`{}trade in <user>` - view incoming trade from user\n`{}trade out <user>` - view outgoing trade to user\n`{}trade accept <user>` - accept trade from user\n`{}trade decline <user>` - decline trade from user\n`{}trade cancel <user>` - cancel trade to user",
+
+    "trade_notif.embed.title": "{} has sent you a trade request!",
+    "trade_notif.commands.value": "`{}trade accept {}` - accept trade\n`{}trade decline {}` - decline trade",
+
+    "trade_embed.incoming_title": "Incoming trade from {}",
+    "trade_embed.outgoing_title": "Outgoing trade from {}",
+    "trade_embed.footer": "Trade expires in {} days, {} hours and {} minutes",
+    "trade_embed.commands.value": "`{}trade cancel {}` - cancel trade",
+
+    "trade_in_creation_embed.unsent.title": "Trade request to {}",
+    "trade_in_creation_embed.sent.title": "Sent trade request to {}",
+    "trade_in_creation_embed.sent.footer": "Warning! Trade will expire in 1 week",
+    "trade_in_creation_embed.unsent.commands.value": "`{}trade cancel` - cancel trade\n`{}trade add in/out <inventory item number>` - add item\n`{}trade remove in/out <trade item number>` - remove item\n`{}trade send` - send trade"
 }

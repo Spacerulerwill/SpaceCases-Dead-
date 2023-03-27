@@ -3,16 +3,19 @@ from src.util import database
 from src.commands.trading.trade_func import create_item_str
 from discord.ext.commands import Context
 from src.util.embed_func import msg_embed
+from src.util.lang import get_locale
 from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def accept(ctx:Context, sender:discord.Member):
+    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+
     with database.mongo_client.start_session() as session:
         with session.start_transaction():
             trade = database.trade_requests.find_one({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
             
             if trade is None:
-                await msg_embed(ctx, f"You do not have an incoming trade from {sender.name}")
+                await msg_embed(ctx, get_locale(lang, "no_incoming_trade", sender.name))
                 session.abort_transaction()
                 return
             
@@ -35,8 +38,8 @@ async def accept(ctx:Context, sender:discord.Member):
                 # no missing items, next check that the trade will not result in inventory capacity overflow
                 if sender_data["inventory-size"] + len(trade["sender-items"]) > sender_data["inventory-capacity"]:
                     e = discord.Embed(
-                        title="Trade Error",
-                        description=f"Your trade to {ctx.author.name} could not take place as you don't have enough inventory space to recieve the items from the trade!",
+                        title=get_locale(lang, "trade_error"),
+                        description=get_locale(lang, "trade_error.author_not_enough_space", sender.name),
                         color=discord.Color.red()
                     )
                     await ctx.send(embed=e)
@@ -44,8 +47,8 @@ async def accept(ctx:Context, sender:discord.Member):
 
                 if recipient_data["inventory-size"] + len(trade["recipient-items"]) > sender_data["inventory-capacity"]:
                     e = discord.Embed(
-                        title="Trade Error",
-                        description=f"Your trade to {ctx.author.name} could not take place {ctx.author.name} does not have enough inventory space to recieve the items from the trade!",
+                        title=get_locale(lang, "trade_error"),
+                        description=get_locale(lang, "trade_error.sender_not_enough_space", sender.name, sender.name),
                         color=discord.Color.red()
                     )
                     await ctx.send(embed=e)
@@ -108,21 +111,22 @@ async def accept(ctx:Context, sender:discord.Member):
                     session=session   
                 )
 
-                #send embed person who accepted
+                #send embed to person who accepted
                 recipient_embed = discord.Embed(
-                    title=f"Trade from {sender.name} accepted!",
+                    title=get_locale(lang, "trade_accept.author_embed.description", sender.name),
                     color=discord.Color.green()
                 )
-                recipient_embed.add_field(name="Your New Items", value=create_item_str(trade["sender-items"]))
+                recipient_embed.add_field(name="Your New Items", value=create_item_str(lang, trade["sender-items"]))
                 recipient_embed.set_thumbnail(url=ctx.author.display_avatar.url)
 
                 await ctx.send(embed=recipient_embed)
 
+                # inform the original sender that it was accepted
                 sender_embed = discord.Embed(
-                    title=f"{ctx.author.name} accepted your trade request!",
+                    title=get_locale(lang, "trade_accept.sender_embed.title", ctx.author.name),
                     color=discord.Color.green()
                 )
-                sender_embed.add_field(name="Your New Items", value=create_item_str(trade["recipient-items"]))
+                sender_embed.add_field(name=get_locale(lang, "your_new_items"), value=create_item_str(lang, trade["recipient-items"]))
                 recipient_embed.set_thumbnail(url=sender.display_avatar.url)
 
                 await sender.send(embed=sender_embed)
@@ -133,29 +137,13 @@ async def accept(ctx:Context, sender:discord.Member):
 
                 # send message to recipient
                 e = discord.Embed(
-                    title="Trade Error",
-                    description=f"The trade from {sender.name} could not take place and has been cancelled as items were missing from one or both participants inventories.",
+                    title=get_locale(lang, "trade_error"),
+                    description=get_locale(lang, "trade_error.missing_items", sender.name),
                     color=discord.Color.red()
                 )
                 e.set_thumbnail(url=ctx.author.display_avatar.url)
 
-                e.add_field(name="You Are Missing", value=create_item_str(recipient_items_missing))
-                e.add_field(name=f"{sender.name} is Missing", value=create_item_str(sender_items_missing))
+                e.add_field(name=get_locale(lang, "you_are_missing"), value=create_item_str(lang, recipient_items_missing))
+                e.add_field(name=get_locale(lang, "sender_is_missing", sender.name), value=create_item_str(lang, sender_items_missing))
 
                 await ctx.send(embed=e)
-
-                # only send to the sender if they have items missing
-                if len(sender_items_missing) != 0:
-                    # send message to sender
-                    e = discord.Embed(
-                        title="Trade Error",
-                        description=f"Your trade to {ctx.author.name} could not take place and has been cancelled as items were missing from one or both participants inventories",
-                        color=discord.Color.red()
-                    )
-
-                    e.set_thumbnail(url=sender.display_avatar.url)
-
-                    e.add_field(name=f"{ctx.author.name} is Missing", value=create_item_str(recipient_items_missing))
-                    e.add_field(name="You Are Missing", value=create_item_str(sender_items_missing))
-
-                    await sender.send(embed=e)
