@@ -222,5 +222,8 @@
     "trade_in_creation_embed.unsent.title": "Trade request to {}",
     "trade_in_creation_embed.sent.title": "Sent trade request to {}",
     "trade_in_creation_embed.sent.footer": "Warning! Trade will expire in 1 week",
-    "trade_in_creation_embed.unsent.commands.value": "`{}trade cancel` - cancel trade\n`{}trade add in/out <inventory item number>` - add item\n`{}trade remove in/out <trade item number>` - remove item\n`{}trade send` - send trade"
+    "trade_in_creation_embed.unsent.commands.value": "`{}trade cancel` - cancel trade\n`{}trade add in/out <inventory item number>` - add item\n`{}trade remove in/out <trade item number>` - remove item\n`{}trade send` - send trade",
+
+    "help.embed.description": "'Use `{}help <command>` to gain more information about that command'",
+    "help.aliases": "Aliases"
 }
