@@ -22,7 +22,7 @@ PRICE_STR = currency_str_format(HL_PRICE)
 
 @requires(users_registered=True)
 async def higher_lower(ctx:Context, difficulty:int):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     if not HL_MIN_GUESS <= difficulty <= HL_MAX_GUESS:
         await msg_embed(ctx, get_locale(lang, "hl.invalid_difficulty", HL_MIN_GUESS, HL_MAX_GUESS))

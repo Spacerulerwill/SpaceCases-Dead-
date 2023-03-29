@@ -9,7 +9,7 @@ from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def remove(ctx:Context, in_out:str, item_index:int):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
     if trade is None:

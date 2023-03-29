@@ -42,14 +42,14 @@ async def send_warning(lang:str, ctx:Context, recipient:discord.Member):
             
         trade =  {
             "_id": ctx.author.id,
-            "send-timestamp": 0,
-            "recipient-id": recipient.id,
-            "sender-items": [],
-            "recipient-items": [],
-            "send-timestamp": 0
+            "send_timestamp": 0,
+            "recipient_id": recipient.id,
+            "sender_items": [],
+            "recipient_items": [],
+            "send_timestamp": 0
         }
         database.trade_requests.update_one(
-            {"_id": ctx.author.id, "send-timestamp": 0},
+            {"_id": ctx.author.id, "send_timestamp": 0},
             {
                 "$set": trade
             },
@@ -74,13 +74,13 @@ async def send_warning(lang:str, ctx:Context, recipient:discord.Member):
 def try_create_trade_request(ctx:Context, recipient:discord.Member) -> Tuple[bool, dict]:
     trade = {
         "_id": ctx.author.id,
-        "recipient-id": recipient.id,
-        "sender-items": [],
-        "recipient-items": [],
-        "send-timestamp": 0
+        "recipient_id": recipient.id,
+        "sender_items": [],
+        "recipient_items": [],
+        "send_timestamp": 0
     }
     update_result = database.trade_requests.update_one(
-        {"_id": ctx.author.id, "send-timestamp": 0},
+        {"_id": ctx.author.id, "send_timestamp": 0},
         {
             "$setOnInsert": trade
         },
@@ -91,7 +91,7 @@ def try_create_trade_request(ctx:Context, recipient:discord.Member) -> Tuple[boo
 
 @requires(users_registered=True)
 async def new(ctx:Context, recipient:discord.Member):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     try:
         successful, trade = try_create_trade_request(ctx, recipient)

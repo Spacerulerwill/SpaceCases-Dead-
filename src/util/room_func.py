@@ -29,9 +29,9 @@ def get_guild_room_create_channel(guild:discord.Guild, guild_data=None):
         if guild_data is None:
             return None
 
-    channel = guild.get_channel(guild_data["unbox-room-creation-channel-id"])
+    channel = guild.get_channel(guild_data["unbox_room_creation_channel_id"])
     if channel is None:
-        database.guild_data.update_one({"_id": guild.id}, {"$set": {"unbox-room-creation-channel-id": None}})
+        database.guild_data.update_one({"_id": guild.id}, {"$set": {"unbox_room_creation_channel_id": None}})
 
     return channel
 

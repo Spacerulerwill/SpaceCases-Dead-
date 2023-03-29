@@ -10,16 +10,16 @@ async def register(ctx:Context):
         {
             "$setOnInsert": {
                 "balance": 0,
-                "language": "en",
-                "last-claim": 0,
-                "claim-streak": 0,
+                "lang": "en",
+                "last_claim": 0,
+                "claim_streak": 0,
                 "inventory": [],
-                "inventory-size": 0,
-                "inventory-max-capacity": 5,
+                "inventory_size": 0,
+                "inventory_max_capacity": 5,
                 "stats": {
-                    "containers-opened": 0,
-                    "total-spent": 0,
-                    "total-return": 0,
+                    "containers_opened": 0,
+                    "total_spent": 0,
+                    "total_return": 0,
                 },
             }
         },
@@ -28,6 +28,6 @@ async def register(ctx:Context):
 
     if update_result.upserted_id == None:
         user_data = database.user_data.find_one({"_id": ctx.author.id})
-        await msg_embed(ctx, get_locale(user_data["language"], "register.already_registered"))
+        await msg_embed(ctx, get_locale(user_data["lang"], "register.already_registered"))
     else:
         await msg_embed(ctx, f"Registered! Use `{PREFIX}claim` to claim some money!")

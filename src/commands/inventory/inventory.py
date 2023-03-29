@@ -14,7 +14,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
         member = ctx.author
     
     user_data = database.user_data.find_one({"_id": member.id})
-    lang = user_data["language"]
+    lang = user_data["lang"]
 
     # if users inventory is empty
     if len(user_data["inventory"]) == 0:
@@ -51,7 +51,7 @@ async def inventory(ctx:Context, member:discord.Member, page:int):
 
         e = discord.Embed(
             title=get_locale(lang, "inventory.embed.title", member.name, page+1, len(inventory_pages)), 
-            description = get_locale(lang, "inventory.embed.description", currency_str_format(inventory_value), user_data['inventory-size'], user_data['inventory-max-capacity']),
+            description = get_locale(lang, "inventory.embed.description", currency_str_format(inventory_value), user_data['inventory_size'], user_data['inventory_max_capacity']),
             color=discord.Color.dark_theme()
         )
          

@@ -12,7 +12,7 @@ async def item(ctx:Context, *args):
     if user_data is None:
         lang = "en"
     else:
-        lang = user_data["language"]
+        lang = user_data["lang"]
 
     item_query = " ".join(args[:]).strip().lower()
 

@@ -12,7 +12,7 @@ from src.util.embed_func import msg_embed_response, msg_embed
 
 @requires(users_registered=True)
 async def ttt(ctx:Context, player2:discord.Member, bet:Decimal):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     if bet < 0:
         await msg_embed(ctx, get_locale(lang, "cannot_bet_negative"))

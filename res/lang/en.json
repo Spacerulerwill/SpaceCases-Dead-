@@ -26,6 +26,7 @@
     "commands": "Commands",
 
     "none": "None",
+    "backtick_none": "`None`",
 
     "inspect_in_3d": "[Inspect In 3D]({})",
 
@@ -40,6 +41,8 @@
     "button.start": "Start",
     "button.less": "Less",
     "button.more": "More",
+    "button.clear": "Clear",
+    "button.edit": "Edit",
 
     "command_not_found": "Command not found!",
     "command_not_found_suggest": "Command not found! Did you mean `{}`?",
@@ -79,7 +82,7 @@
     "claim.embed.streak": "Streak 🔥",
     "claim.embed.bonus_item": "You got a bonus item!",
 
-    "room.cant_create_here": "You cannot create rooms here!",
+    "room.cannot_create_here": "You cannot create rooms here!",
     "room.not_setup": "This server does not have rooms set up yet. You can either unbox without a room, or ask an **admin** to use `{}config` to set it up",
     "room.not_in_channel": "You must be in {} to create a room!",
     "room.exists": "{} already exists",

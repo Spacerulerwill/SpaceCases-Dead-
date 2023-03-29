@@ -15,7 +15,7 @@ def get_lang_embed(lang:str) -> discord.Embed:
 async def lang(ctx:Context, lang:str):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
     if lang is None:
-        await ctx.send(embed=get_lang_embed(user_data["language"]))
+        await ctx.send(embed=get_lang_embed(user_data["lang"]))
         return
     
     # set new langauge
@@ -29,7 +29,7 @@ async def lang(ctx:Context, lang:str):
         {"_id": ctx.author.id},
         {
             "$set": {
-                "language": lang
+                "lang": lang
             }
         }
     )

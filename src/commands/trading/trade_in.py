@@ -8,8 +8,8 @@ from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def view_incoming_trade(ctx:Context, sender:discord.Member):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
-    trade = database.trade_requests.find_one({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}})
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
+    trade = database.trade_requests.find_one({"_id": sender.id, "recipient_id": ctx.author.id, "send_timestamp": {"$ne": 0}})
     if trade is None:
         await msg_embed(ctx, get_locale(lang, "no_incoming_trade", sender.name))
         return

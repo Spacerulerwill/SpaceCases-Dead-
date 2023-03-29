@@ -10,7 +10,7 @@ from decimal import Decimal
 @requires(users_registered=True)
 async def transfer(ctx:Context, member: discord.Member, amount:Decimal):
 
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     if member is ctx.author:
         await msg_embed(ctx, get_locale(lang, "transfer.cant_transfer_to_self"))

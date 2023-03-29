@@ -10,7 +10,7 @@ async def ranking(ctx:Context, user:discord.Member):
         user = ctx.author
 
     user_data = database.user_data.find_one({"_id": user.id})
-    lang = user_data["language"]
+    lang = user_data["lang"]
 
     user_inv_value = sum([database.skin_data["skins"][item["name"]]["price"] for item in user_data["inventory"]])
     

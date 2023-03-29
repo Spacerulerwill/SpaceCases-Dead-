@@ -1,7 +1,7 @@
 from discord.ext.commands import Context
 from src.util import database
 from src.util.lang import get_locale
-from src.util.constants import PREFIX, ROOM_DELETION_TIME
+from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
 from src.util.decorators import requires
 from src.util.room_func import delete_room, get_guild_room_create_channel
@@ -10,21 +10,21 @@ import asyncio
 
 @requires(users_registered=True)
 async def room(ctx:Context, public_private:str):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     try:
         guild_data = database.guild_data.find_one({"_id": ctx.guild.id})
     except AttributeError:
         # if there is no ctx.guild ( i.e. in a dm )
-        await msg_embed(ctx, get_locale(lang, "room.cant_crete_here"))
+        await msg_embed(ctx, get_locale(lang, "room.cannot_create_here"))
         return
 
     room_creation_channel = get_guild_room_create_channel(ctx.guild, guild_data)
-    if guild_data is None or guild_data["unbox-room-creation-channel-id"] is None or room_creation_channel is None:
+    if guild_data is None or guild_data["unbox_room_creation_channel_id"] is None or room_creation_channel is None:
         await msg_embed(ctx, get_locale(lang, "room.not_setup", PREFIX))
         return
 
-    if ctx.channel.id != guild_data["unbox-room-creation-channel-id"]:
+    if ctx.channel.id != guild_data["unbox_room_creation_channel_id"]:
         await msg_embed(ctx, get_locale(lang, "room.not_in_channel", room_creation_channel.mention))
         return
 

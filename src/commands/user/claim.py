@@ -43,20 +43,20 @@ async def claim(ctx:Context):
     [   
         {
             "$set": {      
-                 'claim-streak': {
+                 'claim_streak': {
                     "$let": {
-                        "vars": {"daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]}},
+                        "vars": {"daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last_claim", ONE_DAY]}]}]}},
                         "in": {
                             "$switch": {
                                 "branches": [
                                     {"case": {"$or": [
-                                        {"$eq": ["$last-claim", 0]},
+                                        {"$eq": ["$last_claim", 0]},
                                         {"$gt": ["$$daydiff", 1]}
 
                                     ]}, "then": 1},
-                                    {"case": {"$eq": ["$$daydiff", 1]}, "then": {"$add": ["$claim-streak", 1]}}
+                                    {"case": {"$eq": ["$$daydiff", 1]}, "then": {"$add": ["$claim_streak", 1]}}
                                 ] ,
-                                "default": "$claim-streak"
+                                "default": "$claim_streak"
                             }
                         }
                     }
@@ -65,14 +65,14 @@ async def claim(ctx:Context):
                 'balance': {
                     "$let": {
                         "vars": {
-                            "daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]},
+                            "daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last_claim", ONE_DAY]}]}]},
                             "claim_money_amounts": CLAIM_MONEY_AMOUNTS
                         },
                         "in": {
                             "$cond": { # if first claim ever, or streak broken, add the first money amount
                                 "if": {
                                     "$or": [
-                                        {"$eq": ["$last-claim", 0]},
+                                        {"$eq": ["$last_claim", 0]},
                                         {"$gt": ["$$daydiff", 1]}
                                     ]
                                 },
@@ -84,9 +84,9 @@ async def claim(ctx:Context):
                                         },
                                         "then": {
                                             "$cond": [
-                                                {"$gte": ["$claim-streak", max_claim_streak]}, 
+                                                {"$gte": ["$claim_streak", max_claim_streak]}, 
                                                 {"$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", max_claim_streak-1]}]},
-                                                {"$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", "$claim-streak"]}]}
+                                                {"$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", "$claim_streak"]}]}
                                             ]
                                         },
                                         "else": "$balance"
@@ -97,10 +97,10 @@ async def claim(ctx:Context):
                     }
                 },
 
-                'last-claim': {
+                'last_claim': {
                     "$let": {
                         "vars": {
-                            "daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last-claim", ONE_DAY]}]}]},
+                            "daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last_claim", ONE_DAY]}]}]},
                             "claim_money_amounts": CLAIM_MONEY_AMOUNTS
                         },
                         "in": {
@@ -108,11 +108,11 @@ async def claim(ctx:Context):
                                 "if": {
                                     "$or": [
                                         {"$gte": ["$$daydiff", 1]},
-                                        {"$eq": ["$last-claim", 0]}
+                                        {"$eq": ["$last_claim", 0]}
                                     ]
                                 },
                                 "then": int(time.time()),
-                                "else": "$last-claim"
+                                "else": "$last_claim"
                             }
                         }
                     }
@@ -125,7 +125,7 @@ async def claim(ctx:Context):
     if update_result.modified_count == 1:
 
         post_doc = database.user_data.find_one({"_id": ctx.author.id})
-        lang = post_doc["language"]
+        lang = post_doc["lang"]
 
         #create embed
         e = discord.Embed(title=get_locale(lang, "claim.embed.title"), description=get_locale(lang, "claim.embed.description"), color=discord.Color.green())
@@ -135,19 +135,19 @@ async def claim(ctx:Context):
 
         view = None
         
-        prev_streak = post_doc["claim-streak"]
+        prev_streak = post_doc["claim_streak"]
         if prev_streak != 0:
             prev_streak -= 1
 
-        if post_doc["claim-streak"] >= max_claim_streak: 
+        if post_doc["claim_streak"] >= max_claim_streak: 
             e.add_field(name=get_locale(lang, "claim.embed.amount"), value="$300.00", inline=True)
         else:      
             e.add_field(name=get_locale(lang, "claim.embed.amount"), value=currency_str_format(CLAIM_MONEY_AMOUNTS[prev_streak]), inline=True)
 
         e.add_field(name=get_locale(lang, "claim.embed.new_balance"), value=currency_str_format(post_doc["balance"]), inline=True)
-        e.add_field(name=get_locale(lang, "claim.embed.streak"), value=post_doc["claim-streak"], inline=True)
+        e.add_field(name=get_locale(lang, "claim.embed.streak"), value=post_doc["claim_streak"], inline=True)
 
-        bonus_reward = CLAIM_BONUS_REWARDS.get(post_doc["claim-streak"])
+        bonus_reward = CLAIM_BONUS_REWARDS.get(post_doc["claim_streak"])
 
         interacted_with = False
         
@@ -176,14 +176,14 @@ async def claim(ctx:Context):
                 # add to user inventory
                 filter_ = {
                     '_id': ctx.author.id,
-                    "$expr":{ "$lt" : ["$inventory-size", "$inventory-max-capacity"]}
+                    "$expr":{ "$lt" : ["$inventory_size", "$inventory_max_capacity"]}
                 }
                 update =  {
                     '$push': { 
                         'inventory':  {"name": unformatted_name, "float": float_val}
                     },
                     "$inc": {
-                        "inventory-size": 1
+                        "inventory_size": 1
                     }
                 }
 

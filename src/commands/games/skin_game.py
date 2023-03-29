@@ -17,7 +17,7 @@ SKIN_GAME_REWARD_STR = currency_str_format(SKIN_GAME_REWARD)
 
 @requires(users_registered=True)
 async def skin_game(ctx:Context):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
     # check user has enough to play
     update_result = database.user_data.update_one({"_id": ctx.author.id},
     [{

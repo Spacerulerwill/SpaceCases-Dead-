@@ -31,7 +31,7 @@ class Config(commands.Cog):
         if user_data is None:
             lang = "en"
         else:
-            lang = user_data["language"]
+            lang = user_data["lang"]
 
         await ctx.send(embed=welcome_embed(lang, ctx.bot))
 

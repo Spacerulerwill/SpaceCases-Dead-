@@ -8,11 +8,11 @@ from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def accept(ctx:Context, sender:discord.Member):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     with database.mongo_client.start_session() as session:
         with session.start_transaction():
-            trade = database.trade_requests.find_one({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
+            trade = database.trade_requests.find_one({"_id": sender.id, "recipient_id": ctx.author.id, "send_timestamp": {"$ne": 0}}, session=session)
             
             if trade is None:
                 await msg_embed(ctx, get_locale(lang, "no_incoming_trade", sender.name))
@@ -35,6 +35,7 @@ async def accept(ctx:Context, sender:discord.Member):
                     recipient_items_missing.append(item)
 
             if len(sender_items_missing) == 0 and len(recipient_items_missing) == 0:
+
                 # no missing items, next check that the trade will not result in inventory capacity overflow
                 if sender_data["inventory-size"] + len(trade["sender-items"]) > sender_data["inventory-capacity"]:
                     e = discord.Embed(
@@ -132,7 +133,7 @@ async def accept(ctx:Context, sender:discord.Member):
                 await sender.send(embed=sender_embed)
                 
             else:
-                # items missing, cancel and inform participants that cnanot perform trade!
+                # items missing, cancel and inform participants that cannot perform trade!
                 database.trade_requests.delete_one({"_id": sender.id, "recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}, session=session)
 
                 # send message to recipient

@@ -10,7 +10,7 @@ from discord.ext.commands import Context
 @requires(users_registered=True)
 async def sell(ctx:Context, item_index:int):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
-    lang = user_data["language"]
+    lang = user_data["lang"]
     user_inventory = list(user_data["inventory"])
 
     if item_index > len(user_inventory):

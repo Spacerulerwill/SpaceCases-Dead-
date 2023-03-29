@@ -11,7 +11,7 @@ from decimal import Decimal
 
 @requires(users_registered=True)
 async def coinflip(ctx:Context, t_ct:str, amount:Decimal):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
     integer_amount = int(amount * Decimal('100'))
 
     if integer_amount <= 0:

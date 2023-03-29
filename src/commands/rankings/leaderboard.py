@@ -13,7 +13,7 @@ async def leaderboard(ctx:Context, page:int):
     if user_data is None:
         lang = "en"
     else:
-        lang = user_data["language"]
+        lang = user_data["lang"]
 
     page -= 1
     data = database.leaderboard[page*LEADERBOARD_ELEMS_PER_PAGE:(page+1)*LEADERBOARD_ELEMS_PER_PAGE]

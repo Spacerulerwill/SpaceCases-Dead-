@@ -20,7 +20,7 @@ def get_wordle_embed(lang:str, game_data:dict, won:bool=False, lost:bool=False) 
     description = ""
 
     if won:
-        title=get_locale(lang, "wordle.won.embed.title", currency_str_format(WORLD_REWARD(game_data['remaining-guesses'])))
+        title=get_locale(lang, "wordle.won.embed.title", currency_str_format(WORLD_REWARD(game_data['remaining_guesses'])))
         color = discord.Color.green()
     elif lost:
         title=get_locale(lang, "wordle.loss.embed.title")
@@ -32,7 +32,7 @@ def get_wordle_embed(lang:str, game_data:dict, won:bool=False, lost:bool=False) 
     for guess in game_data["guesses"]:
         description += guess + "\n"
 
-    for i in range(game_data["remaining-guesses"]):
+    for i in range(game_data["remaining_guesses"]):
         description += BLANK_ROW
 
     e = discord.Embed(
@@ -63,9 +63,9 @@ async def new_game(lang:str, ctx:Context) -> dict:
         return None
 
     game_data = {
-        "user-id": ctx.author.id,
+        "user_id": ctx.author.id,
         "answer": random.choice(database.word_list),
-        "remaining-guesses": 6,
+        "remaining_guesses": 6,
         "guesses": []
     }
 
@@ -73,7 +73,7 @@ async def new_game(lang:str, ctx:Context) -> dict:
 
 @requires(users_registered=True)
 async def wordle(ctx:Context, guess:str):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     # no guess - just see current game, or create new one if none is started
     if guess is None:
@@ -146,15 +146,15 @@ async def guess_word(lang:str, ctx:Context, guess:str):
             guess_result[count] = gray_letters[letter]
 
     game_data["guesses"].append("".join(guess_result))
-    game_data["remaining-guesses"] -= 1
+    game_data["remaining_guesses"] -= 1
 
     won = guess == answer
-    lost = game_data["remaining-guesses"] == 0 and not won
+    lost = game_data["remaining_guesses"] == 0 and not won
 
     await ctx.send(embed=get_wordle_embed(lang, game_data, won, lost))
 
     if won or lost:
         if won:
-            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": WORLD_REWARD(game_data["remaining-guesses"])}})
+            database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"balance": WORLD_REWARD(game_data["remaining_guesses"])}})
 
         del database.wordle_games[ctx.author.id]

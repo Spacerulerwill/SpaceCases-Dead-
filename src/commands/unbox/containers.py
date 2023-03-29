@@ -69,7 +69,7 @@ async def containers(ctx:Context, page:int = 1):
     if user_data is None:
         lang = "en"
     else:
-        lang = user_data["language"]
+        lang = user_data["lang"]
 
     if page <= 0 or page > len_containerlist_pages:
         await msg_embed(ctx, get_locale(lang, "invalid_page"))

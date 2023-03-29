@@ -13,7 +13,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
     result_item_name = " ".join(args[:]).strip().lower()
 
     user_data = database.user_data.find_one({"_id": ctx.author.id})
-    lang = user_data["language"]
+    lang = user_data["lang"]
 
     if item_index > len(user_data["inventory"]):
         await msg_embed(ctx, get_locale(lang, "inventory.not_at_index", item_index))
@@ -114,7 +114,7 @@ async def upgrade(ctx:Context, item_index:int, *args):
                         session.abort_transaction()
                     else:
                         #successful at pull, decrement inventory size
-                        database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"inventory-size": -1}}, session=session)
+                        database.user_data.update_one({"_id": ctx.author.id}, {"$inc": {"inventory_size": -1}}, session=session)
                         e.color = discord.Color.red()
                         e.set_footer(text=None)
 

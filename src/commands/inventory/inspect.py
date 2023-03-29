@@ -14,7 +14,7 @@ async def inspect(ctx:Context, member:discord.Member, item_index:int):
         member = ctx.author
 
     user_data = database.user_data.find_one({"_id": member.id})
-    lang = user_data["language"]
+    lang = user_data["lang"]
     user_inventory = list(user_data["inventory"])
 
     if item_index > len(user_inventory):

@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 
 async def send_trade_notif_to_user(lang:str, sender: discord.Member, recipient:discord.Member):
-    trade = database.trade_requests.find_one({"_id": sender.id, "recipient-id": recipient.id})
+    trade = database.trade_requests.find_one({"_id": sender.id, "recipient_id": recipient.id})
 
     e = discord.Embed(
         title=get_locale(lang, "trade_notif.title"),
@@ -15,8 +15,8 @@ async def send_trade_notif_to_user(lang:str, sender: discord.Member, recipient:d
     )
     e.set_thumbnail(url=sender.display_avatar.url)
 
-    they_offer = create_item_str(lang, trade["sender-items"])
-    for_your = create_item_str(lang, trade["recipient-items"])
+    they_offer = create_item_str(lang, trade["sender_items"])
+    for_your = create_item_str(lang, trade["recipient_items"])
 
     e.add_field(name=get_locale(lang, "they_offer"), value=they_offer)
     e.add_field(name=get_locale(lang, "for_your"), value=for_your)
@@ -43,18 +43,18 @@ async def send_trade_embed(lang:str, ctx:Context, trade:dict, incoming:bool):
         user:discord.Member = await ctx.bot.fetch_user(trade["_id"])
         title = get_locale(lang, "trade_embed.incoming_title", user.name) 
     else:
-        user:discord.Member = await ctx.bot.fetch_user(trade["recipient-id"])
+        user:discord.Member = await ctx.bot.fetch_user(trade["recipient_id"])
         title = get_locale(lang, "trade_embed.outgoing_title", user.name) 
 
     e = discord.Embed(title=title, color=discord.Color.dark_theme())
     e.set_thumbnail(url=user.display_avatar.url)
 
     if incoming:
-        your_items = create_item_str(lang, trade["recipient-items"])      
-        their_items = create_item_str(lang, trade["sender-items"])
+        your_items = create_item_str(lang, trade["recipient_items"])      
+        their_items = create_item_str(lang, trade["sender_items"])
     else:
-        your_items = create_item_str(lang, trade["sender-items"])      
-        their_items = create_item_str(lang, trade["recipient-items"])
+        your_items = create_item_str(lang, trade["sender_items"])      
+        their_items = create_item_str(lang, trade["recipient_items"])
 
     e.add_field(name=get_locale(lang, "they_offer"), value=their_items)
     e.add_field(name=get_locale(lang, "for_your"), value=your_items)
@@ -63,7 +63,7 @@ async def send_trade_embed(lang:str, ctx:Context, trade:dict, incoming:bool):
         e.add_field(name=get_locale(lang, "commands"), inline=False, 
         value=get_locale(lang, "trade_embed.commands.value", PREFIX, user.name))
 
-    time_left:timedelta = (trade["send-timestamp"] + timedelta(weeks=1)) - datetime.utcnow()
+    time_left:timedelta = (trade["send_timestamp"] + timedelta(weeks=1)) - datetime.utcnow()
     e.set_footer(text=get_locale(lang, "trade_embed.footer", time_left.days, time_left.seconds // 3600, (time_left.seconds//60)%60))
 
     await ctx.send(embed=e)
@@ -81,14 +81,14 @@ async def send_trade_in_creation_embed(lang:str, ctx:Context, recipient:discord.
         e.color = discord.Color.green()
 
     if trade is None:
-        trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
+        trade = database.trade_requests.find_one({"_id": ctx.author.id, "send_timestamp": 0})
 
         if trade is None:
             await ctx.send(get_locale(lang, "no_trade_in_creation", PREFIX))
             return
 
-    your_items = create_item_str(lang, trade["sender-items"])      
-    their_items = create_item_str(lang, trade["recipient-items"])
+    your_items = create_item_str(lang, trade["sender_items"])      
+    their_items = create_item_str(lang, trade["recipient_items"])
 
     e.add_field(name=get_locale(lang, "your_items"), value=your_items)
     e.add_field(name=get_locale(lang, "their_items"), value=their_items)

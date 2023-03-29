@@ -64,6 +64,9 @@ def init_collections():
   guild_data = db["guild-data"]
   skin_data_collection = db["skin-data"]
 
+  user_data.delete_many({})
+  guild_data.delete_many({})
+
   # create indexes
   trade_requests.create_index([("send-timestamp", pymongo.ASCENDING )], expireAfterSeconds=ONE_WEEK) # TRADES DELETE AFTER ONE WEEK
 

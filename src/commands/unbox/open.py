@@ -14,7 +14,7 @@ async def open(ctx:Context, *args):
     container_name = " ".join(args[:]).strip().lower()
 
     user_data = database.user_data.find_one({"_id": ctx.author.id})
-    lang = user_data["language"]
+    lang = user_data["lang"]
     
     # check case exists
     try:
@@ -58,9 +58,9 @@ async def open(ctx:Context, *args):
     #decrement balance, increment total spent, increase total return and containers opened
     database.user_data.update_one({"_id": ctx.author.id},{"$inc" :{
         "balance" : -(container_price + KEY_PRICE), 
-        "stats.total-spent": container_price + KEY_PRICE, 
-        "stats.total-return": skin_price, 
-        "stats.containers-opened": 1
+        "stats.total_spent": container_price + KEY_PRICE, 
+        "stats.total_return": skin_price, 
+        "stats.containers_opened": 1
     }})
 
     # create embed to show user
@@ -108,14 +108,14 @@ async def open(ctx:Context, *args):
             # add to user inventory
             filter_ = {
                 '_id': ctx.author.id,
-                "$expr":{ "$lt" : ["$inventory-size", "$inventory-max-capacity"]}
+                "$expr":{ "$lt" : ["$inventory_size", "$inventory_max_capacity"]}
             }
             update =  {
                 '$push': { 
                     'inventory':  {"name": unformatted_name, "float": float_val}
                 },
                 "$inc": {
-                    "inventory-size": 1
+                    "inventory_size": 1
                 }
             }
 

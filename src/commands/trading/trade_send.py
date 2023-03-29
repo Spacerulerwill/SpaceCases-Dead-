@@ -10,17 +10,17 @@ from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def send(ctx:Context):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
-    trade = database.trade_requests.find_one({"_id": ctx.author.id, "send-timestamp": 0})
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
+    trade = database.trade_requests.find_one({"_id": ctx.author.id, "send_timestamp": 0})
     if trade is None:
         await msg_embed(ctx, get_locale(lang, "no_trade_in_creation", PREFIX))
         return
 
     update_result = database.trade_requests.update_one(
-        {"_id": ctx.author.id, "send-timestamp": 0},
+        {"_id": ctx.author.id, "send_timestamp": 0},
         {
             "$set": {
-                "send-timestamp": datetime.utcnow()
+                "send_timestamp": datetime.utcnow()
             }
         }
     )
@@ -29,6 +29,6 @@ async def send(ctx:Context):
         await msg_embed(ctx, get_locale(lang, "no_trade_in_creation", PREFIX))
         return
 
-    recipient:discord.Member = await ctx.bot.fetch_user(trade["recipient-id"])
+    recipient:discord.Member = await ctx.bot.fetch_user(trade["recipient_id"])
     await send_trade_notif_to_user(lang, ctx.author, recipient)
     await send_trade_in_creation_embed(lang, ctx, recipient, trade, True)

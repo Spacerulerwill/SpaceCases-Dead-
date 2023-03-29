@@ -11,7 +11,7 @@ from src.util.decorators import requires
 
 @requires(users_registered=True)
 async def trades(ctx:Context, in_out:str, page:int):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
+    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     if in_out is None:
         in_out = "all"
@@ -23,13 +23,13 @@ async def trades(ctx:Context, in_out:str, page:int):
     
     if in_out == "all":
         title = get_locale(lang, "trades.all.embed.title")
-        trades = list(database.trade_requests.find({"$or": [{"_id": ctx.author.id, "send-timestamp": {"$ne": 0}}, {"recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}]}))
+        trades = list(database.trade_requests.find({"$or": [{"_id": ctx.author.id, "send_timestamp": {"$ne": 0}}, {"recipient_id": ctx.author.id, "send_timestamp": {"$ne": 0}}]}))
     elif in_out == "in":
         title = get_locale(lang, "trades.in.embed.title")
-        trades = list(database.trade_requests.find({"recipient-id": ctx.author.id, "send-timestamp": {"$ne": 0}}))
+        trades = list(database.trade_requests.find({"recipient_id": ctx.author.id, "send_timestamp": {"$ne": 0}}))
     elif in_out == "out":
         title = get_locale(lang, "trades.out.embed.title")
-        trades = list(database.trade_requests.find({"_id": ctx.author.id, "send-timestamp": {"$ne": 0}}))
+        trades = list(database.trade_requests.find({"_id": ctx.author.id, "send_timestamp": {"$ne": 0}}))
 
     trades_pages = [trades[x:x+MAX_TRADES_PER_PAGE] for x in range(0, len(trades), MAX_TRADES_PER_PAGE)]
     
@@ -70,18 +70,18 @@ async def trades(ctx:Context, in_out:str, page:int):
                 async with asyncio.TaskGroup() as tg:
                     for trade in current_trade_page:
                         if trade["_id"] == ctx.author.id:
-                            tg.create_task(get_name(trade["recipient-id"]))
-                        elif trade["recipient-id"] == ctx.author.id:
+                            tg.create_task(get_name(trade["recipient_id"]))
+                        elif trade["recipient_id"] == ctx.author.id:
                             tg.create_task(get_name(trade["_id"]))
 
 
                 for trade in current_trade_page:
-                    time_left:timedelta = (trade["send-timestamp"] + one_week) - now
+                    time_left:timedelta = (trade["send_timestamp"] + one_week) - now
                     
                     if trade["_id"] == ctx.author.id:
-                        recipient = id_name_dict[trade["recipient-id"]]
+                        recipient = id_name_dict[trade["recipient_id"]]
                         trade_list_str += get_locale(lang, "trades.outgoing_to", recipient, time_left.days)
-                    elif trade["recipient-id"] == ctx.author.id:
+                    elif trade["recipient_id"] == ctx.author.id:
                         sender = id_name_dict[trade["_id"]]
                         trade_list_str += get_locale(lang, "trades.incoming_from", sender, time_left.days)
 
@@ -92,7 +92,7 @@ async def trades(ctx:Context, in_out:str, page:int):
                         tg.create_task(get_name(trade["_id"]))
 
                 for trade in current_trade_page:
-                    time_left:timedelta = (trade["send-timestamp"] + one_week) - now
+                    time_left:timedelta = (trade["send_timestamp"] + one_week) - now
                     sender = id_name_dict[trade["_id"]]
                     trade_list_str += get_locale(lang, "trades.incoming_from", sender, time_left.days)
 
@@ -100,11 +100,11 @@ async def trades(ctx:Context, in_out:str, page:int):
 
                 async with asyncio.TaskGroup() as tg:
                     for trade in current_trade_page:
-                        tg.create_task(get_name(trade["recipient-id"]))
+                        tg.create_task(get_name(trade["recipient_id"]))
 
                 for trade in current_trade_page:
-                    time_left:timedelta = (trade["send-timestamp"] + one_week) - now
-                    recipient = id_name_dict[trade["recipient-id"]]
+                    time_left:timedelta = (trade["send_timestamp"] + one_week) - now
+                    recipient = id_name_dict[trade["recipient_id"]]
                     trade_list_str += get_locale(lang, "trades.outgoing_to", recipient, time_left.days)
 
         e = discord.Embed(title=title, color=discord.Color.dark_theme())

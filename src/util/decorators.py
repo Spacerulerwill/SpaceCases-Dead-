@@ -17,14 +17,14 @@ def requires(room:bool=False, users_registered:bool=False):
             ctx, *_ = args
             ctx:Context
             user_data = database.user_data.find_one({"_id": ctx.author.id})
-            lang = user_data["language"]
+            lang = user_data["lang"]
 
             if room:
                 guild_data = database.guild_data.find_one({"_id": ctx.guild.id})
 
-                HAS_GUILD_DATA = guild_data is not None and guild_data["unbox-room-creation-channel-id"] is not None
+                HAS_GUILD_DATA = guild_data is not None and guild_data["unbox_room_creation_channel_id"] is not None
                 if HAS_GUILD_DATA:
-                    INVALID_PARENT_CHANNEL = hasattr(ctx.channel, "parent") and ctx.channel.parent.id != guild_data["unbox-room-creation-channel-id"]
+                    INVALID_PARENT_CHANNEL = hasattr(ctx.channel, "parent") and ctx.channel.parent.id != guild_data["unbox_room_creation_channel_id"]
                     NO_PARENT_CHANNEL = hasattr(ctx.channel, "parent") is False
 
                     if INVALID_PARENT_CHANNEL or NO_PARENT_CHANNEL:
