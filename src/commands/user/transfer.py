@@ -2,14 +2,14 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.util.lang import get_locale
-from src.util.decorators import requires 
+from src.util.decorators import requires
 from src.util.string_util import currency_str_format
 from src.util.embed_func import msg_embed
 from decimal import Decimal
 
-@requires(users_registered=True)
-async def transfer(ctx:Context, member: discord.Member, amount:Decimal):
 
+@requires(users_registered=True)
+async def transfer(ctx: Context, member: discord.Member, amount: Decimal):
     lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     if member is ctx.author:
@@ -20,36 +20,49 @@ async def transfer(ctx:Context, member: discord.Member, amount:Decimal):
         await msg_embed(ctx, get_locale(lang, "transfer.amount_greater_than_0"))
         return
 
-    #convert amount to cents
-    amount = int(amount * Decimal('100'))
+    # convert amount to cents
+    amount = int(amount * Decimal("100"))
 
-    #start a session to multi docuemnt atomic transaction
+    # start a session to multi docuemnt atomic transaction
     with database.mongo_client.start_session() as session:
         with session.start_transaction():
-            update_result = database.user_data.update_one({"_id": ctx.author.id}, 
-            [{
-            "$set": {                  
-                'balance': {
-                    "$cond": {
-                        "if": {
-                            "$gte": ["$balance", amount]
-                        },
-                        "then": {
-                            "$subtract": ["$balance", amount],
-                        },
-                        "else": "$balance"
+            update_result = database.user_data.update_one(
+                {"_id": ctx.author.id},
+                [
+                    {
+                        "$set": {
+                            "balance": {
+                                "$cond": {
+                                    "if": {"$gte": ["$balance", amount]},
+                                    "then": {
+                                        "$subtract": ["$balance", amount],
+                                    },
+                                    "else": "$balance",
+                                }
+                            },
+                        }
                     }
-                },
-            }
-            }], session=session)
+                ],
+                session=session,
+            )
 
             if update_result.modified_count == 1:
-                other_update_result = database.user_data.update_one({"_id":member.id}, {"$inc": {"balance": amount}}, session=session)
+                other_update_result = database.user_data.update_one(
+                    {"_id": member.id}, {"$inc": {"balance": amount}}, session=session
+                )
                 if other_update_result.matched_count == 0:
                     await ctx.send(f"{member.name} is not registered!")
                     session.abort_transaction()
                     return
-                
-                await msg_embed(ctx, get_locale(lang, "transfer.successfull", currency_str_format(amount), member.name))
+
+                await msg_embed(
+                    ctx,
+                    get_locale(
+                        lang,
+                        "transfer.successfull",
+                        currency_str_format(amount),
+                        member.name,
+                    ),
+                )
             else:
                 await msg_embed(ctx, get_locale(lang, "transfer.insufficient_funds"))

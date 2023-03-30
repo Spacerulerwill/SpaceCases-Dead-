@@ -5,7 +5,10 @@ from src.util.lang import get_locale
 from src.util import database
 from discord.ext import commands
 
-async def msg_embed(ctx:Context, msg_content:str, view:discord.ui.View=None) -> discord.Message:
+
+async def msg_embed(
+    ctx: Context, msg_content: str, view: discord.ui.View = None
+) -> discord.Message:
     """send an embed with dark theme with a text description via a context
 
     Args:
@@ -15,9 +18,15 @@ async def msg_embed(ctx:Context, msg_content:str, view:discord.ui.View=None) -> 
     Returns:
         The discord message that was sent
     """
-    return await ctx.send(embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()), view=view)
+    return await ctx.send(
+        embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()),
+        view=view,
+    )
 
-async def msg_embed_response(response:discord.InteractionResponse, msg_content:str, ephemeral:bool=False):
+
+async def msg_embed_response(
+    response: discord.InteractionResponse, msg_content: str, ephemeral: bool = False
+):
     """send an embed with dark theme with a text description via a interact response
 
     Args:
@@ -27,9 +36,13 @@ async def msg_embed_response(response:discord.InteractionResponse, msg_content:s
     Returns:
         The discord message that was sent
     """
-    return await response.send_message(embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()), ephemeral=ephemeral)
+    return await response.send_message(
+        embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()),
+        ephemeral=ephemeral,
+    )
 
-def create_msg_embed(msg_content:str) -> discord.Embed:
+
+def create_msg_embed(msg_content: str) -> discord.Embed:
     """create an embed with dark theme with a text description
 
     Args:
@@ -39,17 +52,24 @@ def create_msg_embed(msg_content:str) -> discord.Embed:
     """
     return discord.Embed(description=msg_content, color=discord.Color.dark_theme())
 
-async def msg_embed_edit(msg:discord.Message, msg_content:str, view:discord.ui.View=None):
+
+async def msg_embed_edit(
+    msg: discord.Message, msg_content: str, view: discord.ui.View = None
+):
     """edit a message and replace its embed and view with a dark theme text embed and a view
 
     Args:
         msg: the msg to edit
         msg_content: the text for the embed
-        view: optional: a view to send with the message 
+        view: optional: a view to send with the message
     """
-    await msg.edit(embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()), view=view)
+    await msg.edit(
+        embed=discord.Embed(description=msg_content, color=discord.Color.dark_theme()),
+        view=view,
+    )
 
-def welcome_embed(lang:str, bot:commands.Bot) -> discord.Embed:
+
+def welcome_embed(lang: str, bot: commands.Bot) -> discord.Embed:
     """
     send the bots welcome message
 
@@ -59,11 +79,11 @@ def welcome_embed(lang:str, bot:commands.Bot) -> discord.Embed:
     Args:
         msg: the msg to edit
         msg_content: the text for the embed
-        view: optional: a view to send with the message 
+        view: optional: a view to send with the message
     """
     e = discord.Embed(
         description=get_locale(lang, "welcome_message", bot.user.name, PREFIX, PREFIX),
-        color=discord.Color.dark_theme()
+        color=discord.Color.dark_theme(),
     )
 
     e.set_thumbnail(url=bot.user.display_avatar.url)

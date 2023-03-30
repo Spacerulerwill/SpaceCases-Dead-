@@ -23,70 +23,93 @@ from decimal import Decimal
 # commands
 from src.commands.games.skin_game import skin_game, SKIN_GAME_PRICE, SKIN_GAME_REWARD
 from src.commands.games.coinflip import coinflip
-from src.commands.games.higher_lower import higher_lower, HL_MIN_GUESS, HL_MAX_GUESS, HL_PRICE
+from src.commands.games.higher_lower import (
+    higher_lower,
+    HL_MIN_GUESS,
+    HL_MAX_GUESS,
+    HL_PRICE,
+)
 from src.commands.games.wordle import wordle
 from src.commands.games.ttt import ttt
 
+
 # initialise class
 class Games(commands.Cog):
-    def __init__(self, bot:commands.Bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.command(name="skin?", description=f"Play the skin guessing game! Costs", usage=
-    {
-        "Syntax": f"`{PREFIX}skin?`",
-        "How To Play": f"""Use the command and reply to the message with the name of the skin **within 10 seconds!** Do **not** include the condition or the name of the weapon, just the skin name. 
+    @commands.command(
+        name="skin?",
+        description=f"Play the skin guessing game! Costs",
+        usage={
+            "Syntax": f"`{PREFIX}skin?`",
+            "How To Play": f"""Use the command and reply to the message with the name of the skin **within 10 seconds!** Do **not** include the condition or the name of the weapon, just the skin name. 
         
-        It costs **{currency_str_format(SKIN_GAME_PRICE)}** to play, winning rewards you with **{currency_str_format(SKIN_GAME_REWARD)}!**"""
-    })
-    async def skin_game(self, ctx:Context):
+        It costs **{currency_str_format(SKIN_GAME_PRICE)}** to play, winning rewards you with **{currency_str_format(SKIN_GAME_REWARD)}!**""",
+        },
+    )
+    async def skin_game(self, ctx: Context):
         await skin_game(ctx)
 
-    @commands.command(description="Bet money and flip a coin! ", usage={
-        "Syntax": f"`{PREFIX}coinflip <t/ct> <amount>`",
-        "Arguments": """
+    @commands.command(
+        description="Bet money and flip a coin! ",
+        usage={
+            "Syntax": f"`{PREFIX}coinflip <t/ct> <amount>`",
+            "Arguments": """
         `<t/ct>` - whether to bet on the coin landing on the t or ct side
         `<amount>` - the amount of money to bet on the coin flip
         """,
-        "How To Play": "Use the command to bet an amount on the coinflip. If you guess correctly, your money will be doubled. But if you get it wrong, you will lose it."
-    }, aliases=["flip", "coin"])
-    async def coinflip(self, ctx:Context, t_ct:Literal["t", "ct"], amount:Decimal):
+            "How To Play": "Use the command to bet an amount on the coinflip. If you guess correctly, your money will be doubled. But if you get it wrong, you will lose it.",
+        },
+        aliases=["flip", "coin"],
+    )
+    async def coinflip(self, ctx: Context, t_ct: Literal["t", "ct"], amount: Decimal):
         await coinflip(ctx, t_ct, amount)
 
-    @commands.command(description="Play the higher or lower game!", usage={
-        "Syntax": f"`{PREFIX}hl <difficulty>`",
-        "Arguments": f"`<difficulty>` - the amount of correct guessed needed to win in range **{HL_MIN_GUESS}** to **{HL_MAX_GUESS}** - **optional**",
-        "How To Play": f"""
+    @commands.command(
+        description="Play the higher or lower game!",
+        usage={
+            "Syntax": f"`{PREFIX}hl <difficulty>`",
+            "Arguments": f"`<difficulty>` - the amount of correct guessed needed to win in range **{HL_MIN_GUESS}** to **{HL_MAX_GUESS}** - **optional**",
+            "How To Play": f"""
         Try and figure out if the price of the skin is more or less expensive than the previous one! 
         Choose a difficulty from 3 to 10, which dictates the amount of correct guessed needed before winning
-        It costs **{currency_str_format(HL_PRICE)}** to play!"""
-    })
-    async def hl(self, ctx:Context, difficulty:int=HL_MIN_GUESS):
+        It costs **{currency_str_format(HL_PRICE)}** to play!""",
+        },
+    )
+    async def hl(self, ctx: Context, difficulty: int = HL_MIN_GUESS):
         await higher_lower(ctx, difficulty)
 
-    @commands.command(description="Play the wordle word guessing game!", usage={
-        "Syntax": f"`{PREFIX}wordle <guess>`",
-        "Arguments": f"`<guess>` - the word you guess - **optional**",
-        "How To Play": """
+    @commands.command(
+        description="Play the wordle word guessing game!",
+        usage={
+            "Syntax": f"`{PREFIX}wordle <guess>`",
+            "Arguments": f"`<guess>` - the word you guess - **optional**",
+            "How To Play": """
         Try and guess the 5 letter word in 6 guesses! When you guess a word, a letter will show:
         • **Green** if it is the correct letter in the correct place
         • **Yellow** if the letter is in the word but is in the wrong place
         • **Gray** if the letter is not in the word at all
-        """
-    })
-    async def wordle(self, ctx:Context, guess:str=None):
+        """,
+        },
+    )
+    async def wordle(self, ctx: Context, guess: str = None):
         await wordle(ctx, guess)
 
-    @commands.command(description="Play Tic Tac Toe against another player!", usage={
-        "Syntax": f"`{PREFIX}ttt <player2> <bet>`",
-        "Arguments": f"""`<player2>` - the opponent 
+    @commands.command(
+        description="Play Tic Tac Toe against another player!",
+        usage={
+            "Syntax": f"`{PREFIX}ttt <player2> <bet>`",
+            "Arguments": f"""`<player2>` - the opponent 
         `<bet>` - amount to bet on the game - **optional**""",
-        "How To Play": """
+            "How To Play": """
         Take turns to place a naught or a cross on the board. Whoever gets 3 in a row wins the bet! If it is a draw, both players keep their money.
-        """
-    })
-    async def ttt(self, ctx:Context, player2:discord.Member, bet:Decimal=0):
+        """,
+        },
+    )
+    async def ttt(self, ctx: Context, player2: discord.Member, bet: Decimal = 0):
         await ttt(ctx, player2, bet)
+
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot):

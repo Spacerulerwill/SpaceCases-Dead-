@@ -1,4 +1,4 @@
-#rarity emojis
+# rarity emojis
 CONSUMER_GRADE_EMOJI = "<:consumer_emoji:1056677265318105158>"
 INDUSTRIAL_GRADE_EMOJI = "<:industrial_emoji:1056677268346392706>"
 MILSPEC_EMOJI = "<:milspec_emoji:1056677269323653202>"
@@ -9,7 +9,7 @@ CONTRABAND_EMOJI = "<:contraband_emoji:1056677266341494824>"
 
 BLANK_LETTER = "<:_gray:1073908863838982184>"
 
-#wordle emoji dicts
+# wordle emoji dicts
 gray_letters = {
     "a": "<:A_gray:1073694060944035870>",
     "b": "<:B_gray:1073694082855079987>",
@@ -36,7 +36,7 @@ gray_letters = {
     "w": "<:W_gray:1073716853777633422>",
     "x": "<:X_gray:1073726832655999027>",
     "y": "<:Y_gray:1073726855540125828>",
-    "z": "<:Z_gray:1073726882836652033>"
+    "z": "<:Z_gray:1073726882836652033>",
 }
 
 green_letters = {
@@ -65,7 +65,7 @@ green_letters = {
     "w": "<:W_green:1073726801131618304>",
     "x": "<:X_green:1073726833801043988>",
     "y": "<:Y_green:1073726857788268656>",
-    "z": "<:Z_green:1073726885005107270>"
+    "z": "<:Z_green:1073726885005107270>",
 }
 
 yellow_letters = {
@@ -94,5 +94,5 @@ yellow_letters = {
     "w": "<:W_yellow:1073716856034168873>",
     "x": "<:X_yellow:1073716859326709761>",
     "y": "<:Y_yellow:1073716863479062528>",
-    "z": "<:Z_yellow:1073726886053683240>"
-}   
+    "z": "<:Z_yellow:1073726886053683240>",
+}

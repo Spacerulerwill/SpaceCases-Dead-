@@ -7,9 +7,9 @@ from src.util.string_util import currency_str_format, get_inspect_link_3D
 from src.util.embed_func import msg_embed
 from discord.ext.commands import Context
 
-@requires(users_registered=True)
-async def inspect(ctx:Context, member:discord.Member, item_index:int):
 
+@requires(users_registered=True)
+async def inspect(ctx: Context, member: discord.Member, item_index: int):
     if member is None:
         member = ctx.author
 
@@ -20,11 +20,11 @@ async def inspect(ctx:Context, member:discord.Member, item_index:int):
     if item_index > len(user_inventory):
         await msg_embed(ctx, get_locale(lang, "inventory.not_found_index", item_index))
         return
-        
+
     item_index -= 1
 
     item = user_inventory[item_index]
-    
+
     unformatted_name = item["name"]
     float_val = str(item["float"])
 
@@ -36,12 +36,18 @@ async def inspect(ctx:Context, member:discord.Member, item_index:int):
     rarity = item_data["rarity"]
     rarity_color = rarity_color_dict[rarity]
     inspect_url = get_inspect_link_3D(item_data["inspect_url"])
-    
-    e = discord.Embed(title=formatted_name, color=rarity_color, description=get_locale(lang, "inspect_in_3d", inspect_url))
+
+    e = discord.Embed(
+        title=formatted_name,
+        color=rarity_color,
+        description=get_locale(lang, "inspect_in_3d", inspect_url),
+    )
     e.add_field(name=get_locale(lang, "market_value"), value=price)
     e.add_field(name=get_locale(lang, "float"), value=float_val)
     e.add_field(name=get_locale(lang, "rarity"), value=get_locale(lang, rarity))
     e.set_image(url=image_url)
-    e.set_footer(icon_url=member.display_avatar.url, text=f"This item belongs to {member.name}")
+    e.set_footer(
+        icon_url=member.display_avatar.url, text=f"This item belongs to {member.name}"
+    )
 
     await ctx.send(embed=e)

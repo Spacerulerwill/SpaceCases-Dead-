@@ -23,7 +23,7 @@ containerlist_pages = [
             "horizon case",
             "clutch case",
             "spectrum 2 case",
-        ]
+        ],
     ),
     (
         "Cases",
@@ -40,7 +40,7 @@ containerlist_pages = [
             "falchion case",
             "chroma 2 case",
             "chroma case",
-        ]
+        ],
     ),
     (
         "Cases",
@@ -57,13 +57,14 @@ containerlist_pages = [
             "operation bravo case",
             "esports 2013 case",
             "csgo weapon case",
-        ]
-    )
+        ],
+    ),
 ]
 
 len_containerlist_pages = len(containerlist_pages)
 
-async def containers(ctx:Context, page:int = 1):
+
+async def containers(ctx: Context, page: int = 1):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
 
     if user_data is None:
@@ -76,14 +77,18 @@ async def containers(ctx:Context, page:int = 1):
         return
 
     page -= 1
-    
+
     def get_embed():
         container_type, containers = containerlist_pages[page]
-    
+
         e = discord.Embed(
-            title=get_locale(lang, "containers.embed.title", page+1, len_containerlist_pages), 
-            description=get_locale(lang, "containers.embed.description", PREFIX, PREFIX),
-            color=discord.Color.dark_theme()
+            title=get_locale(
+                lang, "containers.embed.title", page + 1, len_containerlist_pages
+            ),
+            description=get_locale(
+                lang, "containers.embed.description", PREFIX, PREFIX
+            ),
+            color=discord.Color.dark_theme(),
         )
 
         page_field = ""
@@ -92,13 +97,19 @@ async def containers(ctx:Context, page:int = 1):
 
             page_field += f'{container_data["formatted_name"]} - **{currency_str_format(container_data["price"])}**\n'
         e.add_field(name=container_type, value=page_field)
-        e.set_footer(text=get_locale(lang, "containers.embed.footer", currency_str_format(KEY_PRICE)))
+        e.set_footer(
+            text=get_locale(
+                lang, "containers.embed.footer", currency_str_format(KEY_PRICE)
+            )
+        )
         return e
 
     # callbacks
     async def prev_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
+            await msg_embed_response(
+                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+            )
             return
 
         nonlocal page
@@ -106,17 +117,19 @@ async def containers(ctx:Context, page:int = 1):
         if page > 0:
             page -= 1
         else:
-            page = len_containerlist_pages-1
+            page = len_containerlist_pages - 1
         await interact.response.edit_message(embed=get_embed(), view=view)
 
     async def next_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
+            await msg_embed_response(
+                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+            )
             return
 
         nonlocal page
 
-        if page < len_containerlist_pages-1:
+        if page < len_containerlist_pages - 1:
             page += 1
         else:
             page = 0
@@ -125,7 +138,7 @@ async def containers(ctx:Context, page:int = 1):
     async def view_timeout_callback():
         await msg.delete()
 
-    #create next and prev page buttons
+    # create next and prev page buttons
     view = discord.ui.View(timeout=30)
     view.on_timeout = view_timeout_callback
 

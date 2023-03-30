@@ -9,84 +9,105 @@ from src.util.constants import ONE_WEEK
 
 # MongoDB collections
 user_data: Collection
-trade_requests:Collection
-guild_data:Collection
-skin_data_collection:Collection
+trade_requests: Collection
+guild_data: Collection
+skin_data_collection: Collection
 
-mongo_client:pymongo.MongoClient
+mongo_client: pymongo.MongoClient
 
-# Bot data 
-leaderboard = [] # user leaderboard
+# Bot data
+leaderboard = []  # user leaderboard
 rooms = {}
 wordle_games = {}
 skin_data = {}
-skin_data_hl = {} # SKIN DATA for higher lower game - does not include knives, glov
+skin_data_hl = {}  # SKIN DATA for higher lower game - does not include knives, glov
 containers = {}
 word_list = []
 
+
 def get_leaderboard():
-  """Regenerate the leaderboard"""
-  global leaderboard
+    """Regenerate the leaderboard"""
+    global leaderboard
 
-  start = timer()
-  all_users_data = user_data.find({}).batch_size(4)
+    start = timer()
+    all_users_data = user_data.find({}).batch_size(4)
 
-  leaderboard = sorted([(user_data["_id"], sum([skin_data["skins"][item["name"]]["price"] for item in user_data["inventory"]])) for user_data in all_users_data], key=lambda x: x[1], reverse=True)
-  end = timer()
+    leaderboard = sorted(
+        [
+            (
+                user_data["_id"],
+                sum(
+                    [
+                        skin_data["skins"][item["name"]]["price"]
+                        for item in user_data["inventory"]
+                    ]
+                ),
+            )
+            for user_data in all_users_data
+        ],
+        key=lambda x: x[1],
+        reverse=True,
+    )
+    end = timer()
 
-  print(f"Generated leaderboard in {timedelta(seconds=end-start)}")
+    print(f"Generated leaderboard in {timedelta(seconds=end-start)}")
+
 
 # setup database and data
 def init_collections():
-  global user_data, trade_requests, skin_data_collection, mongo_client, guild_data, word_list
+    global user_data, trade_requests, skin_data_collection, mongo_client, guild_data, word_list
 
-  #try read mongodb database password from database_pass.txt, if fails read from environment variable
-  try:
-      #read local bot_info
-      f = open("database_pass.txt", "r")
-      PASS = f.read()
-  except FileNotFoundError:
-      #read password from environment variable
-      PASS = environ["MONGO_DB_PASS"]
+    # try read mongodb database password from database_pass.txt, if fails read from environment variable
+    try:
+        # read local bot_info
+        f = open("database_pass.txt", "r")
+        PASS = f.read()
+    except FileNotFoundError:
+        # read password from environment variable
+        PASS = environ["MONGO_DB_PASS"]
 
-  #setup mongodb database
-  mongo_url = f"mongodb+srv://admin:{PASS}@csgo-case-bot.odtd2un.mongodb.net/?retryWrites=true&w=majority"
-  mongo_client = pymongo.MongoClient(mongo_url, tlsCAFile=certifi.where())
+    # setup mongodb database
+    mongo_url = f"mongodb+srv://admin:{PASS}@csgo-case-bot.odtd2un.mongodb.net/?retryWrites=true&w=majority"
+    mongo_client = pymongo.MongoClient(mongo_url, tlsCAFile=certifi.where())
 
-  print("Connected to MongoDB database!")
+    print("Connected to MongoDB database!")
 
-  # load the csgo bot database
-  db = mongo_client['csgo-case-bot']
+    # load the csgo bot database
+    db = mongo_client["csgo-case-bot"]
 
-  # load collections
-  user_data = db["user-data"]
-  trade_requests = db["trade-requests"]
-  guild_data = db["guild-data"]
-  skin_data_collection = db["skin-data"]
+    # load collections
+    user_data = db["user-data"]
+    trade_requests = db["trade-requests"]
+    guild_data = db["guild-data"]
+    skin_data_collection = db["skin-data"]
+    patch_notes = db["patch-notes"]
 
-  user_data.delete_many({})
-  guild_data.delete_many({})
+    # create indexes
+    trade_requests.create_index(
+        [("send-timestamp", pymongo.ASCENDING)], expireAfterSeconds=ONE_WEEK
+    )  # TRADES DELETE AFTER ONE WEEK
 
-  # create indexes
-  trade_requests.create_index([("send-timestamp", pymongo.ASCENDING )], expireAfterSeconds=ONE_WEEK) # TRADES DELETE AFTER ONE WEEK
+    print("Loaded collections")
 
-  print("Loaded collections")
 
 def load_data():
+    global containers, skin_data, skin_data_hl, word_list
 
-  global containers, skin_data, skin_data_hl, word_list
+    # load container data
+    containers = skin_data_collection.find_one({"_id": "container-data"})
 
-  # load container data
-  containers = skin_data_collection.find_one({"_id": "container-data"})
+    # load skin data
+    skin_data = skin_data_collection.find_one({"_id": "skin-data"})
 
-  # load skin data
-  skin_data = skin_data_collection.find_one({"_id": "skin-data"})
-  
-  # skin data for higher lower gamae
-  skin_data_hl = {key: value for key, value in skin_data["skins"].items() if value["type"] not in ["Gloves", "Knife"] or value["price"] == NO_PRICE_FOUND}
+    # skin data for higher lower gamae
+    skin_data_hl = {
+        key: value
+        for key, value in skin_data["skins"].items()
+        if value["type"] not in ["Gloves", "Knife"] or value["price"] == NO_PRICE_FOUND
+    }
 
-  # word list
-  with open("res/wordlist.txt") as f:
-    word_list = f.read().splitlines()
+    # word list
+    with open("res/wordlist.txt") as f:
+        word_list = f.read().splitlines()
 
-  print("Loaded data")
+    print("Loaded data")

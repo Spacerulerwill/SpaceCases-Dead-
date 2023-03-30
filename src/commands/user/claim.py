@@ -25,190 +25,273 @@ CLAIM_MONEY_AMOUNTS = [
     22500,
     25000,
     27500,
-    30000
+    30000,
 ]
 
 max_claim_streak = len(CLAIM_MONEY_AMOUNTS)
 
-CLAIM_BONUS_REWARDS = {
-    4: "classified",
-    10: "covert",
-    14: "rare items"
-}
+CLAIM_BONUS_REWARDS = {4: "classified", 10: "covert", 14: "rare items"}
+
 
 @requires(users_registered=True)
-async def claim(ctx:Context):
-    #update balance and set last claim to now if been twelve hours since last claim
-    update_result = database.user_data.update_one({"_id": ctx.author.id},
-    [   
-        {
-            "$set": {      
-                 'claim_streak': {
-                    "$let": {
-                        "vars": {"daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last_claim", ONE_DAY]}]}]}},
-                        "in": {
-                            "$switch": {
-                                "branches": [
-                                    {"case": {"$or": [
-                                        {"$eq": ["$last_claim", 0]},
-                                        {"$gt": ["$$daydiff", 1]}
-
-                                    ]}, "then": 1},
-                                    {"case": {"$eq": ["$$daydiff", 1]}, "then": {"$add": ["$claim_streak", 1]}}
-                                ] ,
-                                "default": "$claim_streak"
-                            }
-                        }
-                    }
-                },
-
-                'balance': {
-                    "$let": {
-                        "vars": {
-                            "daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last_claim", ONE_DAY]}]}]},
-                            "claim_money_amounts": CLAIM_MONEY_AMOUNTS
-                        },
-                        "in": {
-                            "$cond": { # if first claim ever, or streak broken, add the first money amount
-                                "if": {
-                                    "$or": [
-                                        {"$eq": ["$last_claim", 0]},
-                                        {"$gt": ["$$daydiff", 1]}
-                                    ]
-                                },
-                                "then": {"$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", 0]}]},
-                                "else": { #otherwise if claim streak is greater than max, add the max
-                                    "$cond": {
-                                        "if": {
-                                            "$eq": ["$$daydiff", 1]
-                                        },
-                                        "then": {
-                                            "$cond": [
-                                                {"$gte": ["$claim_streak", max_claim_streak]}, 
-                                                {"$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", max_claim_streak-1]}]},
-                                                {"$add": ["$balance", {"$arrayElemAt": ["$$claim_money_amounts", "$claim_streak"]}]}
+async def claim(ctx: Context):
+    # update balance and set last claim to now if been twelve hours since last claim
+    update_result = database.user_data.update_one(
+        {"_id": ctx.author.id},
+        [
+            {
+                "$set": {
+                    "claim_streak": {
+                        "$let": {
+                            "vars": {
+                                "daydiff": {
+                                    "$subtract": [
+                                        int(time.time()) // ONE_DAY,
+                                        {
+                                            "$trunc": [
+                                                {"$divide": ["$last_claim", ONE_DAY]}
                                             ]
                                         },
-                                        "else": "$balance"
-                                    }
+                                    ]
                                 }
-                            }
+                            },
+                            "in": {
+                                "$switch": {
+                                    "branches": [
+                                        {
+                                            "case": {
+                                                "$or": [
+                                                    {"$eq": ["$last_claim", 0]},
+                                                    {"$gt": ["$$daydiff", 1]},
+                                                ]
+                                            },
+                                            "then": 1,
+                                        },
+                                        {
+                                            "case": {"$eq": ["$$daydiff", 1]},
+                                            "then": {"$add": ["$claim_streak", 1]},
+                                        },
+                                    ],
+                                    "default": "$claim_streak",
+                                }
+                            },
                         }
-                    }
-                },
-
-                'last_claim': {
-                    "$let": {
-                        "vars": {
-                            "daydiff": {"$subtract": [int(time.time())//ONE_DAY, {"$trunc": [{"$divide": ["$last_claim", ONE_DAY]}]}]},
-                            "claim_money_amounts": CLAIM_MONEY_AMOUNTS
-                        },
-                        "in": {
-                            "$cond": {
-                                "if": {
-                                    "$or": [
-                                        {"$gte": ["$$daydiff", 1]},
-                                        {"$eq": ["$last_claim", 0]}
+                    },
+                    "balance": {
+                        "$let": {
+                            "vars": {
+                                "daydiff": {
+                                    "$subtract": [
+                                        int(time.time()) // ONE_DAY,
+                                        {
+                                            "$trunc": [
+                                                {"$divide": ["$last_claim", ONE_DAY]}
+                                            ]
+                                        },
                                     ]
                                 },
-                                "then": int(time.time()),
-                                "else": "$last_claim"
-                            }
+                                "claim_money_amounts": CLAIM_MONEY_AMOUNTS,
+                            },
+                            "in": {
+                                "$cond": {  # if first claim ever, or streak broken, add the first money amount
+                                    "if": {
+                                        "$or": [
+                                            {"$eq": ["$last_claim", 0]},
+                                            {"$gt": ["$$daydiff", 1]},
+                                        ]
+                                    },
+                                    "then": {
+                                        "$add": [
+                                            "$balance",
+                                            {
+                                                "$arrayElemAt": [
+                                                    "$$claim_money_amounts",
+                                                    0,
+                                                ]
+                                            },
+                                        ]
+                                    },
+                                    "else": {  # otherwise if claim streak is greater than max, add the max
+                                        "$cond": {
+                                            "if": {"$eq": ["$$daydiff", 1]},
+                                            "then": {
+                                                "$cond": [
+                                                    {
+                                                        "$gte": [
+                                                            "$claim_streak",
+                                                            max_claim_streak,
+                                                        ]
+                                                    },
+                                                    {
+                                                        "$add": [
+                                                            "$balance",
+                                                            {
+                                                                "$arrayElemAt": [
+                                                                    "$$claim_money_amounts",
+                                                                    max_claim_streak
+                                                                    - 1,
+                                                                ]
+                                                            },
+                                                        ]
+                                                    },
+                                                    {
+                                                        "$add": [
+                                                            "$balance",
+                                                            {
+                                                                "$arrayElemAt": [
+                                                                    "$$claim_money_amounts",
+                                                                    "$claim_streak",
+                                                                ]
+                                                            },
+                                                        ]
+                                                    },
+                                                ]
+                                            },
+                                            "else": "$balance",
+                                        }
+                                    },
+                                }
+                            },
                         }
-                    }
+                    },
+                    "last_claim": {
+                        "$let": {
+                            "vars": {
+                                "daydiff": {
+                                    "$subtract": [
+                                        int(time.time()) // ONE_DAY,
+                                        {
+                                            "$trunc": [
+                                                {"$divide": ["$last_claim", ONE_DAY]}
+                                            ]
+                                        },
+                                    ]
+                                },
+                                "claim_money_amounts": CLAIM_MONEY_AMOUNTS,
+                            },
+                            "in": {
+                                "$cond": {
+                                    "if": {
+                                        "$or": [
+                                            {"$gte": ["$$daydiff", 1]},
+                                            {"$eq": ["$last_claim", 0]},
+                                        ]
+                                    },
+                                    "then": int(time.time()),
+                                    "else": "$last_claim",
+                                }
+                            },
+                        }
+                    },
                 }
             }
-        }
-    ])
+        ],
+    )
 
-    #if document modified
+    # if document modified
     if update_result.modified_count == 1:
-
         post_doc = database.user_data.find_one({"_id": ctx.author.id})
         lang = post_doc["lang"]
 
-        #create embed
-        e = discord.Embed(title=get_locale(lang, "claim.embed.title"), description=get_locale(lang, "claim.embed.description"), color=discord.Color.green())
+        # create embed
+        e = discord.Embed(
+            title=get_locale(lang, "claim.embed.title"),
+            description=get_locale(lang, "claim.embed.description"),
+            color=discord.Color.green(),
+        )
         e.set_thumbnail(url=ctx.author.display_avatar.url)
 
         footer = get_locale(lang, "claim.embed.footer")
 
         view = None
-        
+
         prev_streak = post_doc["claim_streak"]
         if prev_streak != 0:
             prev_streak -= 1
 
-        if post_doc["claim_streak"] >= max_claim_streak: 
-            e.add_field(name=get_locale(lang, "claim.embed.amount"), value="$300.00", inline=True)
-        else:      
-            e.add_field(name=get_locale(lang, "claim.embed.amount"), value=currency_str_format(CLAIM_MONEY_AMOUNTS[prev_streak]), inline=True)
+        if post_doc["claim_streak"] >= max_claim_streak:
+            e.add_field(
+                name=get_locale(lang, "claim.embed.amount"),
+                value="$300.00",
+                inline=True,
+            )
+        else:
+            e.add_field(
+                name=get_locale(lang, "claim.embed.amount"),
+                value=currency_str_format(CLAIM_MONEY_AMOUNTS[prev_streak]),
+                inline=True,
+            )
 
-        e.add_field(name=get_locale(lang, "claim.embed.new_balance"), value=currency_str_format(post_doc["balance"]), inline=True)
-        e.add_field(name=get_locale(lang, "claim.embed.streak"), value=post_doc["claim_streak"], inline=True)
+        e.add_field(
+            name=get_locale(lang, "claim.embed.new_balance"),
+            value=currency_str_format(post_doc["balance"]),
+            inline=True,
+        )
+        e.add_field(
+            name=get_locale(lang, "claim.embed.streak"),
+            value=post_doc["claim_streak"],
+            inline=True,
+        )
 
         bonus_reward = CLAIM_BONUS_REWARDS.get(post_doc["claim_streak"])
 
         interacted_with = False
-        
+
         # callbacks
         async def sell_item():
-
             nonlocal interacted_with
-            #change color to dark gray, remove footer, change balance to have balance of skin
-            database.user_data.update_one({"_id": ctx.author.id}, {"$inc" :{"balance" : skin_price}})
+            # change color to dark gray, remove footer, change balance to have balance of skin
+            database.user_data.update_one(
+                {"_id": ctx.author.id}, {"$inc": {"balance": skin_price}}
+            )
 
             e.colour = discord.colour.Color.dark_gray()
             e.set_footer(text="")
 
             await msg.edit(embed=e, view=None)
             interacted_with = True
-        
-        async def sell_callback(interact:discord.Interaction):
+
+        async def sell_callback(interact: discord.Interaction):
             if ctx.author.id == interact.user.id:
                 await sell_item()
             await interact.response.defer()
-        
-        async def inventory_callback(interact:discord.Interaction):
+
+        async def inventory_callback(interact: discord.Interaction):
             nonlocal interacted_with
             if interact.user.id == ctx.author.id:
-                
                 # add to user inventory
                 filter_ = {
-                    '_id': ctx.author.id,
-                    "$expr":{ "$lt" : ["$inventory_size", "$inventory_max_capacity"]}
+                    "_id": ctx.author.id,
+                    "$expr": {"$lt": ["$inventory_size", "$inventory_max_capacity"]},
                 }
-                update =  {
-                    '$push': { 
-                        'inventory':  {"name": unformatted_name, "float": float_val}
+                update = {
+                    "$push": {
+                        "inventory": {"name": unformatted_name, "float": float_val}
                     },
-                    "$inc": {
-                        "inventory_size": 1
-                    }
+                    "$inc": {"inventory_size": 1},
                 }
 
-                update_result = database.user_data.update_one(filter_, update)    
-                        
+                update_result = database.user_data.update_one(filter_, update)
+
                 if update_result.modified_count == 1:
                     e.colour = discord.colour.Color.green()
                     e.set_footer(text="")
-                    await  msg.edit(embed=e, view=None)
-                    
+                    await msg.edit(embed=e, view=None)
+
                 elif update_result.modified_count == 0:
                     await msg_embed(ctx, get_locale(lang, "inventory.full"))
             await interact.response.defer()
 
-        #if not interacted with after 30 seconds, sell the item
+        # if not interacted with after 30 seconds, sell the item
         async def view_timeout_callback():
             if not interacted_with:
                 await sell_item()
-        
+
         # if bonus item reward, pick random item of given quality
         if bonus_reward != None:
-           
             footer += get_locale(lang, "claim.embed.footer.bonus_item")
 
-            #pick random case
+            # pick random case
             random_container = random.choice(list(database.containers.keys()))
             item_pool = database.containers[random_container]["items"][bonus_reward]
             unformatted_name, float_val = gen_item(random.choice(item_pool))
@@ -216,16 +299,25 @@ async def claim(ctx:Context):
             skin_data = database.skin_data["skins"][unformatted_name]
             skin_price = skin_data["price"]
 
-            e.add_field(name=get_locale(lang, "claim.embed.bonus_item"), value=f"**{skin_data['formatted_name']}** - **{currency_str_format(skin_price)}**", inline=False)
+            e.add_field(
+                name=get_locale(lang, "claim.embed.bonus_item"),
+                value=f"**{skin_data['formatted_name']}** - **{currency_str_format(skin_price)}**",
+                inline=False,
+            )
             e.color = rarity_color_dict[skin_data["rarity"]]
-            e.set_image(url=skin_data["image_url"])         
+            e.set_image(url=skin_data["image_url"])
 
-            #create view
+            # create view
             view = discord.ui.View()
             view.on_timeout = view_timeout_callback
-            inventory_button = discord.ui.Button(label=get_locale(lang, "button.add_to_inventory"), style=discord.ButtonStyle.green)
+            inventory_button = discord.ui.Button(
+                label=get_locale(lang, "button.add_to_inventory"),
+                style=discord.ButtonStyle.green,
+            )
             inventory_button.callback = inventory_callback
-            sell_button = discord.ui.Button(label=get_locale(lang, "button.sell"), style=discord.ButtonStyle.red)
+            sell_button = discord.ui.Button(
+                label=get_locale(lang, "button.sell"), style=discord.ButtonStyle.red
+            )
             sell_button.callback = sell_callback
             view.add_item(inventory_button)
             view.add_item(sell_button)

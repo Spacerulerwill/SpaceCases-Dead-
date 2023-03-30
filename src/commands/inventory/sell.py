@@ -8,7 +8,7 @@ from discord.ext.commands import Context
 
 
 @requires(users_registered=True)
-async def sell(ctx:Context, item_index:int):
+async def sell(ctx: Context, item_index: int):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
     lang = user_data["lang"]
     user_inventory = list(user_data["inventory"])
@@ -17,18 +17,20 @@ async def sell(ctx:Context, item_index:int):
         await msg_embed(ctx, get_locale(lang, "inventory.not_found_index", item_index))
         return
 
-    #callbacks
+    # callbacks
     is_msg_deleted = False
+
     async def close_message():
         nonlocal is_msg_deleted
         if not is_msg_deleted:
-            is_msg_deleted =True
+            is_msg_deleted = True
             await msg.delete()
 
     async def sell_callback(interact: discord.Interaction):
-
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
+            await msg_embed_response(
+                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+            )
             return
 
         update_result = database.user_data.update_one(
@@ -37,20 +39,26 @@ async def sell(ctx:Context, item_index:int):
                 "$pull": {"inventory": {"name": item, "float": float}},
                 "$inc": {
                     "balance": database.skin_data["skins"][item]["price"],
-                    "inventory-size": -1
-                }
+                    "inventory_size": -1,
+                },
             },
         )
-        
+
         if update_result.matched_count == 0:
             await close_message()
             await msg_embed(ctx, get_locale(lang, "sell.item_missing", formatted_name))
         else:
-            await msg_embed_edit(msg, get_locale(lang, "sell.success", formatted_name), view=None)
+            await msg_embed_edit(
+                msg, get_locale(lang, "sell.success", formatted_name), view=None
+            )
 
     async def cancel_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, get_locale("not_your_button")), ephemeral=True)
+            await msg_embed_response(
+                interact.response,
+                get_locale(lang, get_locale("not_your_button")),
+                ephemeral=True,
+            )
             return
 
         await close_message()
@@ -65,13 +73,19 @@ async def sell(ctx:Context, item_index:int):
 
     view = discord.ui.View(timeout=30)
     view.on_timeout = close_message
-    confirm_button = discord.ui.Button(label=get_locale(lang, "button.sell"), style=discord.ButtonStyle.green)
+    confirm_button = discord.ui.Button(
+        label=get_locale(lang, "button.sell"), style=discord.ButtonStyle.green
+    )
     confirm_button.callback = sell_callback
 
-    cancel_button = discord.ui.Button(label=get_locale(lang, "button.cancel"), style=discord.ButtonStyle.red)
+    cancel_button = discord.ui.Button(
+        label=get_locale(lang, "button.cancel"), style=discord.ButtonStyle.red
+    )
     cancel_button.callback = cancel_callback
 
     view.add_item(confirm_button)
     view.add_item(cancel_button)
 
-    msg = await msg_embed(ctx, get_locale(lang, "sell.are_you_sure", formatted_name, price), view=view)
+    msg = await msg_embed(
+        ctx, get_locale(lang, "sell.are_you_sure", formatted_name, price), view=view
+    )

@@ -6,7 +6,8 @@ from src.util.string_util import currency_str_format, get_closest_match
 from src.util.constants import conditions, rarity_color_dict
 from src.util.embed_func import msg_embed, msg_embed_response
 
-async def container(ctx:Context, *args):
+
+async def container(ctx: Context, *args):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
 
     if user_data is None:
@@ -15,26 +16,33 @@ async def container(ctx:Context, *args):
         lang = user_data["lang"]
 
     container = " ".join(args[:]).strip().lower()
-    
+
     try:
         container_data = database.containers[container]
         container_name = container_data["formatted_name"]
         container_price = currency_str_format(container_data["price"])
         container_image_url = container_data["image_url"]
     except KeyError:
-        #try and find closest match
+        # try and find closest match
         closest_match = get_closest_match(container, database.containers.keys())
-        
-        #if match is reasonably close enough
+
+        # if match is reasonably close enough
         if closest_match is None:
             await msg_embed(ctx, get_locale(lang, "container.not_found"))
         else:
             container_data = database.containers[closest_match]
-            await msg_embed(ctx, get_locale(lang, "container.not_found_suggest", {container_data["formatted_name"]}))
+            await msg_embed(
+                ctx,
+                get_locale(
+                    lang,
+                    "container.not_found_suggest",
+                    {container_data["formatted_name"]},
+                ),
+            )
         return
-        
+
     item_index = 0
-    
+
     rarities = {}
     selected_rarity = "all items"
     rarities["all items"] = container_data["all items"]
@@ -44,24 +52,35 @@ async def container(ctx:Context, *args):
         if len(value) != 0:
             rarities[key] = value
 
-    #create select menu and left right arrow buttons
+    # create select menu and left right arrow buttons
     view = discord.ui.View(timeout=60)
 
-    select_options = [discord.SelectOption(label=get_locale(lang, "container.select.all_items"), value="all items")]
-    for key, rarity, in container_data["items"].items():
+    select_options = [
+        discord.SelectOption(
+            label=get_locale(lang, "container.select.all_items"), value="all items"
+        )
+    ]
+    for (
+        key,
+        rarity,
+    ) in container_data["items"].items():
         if len(rarity) != 0:
-            select_options.append(discord.SelectOption(label=get_locale(lang, key), value=key))
+            select_options.append(
+                discord.SelectOption(label=get_locale(lang, key), value=key)
+            )
 
     select = discord.ui.Select(options=select_options)
 
     async def select_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "not_your_select"), ephemeral=True)
+            await msg_embed_response(
+                interact.response, get_locale(lang, "not_your_select"), ephemeral=True
+            )
             return
 
         nonlocal selected_rarity, item_index, rarity_len
 
-        selected_rarity = select.values[0]        
+        selected_rarity = select.values[0]
         rarity_len = len(rarities[selected_rarity])
         item_index = 0
         await interact.response.edit_message(embed=get_embed(), view=view)
@@ -73,30 +92,34 @@ async def container(ctx:Context, *args):
 
     async def prev_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
+            await msg_embed_response(
+                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+            )
             return
-        
+
         nonlocal item_index
 
         if item_index == 0:
-            item_index = len(rarities[selected_rarity])-1
+            item_index = len(rarities[selected_rarity]) - 1
         else:
             item_index -= 1
-        await interact.response.edit_message(embed=get_embed(), view=view) 
+        await interact.response.edit_message(embed=get_embed(), view=view)
 
     async def next_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
-            await msg_embed_response(interact.response, get_locale(lang, "not_your_button"), ephemeral=True)
+            await msg_embed_response(
+                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+            )
             return
 
         nonlocal item_index
 
-        if item_index == len(rarities[selected_rarity])-1:
+        if item_index == len(rarities[selected_rarity]) - 1:
             item_index = 0
         else:
             item_index += 1
         await interact.response.edit_message(embed=get_embed(), view=view)
-    
+
     async def on_view_timeout():
         await msg.delete()
 
@@ -110,26 +133,34 @@ async def container(ctx:Context, *args):
 
     def get_embed():
         item = rarities[selected_rarity][item_index]
-        formatted_item_name = database.skin_data["no_wear_skins"][item]["formatted_name"]
+        formatted_item_name = database.skin_data["no_wear_skins"][item][
+            "formatted_name"
+        ]
 
-        best_condition_index = database.skin_data["no_wear_skins"][item]["best_condition_index"]
-        worst_condition_index = database.skin_data["no_wear_skins"][item]["worst_condition_index"]
+        best_condition_index = database.skin_data["no_wear_skins"][item][
+            "best_condition_index"
+        ]
+        worst_condition_index = database.skin_data["no_wear_skins"][item][
+            "worst_condition_index"
+        ]
 
         best_condition = conditions[best_condition_index].lower()
         item_data = database.skin_data["skins"][best_condition + " " + item]
         rarity = item_data["rarity"]
         rarity_color = rarity_color_dict[rarity]
 
-        #price range string generation
+        # price range string generation
         has_stattrak_variant = item_data["has_stattrak_variant"]
         has_souvenir_variant = item_data["has_souvenir_variant"]
 
         has_modifier_price = False
 
-        min_price = float('inf')
+        min_price = float("inf")
         max_price = 0
-        for i in range(best_condition_index, worst_condition_index+1):
-            price = database.skin_data["skins"][conditions[i].lower() + " " + item]["price"]
+        for i in range(best_condition_index, worst_condition_index + 1):
+            price = database.skin_data["skins"][conditions[i].lower() + " " + item][
+                "price"
+            ]
             if price < min_price:
                 min_price = price
             if price > max_price:
@@ -143,32 +174,40 @@ async def container(ctx:Context, *args):
             modifier = "souvenir "
 
         if has_modifier_price:
-            min_modifier_price = float('inf')
+            min_modifier_price = float("inf")
             max_modifier_price = 0.0
-            for i in range(best_condition_index, worst_condition_index+1):
-                price = database.skin_data["skins"][modifier + conditions[i].lower() + " " + item]["price"]
+            for i in range(best_condition_index, worst_condition_index + 1):
+                price = database.skin_data["skins"][
+                    modifier + conditions[i].lower() + " " + item
+                ]["price"]
                 if price < min_modifier_price:
                     min_modifier_price = price
                 if price > max_modifier_price:
                     max_modifier_price = price
 
-        price_range_str = f"{currency_str_format(min_price)} - {currency_str_format(max_price)}"
-        if has_modifier_price: 
+        price_range_str = (
+            f"{currency_str_format(min_price)} - {currency_str_format(max_price)}"
+        )
+        if has_modifier_price:
             price_range_str += f"\n{currency_str_format(min_modifier_price)} - {currency_str_format(max_modifier_price)}"
 
-        #min max float
+        # min max float
         min_float = "{:.2f}".format(item_data["min_float"])
         max_float = "{:.2f}".format(item_data["max_float"])
 
         image_url = item_data["image_url"]
 
-        e = discord.Embed(title=f"{container_name} - ${container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})", color=rarity_color)
+        e = discord.Embed(
+            title=f"{container_name} - ${container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})",
+            color=rarity_color,
+        )
         e.add_field(name=get_locale(lang, "price_range"), value=price_range_str)
         e.add_field(name=get_locale(lang, "rarity"), value=get_locale(lang, rarity))
-        e.add_field(name=get_locale(lang, "float_range"), value=f"{min_float} - {max_float}")
+        e.add_field(
+            name=get_locale(lang, "float_range"), value=f"{min_float} - {max_float}"
+        )
         e.set_image(url=image_url)
         e.set_thumbnail(url=container_image_url)
         return e
 
     msg = await ctx.send(embed=get_embed(), view=view)
-        

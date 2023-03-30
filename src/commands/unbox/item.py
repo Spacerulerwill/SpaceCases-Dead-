@@ -2,11 +2,16 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.util.lang import get_locale
-from src.util.string_util import currency_str_format, get_inspect_link_3D, get_closest_match
+from src.util.string_util import (
+    currency_str_format,
+    get_inspect_link_3D,
+    get_closest_match,
+)
 from src.util.constants import rarity_color_dict
 from src.util.embed_func import msg_embed
 
-async def item(ctx:Context, *args):
+
+async def item(ctx: Context, *args):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
 
     if user_data is None:
@@ -19,7 +24,7 @@ async def item(ctx:Context, *args):
     if item_query not in database.skin_data["skins"]:
         await msg_embed(ctx, get_locale(lang, "item.could_not_find"))
         return
-        
+
     skin_data = database.skin_data["skins"][item_query]
 
     formatted_name = skin_data["formatted_name"]
@@ -31,12 +36,17 @@ async def item(ctx:Context, *args):
     min_float = "{:.2f}".format(skin_data["min_float"])
     max_float = "{:.2f}".format(skin_data["max_float"])
     inspect_url = get_inspect_link_3D(skin_data["inspect_url"])
-    
-    e = discord.Embed(title=formatted_name, color=rarity_color, description=get_locale(lang, "inspect_in_3d", inspect_url))
+
+    e = discord.Embed(
+        title=formatted_name,
+        color=rarity_color,
+        description=get_locale(lang, "inspect_in_3d", inspect_url),
+    )
     e.add_field(name=get_locale(lang, "market_value"), value=price)
     e.add_field(name=get_locale(lang, "rarity"), value=get_locale(lang, rarity))
-    e.add_field(name=get_locale(lang, "float_range"), value=f"{min_float} - {max_float}")
+    e.add_field(
+        name=get_locale(lang, "float_range"), value=f"{min_float} - {max_float}"
+    )
     e.set_image(url=image_url)
 
     await ctx.send(embed=e)
-    

@@ -9,10 +9,11 @@ from src.util.decorators import requires
 from src.util import database
 from decimal import Decimal
 
+
 @requires(users_registered=True)
-async def coinflip(ctx:Context, t_ct:str, amount:Decimal):
+async def coinflip(ctx: Context, t_ct: str, amount: Decimal):
     lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
-    integer_amount = int(amount * Decimal('100'))
+    integer_amount = int(amount * Decimal("100"))
 
     if integer_amount <= 0:
         await msg_embed(ctx, get_locale(lang, "greater_than_0"))
@@ -26,49 +27,69 @@ async def coinflip(ctx:Context, t_ct:str, amount:Decimal):
         url = CT_LOGO
 
     if t_ct == winner:
-
         # they won!
-        update_result = database.user_data.update_one({"_id": ctx.author.id},
-        [{
-            "$set": {
-                "balance": {
-                    "$cond": {
-                        "if": {"$gte": ["$balance", integer_amount]},
-                        "then": {"$add": ["$balance", integer_amount]},
-                        "else": "$balance"
+        update_result = database.user_data.update_one(
+            {"_id": ctx.author.id},
+            [
+                {
+                    "$set": {
+                        "balance": {
+                            "$cond": {
+                                "if": {"$gte": ["$balance", integer_amount]},
+                                "then": {"$add": ["$balance", integer_amount]},
+                                "else": "$balance",
+                            }
+                        }
                     }
                 }
-            }
-        }])
+            ],
+        )
 
         if update_result.modified_count == 0:
             await msg_embed(ctx, get_locale(lang, "not_enough_funds"))
             return
 
-        e = discord.Embed(title=get_locale(lang, "coinflip.win.embed.title", currency_str_format(integer_amount)), color=discord.Color.green()) 
+        e = discord.Embed(
+            title=get_locale(
+                lang, "coinflip.win.embed.title", currency_str_format(integer_amount)
+            ),
+            color=discord.Color.green(),
+        )
 
     else:
-        update_result = database.user_data.update_one({"_id": ctx.author.id},
-        [{
-            "$set": {
-                "balance": {
-                    "$cond": {
-                        "if": {"$gte": ["$balance", integer_amount]},
-                        "then": {"$subtract": ["$balance", integer_amount]},
-                        "else": "$balance"
+        update_result = database.user_data.update_one(
+            {"_id": ctx.author.id},
+            [
+                {
+                    "$set": {
+                        "balance": {
+                            "$cond": {
+                                "if": {"$gte": ["$balance", integer_amount]},
+                                "then": {"$subtract": ["$balance", integer_amount]},
+                                "else": "$balance",
+                            }
+                        }
                     }
                 }
-            }
-        }])
+            ],
+        )
 
         if update_result.modified_count == 0:
             await msg_embed(ctx, get_locale(lang, "not_enough_funds"))
             return
 
         # they lost
-        e = discord.Embed(title=get_locale(lang, "coinflip.loss.embed.title", currency_str_format(integer_amount)), color=discord.Color.red())
+        e = discord.Embed(
+            title=get_locale(
+                lang, "coinflip.loss.embed.title", currency_str_format(integer_amount)
+            ),
+            color=discord.Color.red(),
+        )
 
-        e.set_footer(text=get_locale(lang, "coinflip.loss.embed.description"), icon_url=ctx.author.display_avatar.url)
+        e.set_footer(
+            text=get_locale(lang, "coinflip.loss.embed.description"),
+            icon_url=ctx.author.display_avatar.url,
+        )
 
     e.set_image(url=url)
 

@@ -4,7 +4,8 @@ from src.util.lang import get_locale
 from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
 
-async def register(ctx:Context):
+
+async def register(ctx: Context):
     update_result = database.user_data.update_one(
         {"_id": ctx.author.id},
         {
@@ -23,11 +24,13 @@ async def register(ctx:Context):
                 },
             }
         },
-        upsert=True
+        upsert=True,
     )
 
     if update_result.upserted_id == None:
         user_data = database.user_data.find_one({"_id": ctx.author.id})
-        await msg_embed(ctx, get_locale(user_data["lang"], "register.already_registered"))
+        await msg_embed(
+            ctx, get_locale(user_data["lang"], "register.already_registered")
+        )
     else:
         await msg_embed(ctx, f"Registered! Use `{PREFIX}claim` to claim some money!")

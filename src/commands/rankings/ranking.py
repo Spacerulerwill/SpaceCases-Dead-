@@ -4,16 +4,21 @@ from src.util import database
 from src.util.lang import get_locale
 from src.util.embed_func import msg_embed
 
-async def ranking(ctx:Context, user:discord.Member):
 
+async def ranking(ctx: Context, user: discord.Member):
     if user is None:
         user = ctx.author
 
     user_data = database.user_data.find_one({"_id": user.id})
     lang = user_data["lang"]
 
-    user_inv_value = sum([database.skin_data["skins"][item["name"]]["price"] for item in user_data["inventory"]])
-    
+    user_inv_value = sum(
+        [
+            database.skin_data["skins"][item["name"]]["price"]
+            for item in user_data["inventory"]
+        ]
+    )
+
     position = 1
     for elem in database.leaderboard:
         _id, inv_value = elem
