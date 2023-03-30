@@ -95,7 +95,12 @@ async def leaderboard_loop():
 # handle command errors with an appriopriate error messages
 @bot_instance.event
 async def on_command_error(ctx: Context, error):
-    lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
+    user_data = database.user_data.find_one({"_id": ctx.author.id})
+    
+    if user_data is None:
+        lang = "en"
+    else:
+        lang = user_data["lang"]
 
     if isinstance(error, commands.CommandNotFound):
         (err_msg,) = error.args

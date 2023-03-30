@@ -19,6 +19,28 @@ def requires(room: bool = False, users_registered: bool = False):
             ctx, *_ = args
             ctx: Context
             user_data = database.user_data.find_one({"_id": ctx.author.id})
+
+            if user_data is None:
+                lang = "en"
+            else:
+                lang = user_data["lang"]
+
+            # ensure all users in call are registered before proceeding
+            if users_registered:
+                if user_data is None:
+                    await msg_embed(
+                        ctx, get_locale(lang, "author_not_registered", PREFIX)
+                    )
+                    return
+
+                for arg in _:
+                    if isinstance(arg, discord.Member):
+                        if database.user_data.find_one({"_id": arg.id}) is None:
+                            await msg_embed(
+                                ctx, get_locale(lang, "user_not_registered", arg.name)
+                            )
+                            return
+
             lang = user_data["lang"]
 
             if room:
@@ -44,22 +66,6 @@ def requires(room: bool = False, users_registered: bool = False):
                                 get_locale(
                                     lang, "command_error.room", channel.mention, PREFIX
                                 ),
-                            )
-                            return
-
-            # ensure all users in call are registered before proceeding
-            if users_registered:
-                if user_data is None:
-                    await msg_embed(
-                        ctx, get_locale(lang, "author_not_registed", PREFIX)
-                    )
-                    return
-
-                for arg in _:
-                    if isinstance(arg, discord.Member):
-                        if database.user_data.find_one({"_id": arg.id}) is None:
-                            await msg_embed(
-                                ctx, get_locale(lang, "user_not_registered", arg.name)
                             )
                             return
 

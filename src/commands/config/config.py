@@ -3,7 +3,7 @@ from discord.ext.commands import Context, Bot, TextChannelConverter
 from src.util import database
 from src.util.lang import get_locale
 from pymongo import ReturnDocument
-from src.util.constants import PREFIX
+from src.util.decorators import requires
 from src.util.embed_func import msg_embed, create_msg_embed, msg_embed_response
 import asyncio
 
@@ -21,7 +21,8 @@ config_options = [
 ]
 
 
-async def config_menu(bot: Bot, ctx: Context):
+@requires(users_registered=True)
+async def config_menu(ctx: Context, bot: Bot):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
 
     if user_data is None:
@@ -74,9 +75,7 @@ async def config_menu(bot: Bot, ctx: Context):
             color=discord.Color.dark_theme(),
         )
         e.set_thumbnail(url=bot.user.display_avatar.url)
-        e.set_footer(
-            text=get_locale(lang, "config.menu.footer")
-        )
+        e.set_footer(text=get_locale(lang, "config.menu.footer"))
 
         return e
 
@@ -87,11 +86,15 @@ async def config_menu(bot: Bot, ctx: Context):
     view = discord.ui.View()
     view.on_timeout = view_timeout_callback
 
-    select_options = [discord.SelectOption(label=get_locale(lang, config_options[0]["name"]), value=0)]
+    select_options = [
+        discord.SelectOption(label=get_locale(lang, config_options[0]["name"]), value=0)
+    ]
 
     if len(config_options) > 1:
         select_options += [
-            discord.SelectOption(label=get_locale(lang, option["name"]), value=count + 1)
+            discord.SelectOption(
+                label=get_locale(lang, option["name"]), value=count + 1
+            )
             for count, option in enumerate(config_options[1:])
         ]
 
@@ -128,7 +131,9 @@ async def config_menu(bot: Bot, ctx: Context):
         name = get_locale(lang, selected_option["name"])
 
         # send response embed
-        await msg_embed_response(interact.response, get_locale(lang, selected_option["response_text"]))
+        await msg_embed_response(
+            interact.response, get_locale(lang, selected_option["response_text"])
+        )
 
         # if no options, must be a user input
         if len(selected_option["options"]) == 0:
@@ -168,17 +173,23 @@ async def config_menu(bot: Bot, ctx: Context):
 
                         await response.reply(
                             embed=create_msg_embed(
-                                get_locale(lang, "config.successful_change", name, response.content)
+                                get_locale(
+                                    lang,
+                                    "config.successful_change",
+                                    name,
+                                    response.content,
+                                )
                             )
                         )
                     except:
                         await response.reply(
-                            embed=create_msg_embed(get_locale(lang, "config.conversion_fail"))
+                            embed=create_msg_embed(
+                                get_locale(lang, "config.conversion_fail")
+                            )
                         )
             except asyncio.TimeoutError:
                 await msg_embed(
-                    interact.followup,
-                    get_locale(lang, "config.no_response", name)
+                    interact.followup, get_locale(lang, "config.no_response", name)
                 )
         else:
             # if has options provide an option menu embed
@@ -207,7 +218,12 @@ async def config_menu(bot: Bot, ctx: Context):
 
         await msg_embed_response(
             interact.response,
-            get_locale(lang,"config.set_default_value", get_locale(lang, selected_option["name"], get_locale(lang, str(selected_option["default_value"]))))
+            get_locale(
+                lang,
+                "config.set_default_value",
+                get_locale(lang, selected_option["name"]),
+                get_locale(lang, str(selected_option["default_value"])),
+            ),
         )
 
     clear_button.callback = clear_callback

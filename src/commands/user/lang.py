@@ -23,7 +23,7 @@ async def lang(ctx: Context, lang: str):
     lang = lang.lower().strip()
 
     if lang not in supported_languages:
-        await msg_embed(ctx, get_locale(user_data["language"], "lang.not_found"))
+        await msg_embed(ctx, get_locale(user_data["lang"], "lang.not_found"))
         return
 
     database.user_data.update_one({"_id": ctx.author.id}, {"$set": {"lang": lang}})

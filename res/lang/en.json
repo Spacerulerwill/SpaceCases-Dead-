@@ -1,10 +1,13 @@
 {
     "welcome_message": "Hello! My name is **{}**\n\nI am CS:GO case unboxing and economy bot. With me you can:\n• Unbox your dream skins\n• Trade them with other users\n• Take a risk and upgrade them\n• And more coming soon!\n\nBy default, users can open cases in any channel where they can type. This can cause a lot of clutter, so it is recommended you use `{}config` to set up a room creation channel so users can unbox in their own threads\n\nEnjoy! - [Spacerulerwill](https://github.com/Spacerulerwill)\n\nUse `{}info` to see this message again at anytime",
 
+    "consumer": "Consumer Grade",
+    "industrial": "Industrial Grade",
     "milspec": "Mil-Spec",
     "restricted": "Restricted",
     "classified": "Classified",
     "covert": "Covert",
+    "contraband": "Contraband",
     "rare items": "Rare Items",
 
     "Factory New": "Factory New",
@@ -26,6 +29,7 @@
     "commands": "Commands",
 
     "none": "None",
+    "None": "None",
     "backtick_none": "`None`",
 
     "inspect_in_3d": "[Inspect In 3D]({})",
@@ -239,5 +243,5 @@
     "config.no_response": "Editing **{}** cancelled due to no response",
     "config.set_default_value": "Set **{}** to default value: `{}`",
     "config.successful_change": "Successfully set **{}** to {}",
-    "config.conversion_fail": "Conversion Failiure"
+    "config.conversion_fail": "Conversion Failure"
 }

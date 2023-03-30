@@ -39,7 +39,7 @@ class Config(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def config(self, ctx: Context):
-        await config_menu(self.bot, ctx)
+        await config_menu(ctx, self.bot)
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

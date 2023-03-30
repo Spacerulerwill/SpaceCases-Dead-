@@ -1,10 +1,12 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
+from src.util.decorators import requires
 from src.util.lang import get_locale
 from src.util.embed_func import msg_embed
 
 
+@requires(users_registered=True)
 async def ranking(ctx: Context, user: discord.Member):
     if user is None:
         user = ctx.author
