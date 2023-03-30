@@ -1,4 +1,4 @@
-# SpaceCases
+# SpaceCases [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 This is the new in development version of my Counter Strike trading and unboxing simulator, current features include:
 * Unboxing items from all CS:GO cases
 * Trading items with other users
