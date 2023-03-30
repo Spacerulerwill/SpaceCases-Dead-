@@ -228,5 +228,16 @@
     "trade_in_creation_embed.unsent.commands.value": "`{}trade cancel` - cancel trade\n`{}trade add in/out <inventory item number>` - add item\n`{}trade remove in/out <trade item number>` - remove item\n`{}trade send` - send trade",
 
     "help.embed.description": "'Use `{}help <command>` to gain more information about that command'",
-    "help.aliases": "Aliases"
+    "help.aliases": "Aliases",
+
+    "config.options.room_channel.name": "Unboxing Room Creation Channel",
+    "config.options.room_channel.description": "Channel used to create rooms to unbox cases in. If set to `None` users can unbox anywhere I can message in the server",
+    "config.options.room_channel.response_embed_text": "Respond to this message with name of text channel within **30 seconds**",
+    "config.menu.footer": "Warning! Menu will close itself after 3 minutes of inactivity",
+    "config.menu.description": "{}\n\n**Current Value**: {}",
+    "config.current_value": "**Current Value**: {}",
+    "config.no_response": "Editing **{}** cancelled due to no response",
+    "config.set_default_value": "Set **{}** to default value: `{}`",
+    "config.successful_change": "Successfully set **{}** to {}",
+    "config.conversion_fail": "Conversion Failiure"
 }

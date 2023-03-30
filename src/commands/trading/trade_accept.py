@@ -34,19 +34,19 @@ async def accept(ctx: Context, sender: discord.Member):
             sender_items_missing = []
             recipient_items_missing = []
 
-            for item in trade["sender-items"]:
+            for item in trade["sender_items"]:
                 if item not in sender_data["inventory"]:
                     sender_items_missing.append(item)
 
-            for item in trade["recipient-items"]:
+            for item in trade["recipient_items"]:
                 if item not in recipient_data["inventory"]:
                     recipient_items_missing.append(item)
 
             if len(sender_items_missing) == 0 and len(recipient_items_missing) == 0:
                 # no missing items, next check that the trade will not result in inventory capacity overflow
                 if (
-                    sender_data["inventory-size"] + len(trade["sender-items"])
-                    > sender_data["inventory-capacity"]
+                    sender_data["inventory_size"] + len(trade["sender_items"])
+                    > sender_data["inventory_capacity"]
                 ):
                     e = discord.Embed(
                         title=get_locale(lang, "trade_error"),
@@ -59,8 +59,8 @@ async def accept(ctx: Context, sender: discord.Member):
                     return
 
                 if (
-                    recipient_data["inventory-size"] + len(trade["recipient-items"])
-                    > sender_data["inventory-capacity"]
+                    recipient_data["inventory_size"] + len(trade["recipient_items"])
+                    > sender_data["inventory_capacity"]
                 ):
                     e = discord.Embed(
                         title=get_locale(lang, "trade_error"),
@@ -79,8 +79,8 @@ async def accept(ctx: Context, sender: discord.Member):
                 database.trade_requests.delete_one(
                     {
                         "_id": sender.id,
-                        "recipient-id": ctx.author.id,
-                        "send-timestamp": {"$ne": 0},
+                        "recipient_id": ctx.author.id,
+                        "send_timestamp": {"$ne": 0},
                     },
                     session=session,
                 )
@@ -89,32 +89,32 @@ async def accept(ctx: Context, sender: discord.Member):
                 database.user_data.update_one(
                     {"_id": ctx.author.id},
                     {
-                        "$pull": {"inventory": {"$in": trade["recipient-items"]}},
-                        "$inc": {"inventory-size" - len(trade["recipient-items"])},
+                        "$pull": {"inventory": {"$in": trade["recipient_items"]}},
+                        "$inc": {"inventory_size" - len(trade["recipient_items"])},
                     },
                     session=session,
                 )
                 database.user_data.update_one(
                     {"_id": ctx.author.id},
                     {
-                        "$push": {"inventory": {"$each": trade["sender-items"]}},
-                        "$inc": {"inventory-size": len(trade["sender-items"])},
+                        "$push": {"inventory": {"$each": trade["sender_items"]}},
+                        "$inc": {"inventory_size": len(trade["sender_items"])},
                     },
                     session=session,
                 )
                 database.user_data.update_one(
                     {"_id": sender.id},
                     {
-                        "$pull": {"inventory": {"$in": trade["sender-items"]}},
-                        "$inc": {"inventory-size": -len(trade["sender-items"])},
+                        "$pull": {"inventory": {"$in": trade["sender_items"]}},
+                        "$inc": {"inventory_size": -len(trade["sender_items"])},
                     },
                     session=session,
                 )
                 database.user_data.update_one(
                     {"_id": sender.id},
                     {
-                        "$push": {"inventory": {"$each": trade["recipient-items"]}},
-                        "$inc": {"inventory-size": len(trade["recipient-items"])},
+                        "$push": {"inventory": {"$each": trade["recipient_items"]}},
+                        "$inc": {"inventory_size": len(trade["recipient_items"])},
                     },
                     session=session,
                 )
@@ -128,7 +128,7 @@ async def accept(ctx: Context, sender: discord.Member):
                 )
                 recipient_embed.add_field(
                     name="Your New Items",
-                    value=create_item_str(lang, trade["sender-items"]),
+                    value=create_item_str(lang, trade["sender_items"]),
                 )
                 recipient_embed.set_thumbnail(url=ctx.author.display_avatar.url)
 
@@ -143,7 +143,7 @@ async def accept(ctx: Context, sender: discord.Member):
                 )
                 sender_embed.add_field(
                     name=get_locale(lang, "your_new_items"),
-                    value=create_item_str(lang, trade["recipient-items"]),
+                    value=create_item_str(lang, trade["recipient_items"]),
                 )
                 recipient_embed.set_thumbnail(url=sender.display_avatar.url)
 
@@ -154,8 +154,8 @@ async def accept(ctx: Context, sender: discord.Member):
                 database.trade_requests.delete_one(
                     {
                         "_id": sender.id,
-                        "recipient-id": ctx.author.id,
-                        "send-timestamp": {"$ne": 0},
+                        "recipient_id": ctx.author.id,
+                        "send_timestamp": {"$ne": 0},
                     },
                     session=session,
                 )

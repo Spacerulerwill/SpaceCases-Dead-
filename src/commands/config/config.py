@@ -9,15 +9,13 @@ import asyncio
 
 config_options = [
     {
-        "name": "Unboxing Room Creation Channel",
+        "name": "config.options.room_channel.name",
         "value": "unbox_room_creation_channel_id",
         "default_value": None,
         "type": discord.TextChannel,
-        "description": "Channel used to create rooms to unbox cases in. If set to `None` users can unbox anywhere I can message in the server",
+        "description": "config.options.room_channel.description",
         "options": [],
-        "response_embed": create_msg_embed(
-            "Respond to this message with name of text channel within **30 seconds**"
-        ),
+        "response_text": "config.options.room_channel.response_embed_text",
         "post_func": lambda result: result.id,
     },
 ]
@@ -57,26 +55,27 @@ async def config_menu(bot: Bot, ctx: Context):
                         ).mention
                     except AttributeError:
                         # channel no longer exists
-                        current_value = "`None`"
+                        current_value = get_locale(lang, "backtick_none")
                         database.guild_data.update_one(
                             {"_id": ctx.guild.id}, {"$set": {option["value"]: None}}
                         )
                 else:
-                    current_value = "`None`"
+                    current_value = get_locale(lang, "backtick_none")
             case _:
                 current_value = f"`{current_value}`"
 
-        description = f"""{option["description"]}
+        description = f"""{get_locale(lang, option["description"])}
         
-        **Current Value**: {current_value}"""
+        {get_locale(lang, "config.current_value", current_value)}"""
+
         e = discord.Embed(
-            title=f'**{option["name"]}**',
+            title=f'**{get_locale(lang, option["name"])}**',
             description=description,
             color=discord.Color.dark_theme(),
         )
         e.set_thumbnail(url=bot.user.display_avatar.url)
         e.set_footer(
-            text="Warning! Menu will close itself after 3 minutes of inactivity"
+            text=get_locale(lang, "config.menu.footer")
         )
 
         return e
@@ -88,11 +87,11 @@ async def config_menu(bot: Bot, ctx: Context):
     view = discord.ui.View()
     view.on_timeout = view_timeout_callback
 
-    select_options = [discord.SelectOption(label=config_options[0]["name"], value=0)]
+    select_options = [discord.SelectOption(label=get_locale(lang, config_options[0]["name"]), value=0)]
 
     if len(config_options) > 1:
         select_options += [
-            discord.SelectOption(label=option["name"], value=count + 1)
+            discord.SelectOption(label=get_locale(lang, option["name"]), value=count + 1)
             for count, option in enumerate(config_options[1:])
         ]
 
@@ -126,8 +125,10 @@ async def config_menu(bot: Bot, ctx: Context):
 
         selected_option = config_options[option_index]
 
+        name = get_locale(lang, selected_option["name"])
+
         # send response embed
-        await interact.response.send_message(embed=selected_option["response_embed"])
+        await msg_embed_response(interact.response, get_locale(lang, selected_option["response_text"]))
 
         # if no options, must be a user input
         if len(selected_option["options"]) == 0:
@@ -167,17 +168,17 @@ async def config_menu(bot: Bot, ctx: Context):
 
                         await response.reply(
                             embed=create_msg_embed(
-                                f'Successfully set **{selected_option["name"]}** to {response.content}'
+                                get_locale(lang, "config.successful_change", name, response.content)
                             )
                         )
                     except:
                         await response.reply(
-                            embed=create_msg_embed("Conversion Failiure")
+                            embed=create_msg_embed(get_locale(lang, "config.conversion_fail"))
                         )
             except asyncio.TimeoutError:
                 await msg_embed(
                     interact.followup,
-                    f'Editing **{selected_option["name"]}** cancelled due to no response',
+                    get_locale(lang, "config.no_response", name)
                 )
         else:
             # if has options provide an option menu embed
@@ -206,7 +207,7 @@ async def config_menu(bot: Bot, ctx: Context):
 
         await msg_embed_response(
             interact.response,
-            f'Set **{selected_option["name"]}** to default value: `{selected_option["default_value"]}`',
+            get_locale(lang,"config.set_default_value", get_locale(lang, selected_option["name"], get_locale(lang, str(selected_option["default_value"]))))
         )
 
     clear_button.callback = clear_callback
