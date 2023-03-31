@@ -1,0 +1,247 @@
+{
+    "welcome_message": "Hallo! Mein Name ist {}\n\nIch bin ein CS:GO-Kisten-Entpackungs- und Wirtschafts-Bot. Mit mir kannst du folgendes tun:\n• Entpacke deine Traum-Skins\n• Tausche sie mit anderen Benutzern\n• Wage ein Risiko und verbessere sie\n• Und bald gibt es noch mehr!\n\nStandardmäßig können Benutzer Kisten in jedem Kanal öffnen, in dem sie tippen können. Dies kann zu viel Unordnung führen, deshalb empfehle ich dir, {}config zu verwenden, um einen Raum-Erstellungs-Kanal einzurichten, damit Benutzer in eigenen Threads entpacken können.\n\nGenieße es! - Spacerulerwill\n\nVerwende {}info, um diese Nachricht jederzeit erneut anzuzeigen.",
+
+    "consumer": "Verbraucherklasse",
+    "industrial": "Industriequalität",
+    "milspec": "Militärstandard",
+    "restricted": "Limitiert",
+    "classified": "Vertraulich",
+    "covert": "Verdeckt",
+    "contraband": "Schmuggelware",
+    "rare items": "Rare Items",
+
+    "Factory New": "Fabrikneu",
+    "Minimal Wear": "Minimale Gebrauchsspuren",
+    "Field Tested": "Einsatzerprobt",
+    "Well Worn": "Abgenutzt",
+    "Battle Scarred": "Kampfspuren",
+
+    "invalid_page": "Ungültige Seitenzahl!",
+    "not_enough_funds": "Du hast nicht genug Geld für diese Aktion!",
+
+    "rarity": "Seltenheit",
+    "price_range": "Preisklasse",
+    "float_range": "Float-Bereich",
+    "float": "Float",
+    "market_value": "Marktwert",
+    "chance": "Chance",
+    "price_multiplier": "Preis-Multiplikator",
+    "commands": "Befehle",
+
+    "none": "Keine",
+    "None": "Keine",
+    "backtick_none": "`Keine`",
+
+    "inspect_in_3d": "[In 3D inspizieren]({})",
+
+    "not_your_button": "Dies ist nicht dein Button!",
+    "not_your_select": "Dies ist nicht deine Auswahlliste!",
+
+    "button.add_to_inventory": "Zum Inventar hinzufügen",
+    "button.sell": "Verkaufen",
+    "button.cancel": "Abbrechen",
+    "button.continue": "Fortfahren",
+    "button.upgrade": "Verbessern",
+    "button.start": "Starten",
+    "button.less": "Weniger",
+    "button.more": "Mehr",
+    "button.clear": "Löschen",
+    "button.edit": "Bearbeiten",
+
+    "command_not_found": "Befehl nicht gefunden!",
+    "command_not_found_suggest": "Befehl nicht gefunden! Meinten Sie {}?",
+    "command_error.no_user": "Fehler! Benutzer konnte nicht gefunden werden!",
+    "command_error.incorrect_type": "Fehler! Das Argument {} muss {} sein",
+    "command_error.missing_required_argument": "Ups! Sie haben das Argument vergessen: {}",
+    "command_error.invalid_option": "Fehler! Das Argument muss eine der folgenden Optionen sein: {}",
+    "command_error.missing_permissions": "Fehler! Ihnen fehlen die folgenden Berechtigungen, um diesen Befehl zu verwenden: {}",
+    "command_error.cooldown": "Befehl ist in Abklingzeit! Versuchen Sie es erneut nach {} Sekunden",
+    "command_error.room": "Dieser Befehl muss in einem Raum verwendet werden! Gehen Sie zu {} und verwenden Sie {}room",
+
+    "author_not_registered": "Sie sind nicht registriert! Verwenden Sie `{}register`, um sich zu registrieren",
+    "user_not_registeed": "{} ist nicht registriert!",
+
+    "lang.current": "Aktuelle Sprache: `Deutsche`",
+    "lang.embed.select.placeholder": "Sprache auswählen",
+    "lang.not_found": "Sprache wird nicht unterstützt! Wählen Sie Ihre Sprache mit den [ISO-Sprachcodes](https://de.wikipedia.org/wiki/ISO_639) aus",
+
+    "balance.embed.title": "{}s Kontostand",
+    "balance.current": "Aktueller Kontostand",
+    "balance.return": "Gesamtrückgabe",
+
+    "register.already_registered": "Sie sind bereits registriert!",
+
+    "transfer.cant_transfer_to_self": "Sie können kein Geld an sich selbst überweisen!",
+    "transfer.amount_greater_than_0": "Der Betrag muss größer als $0 sein!",
+    "transfer.insufficient_funds": "Sie haben nicht genügend Geld!",
+    "transfer.successfull": "{} wurde erfolgreich auf das Konto von {} überwiesen",
+
+    "claim.embed.title": "Sie haben Ihren täglichen Bonus erfolgreich erhalten!",
+    "claim.embed.description": "Sie können morgen erneut einen Bonus erhalten",
+    "claim.embed.footer": "Warnung: Bonus-Serien setzen sich 24 Stunden nach Ihrem letzten Bonus zurück",
+    "claim.embed.footer.bonus_item": "\nWarnung: Sie haben 3 Minuten Zeit, um Ihren Artikel zu erhalten!",
+    "claim.already": "Sie haben Ihren täglichen Bonus bereits erhalten! Sie können morgen erneut einen Bonus erhalten",
+    "claim.embed.amount": "Menge",
+    "claim.embed.new_balance": "Neuer Kontostand",
+    "claim.embed.streak": "Serie 🔥",
+    "claim.embed.bonus_item": "Sie haben einen Bonusartikel erhalten!",
+
+    "room.cannot_create_here": "Sie können hier keine Räume erstellen!",
+    "room.not_setup": "Dieser Server hat noch keine Räume eingerichtet. Sie können entweder ohne Raum öffnen oder einen Admin bitten, {}config zu verwenden, um ihn einzurichten",
+    "room.not_in_channel": "Sie müssen sich in {} befinden, um einen Raum zu erstellen!",
+    "room.exists": "{} existiert bereits",
+    "room.private_created": "Ihr privater Raum wurde erstellt!",
+    "room.greeting": "Willkommen in Ihrem Raum {}! Er wird nach 15 Minuten Inaktivität gelöscht",
+
+    "inventory.embed.empty_title": "{}'s Inventar",
+    "inventory.embed.title": "{}'s Inventar - {}/{}",
+    "inventory.embed.description": "Gesamtwert: **{}**\nBenutzte Slots: **{}/{}**",
+    "inventory.item_string": "{} **{})** `{}` - **{}**\n",
+    "inventory.full": "Ihr Inventar ist voll! Verkaufen Sie ein Item oder kaufen Sie mehr Inventarplatz",
+    "inventory.empty_1": "Ihr Inventar ist leer! Starten Sie das Öffnen mit `{}open`",
+    "inventory.empty_2": "{}s Inventar ist leer!",
+    "inventory.not_found_index": "Es existiert kein Item an Index {}",
+    "inventory.not_found_name": "Es existiert kein Item mit dem Namen `{}`",
+    "inventory.embed.commands_1": "`{}inspect <Item-Nummer>` - Ein Item ansehen\n`{}sell <Item-Nummer>` - Ein Item verkaufen",
+    "inventory.embed.commands_2": "`{}inspect {member.name} <Item-Nummer>` - Ein Item eines Mitglieds ansehen",
+
+    "container.not_found": "Container nicht gefunden!",
+    "container.not_found_suggest": "'Container nicht gefunden! Meinten Sie: `{}`?'",
+    "container.select.all_items": "Alle Items",
+
+    "containers.embed.title": "Seite {}/{}",
+    "containers.embed.description": "Verwenden Sie `{}container <Container>` um den Inhalt eines Containers zu sehen und `{}open <Container>` um ihn zu öffnen",
+    "containers.embed.footer": "Warnung! Die Preise für Kisten beinhalten keinen Preis für den Kistenschlüssel ({})",
+
+    "item.could_not_find": "Item konnte nicht gefunden werden!",
+
+    "open.embed.footer": "Warnung! Items werden automatisch nach 30 Sekunden verkauft",
+
+    "upgrade.cant_upgrade_to_cheaper_item": "Das Ergebnis-Item muss mehr wert sein als das Ausgangs-Item!",
+    "upgrade.embed.title": "**Upgrade**: {}\n**Zu**: {}",
+    "upgrade.embed.footer": "Warnung! Upgrades werden nach 30 Sekunden abgebrochen",
+    "upgrade.error.title": "Upgrade Fehler",
+    "upgrade.error.item_missing": "Upgrade fehlgeschlagen, da **{}** nicht mehr im Inventar vorhanden ist",
+
+    "sell.item_missing": "Verkauf abgebrochen, da das spezifische {} nicht mehr in deinem Inventar ist",
+    "sell.are_you_sure": "Bist du sicher, dass du {} für {} verkaufen möchtest?",
+    "sell.success": "{} erfolgreich verkauft",
+
+    "leaderboard.embed.title": "Bestenliste - #{} - {}",
+    "leaderboard.footer": "Bestenliste aktualisiert sich jede Stunde",
+
+    "ranking.text": "{} belegt den Platz **#{}** auf der Bestenliste",
+
+    "greater_than_0": "Du musst mehr als **$0** setzen!",
+    "cannot_be_negative": "Du kannst nicht negativ setzen!",
+    "cannot_play_against_self": "Du kannst dieses Spiel nicht gegen dich selbst spielen!",
+
+    "coinflip.win.embed.title": "Du hast {} gewonnen!",
+    "coinflip.loss.embed.title": "Du hast {} verloren!",
+    "coinflip.loss.embed.description": "Besser Glück beim nächsten Mal",
+
+    "hl.embed.title": "Höher oder Tiefer",
+    "hl.embed.description": "Willkommen zum **Höher oder Tiefer**-Spiel!\n\nIn diesem Spiel musst du raten, ob das Skin, das du siehst, teurer oder billiger als das vorherige ist. Wenn du alle **{}** richtig hast, gewinnst du Balance! Das Spiel kostet **{}**.\n\nDas erste Skin wird dir unten angezeigt. Drücke die **Start**-Taste, um zu beginnen.\n",
+    "hl.embed.footer": "Achtung! Das Menü wird nach 30 Sekunden geschlossen",
+    "hl.invalid_difficulty": "Menge muss im Bereich von {} bis {} liegen",
+
+    "hl.playing.embed.title": "Höher oder Tiefer - {}/{}",
+    "hl.playing.embed.description": "Kostet dieses Skin mehr oder weniger als das vorherige?\nEntscheide innerhalb von **10 Sekunden**\n\n",
+
+    "hl.playing.won.embed.title": "Herzlichen Glückwunsch!",
+    "hl.playing.won.embed.description": "Du hast **{}** gewonnen",
+
+    "hl.playing.lost.embed.title": "Du hast verloren!",
+    "hl.playing.lost.embed.out_of_time": "Dir ist die Zeit abgelaufen!",
+    "hl.playing.lost.embed.incorrect_guess": "Vorheriges Item: **{} - {}**\nDeine Wahl: **{} - {}**",
+
+    "skin_game.embed.title": "Errate das Skin!",
+    "skin_game.embed.description": "Antworte innerhalb von 10 Sekunden mit dem Namen des Skins!\nOhne den Verschleiß oder den Waffennamen anzugeben!",
+    "skin_game.won": "Du hast **richtig geraten!** Du gewinnst **{}**",
+    "skin_game.lost.incorrect_guess": "Du hast **falsch geraten!** Die richtige Antwort war `{}`",
+    "skin_game.lost.out_of_time": "Du hast nicht rechtzeitig geantwortet! Die richtige Antwort war `{}`",
+
+    "ttt.embed.title": "Tic Tac Toe",
+    "ttt.embed.description": "{} gegen {}\nJeder Spieler hat 10 Sekunden Zeit, um seinen Zug zu machen.\n**{}** muss den Button unten klicken, um zuzustimmen!",
+    "ttt.embed.description_wager": "\nDie Gebühr für dieses Spiel beträgt {}. Der Gewinner bekommt alles!",
+    "ttt.embed.footer": "Achtung! Das Menü schließt sich nach 3 Minuten!",
+    "ttt.both_players_not_enough_funds": "Beide Spieler müssen {} haben, um zu spielen",
+    "ttt.player_won": "{} hat gewonnen!",
+    "ttt.draw": "Unentschieden!",
+    "ttt.player_turn": "Der Zug von {}",
+
+    "wordle.word_wrong_length": "Das zu erratende Wort muss 5 Buchstaben lang sein!",
+    "wordle.word_not_found": "Das Wort muss ein gültiges englisches Wort sein!",
+    "wordle.won.embed.title": "Du hast {} gewonnen!",
+    "wordle.loss.embed.title": "Du hast verloren!",
+    "wordle.loss.embed.description": "Das Wort war `{}`\n",
+
+    "no_incoming_trade": "Du hast keinen eingehenden Handel von {}",
+    "no_outgoing_trade": "Du hast keinen ausgehenden Handel mit {}",
+    "no_trade_in_creation": "Du hast keinen Handel erstellt! Verwende `{}trade new <Benutzer>` um einen neuen Handel zu starten",
+
+    "trade_error": "Handelsfehler",
+    "trade_error.author_not_enough_space": "Dein Handel mit {} konnte nicht stattfinden, da du nicht genügend Inventarplatz hast, um die Gegenstände aus dem Handel zu empfangen!",
+    "trade_error.sender_not_enough_space": "Dein Handel mit {} konnte nicht stattfinden, da {} nicht genügend Inventarplatz hat, um die Gegenstände aus dem Handel zu empfangen!",
+    "trade_error.missing_items": "Der Handel mit {} konnte nicht stattfinden und wurde abgebrochen, da Gegenstände aus den Inventaren eines oder beider Teilnehmer fehlten",
+    "trade_error.already_have_trade_with_user": "Du hast bereits einen ausgehenden Handel mit {}! Du kannst nicht mehrere Handel mit demselben Benutzer haben",
+
+    "you_are_missing": "Dir fehlen folgende Gegenstände",
+    "sender_is_missing": "{} fehlen folgende Gegenstände",
+    "trade_accept.author_embed.description": "Handelsanfrage von {} akzeptiert!",
+    "trade_accept.sender_embed.title": "{} hat deine Handelsanfrage akzeptiert!",
+    "your_new_items": "Deine neuen Gegenstände",
+
+    "trade_add.cannot_add_item_twice": "Du kannst kein Item zweimal zu einem Trade hinzufügen!",
+
+    "trade_cancel.cancelled_trade_to_user": "Trade zu {} erfolgreich abgebrochen",
+    "trade_cancel.cancelled_current": "Trade in Erstellung erfolgreich abgebrochen",
+
+    "trade_decline.author_embed.description": "Trade-Anfrage von {} abgelehnt",
+    "trade_decline.sender_embed.title": "Deine Trade-Anfrage an {} wurde abgelehnt",
+
+    "your_items": "Deine Items",
+    "their_items": "Ihre Items",
+    "you_wanted": "Du wolltest",
+    "for_your": "Für deine",
+    "they_offer": "Sie bieten",
+
+    "trade_new.warning.embed.title": "Warnung: Du hast bereits eine Trade-Anfrage in Erstellung",
+    "trade_new.warning.embed.description": "Diese Trade-Anfrage wird gelöscht. Fortfahren?",
+    "trade_new.warning.embed.footer": "Trade-Anfrage wird automatisch nach 30 Sekunden Inaktivität abgebrochen",
+
+    "trades.in.embed.title": "Eingehende Trade-Anfragen",
+    "trades.out.embed.title": "Ausgehende Trade-Anfragen",
+    "trades.all.embed.title": "Alle Trade-Anfragen",
+    "trades.incoming_from": "**EINGEHEND** von {}: **{}** Tage übrig\n",
+    "trades.outgoing_to": "**AUSGEHEND** zu {}: **{}** Tage übrig\n",
+    "trades.embed.trade_list": "Trade-Liste - {} Items - Seite {}/{}",
+    "trades.embed.commands.value": "`{}trade in <user>` - eingehende Trade-Anfrage von Benutzer anzeigen\n`{}trade out <user>` - ausgehende Trade-Anfrage an Benutzer anzeigen\n`{}trade accept <user>` - Trade-Anfrage von Benutzer akzeptieren\n`{}trade decline <user>` - Trade-Anfrage von Benutzer ablehnen\n`{}trade cancel <user>` - Trade zu Benutzer abbrechen",
+
+    "trade_notif.embed.title": "{} hat dir eine Handelsanfrage gesendet!",
+    "trade_notif.commands.value": "{}trade accept {} - Handel akzeptieren\n{}trade decline {} - Handel ablehnen",
+
+    "trade_embed.incoming_title": "Eingehender Handel von {}",
+    "trade_embed.outgoing_title": "Ausgehender Handel von {}",
+    "trade_embed.footer": "Handel läuft in {} Tagen, {} Stunden und {} Minuten ab",
+    "trade_embed.commands.value": "`{}trade cancel {}` - Handel abbrechen",
+
+    "trade_in_creation_embed.unsent.title": "Handelsanfrage an {}",
+    "trade_in_creation_embed.sent.title": "Handelsanfrage an {} gesendet",
+    "trade_in_creation_embed.sent.footer": "Warnung! Handel läuft in einer Woche ab",
+    "trade_in_creation_embed.unsent.commands.value": "`{}trade cancel` - Handel abbrechen\n`{}trade add in/out <Inventargegenstand-Nummer>` - Gegenstand hinzufügen\n`{}trade remove in/out <Handel-Gegenstands-Nummer>` - Gegenstand entfernen\n`{}trade send` - Handelsanfrage senden",
+
+    "help.embed.description": "'Benutze `{}help <Befehl>` um mehr Informationen über diesen Befehl zu erhalten'",
+    "help.aliases": "Aliase",
+
+    "config.options.room_channel.name": "Unboxing-Raum-Erstellungskanal",
+    "config.options.room_channel.description": "Kanal, der zum Erstellen von Räumen zum Auspacken von Kisten verwendet wird. Wenn `None` eingestellt ist, können Benutzer überall auspacken, wo ich im Server Nachrichten senden kann.",
+    "config.options.room_channel.response_embed_text": "Antworte auf diese Nachricht mit dem Namen des Textkanals innerhalb von **30 Sekunden**",
+    "config.menu.footer": "Warnung! Das Menü schließt sich nach 3 Minuten Inaktivität automatisch",
+    "config.menu.description": "{}\n\n**Aktueller Wert**: {}",
+    "config.current_value": "**Aktueller Wert**: {}",
+    "config.no_response": "Bearbeitung von **{}** abgebrochen aufgrund ausbleibender Antwort",
+    "config.set_default_value": "**{}** auf Standardwert `{}` gesetzt",
+    "config.successful_change": "**{}** erfolgreich auf {} geändert",
+    "config.conversion_fail": "Fehler bei der Konvertierung"
+}

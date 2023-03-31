@@ -3,7 +3,7 @@ import json
 
 language_data = {}
 
-supported_languages = ["en", "fr"]
+supported_languages = ["en", "fr", "es", "de"]
 
 
 def get_locale(lang: str, str, *args):
