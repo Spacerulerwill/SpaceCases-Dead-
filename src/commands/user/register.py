@@ -3,13 +3,14 @@ from src.util import database
 from src.util.lang import get_locale
 from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
-
+import time
 
 async def register(ctx: Context):
     update_result = database.user_data.update_one(
         {"_id": ctx.author.id},
         {
             "$setOnInsert": {
+                "join_date": int(time.time()),
                 "balance": 0,
                 "lang": "en",
                 "last_claim": 0,

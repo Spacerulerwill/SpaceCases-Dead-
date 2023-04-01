@@ -6,6 +6,7 @@ from src.util.skin_func import gen_item
 from src.util.constants import ONE_DAY, rarity_color_dict
 from src.util.embed_func import msg_embed
 from src.util.decorators import requires
+from datetime import datetime
 import discord
 import time
 import random
@@ -35,6 +36,7 @@ CLAIM_BONUS_REWARDS = {4: "classified", 10: "covert", 14: "rare items"}
 
 @requires(users_registered=True)
 async def claim(ctx: Context):
+    datetime.now
     # update balance and set last claim to now if been twelve hours since last claim
     update_result = database.user_data.update_one(
         {"_id": ctx.author.id},
