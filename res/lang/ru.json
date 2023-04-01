@@ -1,0 +1,247 @@
+{
+    "welcome_message": "Привет! Меня зовут **{}**\n\nЯ бот по открытию кейсов и экономике в CS:GO. С моей помощью вы можете:\n• Открывать кейсы и получать свои мечты в виде скинов\n• Обмениваться скинами с другими пользователями\n• Рисковать и улучшать свои скины\n• И вскоре будет еще больше возможностей!\n\nПо умолчанию пользователи могут открывать кейсы в любом канале, где могут писать. Это может вызвать беспорядок, поэтому рекомендуется использовать команду `{}config`, чтобы настроить канал создания комнат, где пользователи смогут открывать кейсы в отдельных потоках.\n\nНаслаждайтесь! - [Spacerulerwill](https://github.com/Spacerulerwill)\n\nИспользуйте команду `{}info`, чтобы просмотреть это сообщение снова в любое время",
+
+    "consumer": "Базового Класса",
+    "industrial": "Среднего Класса",
+    "milspec": "Высшего Класса",
+    "restricted": "Примечательного Типа",
+    "classified": "Экзотичного Вида",
+    "covert": "Экстраординарного Типа",
+    "contraband": "Контрабанда",
+    "rare items": "Rare Items",
+
+    "Factory New": "Прямо С Завода",
+    "Minimal Wear": "Немного Поношенное",
+    "Field Tested": "После полевых испытаний",
+    "Well Worn": "Поношенное",
+    "Battle Scarred": "Закалённое В Боях",
+
+    "invalid_page": "Неверный номер страницы!",
+    "not_enough_funds": "У вас недостаточно средств для этого действия!",
+
+    "rarity": "Редкость",
+    "price_range": "Диапазон цен",
+    "float_range": "Диапазон плавучести",
+    "float": "Плавучесть",
+    "market_value": "Рыночная цена",
+    "chance": "Шанс",
+    "price_multiplier": "Множитель цены",
+    "commands": "Команды",
+
+    "none": "Нет",
+    "None": "Нет",
+    "backtick_none": "`Нет`",
+
+    "inspect_in_3d": "[Просмотреть в 3D]({})",
+
+    "not_your_button": "Это не ваша кнопка!",
+    "not_your_select": "Это не ваше меню выбора!",
+
+    "button.add_to_inventory": "Добавить в инвентарь",
+    "button.sell": "Продать",
+    "button.cancel": "Отмена",
+    "button.continue": "Продолжить",
+    "button.upgrade": "Улучшить",
+    "button.start": "Начать",
+    "button.less": "Меньше",
+    "button.more": "Больше",
+    "button.clear": "Очистить",
+    "button.edit": "Редактировать",
+
+    "command_not_found": "Команда не найдена!",
+    "command_not_found_suggest": "Команда не найдена! Вы имели в виду `{}`?",
+    "command_error.no_user": "**Ошибка!** Не удалось найти пользователя!",
+    "command_error.incorrect_type": "**Ошибка!** Аргумент `{}` должен быть {}",
+    "command_error.missing_required_argument": "**Упс!** Вы забыли указать аргумент: `{}`",
+    "command_error.invalid_option": "**Ошибка!** Аргумент должен быть одним из следующих вариантов: `{}`",
+    "command_error.missing_permissions": "**Ошибка!** У вас нет необходимых прав для использования этой команды: `{}`",
+    "command_error.cooldown": "**Команда на кулдауне!** Попробуйте еще раз через {} секунд",
+    "command_error.room": "Эту команду нужно использовать в комнате! Перейдите в {} и используйте `{}room`",
+
+    "author_not_registered": "Вы не зарегистрированы! Используйте `{}register`, чтобы зарегистрироваться",
+    "user_not_registeed": "{} не зарегистрирован!",
+
+    "lang.current": "Текущий язык: `Английский`",
+    "lang.embed.select.placeholder": "Выберите язык",
+    "lang.not_found": "Язык не поддерживается! Выберите свой язык, используя [коды языков ISO](https://ru.wikipedia.org/wiki/ISO_639-1)",
+
+    "balance.embed.title": "Баланс {}",
+    "balance.current": "Текущий баланс",
+    "balance.return": "Общий доход",
+
+    "register.already_registered": "Вы уже зарегистрированы!",
+
+    "transfer.cant_transfer_to_self": "Вы не можете переводить деньги самому себе!",
+    "transfer.amount_greater_than_0": "Сумма должна быть больше $0!",
+    "transfer.insufficient_funds": "У вас недостаточно средств!",
+    "transfer.successfull": "Успешно переведено {} на счет {}",
+
+    "claim.embed.title": "Вы успешно получили свой ежедневный бонус!",
+    "claim.embed.description": "Вы можете запросить бонус снова завтра",
+    "claim.embed.footer": "Внимание: Строки обнуляются через 24 часа после последнего получения",
+    "claim.embed.footer.bonus_item": "\nВнимание: У вас есть 3 минуты, чтобы забрать свой предмет!",
+    "claim.already": "Вы уже получили свой ежедневный бонус! Вы можете запросить бонус снова завтра",
+    "claim.embed.amount": "Сумма",
+    "claim.embed.new_balance": "Новый баланс",
+    "claim.embed.streak": "Серия 🔥",
+    "claim.embed.bonus_item": "Вы получили бонусный предмет!",
+
+    "room.cannot_create_here": "Вы не можете создавать комнаты здесь!",
+    "room.not_setup": "На этом сервере еще не настроены комнаты. Вы можете распаковывать без комнаты или попросить **администратора** использовать `{}config`, чтобы настроить их",
+    "room.not_in_channel": "Вы должны находиться в {}, чтобы создать комнату!",
+    "room.exists": "{} уже существует",
+    "room.private_created": "Ваша частная комната создана!",
+    "room.greeting": "Добро пожаловать в вашу комнату {}! Она будет удалена через 15 минут бездействия",
+
+    "inventory.embed.empty_title": "Инвентарь {}",
+    "inventory.embed.title": "Инвентарь {} - {}/{}",
+    "inventory.embed.description": "Общая стоимость: **{}**\nИспользовано слотов: **{}/{}**",
+    "inventory.item_string": "{} **{})** `{}` - **{}**\n",
+    "inventory.full": "Ваш инвентарь заполнен! Продайте предмет или купите больше места в инвентаре",
+    "inventory.empty_1": "Ваш инвентарь пуст! Начните распаковывать с `{}open`",
+    "inventory.empty_2":  "Инвентарь {} пуст!",
+    "inventory.not_found_index": "Предмет с индексом {} не найден",
+    "inventory.not_found_name": "Предмет с именем `{}` не найден",
+    "inventory.embed.commands_1": "`{}inspect <номер предмета>` - просмотреть предмет\n`{}sell <номер предмета>` - продать предмет",
+    "inventory.embed.commands_2": "`{}inspect {member.name} <номер предмета>` - посмотреть предмет",
+
+    "container.not_found": "Контейнер не найден!",
+    "container.not_found_suggest": "'Контейнер не найден! Вы имели в виду: `{}`?'",
+    "container.select.all_items": "Все предметы",
+
+    "containers.embed.title": "Страница {}/{}",
+    "containers.embed.description": "Используйте `{}container <название контейнера>` чтобы увидеть содержимое контейнера и `{}open <название контейнера>` чтобы открыть его",
+    "containers.embed.footer": "Внимание! Цены на контейнеры не включают стоимость ключа от контейнера ({})",
+
+    "item.could_not_find": "Не удалось найти предмет!",
+
+    "open.embed.footer": "Внимание! Предметы автоматически продаются через 30 секунд",
+
+    "upgrade.cant_upgrade_to_cheaper_item": "Результирующий предмет должен стоить больше, чем начальный!",
+    "upgrade.embed.title": "**Обновление**: {}\n**На**: {}",
+    "upgrade.embed.footer": "Внимание! Обновления будут отменены через 30 секунд",
+    "upgrade.error.title": "Ошибка обновления",
+    "upgrade.error.item_missing": "Не удалось обновить, так как **{}** больше не существует в инвентаре",
+
+    "sell.item_missing": "Продажа отменена, так как **{}** больше не находится в вашем инвентаре",
+    "sell.are_you_sure": "Вы уверены, что хотите продать **{}** за **{}**?",
+    "sell.success": "Успешно продано **{}**",
+
+    "leaderboard.embed.title": "Таблица лидеров - #{} - {}",
+    "leaderboard.footer": "Таблица лидеров обновляется каждый час",
+
+    "ranking.text": "{} занимает **#{}** место в таблице лидеров",
+
+    "greater_than_0": "Ставка должна быть больше **$0**!",
+    "cannot_be_negative": "Вы не можете делать отрицательные ставки!",
+    "cannot_play_against_self": "Вы не можете играть в эту игру против себя!",
+
+    "coinflip.win.embed.title": "Вы выиграли {}!",
+    "coinflip.loss.embed.title": "Вы проиграли {}!",
+    "coinflip.loss.embed.description": "Удачи в следующий раз",
+
+    "hl.embed.title": "Выше или ниже",
+    "hl.embed.description": "Добро пожаловать в игру **Выше или ниже**!\n\nВ этой игре вы должны угадать, дороже ли следующий скин или дешевле предыдущего. Если вы угадаете все **{}** раз, вы выиграете баланс! Стоимость игры - **{}**.\n\nПервый скин показан ниже. Нажмите кнопку **Старт**, чтобы начать.\n",
+    "hl.embed.footer": "Внимание! Меню закроется через 30 секунд",
+    "hl.invalid_difficulty": "Количество должно быть в диапазоне от {} до {}",
+  
+    "hl.playing.embed.title": "Выше или ниже - {}/{}",
+    "hl.playing.embed.description": "Стоит ли этот скин дороже или дешевле предыдущего?\nРешите в течение **10 секунд**\n\n",
+      
+    "hl.playing.won.embed.title": "Поздравляем!",
+    "hl.playing.won.embed.description": "Вы выиграли **{}**",
+  
+    "hl.playing.lost.embed.title": "Вы проиграли!",
+    "hl.playing.lost.embed.out_of_time": "Время вышло!",
+    "hl.playing.lost.embed.incorrect_guess": "Предыдущий элемент: **{} - {}**\nВаш выбор: **{} - {}**",
+  
+    "skin_game.embed.title": "Угадайте скин!",
+    "skin_game.embed.description": "Ответьте с названием скина в течение 10 секунд!\nНе включайте название износа или название оружия!",
+    "skin_game.won": "Вы угадали **правильно!** Вы выиграли **{}**",
+    "skin_game.lost.incorrect_guess": "Вы угадали **неправильно!** Правильный ответ был `{}`",
+    "skin_game.lost.out_of_time": "Вы не ответили вовремя! Правильный ответ был `{}`",
+
+    "ttt.embed.title": "Крестики-нолики",
+    "ttt.embed.description": "**{}** против **{}**\nУ каждого игрока есть 10 секунд на ход.\n**{}** должен нажать на кнопку ниже, чтобы принять!",
+    "ttt.embed.description_wager": "\nПлата за игру - **{}**. Победитель забирает все!",
+    "ttt.embed.footer": "Внимание! Меню закроется через 3 минуты!",
+    "ttt.both_players_not_enough_funds": "У обоих игроков должно быть по **{}**, чтобы играть",
+    "ttt.player_won": "{} выиграл(а)!",
+    "ttt.draw": "Ничья!",
+    "ttt.player_turn": "Ходит {}",
+
+    "wordle.word_wrong_length": "Угадываемое слово должно состоять из 5 букв!",
+    "wordle.word_not_found": "Угадываемое слово должно быть действительным английским словом!",
+    "wordle.won.embed.title": "Вы выиграли {}!",
+    "wordle.loss.embed.title": "Вы проиграли!",
+    "wordle.loss.embed.description": "Слово было: `{}`\n",
+
+    "no_incoming_trade": "У вас нет входящей сделки с {}",
+    "no_outgoing_trade": "У вас нет исходящей сделки с {}",
+    "no_trade_in_creation": "У вас нет созданной сделки! Используйте `{}trade new <пользователь>` для начала новой сделки",
+
+    "trade_error": "Ошибка сделки",
+    "trade_error.author_not_enough_space": "Ваша сделка с {} не может состояться, так как у вас недостаточно места в инвентаре для получения предметов из сделки!",
+    "trade_error.sender_not_enough_space": "Ваша сделка с {} не может состояться, так как у {} недостаточно места в инвентаре для получения предметов из сделки!",
+    "trade_error.missing_items": "Сделка от {} не может состояться и была отменена, так как предметы отсутствовали в инвентаре одного или обоих участников",
+    "trade_error.already_have_trade_with_user": "У вас уже есть исходящая сделка с {}! Вы не можете иметь несколько сделок с одним пользователем",
+
+    "you_are_missing": "У вас отсутствует",
+    "sender_is_missing": "{} отсутствует",
+    "trade_accept.author_embed.description": "Запрос на сделку от {} принят!",
+    "trade_accept.sender_embed.title": "{} принял ваш запрос на сделку!",
+    "your_new_items": "Ваши новые предметы",
+
+    "trade_add.cannot_add_item_twice": "Вы не можете добавить один и тот же предмет дважды в сделку!",
+
+    "trade_cancel.cancelled_trade_to_user": "Сделка с {} успешно отменена",
+    "trade_cancel.cancelled_current": "Сделка в процессе создания успешно отменена",
+        
+    "trade_decline.author_embed.description": "Запрос на сделку от {} отклонен",
+    "trade_decline.sender_embed.title": "Ваш запрос на сделку с {} был отклонен",
+    
+    "your_items": "Ваши предметы",
+    "their_items": "Их предметы",
+    "you_wanted": "Вы хотели",
+    "for_your": "Для вас",
+    "they_offer": "Они предлагают",
+
+    "trade_new.warning.embed.title": "Предупреждение: у вас уже есть запрос на обмен",
+    "trade_new.warning.embed.description": "Этот запрос на обмен будет удален. Продолжить?",
+    "trade_new.warning.embed.footer": "Создание запроса на обмен автоматически отменится через 30 секунд бездействия",
+
+    "trades.in.embed.title": "Входящие запросы на обмен",
+    "trades.out.embed.title": "Исходящие запросы на обмен",
+    "trades.all.embed.title": "Все запросы на обмен",
+    "trades.incoming_from": "**ВХОДЯЩИЙ** от {}: осталось **{}** дней\n",
+    "trades.outgoing_to": "**ИСХОДЯЩИЙ** к {}: осталось **{}** дней\n",
+    "trades.embed.trade_list": "Список обменов - {} предметов - страница {}/{}",
+    "trades.embed.commands.value": "`{}trade in <пользователь>` - просмотр входящего запроса на обмен\n`{}trade out <пользователь>` - просмотр исходящего запроса на обмен\n`{}trade accept <пользователь>` - принять запрос на обмен\n`{}trade decline <пользователь>` - отклонить запрос на обмен\n`{}trade cancel <пользователь>` - отменить запрос на обмен",
+
+    "trade_notif.embed.title": "{} отправил вам запрос на обмен!",
+    "trade_notif.commands.value": "`{}trade accept {}` - принять обмен\n`{}trade decline {}` - отклонить обмен",
+
+    "trade_embed.incoming_title": "Входящая сделка от {}",
+    "trade_embed.outgoing_title": "Исходящая сделка от {}",
+    "trade_embed.footer": "Сделка истекает через {} дней, {} часов и {} минут",
+    "trade_embed.commands.value": "`{}trade cancel {}` - отменить сделку",
+
+    "trade_in_creation_embed.unsent.title": "Запрос на сделку для {}",
+    "trade_in_creation_embed.sent.title": "Отправлен запрос на сделку для {}",
+    "trade_in_creation_embed.sent.footer": "Внимание! Сделка истечет через 1 неделю",
+    "trade_in_creation_embed.unsent.commands.value": "`{}trade cancel` - отменить сделку\n`{}trade add in/out <inventory item number>` - добавить предмет\n`{}trade remove in/out <trade item number>` - удалить предмет\n`{}trade send` - отправить сделку",
+
+    "help.embed.description": "'Используйте `{}help <команда>`, чтобы получить более подробную информацию о команде'",
+    "help.aliases": "Псевдонимы",
+
+    "config.options.room_channel.name": "Канал создания комнаты для распаковки",
+    "config.options.room_channel.description": "Канал, используемый для создания комнат для распаковки кейсов. Если установлено значение `None`, пользователи могут распаковывать кейсы где угодно, где я могу отправлять сообщения в сервере.",
+    "config.options.room_channel.response_embed_text": "Ответьте на это сообщение с названием текстового канала в течение **30 секунд**",
+    "config.menu.footer": "Внимание! Меню закроется после 3 минут бездействия",
+    "config.menu.description": "{}\n\n**Текущее значение**: {}",
+    "config.current_value": "**Текущее значение**: {}",
+    "config.no_response": "Редактирование **{}** отменено из-за отсутствия ответа",
+    "config.set_default_value": "Установить **{}** на значение по умолчанию: `{}`",
+    "config.successful_change": "Успешно установлено **{}** на {}",
+    "config.conversion_fail": "Ошибка конвертации"
+}
