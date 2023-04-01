@@ -61,7 +61,7 @@
     "author_not_registered": "Вы не зарегистрированы! Используйте `{}register`, чтобы зарегистрироваться",
     "user_not_registeed": "{} не зарегистрирован!",
 
-    "lang.current": "Текущий язык: `Английский`",
+    "lang.current": "Текущий язык: `Русский`",
     "lang.embed.select.placeholder": "Выберите язык",
     "lang.not_found": "Язык не поддерживается! Выберите свой язык, используя [коды языков ISO](https://ru.wikipedia.org/wiki/ISO_639-1)",
 
