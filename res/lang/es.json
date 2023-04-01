@@ -49,12 +49,12 @@
     "button.edit": "Editar",
 
     "command_not_found": "¡Comando no encontrado!",
-    "command_not_found_suggest": "¡Comando no encontrado! ¿Quisiste decir {}?",
+    "command_not_found_suggest": "¡Comando no encontrado! ¿Quisiste decir `{}`?",
     "command_error.no_user": "¡Error! ¡No se pudo encontrar al usuario!",
-    "command_error.incorrect_type": "¡Error! El argumento {} debe ser {}",
-    "command_error.missing_required_argument": "¡Vaya! ¡Olvidaste proporcionar el argumento: {}!",
-    "command_error.invalid_option": "¡Error! El argumento debe ser una de las siguientes opciones: {}",
-    "command_error.missing_permissions": "¡Error! Te faltan los siguientes permisos para usar este comando: {}",
+    "command_error.incorrect_type": "¡Error! El argumento `{}` debe ser `{}`",
+    "command_error.missing_required_argument": "¡Vaya! ¡Olvidaste proporcionar el argumento: `{}`!",
+    "command_error.invalid_option": "¡Error! El argumento debe ser una de las siguientes opciones: `{}`",
+    "command_error.missing_permissions": "¡Error! Te faltan los siguientes permisos para usar este comando: `{}`",
     "command_error.cooldown": "¡Comando en enfriamiento! Inténtalo de nuevo después de {} segundos",
     "command_error.room": "¡Este comando debe ser usado en una sala! Ve a {} y usa {}room",
 
