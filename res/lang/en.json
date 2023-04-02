@@ -62,8 +62,9 @@
     "user_not_registeed": "{} is not registered!",
 
     "lang.current": "Current Language: `English`",
-    "lang.embed.select.placeholder": "Select Language",
-    "lang.not_found": "Langauge is not supported! Choose your language using the [ISO Language Codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)",
+    "lang.embed.supported_languages": "Supported Languages",
+    "lang.embed.supported_languages.value": "🏴󠁧󠁢󠁥󠁮󠁧󠁿 English - `en`\n🇫🇷 Français - `fr`\n🇩🇪 Deutsch - `de`\n🇪🇸 Español - `es`\n🇮🇹 Italiano - `it`\n🇷🇺 Русский - `ru`",
+    "lang.not_found": "Langauge is not supported! Choose your language using the list below",
 
     "balance.embed.title": "{}'s Balance",
     "balance.current": "Current Balance",

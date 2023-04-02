@@ -61,8 +61,9 @@
     "user_not_registeed": "{} n'est pas enregistré !",
 
     "lang.current": "Langue actuelle : `Français`",
-    "lang.embed.select.placeholder": "Choisir une langue",
-    "lang.not_found": "La langue n'est pas prise en charge ! Choisissez votre langue en utilisant les [codes de langue ISO](https://fr.wikipedia.org/wiki/Liste_des_codes_ISO_639-1)",
+    "lang.embed.supported_languages": "Langues prises en charge",
+    "lang.embed.supported_languages.value": "🏴󠁧󠁢󠁥󠁮󠁧󠁿 English - `en`\n🇫🇷 Français - `fr`\n🇩🇪 Deutsch - `de`\n🇪🇸 Español - `es`\n🇮🇹 Italiano - `it`\n🇷🇺 Русский - `ru`",
+    "lang.not_found": "La langue n'est pas prise en charge ! Choisissez votre langue dans la liste ci-dessous",
 
     "balance.embed.title": "Solde de {}",
     "balance.current": "Solde actuel",

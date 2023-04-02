@@ -62,8 +62,9 @@
     "user_not_registeed": "{} ist nicht registriert!",
 
     "lang.current": "Aktuelle Sprache: `Deutsche`",
-    "lang.embed.select.placeholder": "Sprache auswählen",
-    "lang.not_found": "Sprache wird nicht unterstützt! Wählen Sie Ihre Sprache mit den [ISO-Sprachcodes](https://de.wikipedia.org/wiki/ISO_639) aus",
+    "lang.embed.supported_languages": "Unterstützte Sprachen",
+    "lang.embed.supported_languages.value": "🏴󠁧󠁢󠁥󠁮󠁧󠁿 English - `en`\n🇫🇷 Français - `fr`\n🇩🇪 Deutsch - `de`\n🇪🇸 Español - `es`\n🇮🇹 Italiano - `it`\n🇷🇺 Русский - `ru`",
+    "lang.not_found": "Sprache wird nicht unterstützt! Wählen Sie Ihre Sprache aus der Liste unten",
 
     "balance.embed.title": "{}s Kontostand",
     "balance.current": "Aktueller Kontostand",

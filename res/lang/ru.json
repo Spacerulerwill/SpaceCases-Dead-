@@ -62,8 +62,9 @@
     "user_not_registeed": "{} не зарегистрирован!",
 
     "lang.current": "Текущий язык: `Русский`",
-    "lang.embed.select.placeholder": "Выберите язык",
-    "lang.not_found": "Язык не поддерживается! Выберите свой язык, используя [коды языков ISO](https://ru.wikipedia.org/wiki/ISO_639-1)",
+    "lang.embed.supported_languages": "Поддерживаемые языки",
+    "lang.embed.supported_languages.value": "🏴󠁧󠁢󠁥󠁮󠁧󠁿 English - `en`\n🇫🇷 Français - `fr`\n🇩🇪 Deutsch - `de`\n🇪🇸 Español - `es`\n🇮🇹 Italiano - `it`\n🇷🇺 Русский - `ru`",
+    "lang.not_found": "Язык не поддерживается! Выберите свой язык, используя список ниже",
 
     "balance.embed.title": "Баланс {}",
     "balance.current": "Текущий баланс",

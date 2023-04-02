@@ -5,6 +5,7 @@ from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
 import time
 
+
 async def register(ctx: Context):
     update_result = database.user_data.update_one(
         {"_id": ctx.author.id},
