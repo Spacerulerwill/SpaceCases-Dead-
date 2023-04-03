@@ -6,6 +6,8 @@ from pymongo.collection import Collection
 from timeit import default_timer as timer
 from datetime import timedelta
 from src.util.constants import ONE_WEEK
+from src.scripts.csgostash_scraper import csgostash_scrape
+from src.scripts.container_scraper import scrape_containers
 
 # MongoDB collections
 user_data: Collection
@@ -57,6 +59,7 @@ def get_leaderboard():
 def init_collections():
     global user_data, trade_requests, skin_data_collection, mongo_client, guild_data, word_list
 
+    localhost = False
     # try read mongodb database password from database_pass.txt, if fails read from environment variable
     try:
         # read local bot_info
@@ -64,11 +67,27 @@ def init_collections():
         PASS = f.read()
     except FileNotFoundError:
         # read password from environment variable
-        PASS = environ["MONGO_DB_PASS"]
+        try:
+            PASS = environ["MONGO_DB_PASS"]
+        except:
+            # using localhost
+            localhost = True
 
-    # setup mongodb database
-    mongo_url = f"mongodb+srv://admin:{PASS}@csgo-case-bot.odtd2un.mongodb.net/?retryWrites=true&w=majority"
-    mongo_client = pymongo.MongoClient(mongo_url, tlsCAFile=certifi.where())
+    if localhost:
+        try:
+            mongo_url = "mongodb://127.0.0.1:27017"
+            mongo_client = pymongo.MongoClient(mongo_url)
+        except:
+            print("Failed to connect to localhost MongoDB")
+            return
+    else:
+        try:
+            # setup mongodb database from web server
+            mongo_url = f"mongodb+srv://admin:{PASS}@csgo-case-bot.odtd2un.mongodb.net/?retryWrites=true&w=majority"
+            mongo_client = pymongo.MongoClient(mongo_url, tlsCAFile=certifi.where())
+        except:
+            print("Failed to connect to MongoDB web server")
+            return
 
     print("Connected to MongoDB database!")
 
@@ -111,3 +130,16 @@ def load_data():
         word_list = f.read().splitlines()
 
     print("Loaded data")
+
+
+def scrape_skin_data():
+    data = csgostash_scrape()
+
+    skin_data_collection.replace_one({"_id": "skin-data"}, data, upsert=True)
+
+
+def scrape_container_data():
+    data = scrape_containers()
+
+    # upload to mongodb
+    skin_data_collection.replace_one({"_id": "container-data"}, data, upsert=True)

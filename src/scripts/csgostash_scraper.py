@@ -3,20 +3,15 @@ Webscraper script used to data for the skins in csgo
 """
 
 from bs4 import BeautifulSoup
+from functools import partial
 import requests
-import json
 import concurrent.futures
 from re import sub
 from src.util.string_util import remove_skin_name_formatting
 from src.util.constants import case_wear_ranges_lower, MAX_THREADS
 from decimal import Decimal
-from src.util import database
 
 NO_PRICE_FOUND = 300000
-
-result = {"_id": "skin-data", "skins": {}, "no_wear_skins": {}}
-
-skin_links = []
 
 endpoints = [
     # pistols
@@ -110,9 +105,7 @@ condition_index_dict = {
 
 
 # scraping a weapon endpoint (all the skins for a weapon) - adds them to a skin_links list
-def scrape_endpoint(endpoint):
-    global skin_links
-
+def scrape_endpoint(skin_links, endpoint):
     r = requests.get(f"https://csgostash.com/{endpoint}")
     soup = BeautifulSoup(r.content, "html.parser")
 
@@ -126,7 +119,7 @@ def scrape_endpoint(endpoint):
     print(endpoint)
 
 
-def scrape_skin_link(skin_link):
+def scrape_skin_link(result, skin_link):
     # get html source
     r = requests.get(skin_link)
     soup = BeautifulSoup(r.content, "html.parser")
@@ -333,11 +326,14 @@ def scrape_skin_link(skin_link):
     print(formatted_name)
 
 
-def csgostash_scrape():
-    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(scrape_endpoint, endpoints)
+def csgostash_scrape() -> dict:
+    skin_links = []
+    result = {"_id": "skin-data", "skins": {}, "no_wear_skins": {}}
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(scrape_skin_link, skin_links)
+        executor.map(partial(scrape_endpoint, skin_links), endpoints)
 
-    database.skin_data_collection.replace_one({"_id": "skin-data"}, result, upsert=True)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
+        executor.map(partial(scrape_skin_link, result), skin_links)
+
+    return result

@@ -96,7 +96,7 @@ async def leaderboard_loop():
 @bot_instance.event
 async def on_command_error(ctx: Context, error):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
-    
+
     if user_data is None:
         lang = "en"
     else:
@@ -205,18 +205,14 @@ async def on_message(message: discord.Message):
 
 
 def scrape_skin_data():
-    from src.scripts.csgostash_scraper import csgostash_scrape
-
     database.init_collections()
-    csgostash_scrape()
+    database.scrape_skin_data()
 
 
 def scrape_container_data():
-    from src.scripts.container_scraper import scrape_containers
-
     database.init_collections()
-    scrape_containers()
+    database.scrape_container_data()
 
 
 if __name__ == "__main__":
-    run_bot()
+    scrape_skin_data()
