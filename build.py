@@ -24,18 +24,6 @@ def script_run():
     with open("bot_token.txt", "w+") as f:
         f.write(bot_token)
 
-    try:
-        subprocess.run("md \data\db", check=True, shell=True, capture_output=True)
-    except subprocess.CalledProcessError as e:
-        if (
-            e.stderr.decode("utf-8")
-            != "A subdirectory or file \\data\\db already exists.\r\n"
-        ):
-            print(
-                "Could not run command md \data\db. Have you installed MongoDB Community Server?"
-            )
-            return
-
     # setup mongodb database
     mongo_url = "mongodb://127.0.0.1:27017"
     mongo_client = pymongo.MongoClient(mongo_url)

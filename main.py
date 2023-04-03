@@ -215,4 +215,4 @@ def scrape_container_data():
 
 
 if __name__ == "__main__":
-    scrape_skin_data()
+    run_bot()
