@@ -2,6 +2,30 @@
 
 WARNING! All new features that contain text must be implemented in at least ENGLISH. See [here](#cross-language-compatibility) on how to implement text so it can have cross language support.
 
+# Setup
+
+To successfully create an environment to implement new features and test them, you will need to do the following
+
+* As this project is written in python, you can install the latest version [here](https://www.python.org/downloads/)
+* Install [MongoDB Community Server](https://www.mongodb.com/try/download/community) - all the options left to default!
+* Go to the [discord developer portal](https://discord.com/developers/applications), login and click **New Application**
+* Go click on bot tab on the left, and then click **Add Bot**
+* Scroll down to the "Privileged Gateway Intents" section and tick all three
+* Click the **Copy** button to copy its token and save it somewhere temporarily. Don't lose it!
+* Create a fork of the repository and clone it to some folder.
+* Go into that folder in the terminal and run the build.py file, pasting in your token when prompted
+* Wait for it to finish
+* Now you can go back to the discord developer portal and go to the OAuth2 tab, then to URL Generator and then check the "bot" box
+* In the bot permissions box below check: 
+    * Send Messages
+    * Create Public Threads
+    * Create Private Threads
+    * Manage Messages
+    * Manage Threads
+
+Now you can invite your discord bot to a server with the url this has generated, run the bot and add some cool stuff!
+
+# Implementation Guidelines
 ## Cross language compatibility
 All phrases of text for the bot are stored in language specific JSON files with their own unqiue key identifier. For example:
 
