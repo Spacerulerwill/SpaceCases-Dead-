@@ -1,5 +1,5 @@
 import pymongo
-import subprocess
+import os
 from pymongo.database import Database
 from pymongo.collection import Collection
 from pymongo.errors import CollectionInvalid
@@ -19,6 +19,8 @@ def try_create_collection(db: Database, name: str) -> Collection:
 
 
 def script_run():
+    os.system("pip install -r requirements.txt")
+    
     bot_token = input("Enter bot token: ")
 
     with open("bot_token.txt", "w+") as f:
