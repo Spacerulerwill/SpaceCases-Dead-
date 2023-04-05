@@ -106,7 +106,7 @@ class Help(commands.Cog):
                     usage: dict = get_locale(lang, f"{group_name}_{subcommand_name}.usage")
 
                     e = discord.Embed(
-                        title=f"{PREFIX}{subcommand_name}",
+                        title=f"{PREFIX}{group_name} {subcommand_name}",
                         description=description,
                         color=discord.Color.dark_theme(),
                     )
