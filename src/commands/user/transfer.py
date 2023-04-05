@@ -1,7 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.decorators import requires
 from src.util.string_util import currency_str_format
 from src.util.embed_func import msg_embed
@@ -13,11 +13,11 @@ async def transfer(ctx: Context, member: discord.Member, amount: Decimal):
     lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     if member is ctx.author:
-        await msg_embed(ctx, get_locale(lang, "transfer.cant_transfer_to_self"))
+        await msg_embed(ctx, get_locale_fm(lang, "transfer.cant_transfer_to_self"))
         return
 
     if amount <= 0:
-        await msg_embed(ctx, get_locale(lang, "transfer.amount_greater_than_0"))
+        await msg_embed(ctx, get_locale_fm(lang, "transfer.amount_greater_than_0"))
         return
 
     # convert amount to cents
@@ -57,7 +57,7 @@ async def transfer(ctx: Context, member: discord.Member, amount: Decimal):
 
                 await msg_embed(
                     ctx,
-                    get_locale(
+                    get_locale_fm(
                         lang,
                         "transfer.successfull",
                         currency_str_format(amount),
@@ -65,4 +65,4 @@ async def transfer(ctx: Context, member: discord.Member, amount: Decimal):
                     ),
                 )
             else:
-                await msg_embed(ctx, get_locale(lang, "transfer.insufficient_funds"))
+                await msg_embed(ctx, get_locale_fm(lang, "transfer.insufficient_funds"))

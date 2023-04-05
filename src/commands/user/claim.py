@@ -1,6 +1,6 @@
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.string_util import currency_str_format
 from src.util.skin_func import gen_item
 from src.util.constants import ONE_DAY, rarity_color_dict
@@ -197,13 +197,13 @@ async def claim(ctx: Context):
 
         # create embed
         e = discord.Embed(
-            title=get_locale(lang, "claim.embed.title"),
-            description=get_locale(lang, "claim.embed.description"),
+            title=get_locale_fm(lang, "claim.embed.title"),
+            description=get_locale_fm(lang, "claim.embed.description"),
             color=discord.Color.green(),
         )
         e.set_thumbnail(url=ctx.author.display_avatar.url)
 
-        footer = get_locale(lang, "claim.embed.footer")
+        footer = get_locale_fm(lang, "claim.embed.footer")
 
         view = None
 
@@ -213,24 +213,24 @@ async def claim(ctx: Context):
 
         if post_doc["claim_streak"] >= max_claim_streak:
             e.add_field(
-                name=get_locale(lang, "claim.embed.amount"),
+                name=get_locale_fm(lang, "claim.embed.amount"),
                 value="$300.00",
                 inline=True,
             )
         else:
             e.add_field(
-                name=get_locale(lang, "claim.embed.amount"),
+                name=get_locale_fm(lang, "claim.embed.amount"),
                 value=currency_str_format(CLAIM_MONEY_AMOUNTS[prev_streak]),
                 inline=True,
             )
 
         e.add_field(
-            name=get_locale(lang, "claim.embed.new_balance"),
+            name=get_locale_fm(lang, "claim.embed.new_balance"),
             value=currency_str_format(post_doc["balance"]),
             inline=True,
         )
         e.add_field(
-            name=get_locale(lang, "claim.embed.streak"),
+            name=get_locale_fm(lang, "claim.embed.streak"),
             value=post_doc["claim_streak"],
             inline=True,
         )
@@ -281,7 +281,7 @@ async def claim(ctx: Context):
                     await msg.edit(embed=e, view=None)
 
                 elif update_result.modified_count == 0:
-                    await msg_embed(ctx, get_locale(lang, "inventory.full"))
+                    await msg_embed(ctx, get_locale_fm(lang, "inventory.full"))
             await interact.response.defer()
 
         # if not interacted with after 30 seconds, sell the item
@@ -291,7 +291,7 @@ async def claim(ctx: Context):
 
         # if bonus item reward, pick random item of given quality
         if bonus_reward != None:
-            footer += get_locale(lang, "claim.embed.footer.bonus_item")
+            footer += get_locale_fm(lang, "claim.embed.footer.bonus_item")
 
             # pick random case
             random_container = random.choice(list(database.containers.keys()))
@@ -302,7 +302,7 @@ async def claim(ctx: Context):
             skin_price = skin_data["price"]
 
             e.add_field(
-                name=get_locale(lang, "claim.embed.bonus_item"),
+                name=get_locale_fm(lang, "claim.embed.bonus_item"),
                 value=f"**{skin_data['formatted_name']}** - **{currency_str_format(skin_price)}**",
                 inline=False,
             )
@@ -313,12 +313,12 @@ async def claim(ctx: Context):
             view = discord.ui.View()
             view.on_timeout = view_timeout_callback
             inventory_button = discord.ui.Button(
-                label=get_locale(lang, "button.add_to_inventory"),
+                label=get_locale_fm(lang, "button.add_to_inventory"),
                 style=discord.ButtonStyle.green,
             )
             inventory_button.callback = inventory_callback
             sell_button = discord.ui.Button(
-                label=get_locale(lang, "button.sell"), style=discord.ButtonStyle.red
+                label=get_locale_fm(lang, "button.sell"), style=discord.ButtonStyle.red
             )
             sell_button.callback = sell_callback
             view.add_item(inventory_button)
@@ -329,4 +329,4 @@ async def claim(ctx: Context):
 
     else:
         lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
-        await msg_embed(ctx, get_locale(lang, "claim.already"))
+        await msg_embed(ctx, get_locale_fm(lang, "claim.already"))

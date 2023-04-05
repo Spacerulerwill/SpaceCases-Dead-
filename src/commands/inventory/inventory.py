@@ -1,10 +1,10 @@
 import discord
 from discord.ext.commands import Context
-from src.util.constants import PREFIX, INVENTORY_ELEMS_PER_PAGE, rarity_emoji_dict
+from src.util.constants import INVENTORY_ELEMS_PER_PAGE, rarity_emoji_dict
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.string_util import currency_str_format
 
 
@@ -19,15 +19,15 @@ async def inventory(ctx: Context, member: discord.Member, page: int):
     # if users inventory is empty
     if len(user_data["inventory"]) == 0:
         e = discord.Embed(
-            title=get_locale(lang, "inventory.embed.empty_title", member.name),
+            title=get_locale_fm(lang, "inventory.embed.empty_title", member.name),
             color=discord.Color.dark_theme(),
         )
         e.set_thumbnail(url=member.display_avatar.url)
 
         if member == ctx.author:
-            e.description = get_locale(lang, "inventory.empty_1", PREFIX)
+            e.description = get_locale_fm(lang, "inventory.empty_1")
         else:
-            e.description = get_locale(lang, "inventory.empty_2", member.name)
+            e.description = get_locale_fm(lang, "inventory.empty_2", member.name)
         await ctx.send(embed=e)
         return
 
@@ -39,7 +39,7 @@ async def inventory(ctx: Context, member: discord.Member, page: int):
     ]
 
     if page <= 0 or page > len(inventory_pages):
-        await msg_embed(ctx, get_locale(lang, "invalid_page_number"))
+        await msg_embed(ctx, get_locale_fm(lang, "invalid_page_number"))
         return
 
     page -= 1
@@ -55,7 +55,7 @@ async def inventory(ctx: Context, member: discord.Member, page: int):
         for count, item in enumerate(inventory_page):
             skin_data = database.skin_data["skins"][item["name"]]
             emoji = rarity_emoji_dict[skin_data["rarity"]]
-            string += get_locale(
+            string += get_locale_fm(
                 lang,
                 "inventory.item_string",
                 emoji,
@@ -65,14 +65,14 @@ async def inventory(ctx: Context, member: discord.Member, page: int):
             )
 
         e = discord.Embed(
-            title=get_locale(
+            title=get_locale_fm(
                 lang,
                 "inventory.embed.title",
                 member.name,
                 page + 1,
                 len(inventory_pages),
             ),
-            description=get_locale(
+            description=get_locale_fm(
                 lang,
                 "inventory.embed.description",
                 currency_str_format(inventory_value),
@@ -87,14 +87,14 @@ async def inventory(ctx: Context, member: discord.Member, page: int):
 
         if member is ctx.author:
             e.add_field(
-                name=get_locale(lang, "commands"),
-                value=get_locale(lang, "inventory.embed.commands_1", PREFIX, PREFIX),
+                name=get_locale_fm(lang, "commands"),
+                value=get_locale_fm(lang, "inventory.embed.commands_1"),
                 inline=False,
             )
         else:
             e.add_field(
-                name=get_locale(lang, "commands"),
-                value=get_locale(lang, "inventory.embed.commands_1", PREFIX, PREFIX),
+                name=get_locale_fm(lang, "commands"),
+                value=get_locale_fm(lang, "inventory.embed.commands_1"),
                 inline=False,
             )
 
@@ -104,7 +104,9 @@ async def inventory(ctx: Context, member: discord.Member, page: int):
     async def prev_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -122,7 +124,9 @@ async def inventory(ctx: Context, member: discord.Member, page: int):
     async def next_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 

@@ -3,9 +3,8 @@ import asyncio
 from datetime import datetime, timedelta
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.constants import MAX_TRADES_PER_PAGE
-from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.util.decorators import requires
 
@@ -19,11 +18,11 @@ async def trades(ctx: Context, in_out: str, page: int):
     if page is None:
         page = 1
     elif page < 1:
-        await msg_embed(ctx, get_locale(lang, "invalid_page"))
+        await msg_embed(ctx, get_locale_fm(lang, "invalid_page"))
         return
 
     if in_out == "all":
-        title = get_locale(lang, "trades.all.embed.title")
+        title = get_locale_fm(lang, "trades.all.embed.title")
         trades = list(
             database.trade_requests.find(
                 {
@@ -35,14 +34,14 @@ async def trades(ctx: Context, in_out: str, page: int):
             )
         )
     elif in_out == "in":
-        title = get_locale(lang, "trades.in.embed.title")
+        title = get_locale_fm(lang, "trades.in.embed.title")
         trades = list(
             database.trade_requests.find(
                 {"recipient_id": ctx.author.id, "send_timestamp": {"$ne": 0}}
             )
         )
     elif in_out == "out":
-        title = get_locale(lang, "trades.out.embed.title")
+        title = get_locale_fm(lang, "trades.out.embed.title")
         trades = list(
             database.trade_requests.find(
                 {"_id": ctx.author.id, "send_timestamp": {"$ne": 0}}
@@ -65,12 +64,12 @@ async def trades(ctx: Context, in_out: str, page: int):
         nonlocal num_pages, page
 
         if len(trades) == 0:
-            trade_list_str = get_locale(lang, "none")
+            trade_list_str = get_locale_fm(lang, "none")
         else:
             try:
                 current_trade_page = trades_pages[page]
             except IndexError:
-                await msg_embed(ctx, get_locale(lang, "invalid_page"))
+                await msg_embed(ctx, get_locale_fm(lang, "invalid_page"))
                 return
 
             trade_list_str = ""
@@ -99,12 +98,12 @@ async def trades(ctx: Context, in_out: str, page: int):
 
                     if trade["_id"] == ctx.author.id:
                         recipient = id_name_dict[trade["recipient_id"]]
-                        trade_list_str += get_locale(
+                        trade_list_str += get_locale_fm(
                             lang, "trades.outgoing_to", recipient, time_left.days
                         )
                     elif trade["recipient_id"] == ctx.author.id:
                         sender = id_name_dict[trade["_id"]]
-                        trade_list_str += get_locale(
+                        trade_list_str += get_locale_fm(
                             lang, "trades.incoming_from", sender, time_left.days
                         )
 
@@ -116,7 +115,7 @@ async def trades(ctx: Context, in_out: str, page: int):
                 for trade in current_trade_page:
                     time_left: timedelta = (trade["send_timestamp"] + one_week) - now
                     sender = id_name_dict[trade["_id"]]
-                    trade_list_str += get_locale(
+                    trade_list_str += get_locale_fm(
                         lang, "trades.incoming_from", sender, time_left.days
                     )
 
@@ -128,28 +127,23 @@ async def trades(ctx: Context, in_out: str, page: int):
                 for trade in current_trade_page:
                     time_left: timedelta = (trade["send_timestamp"] + one_week) - now
                     recipient = id_name_dict[trade["recipient_id"]]
-                    trade_list_str += get_locale(
+                    trade_list_str += get_locale_fm(
                         lang, "trades.outgoing_to", recipient, time_left.days
                     )
 
         e = discord.Embed(title=title, color=discord.Color.dark_theme())
         e.set_thumbnail(url=ctx.author.display_avatar.url)
         e.add_field(
-            name=get_locale(
+            name=get_locale_fm(
                 lang, "trades.embed.trade_list", len(trades), page + 1, num_pages
             ),
             value=trade_list_str,
         )
         e.add_field(
             name="Commands",
-            value=get_locale(
+            value=get_locale_fm(
                 lang,
                 "trades.embed.commands.value",
-                PREFIX,
-                PREFIX,
-                PREFIX,
-                PREFIX,
-                PREFIX,
             ),
             inline=False,
         )
@@ -160,7 +154,9 @@ async def trades(ctx: Context, in_out: str, page: int):
     async def next_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -176,7 +172,9 @@ async def trades(ctx: Context, in_out: str, page: int):
     async def prev_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 

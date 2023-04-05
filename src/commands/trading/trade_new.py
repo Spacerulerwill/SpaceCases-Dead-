@@ -1,7 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.commands.trading.trade_func import send_trade_in_creation_embed
 from pymongo.errors import DuplicateKeyError
@@ -12,12 +12,12 @@ from typing import Tuple
 
 async def send_warning(lang: str, ctx: Context, recipient: discord.Member):
     e = discord.Embed(
-        title=get_locale(lang, "trade_new.warning.embed.footer"),
-        description=get_locale(lang, "trade_new.warning.embed.description"),
+        title=get_locale_fm(lang, "trade_new.warning.embed.footer"),
+        description=get_locale_fm(lang, "trade_new.warning.embed.description"),
         color=discord.Color.red(),
     )
     e.set_thumbnail(url=ctx.author.display_avatar.url)
-    e.set_footer(text=get_locale(lang, "trade_new.warning.embed.footer"))
+    e.set_footer(text=get_locale_fm(lang, "trade_new.warning.embed.footer"))
 
     # callback funcs
     async def view_timeout_callback():
@@ -32,7 +32,9 @@ async def send_warning(lang: str, ctx: Context, recipient: discord.Member):
     async def cancel_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -41,7 +43,9 @@ async def send_warning(lang: str, ctx: Context, recipient: discord.Member):
     async def continue_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -64,11 +68,11 @@ async def send_warning(lang: str, ctx: Context, recipient: discord.Member):
     view.on_timeout = view_timeout_callback
 
     continue_button = discord.ui.Button(
-        label=get_locale(lang, "button.continue"), style=discord.ButtonStyle.green
+        label=get_locale_fm(lang, "button.continue"), style=discord.ButtonStyle.green
     )
     continue_button.callback = continue_callback
     cancel_button = discord.ui.Button(
-        label=get_locale(lang, "button.cancel"), style=discord.ButtonStyle.red
+        label=get_locale_fm(lang, "button.cancel"), style=discord.ButtonStyle.red
     )
     cancel_button.callback = cancel_callback
     view.add_item(continue_button)
@@ -105,7 +109,7 @@ async def new(ctx: Context, recipient: discord.Member):
     except DuplicateKeyError:
         await msg_embed(
             ctx,
-            get_locale(
+            get_locale_fm(
                 lang, "trade_error.already_have_trade_with_user", recipient.name
             ),
         )

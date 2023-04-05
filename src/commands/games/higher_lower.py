@@ -1,7 +1,7 @@
 import discord
 from discord.errors import NotFound
 import random
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from discord.ext.commands import Context
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.util.decorators import requires
@@ -18,16 +18,14 @@ HL_MAX_GUESS = 10
 HL_PRICE = 250
 HL_REWARD = lambda difficulty: ((difficulty - HL_MIN_GUESS) * 250) + HL_PRICE + 750
 
-PRICE_STR = currency_str_format(HL_PRICE)
-
-
 @requires(users_registered=True)
 async def higher_lower(ctx: Context, difficulty: int):
     lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     if not HL_MIN_GUESS <= difficulty <= HL_MAX_GUESS:
         await msg_embed(
-            ctx, get_locale(lang, "hl.invalid_difficulty", HL_MIN_GUESS, HL_MAX_GUESS)
+            ctx,
+            get_locale_fm(lang, "hl.invalid_difficulty"),
         )
         return
 
@@ -38,8 +36,8 @@ async def higher_lower(ctx: Context, difficulty: int):
     game_started = False
 
     e = discord.Embed(
-        title=get_locale(lang, "hl.embed.title"),
-        description=get_locale(lang, "hl.embed.description", difficulty, PRICE_STR),
+        title=get_locale_fm(lang, "hl.embed.title"),
+        description=get_locale_fm(lang, "hl.embed.description", difficulty),
         color=discord.Color.dark_theme(),
     )
 
@@ -53,7 +51,8 @@ async def higher_lower(ctx: Context, difficulty: int):
 
     e.set_image(url=initial_item_data["image_url"])
     e.set_footer(
-        icon_url=ctx.author.display_avatar.url, text=get_locale(lang, "hl.embed.footer")
+        icon_url=ctx.author.display_avatar.url,
+        text=get_locale_fm(lang, "hl.embed.footer"),
     )
 
     view = discord.ui.View(timeout=30)
@@ -68,14 +67,16 @@ async def higher_lower(ctx: Context, difficulty: int):
     view.on_timeout = view_timeout_callback
 
     start_button = discord.ui.Button(
-        label=get_locale(lang, "button.start"), style=discord.ButtonStyle.green
+        label=get_locale_fm(lang, "button.start"), style=discord.ButtonStyle.green
     )
 
     # start game
     async def start_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -116,7 +117,7 @@ async def start_game(
     )
 
     if update_result.modified_count == 0:
-        await msg_embed(ctx, get_locale(lang, "not_enough_funds"))
+        await msg_embed(ctx, get_locale_fm(lang, "not_enough_funds"))
         return
 
     # get all skins prices
@@ -140,8 +141,8 @@ async def start_game(
     async def view_timeout_callback():
         if not game_over:
             e = discord.Embed(
-                title=get_locale(lang, "hl.playing.lost.embed.title"),
-                description=get_locale(lang, "hl.playing.lost.embed.out_of_time"),
+                title=get_locale_fm(lang, "hl.playing.lost.embed.title"),
+                description=get_locale_fm(lang, "hl.playing.lost.embed.out_of_time"),
                 color=discord.Color.red(),
             )
             await msg.edit(embed=e, view=None)
@@ -149,10 +150,10 @@ async def start_game(
     view.on_timeout = view_timeout_callback
 
     less_button = discord.ui.Button(
-        label=get_locale(lang, "button.less"), style=discord.ButtonStyle.red
+        label=get_locale_fm(lang, "button.less"), style=discord.ButtonStyle.red
     )
     more_button = discord.ui.Button(
-        label=get_locale(lang, "button.more"), style=discord.ButtonStyle.green
+        label=get_locale_fm(lang, "button.more"), style=discord.ButtonStyle.green
     )
 
     # call backs
@@ -161,7 +162,9 @@ async def start_game(
 
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -172,8 +175,8 @@ async def start_game(
             else:
                 game_over = True
                 e = discord.Embed(
-                    title=get_locale(lang, "hl.playing.lost.embed.title"),
-                    description=get_locale(
+                    title=get_locale_fm(lang, "hl.playing.lost.embed.title"),
+                    description=get_locale_fm(
                         lang,
                         "hl.playing.lost.embed.incorrect_guess",
                         skin_data[guess_num]["formatted_name"],
@@ -190,8 +193,8 @@ async def start_game(
             amount_won = HL_REWARD(difficulty)
 
             e = discord.Embed(
-                title=get_locale(lang, "hl.playing.won.embed.title"),
-                description=get_locale(
+                title=get_locale_fm(lang, "hl.playing.won.embed.title"),
+                description=get_locale_fm(
                     lang,
                     "hl.playing.won.embed.description",
                     currency_str_format(amount_won),
@@ -208,7 +211,9 @@ async def start_game(
         nonlocal guess_num, game_over
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -219,8 +224,8 @@ async def start_game(
             else:
                 game_over = True
                 e = discord.Embed(
-                    title=get_locale(lang, "hl.playing.lost.embed.title"),
-                    description=get_locale(
+                    title=get_locale_fm(lang, "hl.playing.lost.embed.title"),
+                    description=get_locale_fm(
                         lang,
                         "hl.playing.lost.embed.incorrect_guess",
                         skin_data[guess_num]["formatted_name"],
@@ -237,8 +242,8 @@ async def start_game(
             amount_won = HL_REWARD(difficulty)
 
             e = discord.Embed(
-                title=get_locale(lang, "hl.playing.won.embed.title"),
-                description=get_locale(
+                title=get_locale_fm(lang, "hl.playing.won.embed.title"),
+                description=get_locale_fm(
                     lang,
                     "hl.playing.won.embed.description",
                     currency_str_format(amount_won),
@@ -261,8 +266,10 @@ async def start_game(
 
     def get_embed() -> discord.Embed:
         e = discord.Embed(
-            title=get_locale(lang, "hl.playing.embed.title", guess_num + 1, difficulty),
-            description=get_locale(lang, "hl.playing.embed.description"),
+            title=get_locale_fm(
+                lang, "hl.playing.embed.title", guess_num + 1, difficulty
+            ),
+            description=get_locale_fm(lang, "hl.playing.embed.description"),
         )
 
         e.description += "**"

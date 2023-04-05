@@ -3,7 +3,7 @@ from src.util import database
 from src.commands.trading.trade_func import create_item_str
 from discord.ext.commands import Context
 from src.util.embed_func import msg_embed
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.decorators import requires
 
 
@@ -23,7 +23,9 @@ async def accept(ctx: Context, sender: discord.Member):
             )
 
             if trade is None:
-                await msg_embed(ctx, get_locale(lang, "no_incoming_trade", sender.name))
+                await msg_embed(
+                    ctx, get_locale_fm(lang, "no_incoming_trade", sender.name)
+                )
                 session.abort_transaction()
                 return
 
@@ -49,8 +51,8 @@ async def accept(ctx: Context, sender: discord.Member):
                     > sender_data["inventory_capacity"]
                 ):
                     e = discord.Embed(
-                        title=get_locale(lang, "trade_error"),
-                        description=get_locale(
+                        title=get_locale_fm(lang, "trade_error"),
+                        description=get_locale_fm(
                             lang, "trade_error.author_not_enough_space", sender.name
                         ),
                         color=discord.Color.red(),
@@ -63,8 +65,8 @@ async def accept(ctx: Context, sender: discord.Member):
                     > sender_data["inventory_capacity"]
                 ):
                     e = discord.Embed(
-                        title=get_locale(lang, "trade_error"),
-                        description=get_locale(
+                        title=get_locale_fm(lang, "trade_error"),
+                        description=get_locale_fm(
                             lang,
                             "trade_error.sender_not_enough_space",
                             sender.name,
@@ -119,9 +121,9 @@ async def accept(ctx: Context, sender: discord.Member):
                     session=session,
                 )
 
-                # send embed to person who accepted
+                # send embed to perso n who accepted
                 recipient_embed = discord.Embed(
-                    title=get_locale(
+                    title=get_locale_fm(
                         lang, "trade_accept.author_embed.description", sender.name
                     ),
                     color=discord.Color.green(),
@@ -136,13 +138,13 @@ async def accept(ctx: Context, sender: discord.Member):
 
                 # inform the original sender that it was accepted
                 sender_embed = discord.Embed(
-                    title=get_locale(
+                    title=get_locale_fm(
                         lang, "trade_accept.sender_embed.title", ctx.author.name
                     ),
                     color=discord.Color.green(),
                 )
                 sender_embed.add_field(
-                    name=get_locale(lang, "your_new_items"),
+                    name=get_locale_fm(lang, "your_new_items"),
                     value=create_item_str(lang, trade["recipient_items"]),
                 )
                 recipient_embed.set_thumbnail(url=sender.display_avatar.url)
@@ -162,8 +164,8 @@ async def accept(ctx: Context, sender: discord.Member):
 
                 # send message to recipient
                 e = discord.Embed(
-                    title=get_locale(lang, "trade_error"),
-                    description=get_locale(
+                    title=get_locale_fm(lang, "trade_error"),
+                    description=get_locale_fm(
                         lang, "trade_error.missing_items", sender.name
                     ),
                     color=discord.Color.red(),
@@ -171,11 +173,11 @@ async def accept(ctx: Context, sender: discord.Member):
                 e.set_thumbnail(url=ctx.author.display_avatar.url)
 
                 e.add_field(
-                    name=get_locale(lang, "you_are_missing"),
+                    name=get_locale_fm(lang, "you_are_missing"),
                     value=create_item_str(lang, recipient_items_missing),
                 )
                 e.add_field(
-                    name=get_locale(lang, "sender_is_missing", sender.name),
+                    name=get_locale_fm(lang, "sender_is_missing", sender.name),
                     value=create_item_str(lang, sender_items_missing),
                 )
 

@@ -4,7 +4,7 @@ import asyncio
 import Levenshtein
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed
 from src.util.string_util import remove_skin_name_formatting, currency_str_format
@@ -38,12 +38,12 @@ async def skin_game(ctx: Context):
     )
 
     if update_result.modified_count == 0:
-        await msg_embed(ctx, get_locale(lang, "not_enough_funds"))
+        await msg_embed(ctx, get_locale_fm(lang, "not_enough_funds"))
         return
 
     e = discord.Embed(
-        title=get_locale(lang, "skin_game.embed.title"),
-        description=get_locale(lang, "skin_game.embed.description"),
+        title=get_locale_fm(lang, "skin_game.embed.title"),
+        description=get_locale_fm(lang, "skin_game.embed.description"),
         color=discord.Color.dark_theme(),
     )
 
@@ -71,15 +71,17 @@ async def skin_game(ctx: Context):
 
         if Levenshtein.ratio(guess, skin_name) > 0.8:
             await msg_embed(
-                ctx, get_locale(lang, "skin_game.won", SKIN_GAME_REWARD_STR)
+                ctx, get_locale_fm(lang, "skin_game.won", SKIN_GAME_REWARD_STR)
             )
             database.user_data.update_one(
                 {"_id": ctx.author.id}, {"$inc": {"balance": SKIN_GAME_REWARD}}
             )
         else:
             await msg_embed(
-                ctx, get_locale(lang, "skin_game.lost.incorrect_guess", skin_name)
+                ctx, get_locale_fm(lang, "skin_game.lost.incorrect_guess", skin_name)
             )
 
     except asyncio.TimeoutError:
-        await msg_embed(ctx, get_locale(lang, "skin_game.lost.out_of_time", skin_name))
+        await msg_embed(
+            ctx, get_locale_fm(lang, "skin_game.lost.out_of_time", skin_name)
+        )

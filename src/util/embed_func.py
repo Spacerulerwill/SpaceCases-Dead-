@@ -1,8 +1,6 @@
 import discord
 from discord.ext.commands import Context
-from src.util.constants import PREFIX
-from src.util.lang import get_locale
-from src.util import database
+from src.lang.lang import get_locale_fm
 from discord.ext import commands
 
 
@@ -82,7 +80,7 @@ def welcome_embed(lang: str, bot: commands.Bot) -> discord.Embed:
         view: optional: a view to send with the message
     """
     e = discord.Embed(
-        description=get_locale(lang, "welcome_message", bot.user.name, PREFIX, PREFIX),
+        description=get_locale_fm(lang, "welcome_message", bot.user.name),
         color=discord.Color.dark_theme(),
     )
 

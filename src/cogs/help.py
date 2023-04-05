@@ -10,7 +10,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 from src.util.constants import PREFIX
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm, get_locale
 from src.util import database
 from src.util.string_util import get_closest_match
 from src.util.embed_func import msg_embed
@@ -32,11 +32,11 @@ class Help(commands.Cog):
         else:
             lang = user_data["lang"]
 
-        command_name = " ".join(args[:]).strip().lower()
+        cmd_query = " ".join(args[:]).strip().lower()
 
-        if command_name == "":
+        if cmd_query == "":
             e = discord.Embed(
-                description=get_locale("help.embed.description", PREFIX),
+                description=get_locale_fm(lang, "help.embed.description"),
                 color=discord.Color.dark_theme(),
             )
             e.set_thumbnail(url=self.bot.user.display_avatar.url)
@@ -56,21 +56,28 @@ class Help(commands.Cog):
             await ctx.send(embed=e)
         else:
             try:
-                command_name = command_name.split(" ")
+                cmd_query_splt = cmd_query.split(" ")
 
                 # command
-                if len(command_name) == 1:
-                    command_name = command_name[0]
-                    command: commands.Command = self.bot.get_command(command_name)
+                if len(cmd_query_splt) == 1:
+
+                    cmd_query_name = cmd_query_splt[0]
+                    command: commands.Command = self.bot.get_command(cmd_query_name)
+                    command_name = command.name
+
+                    description: str = get_locale_fm(
+                        lang, command_name + ".description"
+                    )
+                    usage: dict = get_locale(lang, command_name + ".usage")
 
                     e = discord.Embed(
                         title=f"{PREFIX}{command_name}",
-                        description=command.description,
+                        description=description,
                         color=discord.Color.dark_theme(),
                     )
                     e.set_thumbnail(url=self.bot.user.display_avatar.url)
 
-                    for name, value in command.usage.items():
+                    for name, value in usage.items():
                         e.add_field(name=name, value=value, inline=False)
 
                     if len(command.aliases) > 0:
@@ -78,27 +85,34 @@ class Help(commands.Cog):
                         for alias in command.aliases:
                             alias_str += f"\u200b\t•{alias}\n"
                         e.add_field(
-                            name=get_locale(lang, "help.aliases"),
+                            name=get_locale_fm(lang, "help.aliases"),
                             value=alias_str,
                             inline=False,
                         )
 
                     await ctx.send(embed=e)
 
-                elif len(command_name) == 2:  # command with group
-                    group_name = command_name[0]
-                    subcommand_name = command_name[1]
+                elif len(cmd_query_splt) == 2:  # command with group
+
+                    group_name = cmd_query_splt[0]
+                    cmd_query_name = cmd_query_splt[1]
                     group: commands.Group = self.bot.get_command(group_name)
-                    subcommand = group.get_command(subcommand_name)
+                    subcommand = group.get_command(cmd_query_name)
+                    subcommand_name = subcommand.name
+
+                    description: str = get_locale_fm(
+                        lang, f"{group_name}_{subcommand_name}.description"
+                    )
+                    usage: dict = get_locale(lang, f"{group_name}_{subcommand_name}.usage")
 
                     e = discord.Embed(
-                        title=f"{PREFIX}{group_name} {subcommand_name}",
-                        description=subcommand.description,
+                        title=f"{PREFIX}{subcommand_name}",
+                        description=description,
                         color=discord.Color.dark_theme(),
                     )
                     e.set_thumbnail(url=self.bot.user.display_avatar.url)
 
-                    for name, value in subcommand.usage.items():
+                    for name, value in usage.items():
                         e.add_field(name=name, value=value, inline=False)
 
                     if len(subcommand.aliases) > 0:
@@ -106,20 +120,21 @@ class Help(commands.Cog):
                         for alias in subcommand.aliases:
                             alias_str += f"\u200b\t•{alias}\n"
                         e.add_field(
-                            name=get_locale(lang, "help.aliases"),
+                            name=get_locale_fm(lang, "help.aliases"),
                             value=alias_str,
                             inline=False,
                         )
 
                     await ctx.send(embed=e)
             except AttributeError:
-                closest_match = get_closest_match(command_name, self.bot.commands)
+
+                closest_match = get_closest_match(cmd_query_name, self.bot.all_commands.keys())
                 if closest_match is None:
-                    await msg_embed(ctx, get_locale(lang, "command_not_found"))
+                    await msg_embed(ctx, get_locale_fm(lang, "command_not_found"))
                 else:
                     await msg_embed(
                         ctx,
-                        get_locale(lang, "command_not_found_suggest", closest_match),
+                        get_locale_fm(lang, "command_not_found_suggest", closest_match),
                     )
 
 

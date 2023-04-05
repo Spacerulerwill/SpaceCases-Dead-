@@ -5,7 +5,7 @@ from decimal import Decimal
 from discord.ext.commands import Context
 from discord.errors import NotFound
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.string_util import currency_str_format
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed_response, msg_embed
@@ -16,32 +16,32 @@ async def ttt(ctx: Context, player2: discord.Member, bet: Decimal):
     lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]
 
     if bet < 0:
-        await msg_embed(ctx, get_locale(lang, "cannot_bet_negative"))
+        await msg_embed(ctx, get_locale_fm(lang, "cannot_bet_negative"))
         return
 
     amount = int(bet * Decimal("100"))
 
     if ctx.author.id == player2.id:
-        await msg_embed(ctx, get_locale(lang, "cannot_play_against_self"))
+        await msg_embed(ctx, get_locale_fm(lang, "cannot_play_against_self"))
         return
 
     e = discord.Embed(
-        title=get_locale(lang, "ttt.embed.title"),
-        description=get_locale(lang, "ttt.embed.description"),
+        title=get_locale_fm(lang, "ttt.embed.title"),
+        description=get_locale_fm(lang, "ttt.embed.description"),
         color=discord.Color.dark_theme(),
     )
 
     has_wager = amount != 0
 
     if has_wager:
-        e.description += get_locale(
+        e.description += get_locale_fm(
             lang, "ttt.embed.description_wager", currency_str_format(amount)
         )
 
     e.set_thumbnail(url=ctx.bot.user.display_avatar.url)
     e.set_footer(
         icon_url=ctx.author.display_avatar.url,
-        text=get_locale(lang, "ttt.embed.footer"),
+        text=get_locale_fm(lang, "ttt.embed.footer"),
     )
 
     view = discord.ui.View(timeout=180)
@@ -74,7 +74,9 @@ async def ttt(ctx: Context, player2: discord.Member, bet: Decimal):
 
         if interact.user.id != player2.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -104,7 +106,7 @@ async def ttt(ctx: Context, player2: discord.Member, bet: Decimal):
             if update_result.modified_count != 2:
                 await msg_embed_response(
                     interact.response,
-                    get_locale(
+                    get_locale_fm(
                         lang,
                         "ttt.both_players_not_enough_funds",
                         currency_str_format(amount),
@@ -149,7 +151,9 @@ async def start_game(
 
         if interact.user not in players:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -177,7 +181,8 @@ async def start_game(
                 button.disabled = True
 
             await interact.response.edit_message(
-                content=get_locale(lang, "ttt.player_won", winner_user.name), view=view
+                content=get_locale_fm(lang, "ttt.player_won", winner_user.name),
+                view=view,
             )
 
             if not has_wager:
@@ -195,7 +200,7 @@ async def start_game(
                 button.disabled = True
 
             await interact.response.edit_message(
-                content=get_locale(lang, "ttt.draw"), view=view
+                content=get_locale_fm(lang, "ttt.draw"), view=view
             )
 
             if not has_wager:
@@ -212,7 +217,7 @@ async def start_game(
         turn_index = (turn_index + 1) % 2
 
         await interact.response.edit_message(
-            content=get_locale(lang, "ttt.player_turn", players[turn_index].name),
+            content=get_locale_fm(lang, "ttt.player_turn", players[turn_index].name),
             view=view,
         )
 
@@ -256,7 +261,7 @@ async def start_game(
         view.add_item(buttons[i])
 
     await interact.response.edit_message(
-        content=get_locale(lang, "ttt.player_turn", players[turn_index].name),
+        content=get_locale_fm(lang, "ttt.player_turn", players[turn_index].name),
         embed=None,
         view=view,
     )

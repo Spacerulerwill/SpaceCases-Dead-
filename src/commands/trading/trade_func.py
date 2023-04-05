@@ -1,7 +1,6 @@
 import discord
 from src.util import database
-from src.util.lang import get_locale
-from src.util.constants import PREFIX
+from src.lang.lang import get_locale_fm
 from discord.ext.commands import Context
 from datetime import datetime, timedelta
 
@@ -14,19 +13,19 @@ async def send_trade_notif_to_user(
     )
 
     e = discord.Embed(
-        title=get_locale(lang, "trade_notif.title"), color=discord.Color.dark_theme()
+        title=get_locale_fm(lang, "trade_notif.title"), color=discord.Color.dark_theme()
     )
     e.set_thumbnail(url=sender.display_avatar.url)
 
     they_offer = create_item_str(lang, trade["sender_items"])
     for_your = create_item_str(lang, trade["recipient_items"])
 
-    e.add_field(name=get_locale(lang, "they_offer"), value=they_offer)
-    e.add_field(name=get_locale(lang, "for_your"), value=for_your)
+    e.add_field(name=get_locale_fm(lang, "they_offer"), value=they_offer)
+    e.add_field(name=get_locale_fm(lang, "for_your"), value=for_your)
     e.add_field(
-        name=get_locale(lang, "commands"),
-        value=get_locale(
-            lang, "trade_notif.commands.value", PREFIX, sender.name, PREFIX, sender.name
+        name=get_locale_fm(lang, "commands"),
+        value=get_locale_fm(
+            lang, "trade_notif.commands.value", sender.name, sender.name
         ),
         inline=False,
     )
@@ -35,7 +34,7 @@ async def send_trade_notif_to_user(
 
 def create_item_str(lang: str, items: list) -> str:
     if len(items) == 0:
-        return get_locale(lang, "none")
+        return get_locale_fm(lang, "none")
     else:
         string = ""
         for count, item in enumerate(items):
@@ -47,10 +46,10 @@ def create_item_str(lang: str, items: list) -> str:
 async def send_trade_embed(lang: str, ctx: Context, trade: dict, incoming: bool):
     if incoming:
         user: discord.Member = await ctx.bot.fetch_user(trade["_id"])
-        title = get_locale(lang, "trade_embed.incoming_title", user.name)
+        title = get_locale_fm(lang, "trade_embed.incoming_title", user.name)
     else:
         user: discord.Member = await ctx.bot.fetch_user(trade["recipient_id"])
-        title = get_locale(lang, "trade_embed.outgoing_title", user.name)
+        title = get_locale_fm(lang, "trade_embed.outgoing_title", user.name)
 
     e = discord.Embed(title=title, color=discord.Color.dark_theme())
     e.set_thumbnail(url=user.display_avatar.url)
@@ -62,21 +61,21 @@ async def send_trade_embed(lang: str, ctx: Context, trade: dict, incoming: bool)
         your_items = create_item_str(lang, trade["sender_items"])
         their_items = create_item_str(lang, trade["recipient_items"])
 
-    e.add_field(name=get_locale(lang, "they_offer"), value=their_items)
-    e.add_field(name=get_locale(lang, "for_your"), value=your_items)
+    e.add_field(name=get_locale_fm(lang, "they_offer"), value=their_items)
+    e.add_field(name=get_locale_fm(lang, "for_your"), value=your_items)
 
     if not incoming:
         e.add_field(
-            name=get_locale(lang, "commands"),
+            name=get_locale_fm(lang, "commands"),
             inline=False,
-            value=get_locale(lang, "trade_embed.commands.value", PREFIX, user.name),
+            value=get_locale_fm(lang, "trade_embed.commands.value", user.name),
         )
 
     time_left: timedelta = (
         trade["send_timestamp"] + timedelta(weeks=1)
     ) - datetime.utcnow()
     e.set_footer(
-        text=get_locale(
+        text=get_locale_fm(
             lang,
             "trade_embed.footer",
             time_left.days,
@@ -96,9 +95,13 @@ async def send_trade_in_creation_embed(
     confirmed: bool = False,
 ):
     if confirmed:
-        title = get_locale(lang, "trade_in_creation_embed.sent.title", recipient.name)
+        title = get_locale_fm(
+            lang, "trade_in_creation_embed.sent.title", recipient.name
+        )
     else:
-        title = get_locale(lang, "trade_in_creation_embed.unsent.title", recipient.name)
+        title = get_locale_fm(
+            lang, "trade_in_creation_embed.unsent.title", recipient.name
+        )
 
     e = discord.Embed(title=title)
     e.set_thumbnail(url=recipient.display_avatar.url)
@@ -112,30 +115,23 @@ async def send_trade_in_creation_embed(
         )
 
         if trade is None:
-            await ctx.send(get_locale(lang, "no_trade_in_creation", PREFIX))
+            await ctx.send(get_locale_fm(lang, "no_trade_in_creation"))
             return
 
     your_items = create_item_str(lang, trade["sender_items"])
     their_items = create_item_str(lang, trade["recipient_items"])
 
-    e.add_field(name=get_locale(lang, "your_items"), value=your_items)
-    e.add_field(name=get_locale(lang, "their_items"), value=their_items)
+    e.add_field(name=get_locale_fm(lang, "your_items"), value=your_items)
+    e.add_field(name=get_locale_fm(lang, "their_items"), value=their_items)
 
     if not confirmed:
         e.add_field(
-            name=get_locale(lang, "commands"),
-            value=get_locale(
-                lang,
-                "trade_in_creation_embed.unsent.commands.value",
-                PREFIX,
-                PREFIX,
-                PREFIX,
-                PREFIX,
-            ),
+            name=get_locale_fm(lang, "commands"),
+            value=get_locale_fm(lang, "trade_in_creation_embed.unsent.commands.value"),
             inline=False,
         )
 
     else:
-        e.set_footer(text=get_locale(lang, "trade_in_creation_embed.sent.footer"))
+        e.set_footer(text=get_locale_fm(lang, "trade_in_creation_embed.sent.footer"))
 
     await ctx.send(embed=e)

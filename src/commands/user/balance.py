@@ -1,13 +1,13 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.string_util import currency_str_format, round_sig_fig
 from src.util.decorators import requires
 
 
 @requires(users_registered=True)
-async def balance(ctx: Context, member: discord.Member = None):
+async def balance(ctx: Context, member: discord.Member):
     if member is None:
         member = ctx.author
 
@@ -15,12 +15,12 @@ async def balance(ctx: Context, member: discord.Member = None):
     lang = user_data["lang"]
 
     e = discord.Embed(
-        title=get_locale(lang, "balance.embed.title", member.name),
+        title=get_locale_fm(lang, "balance.embed.title", member.name),
         color=discord.Color.dark_theme(),
     )
     e.set_thumbnail(url=member.display_avatar.url)
     e.add_field(
-        name=get_locale(lang, "balance.current"),
+        name=get_locale_fm(lang, "balance.current"),
         value=currency_str_format(user_data["balance"]),
     )
 
@@ -33,6 +33,8 @@ async def balance(ctx: Context, member: discord.Member = None):
             2,
         )
 
-    e.add_field(name=get_locale(lang, "balance.return"), value=str(total_return) + "%")
+    e.add_field(
+        name=get_locale_fm(lang, "balance.return"), value=str(total_return) + "%"
+    )
 
     await ctx.send(embed=e)

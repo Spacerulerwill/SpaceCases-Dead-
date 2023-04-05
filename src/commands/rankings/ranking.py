@@ -2,7 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.util.decorators import requires
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.embed_func import msg_embed
 
 
@@ -28,4 +28,4 @@ async def ranking(ctx: Context, user: discord.Member):
         if inv_value > user_inv_value:
             position += 1
 
-    await msg_embed(ctx, get_locale(lang, "ranking.text", user.name, position))
+    await msg_embed(ctx, get_locale_fm(lang, "ranking.text", user.name, position))

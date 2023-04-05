@@ -26,15 +26,7 @@ class Inventory(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(
-        description="View a user's inventory",
-        usage={
-            "Syntax": f"`{PREFIX}inventory <user>`",
-            "Arguments": """`<user>` - the owner of the inventory - **optional**
-        `<page>` - the page of the inventory - **optional**""",
-        },
-        aliases=["inv"],
-    )
+    @commands.command(aliases=["inv"])
     async def inventory(
         self,
         ctx: Context,
@@ -43,26 +35,13 @@ class Inventory(commands.Cog):
     ):
         await inventory(ctx, member, page)
 
-    @commands.command(
-        description="Inspect an item in someone's inventory",
-        usage={
-            "Syntax": f"`{PREFIX}inspect <user> <item index>`",
-            "Arguments": """`<user>` - the user whos inventory you wish to look in - **optional**
-        `<item index>` - the index of the item""",
-        },
-    )
+    @commands.command()
     async def inspect(
-        self, ctx: Context, member: Optional[discord.Member], item_index: int
+        self, ctx: Context, user: Optional[discord.Member], item_index: int
     ):
-        await inspect(ctx, member, item_index)
+        await inspect(ctx, user, item_index)
 
-    @commands.command(
-        description="Sell an item from your inventory",
-        usage={
-            "Syntax": f"`{PREFIX}sell <item index>`",
-            "Arguments": "`<item index>` - the index of the item you want to sell",
-        },
-    )
+    @commands.command()
     async def sell(self, ctx: Context, item_index: int):
         await sell(ctx, item_index)
 

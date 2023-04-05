@@ -1,8 +1,7 @@
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.commands.trading.trade_func import send_trade_in_creation_embed
-from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
 from pymongo.errors import WriteError
 from src.util.decorators import requires
@@ -16,7 +15,7 @@ async def remove(ctx: Context, in_out: str, item_index: int):
         {"_id": ctx.author.id, "send_timestamp": 0}
     )
     if trade is None:
-        await msg_embed(ctx, get_locale(lang, "no_trade_in_creation", PREFIX))
+        await msg_embed(ctx, get_locale_fm(lang, "no_trade_in_creation"))
         return
 
     item_index -= 1
@@ -46,17 +45,17 @@ async def remove(ctx: Context, in_out: str, item_index: int):
             )
         except WriteError:
             await msg_embed(
-                ctx, get_locale(lang, "inventory.not_found_index", item_index + 1)
+                ctx, get_locale_fm(lang, "inventory.not_found_index", item_index + 1)
             )
             return
 
         if update_result.matched_count == 0:
-            await msg_embed(ctx, get_locale(lang, "no_trade_in_creation", PREFIX))
+            await msg_embed(ctx, get_locale_fm(lang, "no_trade_in_creation"))
             return
 
         if update_result.modified_count == 0:
             await msg_embed(
-                ctx, get_locale(lang, "inventory.not_found_index", item_index + 1)
+                ctx, get_locale_fm(lang, "inventory.not_found_index", item_index + 1)
             )
             return
 
@@ -85,17 +84,17 @@ async def remove(ctx: Context, in_out: str, item_index: int):
             )
         except WriteError:
             await msg_embed(
-                ctx, get_locale(lang, "inventory.not_found_index", item_index + 1)
+                ctx, get_locale_fm(lang, "inventory.not_found_index", item_index + 1)
             )
             return
 
         if update_result.matched_count == 0:
-            await msg_embed(ctx, get_locale(lang, "no_trade_in_creation", PREFIX))
+            await msg_embed(ctx, get_locale_fm(lang, "no_trade_in_creation"))
             return
 
         if update_result.modified_count == 0:
             await msg_embed(
-                ctx, get_locale(lang, "inventory.not_found_index", item_index + 1)
+                ctx, get_locale_fm(lang, "inventory.not_found_index", item_index + 1)
             )
             return
 

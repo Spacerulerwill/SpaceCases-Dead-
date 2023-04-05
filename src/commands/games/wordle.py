@@ -3,11 +3,10 @@ import random
 import collections
 from discord.ext.commands import Context
 from src.util.decorators import requires
-from src.util.constants import PREFIX
 from src.util.string_util import currency_str_format
 from src.util.embed_func import msg_embed
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.emojis import green_letters, yellow_letters, gray_letters, BLANK_LETTER
 
 BLANK_ROW = BLANK_LETTER * 5 + "\n"
@@ -23,15 +22,15 @@ def get_wordle_embed(
     description = ""
 
     if won:
-        title = get_locale(
+        title = get_locale_fm(
             lang,
             "wordle.won.embed.title",
             currency_str_format(WORLD_REWARD(game_data["remaining_guesses"])),
         )
         color = discord.Color.green()
     elif lost:
-        title = get_locale(lang, "wordle.loss.embed.title")
-        description += get_locale(
+        title = get_locale_fm(lang, "wordle.loss.embed.title")
+        description += get_locale_fm(
             lang, "wordle.loss.embed.description", game_data["answer"]
         )
         color = discord.Color.red()
@@ -69,7 +68,7 @@ async def new_game(lang: str, ctx: Context) -> dict:
     )
 
     if update_result.modified_count == 0:
-        await msg_embed(ctx, get_locale(lang, "not_enough_funds"))
+        await msg_embed(ctx, get_locale_fm(lang, "not_enough_funds"))
         return None
 
     game_data = {
@@ -121,11 +120,11 @@ async def guess_word(lang: str, ctx: Context, guess: str):
 
     # preliminary checks
     if len(guess) != 5:
-        await msg_embed(ctx, get_locale(lang, "wordle.word_wrong_length"))
+        await msg_embed(ctx, get_locale_fm(lang, "wordle.word_wrong_length"))
         return
 
     if guess not in database.word_list:
-        await msg_embed(ctx, get_locale(lang, "wordle.word_not_found"))
+        await msg_embed(ctx, get_locale_fm(lang, "wordle.word_not_found"))
         return
 
     # get amount of each letter in guess

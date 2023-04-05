@@ -1,7 +1,7 @@
 import discord
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.string_util import currency_str_format, get_closest_match
 from src.util.constants import conditions, rarity_color_dict
 from src.util.embed_func import msg_embed, msg_embed_response
@@ -28,12 +28,12 @@ async def container(ctx: Context, *args):
 
         # if match is reasonably close enough
         if closest_match is None:
-            await msg_embed(ctx, get_locale(lang, "container.not_found"))
+            await msg_embed(ctx, get_locale_fm(lang, "container.not_found"))
         else:
             container_data = database.containers[closest_match]
             await msg_embed(
                 ctx,
-                get_locale(
+                get_locale_fm(
                     lang,
                     "container.not_found_suggest",
                     {container_data["formatted_name"]},
@@ -57,7 +57,7 @@ async def container(ctx: Context, *args):
 
     select_options = [
         discord.SelectOption(
-            label=get_locale(lang, "container.select.all_items"), value="all items"
+            label=get_locale_fm(lang, "container.select.all_items"), value="all items"
         )
     ]
     for (
@@ -66,7 +66,7 @@ async def container(ctx: Context, *args):
     ) in container_data["items"].items():
         if len(rarity) != 0:
             select_options.append(
-                discord.SelectOption(label=get_locale(lang, key), value=key)
+                discord.SelectOption(label=get_locale_fm(lang, key), value=key)
             )
 
     select = discord.ui.Select(options=select_options)
@@ -74,7 +74,9 @@ async def container(ctx: Context, *args):
     async def select_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_select"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_select"),
+                ephemeral=True,
             )
             return
 
@@ -93,7 +95,9 @@ async def container(ctx: Context, *args):
     async def prev_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -108,7 +112,9 @@ async def container(ctx: Context, *args):
     async def next_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -201,10 +207,12 @@ async def container(ctx: Context, *args):
             title=f"{container_name} - ${container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})",
             color=rarity_color,
         )
-        e.add_field(name=get_locale(lang, "price_range"), value=price_range_str)
-        e.add_field(name=get_locale(lang, "rarity"), value=get_locale(lang, rarity))
+        e.add_field(name=get_locale_fm(lang, "price_range"), value=price_range_str)
         e.add_field(
-            name=get_locale(lang, "float_range"), value=f"{min_float} - {max_float}"
+            name=get_locale_fm(lang, "rarity"), value=get_locale_fm(lang, rarity)
+        )
+        e.add_field(
+            name=get_locale_fm(lang, "float_range"), value=f"{min_float} - {max_float}"
         )
         e.set_image(url=image_url)
         e.set_thumbnail(url=container_image_url)

@@ -1,7 +1,6 @@
 import discord
 from src.util import database
-from src.util.lang import get_locale
-from src.util.constants import PREFIX
+from src.lang.lang import get_locale_fm
 from src.util.embed_func import msg_embed
 from discord.ext.commands import Context
 from src.commands.trading.trade_func import send_trade_embed
@@ -20,7 +19,7 @@ async def view_outgoing_trade(ctx: Context, recipient: discord.Member):
     )
 
     if trade is None:
-        await msg_embed(ctx, get_locale(lang, "no_incoming_trade", recipient.name))
+        await msg_embed(ctx, get_locale_fm(lang, "no_incoming_trade", recipient.name))
         return
 
     await send_trade_embed(lang, ctx, trade, False)

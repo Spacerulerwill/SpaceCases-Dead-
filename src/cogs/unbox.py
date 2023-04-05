@@ -28,67 +28,28 @@ class Unboxing(commands.Cog):
         self.bot = bot
 
     # inspect a skins image and information
-    @commands.command(
-        description="View details for an item",
-        usage={
-            "Syntax": f"`{PREFIX}item <item name>`",
-            "Arguments": "`<item name>` - name of the item",
-            "Item name formatting": """
-        Weapons: `<modifier> <condition> <weapon> <skin name>`
-        """,
-            "Examples": f"""
-        `{PREFIX}item stattrak minimal wear mp7 bloodsport`
-        `{PREFIX}item well worn bayonet lore`
-        `{PREFIX}item souvenir field tested ak 47 green laminate`
-        """,
-        },
-    )
+    @commands.command()
     async def item(self, ctx: Context, *args):
         await item(ctx, *args)
 
     # view a containers price and contents
-    @commands.command(
-        description="View a container's price and contents",
-        usage={
-            "Syntax": f"`{PREFIX}container <container name>`",
-            "Arguments": "`<container name>` - container name",
-        },
-    )
+    @commands.command()
     async def container(self, ctx: Context, *args):
         await container(ctx, *args)
 
     # see a list of all containers
-    @commands.command(
-        description="See a list of all purchasable containers",
-        usage={"Syntax": f"`{PREFIX}containers`"},
-    )
+    @commands.command()
     async def containers(self, ctx: Context, page: int = 1):
         await containers(ctx, page)
 
     # open a container
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(
-        description="Purchase and open a container, with the option to either sell the item unboxed or add it to your inventory",
-        usage={
-            "Syntax": f"`{PREFIX}open <container name>`",
-            "Arguments": "`<container name>` - the name of the container to open",
-        },
-    )
+    @commands.command()
     async def open(self, ctx: Context, *args):
         await open(ctx, *args)
 
     # upgrade a weapon
-    @commands.command(
-        description="Upgrade a weapon in your inventory to one of higher value",
-        usage={
-            "Syntax": f"`{PREFIX}upgrade <item index> <result item>`",
-            "Arguments": """
-        `<item index>` - inventory index of the item you want to upgrade
-        `<result item>` - the name of the item you want to upgrade too
-        """,
-            "Example": f"`{PREFIX}upgrade 1 stattrak minimal wear mp7 bloodsport`",
-        },
-    )
+    @commands.command()
     async def upgrade(self, ctx: Context, item_index: int, *args):
         await upgrade(ctx, item_index, *args)
 

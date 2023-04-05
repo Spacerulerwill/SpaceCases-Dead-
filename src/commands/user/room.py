@@ -1,7 +1,6 @@
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
-from src.util.constants import PREFIX
+from src.lang.lang import get_locale_fm
 from src.util.embed_func import msg_embed
 from src.util.decorators import requires
 from src.util.room_func import delete_room, get_guild_room_create_channel
@@ -17,7 +16,7 @@ async def room(ctx: Context, public_private: str):
         guild_data = database.guild_data.find_one({"_id": ctx.guild.id})
     except AttributeError:
         # if there is no ctx.guild ( i.e. in a dm )
-        await msg_embed(ctx, get_locale(lang, "room.cannot_create_here"))
+        await msg_embed(ctx, get_locale_fm(lang, "room.cannot_create_here"))
         return
 
     room_creation_channel = get_guild_room_create_channel(ctx.guild, guild_data)
@@ -26,12 +25,13 @@ async def room(ctx: Context, public_private: str):
         or guild_data["unbox_room_creation_channel_id"] is None
         or room_creation_channel is None
     ):
-        await msg_embed(ctx, get_locale(lang, "room.not_setup", PREFIX))
+        await msg_embed(ctx, get_locale_fm(lang, "room.not_setup"))
         return
 
     if ctx.channel.id != guild_data["unbox_room_creation_channel_id"]:
         await msg_embed(
-            ctx, get_locale(lang, "room.not_in_channel", room_creation_channel.mention)
+            ctx,
+            get_locale_fm(lang, "room.not_in_channel", room_creation_channel.mention),
         )
         return
 
@@ -41,7 +41,7 @@ async def room(ctx: Context, public_private: str):
         if ctx.guild.id != room[0].guild.id:
             database.rooms.pop(ctx.author.id, None)
         else:
-            await msg_embed(ctx, get_locale(lang, "room.exists", room[0].mention))
+            await msg_embed(ctx, get_locale_fm(lang, "room.exists", room[0].mention))
             return
 
     if public_private == "public":
@@ -54,9 +54,9 @@ async def room(ctx: Context, public_private: str):
     )
 
     if public_private == "private":
-        await msg_embed(ctx, get_locale(lang, "room.private_created"))
+        await msg_embed(ctx, get_locale_fm(lang, "room.private_created"))
 
-    await msg_embed(thread, get_locale(lang, "room.greeting", ctx.author.mention))
+    await msg_embed(thread, get_locale_fm(lang, "room.greeting", ctx.author.mention))
     await thread.add_user(ctx.author)
 
     task = asyncio.create_task(delete_room(ctx.author.id, thread))

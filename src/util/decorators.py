@@ -1,9 +1,8 @@
 from discord.ext.commands import Context
-from src.util.constants import PREFIX
 from src.util.embed_func import msg_embed
 from src.util.room_func import get_guild_room_create_channel
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 import discord
 
 
@@ -28,16 +27,15 @@ def requires(room: bool = False, users_registered: bool = False):
             # ensure all users in call are registered before proceeding
             if users_registered:
                 if user_data is None:
-                    await msg_embed(
-                        ctx, get_locale(lang, "author_not_registered", PREFIX)
-                    )
+                    await msg_embed(ctx, get_locale_fm(lang, "author_not_registered"))
                     return
 
                 for arg in _:
                     if isinstance(arg, discord.Member):
                         if database.user_data.find_one({"_id": arg.id}) is None:
                             await msg_embed(
-                                ctx, get_locale(lang, "user_not_registered", arg.name)
+                                ctx,
+                                get_locale_fm(lang, "user_not_registered", arg.name),
                             )
                             return
 
@@ -63,8 +61,8 @@ def requires(room: bool = False, users_registered: bool = False):
                         if channel is not None:
                             await msg_embed(
                                 ctx,
-                                get_locale(
-                                    lang, "command_error.room", channel.mention, PREFIX
+                                get_locale_fm(
+                                    lang, "command_error.room", channel.mention
                                 ),
                             )
                             return

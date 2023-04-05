@@ -2,7 +2,7 @@ import discord
 import asyncio
 from discord.ext.commands import Context
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.string_util import currency_str_format
 from src.util.constants import LEADERBOARD_ELEMS_PER_PAGE
 from src.util.embed_func import msg_embed
@@ -22,7 +22,7 @@ async def leaderboard(ctx: Context, page: int):
     ]
 
     if len(data) == 0:
-        await msg_embed(ctx, get_locale(lang, "invalid_page"))
+        await msg_embed(ctx, get_locale_fm(lang, "invalid_page"))
         return
 
     names = {}
@@ -46,7 +46,7 @@ async def leaderboard(ctx: Context, page: int):
         string += f"**{page * LEADERBOARD_ELEMS_PER_PAGE + count+1})** {names[_id]}: {currency_str_format(inv_value)}\n"
 
     e = discord.Embed(
-        title=get_locale(
+        title=get_locale_fm(
             lang,
             "leaderboard.embed.title",
             page * LEADERBOARD_ELEMS_PER_PAGE + 1,
@@ -55,5 +55,5 @@ async def leaderboard(ctx: Context, page: int):
         description=string,
     )
     e.set_thumbnail(url=ctx.bot.user.display_avatar.url)
-    e.set_footer(text=get_locale(lang, "leaderboard.footer"))
+    e.set_footer(text=get_locale_fm(lang, "leaderboard.footer"))
     await ctx.send(embed=e)

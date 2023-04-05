@@ -1,6 +1,6 @@
 import discord
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.string_util import currency_str_format
 from src.util.embed_func import msg_embed, msg_embed_edit, msg_embed_response
 from src.util.decorators import requires
@@ -14,7 +14,9 @@ async def sell(ctx: Context, item_index: int):
     user_inventory = list(user_data["inventory"])
 
     if item_index > len(user_inventory):
-        await msg_embed(ctx, get_locale(lang, "inventory.not_found_index", item_index))
+        await msg_embed(
+            ctx, get_locale_fm(lang, "inventory.not_found_index", item_index)
+        )
         return
 
     # callbacks
@@ -29,7 +31,9 @@ async def sell(ctx: Context, item_index: int):
     async def sell_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -46,17 +50,19 @@ async def sell(ctx: Context, item_index: int):
 
         if update_result.matched_count == 0:
             await close_message()
-            await msg_embed(ctx, get_locale(lang, "sell.item_missing", formatted_name))
+            await msg_embed(
+                ctx, get_locale_fm(lang, "sell.item_missing", formatted_name)
+            )
         else:
             await msg_embed_edit(
-                msg, get_locale(lang, "sell.success", formatted_name), view=None
+                msg, get_locale_fm(lang, "sell.success", formatted_name), view=None
             )
 
     async def cancel_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
                 interact.response,
-                get_locale(lang, get_locale("not_your_button")),
+                get_locale_fm(lang, get_locale_fm("not_your_button")),
                 ephemeral=True,
             )
             return
@@ -74,12 +80,12 @@ async def sell(ctx: Context, item_index: int):
     view = discord.ui.View(timeout=30)
     view.on_timeout = close_message
     confirm_button = discord.ui.Button(
-        label=get_locale(lang, "button.sell"), style=discord.ButtonStyle.green
+        label=get_locale_fm(lang, "button.sell"), style=discord.ButtonStyle.green
     )
     confirm_button.callback = sell_callback
 
     cancel_button = discord.ui.Button(
-        label=get_locale(lang, "button.cancel"), style=discord.ButtonStyle.red
+        label=get_locale_fm(lang, "button.cancel"), style=discord.ButtonStyle.red
     )
     cancel_button.callback = cancel_callback
 
@@ -87,5 +93,5 @@ async def sell(ctx: Context, item_index: int):
     view.add_item(cancel_button)
 
     msg = await msg_embed(
-        ctx, get_locale(lang, "sell.are_you_sure", formatted_name, price), view=view
+        ctx, get_locale_fm(lang, "sell.are_you_sure", formatted_name, price), view=view
     )

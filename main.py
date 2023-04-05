@@ -1,8 +1,8 @@
 import discord
 import asyncio
 from os import environ
-from src.util import database, lang
-from src.util.lang import get_locale
+from src.util import database
+from src.lang.lang import get_locale_fm
 from src.util.string_util import get_closest_match
 from src.util.room_func import delete_room
 from src.util.embed_func import msg_embed, welcome_embed
@@ -22,7 +22,7 @@ try:
         TOKEN = file.read()
 
 except FileNotFoundError:
-    # read token from environment variable
+    # read token fr om environment variable
     TOKEN = environ["BOT_TOKEN"]
 
 # use all intents
@@ -40,7 +40,6 @@ bot_instance = commands.Bot(
 def run_bot():
     database.init_collections()
     database.load_data()
-    lang.init()
 
     try:
         bot_instance.run(TOKEN)
@@ -109,10 +108,10 @@ async def on_command_error(ctx: Context, error):
 
         closest_match = get_closest_match(query, options, 0.5)
         if closest_match is None:
-            await msg_embed(ctx, get_locale(lang, "command_not_found"))
+            await msg_embed(ctx, get_locale_fm(lang, "command_not_found"))
         else:
             await msg_embed(
-                ctx, get_locale(lang, "command_not_found_suggest", closest_match)
+                ctx, get_locale_fm(lang, "command_not_found_suggest", closest_match)
             )
         return
 
@@ -122,38 +121,39 @@ async def on_command_error(ctx: Context, error):
         query = err_msg.split('"')
 
         try:
-            desired_type = err_msg_type_dict[query[1]]
+            desired_type = get_locale_fm(lang, query[1])
+
         except KeyError:
             # if could not find type, its a user not found
-            await msg_embed(ctx, get_locale(lang, "command_error.no_user"))
+            await msg_embed(ctx, get_locale_fm(lang, "command_error.no_user"))
             return
 
         param_name = query[3].replace("_", " ")
 
         await msg_embed(
             ctx,
-            get_locale(lang, "command_error.incorrect_type", param_name, desired_type),
+            get_locale_fm(lang, "command_error.incorrect_type", param_name, desired_type),
         )
         return
 
     if isinstance(error, commands.MissingRequiredArgument):
         param_name = error.param.name.replace("_", " ")
         await msg_embed(
-            ctx, get_locale(lang, "command_error.missing_required_argument", param_name)
+            ctx, get_locale_fm(lang, "command_error.missing_required_argument", param_name)
         )
         return
 
     if isinstance(error, commands.BadLiteralArgument):
         param_name = error.param.name.replace("_", "/")
         await msg_embed(
-            ctx, get_locale(lang, "command_error.invalid_option", param_name)
+            ctx, get_locale_fm(lang, "command_error.invalid_option", param_name)
         )
         return
 
     if isinstance(error, commands.MissingPermissions):
         await msg_embed(
             ctx,
-            get_locale(
+            get_locale_fm(
                 lang,
                 "command_error.missing_permissions",
                 ", ".join(error.missing_permissions),
@@ -163,7 +163,7 @@ async def on_command_error(ctx: Context, error):
 
     if isinstance(error, commands.CommandOnCooldown):
         await msg_embed(
-            ctx, get_locale(lang, "command_error.cooldown", round(error.retry_after, 2))
+            ctx, get_locale_fm(lang, "command_error.cooldown", error.retry_after)
         )
         return
 
@@ -216,3 +216,4 @@ def scrape_container_data():
 
 if __name__ == "__main__":
     run_bot()
+ 

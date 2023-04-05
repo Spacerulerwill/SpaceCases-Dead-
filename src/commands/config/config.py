@@ -1,7 +1,7 @@
 import discord
 from discord.ext.commands import Context, Bot, TextChannelConverter
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from pymongo import ReturnDocument
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed, create_msg_embed, msg_embed_response
@@ -56,26 +56,26 @@ async def config_menu(ctx: Context, bot: Bot):
                         ).mention
                     except AttributeError:
                         # channel no longer exists
-                        current_value = get_locale(lang, "backtick_none")
+                        current_value = get_locale_fm(lang, "backtick_none")
                         database.guild_data.update_one(
                             {"_id": ctx.guild.id}, {"$set": {option["value"]: None}}
                         )
                 else:
-                    current_value = get_locale(lang, "backtick_none")
+                    current_value = get_locale_fm(lang, "backtick_none")
             case _:
                 current_value = f"`{current_value}`"
 
-        description = f"""{get_locale(lang, option["description"])}
+        description = f"""{get_locale_fm(lang, option["description"])}
         
-        {get_locale(lang, "config.current_value", current_value)}"""
+        {get_locale_fm(lang, "config.current_value", current_value)}"""
 
         e = discord.Embed(
-            title=f'**{get_locale(lang, option["name"])}**',
+            title=f'**{get_locale_fm(lang, option["name"])}**',
             description=description,
             color=discord.Color.dark_theme(),
         )
         e.set_thumbnail(url=bot.user.display_avatar.url)
-        e.set_footer(text=get_locale(lang, "config.menu.footer"))
+        e.set_footer(text=get_locale_fm(lang, "config.menu.footer"))
 
         return e
 
@@ -87,13 +87,15 @@ async def config_menu(ctx: Context, bot: Bot):
     view.on_timeout = view_timeout_callback
 
     select_options = [
-        discord.SelectOption(label=get_locale(lang, config_options[0]["name"]), value=0)
+        discord.SelectOption(
+            label=get_locale_fm(lang, config_options[0]["name"]), value=0
+        )
     ]
 
     if len(config_options) > 1:
         select_options += [
             discord.SelectOption(
-                label=get_locale(lang, option["name"]), value=count + 1
+                label=get_locale_fm(lang, option["name"]), value=count + 1
             )
             for count, option in enumerate(config_options[1:])
         ]
@@ -104,7 +106,9 @@ async def config_menu(ctx: Context, bot: Bot):
     async def select_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_select"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_select"),
+                ephemeral=True,
             )
             return
 
@@ -116,23 +120,25 @@ async def config_menu(ctx: Context, bot: Bot):
     select.callback = select_callback
 
     edit_button = discord.ui.Button(
-        label=get_locale(lang, "button.edit"), style=discord.ButtonStyle.gray
+        label=get_locale_fm(lang, "button.edit"), style=discord.ButtonStyle.gray
     )
 
     async def edit_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
         selected_option = config_options[option_index]
 
-        name = get_locale(lang, selected_option["name"])
+        name = get_locale_fm(lang, selected_option["name"])
 
         # send response embed
         await msg_embed_response(
-            interact.response, get_locale(lang, selected_option["response_text"])
+            interact.response, get_locale_fm(lang, selected_option["response_text"])
         )
 
         # if no options, must be a user input
@@ -173,7 +179,7 @@ async def config_menu(ctx: Context, bot: Bot):
 
                         await response.reply(
                             embed=create_msg_embed(
-                                get_locale(
+                                get_locale_fm(
                                     lang,
                                     "config.successful_change",
                                     name,
@@ -184,12 +190,12 @@ async def config_menu(ctx: Context, bot: Bot):
                     except:
                         await response.reply(
                             embed=create_msg_embed(
-                                get_locale(lang, "config.conversion_fail")
+                                get_locale_fm(lang, "config.conversion_fail")
                             )
                         )
             except asyncio.TimeoutError:
                 await msg_embed(
-                    interact.followup, get_locale(lang, "config.no_response", name)
+                    interact.followup, get_locale_fm(lang, "config.no_response", name)
                 )
         else:
             # if has options provide an option menu embed
@@ -198,13 +204,15 @@ async def config_menu(ctx: Context, bot: Bot):
     edit_button.callback = edit_callback
 
     clear_button = discord.ui.Button(
-        style=discord.ButtonStyle.red, label=get_locale(lang, "button.clear")
+        style=discord.ButtonStyle.red, label=get_locale_fm(lang, "button.clear")
     )
 
     async def clear_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
-                interact.response, get_locale(lang, "not_your_button"), ephemeral=True
+                interact.response,
+                get_locale_fm(lang, "not_your_button"),
+                ephemeral=True,
             )
             return
 
@@ -218,11 +226,11 @@ async def config_menu(ctx: Context, bot: Bot):
 
         await msg_embed_response(
             interact.response,
-            get_locale(
+            get_locale_fm(
                 lang,
                 "config.set_default_value",
-                get_locale(lang, selected_option["name"]),
-                get_locale(lang, str(selected_option["default_value"])),
+                get_locale_fm(lang, selected_option["name"]),
+                get_locale_fm(lang, str(selected_option["default_value"])),
             ),
         )
 

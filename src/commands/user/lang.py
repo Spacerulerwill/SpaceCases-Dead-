@@ -1,18 +1,18 @@
 import discord
 from src.util import database
 from src.util.decorators import requires
-from src.util.embed_func import msg_embed
-from src.util.lang import get_locale, supported_languages
+from src.lang.lang import get_locale_fm, supported_languages, supported_languages_str
 from discord.ext.commands import Context
 
 
 def get_lang_embed(lang: str) -> discord.Embed:
     e = discord.Embed(
-        description=get_locale(lang, "lang.current"), color=discord.Color.dark_theme()
+        description=get_locale_fm(lang, "lang.current"),
+        color=discord.Color.dark_theme(),
     )
     e.add_field(
-        name=get_locale(lang, "lang.embed.supported_languages"),
-        value=get_locale(lang, "lang.embed.supported_languages.value"),
+        name=get_locale_fm(lang, "lang.embed.supported_languages"),
+        value=supported_languages_str,
     )
     return e
 
@@ -28,10 +28,12 @@ async def lang(ctx: Context, lang: str):
     lang = lang.lower().strip()
 
     if lang not in supported_languages:
-        e = discord.Embed(description=get_locale(user_data["lang"], "lang.not_found"))
+        e = discord.Embed(
+            description=get_locale_fm(user_data["lang"], "lang.not_found")
+        )
         e.add_field(
-            name=get_locale(user_data["lang"], "lang.embed.supported_languages"),
-            value=get_locale(user_data["lang"], "lang.embed.supported_languages.value"),
+            name=get_locale_fm(user_data["lang"], "lang.embed.supported_languages"),
+            value=supported_languages_str,
         )
 
         await ctx.send(embed=e)

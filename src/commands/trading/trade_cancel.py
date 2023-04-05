@@ -1,8 +1,7 @@
 import discord
 from discord.ext.commands import Context
-from src.util.constants import PREFIX
 from src.util import database
-from src.util.lang import get_locale
+from src.lang.lang import get_locale_fm
 from src.util.decorators import requires
 from src.util.embed_func import msg_embed
 
@@ -18,9 +17,9 @@ async def cancel(ctx: Context, recipient: discord.Member):
         successful = delete_result.deleted_count >= 1
 
         if successful:
-            await msg_embed(ctx, get_locale(lang, "trade_cancel.cancelled_current"))
+            await msg_embed(ctx, get_locale_fm(lang, "trade_cancel.cancelled_current"))
         else:
-            await msg_embed(ctx, get_locale(lang, "no_trade_in_creation", PREFIX))
+            await msg_embed(ctx, get_locale_fm(lang, "no_trade_in_creation"))
 
     else:  # if a recipient is provided trade to that user
         delete_result = database.trade_requests.delete_one(
@@ -31,9 +30,11 @@ async def cancel(ctx: Context, recipient: discord.Member):
         if successful:
             await msg_embed(
                 ctx,
-                get_locale(
+                get_locale_fm(
                     lang, "trade_cancel.cancelled_trade_to_user", recipient.name
                 ),
             )
         else:
-            await msg_embed(ctx, get_locale(lang, "no_outgoing_trade", recipient.name))
+            await msg_embed(
+                ctx, get_locale_fm(lang, "no_outgoing_trade", recipient.name)
+            )
