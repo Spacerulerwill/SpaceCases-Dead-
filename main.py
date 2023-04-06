@@ -1,12 +1,15 @@
 import discord
 import asyncio
+import datetime
+import threading
+import time
 from os import environ
 from src.util import database
 from src.lang.lang import get_locale_fm
 from src.util.string_util import get_closest_match
 from src.util.room_func import delete_room
 from src.util.embed_func import msg_embed, welcome_embed
-from src.util.constants import PREFIX, err_msg_type_dict
+from src.util.constants import PREFIX
 
 from aiohttp import ClientConnectorError
 from discord.ext import commands, tasks
@@ -35,7 +38,6 @@ bot_instance = commands.Bot(
     help_command=None,
 )
 
-
 # Connect to database, try run using token
 def run_bot():
     database.init_collections()
@@ -60,10 +62,25 @@ async def on_ready():
 
     bot_status_loop.start()
     leaderboard_loop.start()
-
+    threading.Thread(target=generate_skin_data_loop).start()
 
 status_int = 0
 
+def seconds_until(hours, minutes):
+    given_time = datetime.time(hours, minutes)
+    now = datetime.datetime.now()
+    future_exec = datetime.datetime.combine(now, given_time)
+    if (future_exec - now).days < 0:  # If we are past the execution, it will take place tomorrow
+        future_exec = datetime.datetime.combine(now + datetime.timedelta(days=1), given_time) # days always >= 0
+
+    return (future_exec - now).total_seconds()
+
+def generate_skin_data_loop():
+    while True:
+        time.sleep(seconds_until(14,45)) 
+        database.scrape_container_data()
+        database.scrape_skin_data()
+        time.sleep(60)  # Practical solution to ensure that the func isn't spammed as long as it is 00:00
 
 # loop that cycles the bot status every 10 seconds
 @tasks.loop(seconds=10)
@@ -83,7 +100,6 @@ async def bot_status_loop():
             )
 
     status_int = (status_int + 1) % 2
-
 
 # loop that updates the leaderboard every hour
 @tasks.loop(hours=1)
@@ -208,11 +224,9 @@ def scrape_skin_data():
     database.init_collections()
     database.scrape_skin_data()
 
-
 def scrape_container_data():
     database.init_collections()
     database.scrape_container_data()
-
 
 if __name__ == "__main__":
     run_bot()

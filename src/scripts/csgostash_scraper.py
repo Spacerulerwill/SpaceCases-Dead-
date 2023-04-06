@@ -10,6 +10,8 @@ from re import sub
 from src.util.string_util import remove_skin_name_formatting
 from src.util.constants import case_wear_ranges_lower, MAX_THREADS
 from decimal import Decimal
+from timeit import default_timer as timer
+from datetime import timedelta
 
 NO_PRICE_FOUND = 300000
 
@@ -115,9 +117,6 @@ def scrape_endpoint(skin_links, endpoint):
         for link_div in soup.find_all("div", {"class": "details-link"})
     ]
     skin_links += details_links
-
-    print(endpoint)
-
 
 def scrape_skin_link(result, skin_link):
     # get html source
@@ -323,17 +322,18 @@ def scrape_skin_link(result, skin_link):
                 result["skins"]["souvenir " + wear + unformatted_name][
                     "inspect_url"
                 ] = inspect_url
-    print(formatted_name)
-
 
 def csgostash_scrape() -> dict:
     skin_links = []
     result = {"_id": "skin-data", "skins": {}, "no_wear_skins": {}}
 
+    print("Scraping skin data...")
+    start = timer()
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_endpoint, skin_links), endpoints)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_skin_link, result), skin_links)
-
+    end = timer()
+    print(f"Executed in {timedelta(seconds=end-start)}")
     return result

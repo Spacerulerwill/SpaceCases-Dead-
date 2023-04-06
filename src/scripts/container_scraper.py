@@ -7,6 +7,8 @@ import requests
 from src.util.string_util import remove_skin_name_formatting
 from re import sub
 from decimal import Decimal
+from timeit import default_timer as timer
+from datetime import timedelta
 
 container_endpoints = [
     "case/376/Revolution-Case",
@@ -53,6 +55,9 @@ container_endpoints = [
 
 def scrape_containers() -> dict:
     result = {"_id": "container-data"}
+
+    print("Scraping containers...")
+    start = timer()
 
     for container in container_endpoints:
         container_data = {
@@ -139,6 +144,9 @@ def scrape_containers() -> dict:
         container_data["formatted_name"] = container_name
         container_data["image_url"] = container_img_url
         result[remove_skin_name_formatting(container_name)] = container_data
-        print(f"Scraped {container_name}")
+        #print(f"Scraped {container_name}")
+
+    end = timer()
+    print(f"Executed in {timedelta(seconds=end-start)}")
 
     return result
