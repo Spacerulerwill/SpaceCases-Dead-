@@ -216,7 +216,7 @@ en_data = {
     `{PREFIX}trade remove in/out <trade item number>` - remove item
     `{PREFIX}trade send` - send trade""",
     # HELP COG
-    "help.embed.description": f"'Use `{PREFIX}help <command>` to gain more information about that command'",
+    "help.embed.description": f"Use `{PREFIX}help <command>` to gain more information about that command'",
     "help.aliases": "Aliases",
     # CONFIG COG
     "config.options.room_channel.name": "Unboxing Room Creation Channel",
@@ -356,7 +356,7 @@ en_data = {
     },
     "ttt.description": "Play Tic Tac Toe against another user",
     "ttt.usage": {
-        "Syntax": f"`{PREFIX}ttt <player2> <bet>",
+        "Syntax": f"`{PREFIX}ttt <player2> <bet>`",
         "Arguments": """`player2`: opponent
         **OPTIONAL** `bet`: amount of money to bet on the game"""
     },

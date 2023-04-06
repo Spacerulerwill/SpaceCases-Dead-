@@ -5,7 +5,7 @@ from pymongo.collection import Collection
 from pymongo.errors import CollectionInvalid
 from src.scripts.csgostash_scraper import csgostash_scrape
 from src.scripts.container_scraper import scrape_containers
-
+from src.util.constants import ONE_WEEK
 
 def try_create_collection(db: Database, name: str) -> Collection:
     try:
@@ -41,6 +41,11 @@ def script_run():
     trade_requests = try_create_collection(db, "trade-requests")
     skin_data_collection = try_create_collection(db, "skin-data")
     patch_notes = try_create_collection(db, "patch-notes")
+
+    # create indexes
+    trade_requests.create_index(
+        [("send-timestamp", pymongo.ASCENDING)], expireAfterSeconds=ONE_WEEK
+    )  # TRADES DELETE AFTER ONE WEEK
 
     print("Inserting skin data - this may take a while!")
 
