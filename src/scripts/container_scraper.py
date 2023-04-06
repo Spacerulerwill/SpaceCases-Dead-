@@ -91,9 +91,9 @@ def scrape_container(result, container):
     container_price = sub(r"[^\d.]", "", container_price)
     container_data["price"] = int(Decimal(container_price) * 100)
 
-    container_img_url = container_soup.find(
-        "a", {"class": "market-button-item"}
-    ).find("img")["src"]
+    container_img_url = container_soup.find("a", {"class": "market-button-item"}).find(
+        "img"
+    )["src"]
 
     result_boxes = container_soup.find_all("div", {"class": "result-box"})
     result_boxes.reverse()
@@ -143,7 +143,8 @@ def scrape_container(result, container):
     result[remove_skin_name_formatting(container_name)] = container_data
 
     result[container_name] = container_data
-    #print(f"Scraped {container_name}")
+    # print(f"Scraped {container_name}")
+
 
 def container_scrape() -> dict:
     result = {"_id": "container-data"}

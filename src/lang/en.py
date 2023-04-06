@@ -236,17 +236,15 @@ en_data = {
     "lang.usage": {
         "Syntax": f"`{PREFIX}lang <language>`",
         "Arguments": "**OPTIONAL** `language`: ISO code of language to switch to",
-        "Supported Languages": supported_languages_str
+        "Supported Languages": supported_languages_str,
     },
     "balance.description": "Check a user's balance",
     "balance.usage": {
         "Syntax": f"`{PREFIX}balance <user>`",
-        "Arguments":"**OPTIONAL** `user`: User to check balance of"
+        "Arguments": "**OPTIONAL** `user`: User to check balance of",
     },
     "claim.description": "Claim your daily reward",
-    "claim.usage": {
-        "Syntax": f"`{PREFIX}claim`"
-    },
+    "claim.usage": {"Syntax": f"`{PREFIX}claim`"},
     "room.description": "Create a room for unboxing items in",
     "room.usage": {
         "Syntax": f"`{PREFIX}claim <type>`",
@@ -254,20 +252,20 @@ en_data = {
         • public - **DEFAULT**
         • private
         """,
-        "Additional Information": f"This command can only be used if rooms are enabled in your guild. Get an admin to turn on rooms with `{PREFIX}config` to use them. If they are enabled you can only used this room in a designated room creation channel"
+        "Additional Information": f"This command can only be used if rooms are enabled in your guild. Get an admin to turn on rooms with `{PREFIX}config` to use them. If they are enabled you can only used this room in a designated room creation channel",
     },
     "transfer.description": "Transfer money to another user",
     "transfer.usage": {
         "Syntax": f"`{PREFIX}transfer <user> <amount>`",
         "Arguments": """`user`: the recipient of the money
         `amount`: the amount of money to transfer
-        """
+        """,
     },
     "open.description": "Buy and open a container",
     "open.usage": {
         "Syntax": f"`{PREFIX}open <container>`",
         "Arguments": "`container`: the container to open",
-        "Additional Information": f"Use `{PREFIX}containers` to view a list of containers available for purchase"
+        "Additional Information": f"Use `{PREFIX}containers` to view a list of containers available for purchase",
     },
     "item.description": "View the details of a specific item",
     "item.usage": {
@@ -280,17 +278,15 @@ en_data = {
         • `stattrak factory new awp dragon lore`
         • `souvenir well worn ak 47 gold arabesque`
         • `field tested usp s cortex`
-        """
+        """,
     },
     "containers.description": "View all containers available for purchase",
-    "containers.usage": {
-        "Syntax": f"`{PREFIX}containers`"
-    },
+    "containers.usage": {"Syntax": f"`{PREFIX}containers`"},
     "container.description": "View a container's contents",
     "container.usage": {
         "Syntax": f"`{PREFIX}`container <container>",
         "Arguments": "`container`: name of container to inspect",
-        "Additional Information": f"Use `{PREFIX}containers` to view a list of containers available for purchase"
+        "Additional Information": f"Use `{PREFIX}containers` to view a list of containers available for purchase",
     },
     "upgrade.description": "Take a chance to upgrade an item to one of higher value",
     "upgrade.usage": {
@@ -304,36 +300,36 @@ en_data = {
         • `stattrak factory new awp dragon lore`
         • `souvenir well worn ak 47 gold arabesque`
         • `field tested usp s cortex`
-        """
+        """,
     },
     "leaderboard.description": "View the global leaderboard",
     "leaderboard.usage": {
         "Syntax": f"`{PREFIX}leaderboard <page>`",
-        "Arguments": "**OPTIONAL** `page`: page of the leaderboard"
+        "Arguments": "**OPTIONAL** `page`: page of the leaderboard",
     },
     "ranking.description": "View a user's ranking on the global leaderboard",
     "ranking.usage": {
         "Syntax": f"`{PREFIX}ranking <user>`",
-        "Arguments": "**OPTIONAL** `user`: user to check ranking of"
+        "Arguments": "**OPTIONAL** `user`: user to check ranking of",
     },
     "inventory.description": "View a user's inventory",
     "inventory.usage": {
         "Syntax": f"`{PREFIX}inventory <user> <page>`",
         "Arguments": """**OPTIONAL** `user`: user whos inventory to view
         **OPTIONAL** `page`: page of inventory to view
-        """
+        """,
     },
     "inspect.description": "Inspect an item in a user's inventory",
     "inspect.usage": {
         "Syntax": f"`{PREFIX}inspect <item index> <user>`",
         "Arguments": """`item index`: index of item to inspect
         **OPTIONAL** `user`: which users inventory the item is in
-        """
+        """,
     },
     "sell.description": "Sell an item from your inventory",
     "sell.usage": {
         "Syntax": f"`{PREFIX}sell <item index>`",
-        "Arguments": "`item index` the index of the item you wish to sell"
+        "Arguments": "`item index` the index of the item you wish to sell",
     },
     "coinflip.description": "Flip a coin to double your bet or lose it all",
     "coinflip.usage": {
@@ -342,23 +338,21 @@ en_data = {
         • t
         • ct
         `bet`: how much money to risk on the coinflip
-        """
+        """,
     },
     "hl.description": "Play the higher lower skin guessing game!",
     "hl.usage": {
         "Syntax": f"{PREFIX}hl <difficulty>",
         "Arguments": f"**OPTIONAL `difficulty`: how many correct guesses needed to win ({HL_MIN_GUESS}-{HL_MAX_GUESS})",
-        "How To Play": """In this game you are shown a skin to start with, then the game starts. You have to guess whether the next skin is more or less expensive just from the picture. Get them all right and you win money!"""
+        "How To Play": """In this game you are shown a skin to start with, then the game starts. You have to guess whether the next skin is more or less expensive just from the picture. Get them all right and you win money!""",
     },
     "skin_game.description": "Guess the name of the skin from the image",
-    "skin_game.usage": {
-        "Syntax": f"`{PREFIX}skin?`"
-    },
+    "skin_game.usage": {"Syntax": f"`{PREFIX}skin?`"},
     "ttt.description": "Play Tic Tac Toe against another user",
     "ttt.usage": {
         "Syntax": f"`{PREFIX}ttt <player2> <bet>`",
         "Arguments": """`player2`: opponent
-        **OPTIONAL** `bet`: amount of money to bet on the game"""
+        **OPTIONAL** `bet`: amount of money to bet on the game""",
     },
     "wordle.description": "Play WORDLE to win money!",
     "wordle.usage": {
@@ -368,12 +362,12 @@ en_data = {
         • **Green** if it is the correct letter in the correct place
         • **Yellow** if the letter is in the word but is in the wrong place
         • **Gray** if the letter is not in the word at all
-        """
+        """,
     },
     "trade_accept.description": "Accept a trade from a user",
     "trade_accept.usage": {
         "Syntax": f"`{PREFIX}trade accept <sender>`",
-        "Arguments": "`sender`: the sender of the trade"
+        "Arguments": "`sender`: the sender of the trade",
     },
     "trade_add.description": "Add an item to your trade in creation",
     "trade_add.usage": {
@@ -383,7 +377,7 @@ en_data = {
         • in
         • out
         `item index`: item index of item to add
-        """
+        """,
     },
     "trade_remove.description": "Remove an item to your trade in creation",
     "trade_remove.usage": {
@@ -393,37 +387,34 @@ en_data = {
         • in
         • out
         `item index`: item index of item to remove
-        """
+        """,
     },
     "trade_cancel.description": "Cancel your trade in creation or a trade sent to another user",
     "trade_cancel.usage": {
         "Syntax": f"`{PREFIX}trade cancel <recipient>`",
         "Arguments": "**OPTIONAL** `recipient`: the recipient of the trade",
-        "Additional Information": "If no recipient is provided, it will cancel your current trade in creation"
+        "Additional Information": "If no recipient is provided, it will cancel your current trade in creation",
     },
     "trade_decline.description": "Decline an incoming trade from a user",
     "trade_decline.usage": {
         "Syntax": f"`{PREFIX}trade decline <sender>`",
-        "Arguments": "`sender`: the sender of the trade"
+        "Arguments": "`sender`: the sender of the trade",
     },
     "trade_in.description": "View an incoming trade from a user",
     "trade_in.usage": {
         "Syntax": f"`{PREFIX}trade in <sender>`",
-        "Arguments": "`sender`: the sender of the trade"
+        "Arguments": "`sender`: the sender of the trade",
     },
     "trade_new.description": "Create a new trade to a user",
     "trade_new.usage": {
         "Syntax": f"`{PREFIX}trade new <recipient>`",
-        "Arguments": "`recipient`: the user you want to trade with"
+        "Arguments": "`recipient`: the user you want to trade with",
     },
     "trade_out.description": "View an outgoing trade to a user",
     "trade_out.usage": {
         "Syntax": f"`{PREFIX}trade out <recipient>`",
-        "Arguments": "`recipient`: the recipient of the trade"
+        "Arguments": "`recipient`: the recipient of the trade",
     },
     "trade_send.description": "Finalise your trade and send it to a user",
-    "trade_send.usage": {
-        "Syntax": f"`{PREFIX}trade send`"
-    }
-} 
-
+    "trade_send.usage": {"Syntax": f"`{PREFIX}trade send`"},
+}

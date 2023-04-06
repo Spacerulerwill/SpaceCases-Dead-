@@ -118,6 +118,7 @@ def scrape_endpoint(skin_links, endpoint):
     ]
     skin_links += details_links
 
+
 def scrape_skin_link(result, skin_link):
     # get html source
     r = requests.get(skin_link)
@@ -322,6 +323,7 @@ def scrape_skin_link(result, skin_link):
                 result["skins"]["souvenir " + wear + unformatted_name][
                     "inspect_url"
                 ] = inspect_url
+
 
 def csgostash_scrape() -> dict:
     skin_links = []

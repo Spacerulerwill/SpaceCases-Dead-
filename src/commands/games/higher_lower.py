@@ -18,6 +18,7 @@ HL_MAX_GUESS = 10
 HL_PRICE = 250
 HL_REWARD = lambda difficulty: ((difficulty - HL_MIN_GUESS) * 250) + HL_PRICE + 750
 
+
 @requires(users_registered=True)
 async def higher_lower(ctx: Context, difficulty: int):
     lang = database.user_data.find_one({"_id": ctx.author.id})["lang"]

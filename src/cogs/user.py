@@ -46,7 +46,7 @@ class User(commands.Cog):
 
     # check user balance
     @commands.command(aliases=["bal"])
-    async def balance(self, ctx: Context, member:Optional[discord.Member]):
+    async def balance(self, ctx: Context, member: Optional[discord.Member]):
         await balance(ctx, member)
 
     # send user money

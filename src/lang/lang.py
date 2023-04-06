@@ -18,10 +18,11 @@ def get_locale(lang: str, str):
         lang: ISO code of the language
         str: the key
     Returns:
-        Whatever it finds lol, anything can 
+        Whatever it finds lol, anything can
     """
 
     return language_data[lang][str]
+
 
 # supported_languages = ["en", "fr", "es", "de", "it", "ru"]
 supported_languages = ["en"]

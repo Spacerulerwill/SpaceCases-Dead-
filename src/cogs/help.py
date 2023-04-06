@@ -60,7 +60,6 @@ class Help(commands.Cog):
 
                 # command
                 if len(cmd_query_splt) == 1:
-
                     cmd_query_name = cmd_query_splt[0]
                     command: commands.Command = self.bot.get_command(cmd_query_name)
                     command_name = command.name
@@ -93,7 +92,6 @@ class Help(commands.Cog):
                     await ctx.send(embed=e)
 
                 elif len(cmd_query_splt) == 2:  # command with group
-
                     group_name = cmd_query_splt[0]
                     cmd_query_name = cmd_query_splt[1]
                     group: commands.Group = self.bot.get_command(group_name)
@@ -103,7 +101,9 @@ class Help(commands.Cog):
                     description: str = get_locale_fm(
                         lang, f"{group_name}_{subcommand_name}.description"
                     )
-                    usage: dict = get_locale(lang, f"{group_name}_{subcommand_name}.usage")
+                    usage: dict = get_locale(
+                        lang, f"{group_name}_{subcommand_name}.usage"
+                    )
 
                     e = discord.Embed(
                         title=f"{PREFIX}{group_name} {subcommand_name}",
@@ -127,8 +127,9 @@ class Help(commands.Cog):
 
                     await ctx.send(embed=e)
             except AttributeError:
-
-                closest_match = get_closest_match(cmd_query_name, self.bot.all_commands.keys())
+                closest_match = get_closest_match(
+                    cmd_query_name, self.bot.all_commands.keys()
+                )
                 if closest_match is None:
                     await msg_embed(ctx, get_locale_fm(lang, "command_not_found"))
                 else:
