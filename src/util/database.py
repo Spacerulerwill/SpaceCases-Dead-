@@ -7,7 +7,7 @@ from timeit import default_timer as timer
 from datetime import timedelta
 from src.util.constants import ONE_WEEK
 from src.scripts.csgostash_scraper import csgostash_scrape
-from src.scripts.container_scraper import scrape_containers
+from src.scripts.container_scraper import container_scrape
 
 # MongoDB collections
 user_data: Collection
@@ -139,7 +139,7 @@ def scrape_skin_data():
 
 
 def scrape_container_data():
-    data = scrape_containers()
+    data = container_scrape()
 
     # upload to mongodb
     skin_data_collection.replace_one({"_id": "container-data"}, data, upsert=True)

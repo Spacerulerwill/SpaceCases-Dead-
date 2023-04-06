@@ -3,8 +3,11 @@ Webscraper script used to scrape all the containers items and container prices
 """
 
 from bs4 import BeautifulSoup
+import concurrent.futures
 import requests
+from functools import partial
 from src.util.string_util import remove_skin_name_formatting
+from src.util.constants import MAX_THREADS
 from re import sub
 from decimal import Decimal
 from timeit import default_timer as timer
@@ -53,98 +56,103 @@ container_endpoints = [
 ]
 
 
-def scrape_containers() -> dict:
-    result = {"_id": "container-data"}
+def scrape_container(result, container):
+    container_data = {
+        "items": {
+            "milspec": [],
+            "restricted": [],
+            "classified": [],
+            "covert": [],
+            "rare items": [],
+        },
+        "all items": [],
+    }
 
-    print("Scraping containers...")
-    start = timer()
+    # get gun skins
+    link = f"https://csgostash.com/{container}"
+    container_skins = requests.get(link)
+    container_soup = BeautifulSoup(container_skins.content, "html.parser")
 
-    for container in container_endpoints:
-        container_data = {
-            "items": {
-                "milspec": [],
-                "restricted": [],
-                "classified": [],
-                "covert": [],
-                "rare items": [],
-            },
-            "all items": [],
-        }
+    # container name and image url
+    container_name = container_soup.find("h1", {"class": "margin-top-sm"}).text
 
-        # get gun skins
-        link = f"https://csgostash.com/{container}"
-        container_skins = requests.get(link)
-        container_soup = BeautifulSoup(container_skins.content, "html.parser")
+    # remove punctuation
+    container_name = container_name.replace("&", "and")
+    container_name = sub("[^\w\s]", "", container_name)
 
-        # container name and image url
-        container_name = container_soup.find("h1", {"class": "margin-top-sm"}).text
+    price_div = container_soup.find(
+        "div", {"class": ["btn-group", "content-header-container-btn"]}
+    )
+    container_price = price_div.find(
+        "a", {"class": ["btn", "btn-default", "market-button-item"]}
+    ).text
 
-        # remove punctuation
-        container_name = container_name.replace("&", "and")
-        container_name = sub("[^\w\s]", "", container_name)
+    container_price = container_price.split(" ")[0]
+    container_price = sub(r"[^\d.]", "", container_price)
+    container_data["price"] = int(Decimal(container_price) * 100)
 
-        price_div = container_soup.find(
-            "div", {"class": ["btn-group", "content-header-container-btn"]}
-        )
-        container_price = price_div.find(
-            "a", {"class": ["btn", "btn-default", "market-button-item"]}
-        ).text
+    container_img_url = container_soup.find(
+        "a", {"class": "market-button-item"}
+    ).find("img")["src"]
 
-        container_price = container_price.split(" ")[0]
-        container_price = sub(r"[^\d.]", "", container_price)
-        container_data["price"] = int(Decimal(container_price) * 100)
+    result_boxes = container_soup.find_all("div", {"class": "result-box"})
+    result_boxes.reverse()
 
-        container_img_url = container_soup.find(
-            "a", {"class": "market-button-item"}
-        ).find("img")["src"]
+    rare_items_link = None
 
-        result_boxes = container_soup.find_all("div", {"class": "result-box"})
-        result_boxes.reverse()
+    for result_box in result_boxes:
+        h3 = result_box.find("h3")
 
-        rare_items_link = None
+        if h3 != None:
+            name = remove_skin_name_formatting(h3.text)
+
+            if "gloves" in name:
+                rare_items_link = link + "?Gloves=1"
+            elif "knives" in name:
+                rare_items_link = link + "?Knives=1"
+            else:
+                quality_div = result_box.find("div", {"class": "quality"})
+                quality = (
+                    quality_div["class"][1]
+                    .replace("color-", " ")
+                    .replace("-", "")
+                    .strip()
+                )
+                container_data["items"][quality].append(name)
+                container_data["all items"].append(name)
+
+    # open rare items skins and get them too if there are any
+    if rare_items_link != None:
+        rare_items_skins = requests.get(rare_items_link)
+        rare_items_soup = BeautifulSoup(rare_items_skins.content, "html.parser")
+
+        result_boxes = rare_items_soup.find_all("div", {"class": "result-box"})
 
         for result_box in result_boxes:
             h3 = result_box.find("h3")
+            if h3 != None and "Case Skins" not in h3.text:
+                unformatted_name = remove_skin_name_formatting(h3.text)
+                if (
+                    container_name not in unformatted_name
+                ):  # avoids the link back to the cases original skins
+                    container_data["items"]["rare items"].append(unformatted_name)
+                    container_data["all items"].append(unformatted_name)
 
-            if h3 != None:
-                name = remove_skin_name_formatting(h3.text)
+    container_data["formatted_name"] = container_name
+    container_data["image_url"] = container_img_url
+    result[remove_skin_name_formatting(container_name)] = container_data
 
-                if "gloves" in name:
-                    rare_items_link = link + "?Gloves=1"
-                elif "knives" in name:
-                    rare_items_link = link + "?Knives=1"
-                else:
-                    quality_div = result_box.find("div", {"class": "quality"})
-                    quality = (
-                        quality_div["class"][1]
-                        .replace("color-", " ")
-                        .replace("-", "")
-                        .strip()
-                    )
-                    container_data["items"][quality].append(name)
-                    container_data["all items"].append(name)
+    result[container_name] = container_data
+    #print(f"Scraped {container_name}")
 
-        # open rare items skins and get them too if there are any
-        if rare_items_link != None:
-            rare_items_skins = requests.get(rare_items_link)
-            rare_items_soup = BeautifulSoup(rare_items_skins.content, "html.parser")
+def container_scrape() -> dict:
+    result = {"_id": "container-data"}
 
-            result_boxes = rare_items_soup.find_all("div", {"class": "result-box"})
+    print("Scraping container data...")
+    start = timer()
 
-            for result_box in result_boxes:
-                h3 = result_box.find("h3")
-                if h3 != None and "Case Skins" not in h3.text:
-                    unformatted_name = remove_skin_name_formatting(h3.text)
-                    if (
-                        container_name not in unformatted_name
-                    ):  # avoids the link back to the cases original skins
-                        container_data["items"]["rare items"].append(unformatted_name)
-                        container_data["all items"].append(unformatted_name)
-
-        container_data["formatted_name"] = container_name
-        container_data["image_url"] = container_img_url
-        result[remove_skin_name_formatting(container_name)] = container_data
-        #print(f"Scraped {container_name}")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
+        executor.map(partial(scrape_container, result), container_endpoints)
 
     end = timer()
     print(f"Executed in {timedelta(seconds=end-start)}")
