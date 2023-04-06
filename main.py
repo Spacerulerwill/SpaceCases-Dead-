@@ -77,7 +77,7 @@ def seconds_until(hours, minutes):
 
 def generate_skin_data_loop():
     while True:
-        time.sleep(seconds_until(14,45)) 
+        time.sleep(seconds_until(0,0)) 
         database.scrape_container_data()
         database.scrape_skin_data()
         time.sleep(60)  # Practical solution to ensure that the func isn't spammed as long as it is 00:00
