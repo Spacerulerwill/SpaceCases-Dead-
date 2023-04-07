@@ -417,4 +417,8 @@ en_data = {
     },
     "trade_send.description": "Finalise your trade and send it to a user",
     "trade_send.usage": {"Syntax": f"`{PREFIX}trade send`"},
+    "info.description": "View the bot info message",
+    "info.usage": {"Syntax": f"`{PREFIX}info`"},
+    "config.description": "View the bot config menu",
+    "config.usage": {"Syntax": f"`{PREFIX}config`"},
 }
