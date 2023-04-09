@@ -245,7 +245,10 @@ async def containers(ctx: Context, page: int = 1):
 
     def get_embed(select_value:int=None):
         if select_value is None:
-            select_value = int(select.values[0])
+            try:
+                select_value = int(select.values[0])
+            except IndexError:
+                select_value = 0
             
         container_type, containers = container_page_data[page]
 
@@ -346,4 +349,4 @@ async def containers(ctx: Context, page: int = 1):
     next_button.callback = next_callback
     view.add_item(next_button)
 
-    msg = await ctx.send(embed=get_embed(0), view=view)
+    msg = await ctx.send(embed=get_embed(), view=view)
