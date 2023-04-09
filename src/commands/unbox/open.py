@@ -57,7 +57,7 @@ async def open(ctx: Context, *args):
 
     # select skin rarity
     rarity_rand = random.random()
-    case_odds:dict = container_data["odds"]
+    case_odds: dict = container_data["odds"]
     for key, value in case_odds.items():
         if rarity_rand > value:
             rarity = key

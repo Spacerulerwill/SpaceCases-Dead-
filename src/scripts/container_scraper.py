@@ -102,15 +102,20 @@ souvenir_package_endpoints = {
     "https://csgostash.com/containers/souvenir-packages?page=3",
 }
 
-def calculate_container_odds(items_dict:dict) -> dict:
+
+def calculate_container_odds(items_dict: dict) -> dict:
     # find all rarities that have actual item data
-    rarities_with_items = [rarity for rarity, items in items_dict.items() if len(items) != 0]
+    rarities_with_items = [
+        rarity for rarity, items in items_dict.items() if len(items) != 0
+    ]
 
     # the most common is 80%, each rarity above is 5 times less likely
-    rarity_odds = {rarity: 0.8 * 0.2**count for count, rarity in enumerate(rarities_with_items)}
+    rarity_odds = {
+        rarity: 0.8 * 0.2**count for count, rarity in enumerate(rarities_with_items)
+    }
 
     # sum of series: 0.8 * 0.2**X does not equal 1, therefore we must make them total one to avoid any boundry cases
-    sum_odds = sum(rarity_odds.values()) 
+    sum_odds = sum(rarity_odds.values())
     add_to_each = (1 - sum_odds) / len(rarities_with_items)
 
     rarity_odds = {rarity: odd + add_to_each for rarity, odd in rarity_odds.items()}
@@ -215,7 +220,7 @@ def scrape_container(result, container_link):
 
     container_data["formatted_name"] = container_name
     container_data["image_url"] = container_img_url
-    container_data["odds"] = calculate_container_odds(container_data["items"]) 
+    container_data["odds"] = calculate_container_odds(container_data["items"])
     result[remove_skin_name_formatting(container_name)] = container_data
 
 
@@ -291,7 +296,7 @@ def scrape_souvenir_package(collections: dict, souvenir_data: dict, link: str):
             "formatted_name": pkg_name,
             "image_url": image_url,
             "price": price,
-            "odds": calculate_container_odds(collection_data["items"])
+            "odds": calculate_container_odds(collection_data["items"]),
         }
 
         souvenir_data[unformatted_pkg_name] = pkg_data
