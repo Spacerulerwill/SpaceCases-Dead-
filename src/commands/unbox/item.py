@@ -26,7 +26,9 @@ async def item(ctx: Context, *args):
         skin_data = database.skin_data["skins"][item_query]
     except KeyError:
         # try and find closest match
-        closest_match = get_closest_match(item_query, database.skin_data["skins"].keys())
+        closest_match = get_closest_match(
+            item_query, database.skin_data["skins"].keys()
+        )
 
         # if match is reasonably close enough
         if closest_match is None:

@@ -4,7 +4,7 @@ from src.util.constants import case_wear_ranges_lower, conditions
 import random
 
 
-def gen_item(unformatted_name: str) -> Tuple[str, float]:
+def gen_item(unformatted_name: str, container_type: str) -> Tuple[str, float]:
     """Randomly generate a float and condition for a skin given its name, and determine if it's statrak
 
     Args:
@@ -40,11 +40,16 @@ def gen_item(unformatted_name: str) -> Tuple[str, float]:
             condition = conditions[wear].lower() + " "
             break
 
-    # is it stattrak?
-    if random.random() < 0.1:
-        stattrak = "stattrak "
-    else:
-        stattrak = ""
-    unformatted_name = stattrak + condition + unformatted_name
+    # modifier
+    modifier = ""
+    if skin_data["has_souvenir_variant"]:
+        if container_type == "souvenir_package":
+            modifier = "souvenir "
+    elif skin_data["has_stattrak_variant"]:
+        if container_type == "case":
+            if random.random() < 0.1:
+                modifier = "stattrak "
+
+    unformatted_name = modifier + condition + unformatted_name
 
     return unformatted_name, final_float

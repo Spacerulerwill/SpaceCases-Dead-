@@ -10,6 +10,7 @@ import random
 
 view = discord.ui.View(timeout=30)
 
+
 @requires(users_registered=True)
 async def upgrade(ctx: Context, item_index: int, *args):
     result_item_name = " ".join(args[:]).strip().lower()
@@ -27,13 +28,15 @@ async def upgrade(ctx: Context, item_index: int, *args):
     start_item_float = user_data["inventory"][item_index]["float"]
 
     start_item_data = database.skin_data["skins"][start_item_name]
-    
+
     # check the item they want to upgrade too exists
     try:
         result_item_data = database.skin_data["skins"][result_item_name]
     except KeyError:
         # try and find closest match
-        closest_match = get_closest_match(result_item_name, database.skin_data["skins"].keys())
+        closest_match = get_closest_match(
+            result_item_name, database.skin_data["skins"].keys()
+        )
 
         # if match is reasonably close enough
         if closest_match is None:

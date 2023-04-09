@@ -51,8 +51,6 @@ conditions = [
     "Battle Scarred",
 ]
 
-err_msg_type_dict = {"int": "an integer", "Decimal": "a positive number"}
-
 # index of each condition in above list mapped to the lower bound of their ranges
 case_wear_ranges_lower = {4: 0.45, 3: 0.38, 2: 0.15, 1: 0.07, 0: 0.00}
 # index of each condition in above list mapped to the upper bound of their ranges

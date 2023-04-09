@@ -25,6 +25,11 @@ async def open(ctx: Context, *args):
     try:
         container_data = database.containers[container_name]
         container_price = container_data["price"]
+
+        # souvenir packages dont require keys
+        if container_data["type"] != "souvenir_package":
+            container_price += KEY_PRICE
+
     except KeyError:
         # try and find closest match
         closest_match = get_closest_match(container_name, database.containers.keys())
@@ -45,19 +50,23 @@ async def open(ctx: Context, *args):
         return
 
     # check user has enough balance for case
-    if user_data["balance"] < container_data["price"] + KEY_PRICE:
+
+    if user_data["balance"] < container_price:
         await msg_embed(ctx, get_locale_fm(lang, "not_enough_funds"))
         return
 
     # select skin rarity
     rarity_rand = random.random()
-    for key, value in case_rarity_odds.items():
+    case_odds:dict = container_data["odds"]
+    for key, value in case_odds.items():
         if rarity_rand > value:
             rarity = key
             break
 
     skin_pool = container_data["items"][rarity]
-    unformatted_name, float_val = gen_item(random.choice(skin_pool))
+    unformatted_name, float_val = gen_item(
+        random.choice(skin_pool), container_data["type"]
+    )
 
     skin_data = database.skin_data["skins"][unformatted_name]
 
@@ -73,8 +82,8 @@ async def open(ctx: Context, *args):
         {"_id": ctx.author.id},
         {
             "$inc": {
-                "balance": -(container_price + KEY_PRICE),
-                "stats.total_spent": container_price + KEY_PRICE,
+                "balance": -(container_price),
+                "stats.total_spent": container_price,
                 "stats.total_return": skin_price,
                 "stats.containers_opened": 1,
             }

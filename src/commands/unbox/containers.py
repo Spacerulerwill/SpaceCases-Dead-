@@ -227,6 +227,7 @@ select_images = [CASE, CASE, SOUVENIR_PACKAGE, STICKER_CAPSULE]
 prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
 next_button = discord.ui.Button(label="▶", style=discord.ButtonStyle.gray)
 
+
 async def containers(ctx: Context, page: int = 1):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
 
@@ -243,18 +244,22 @@ async def containers(ctx: Context, page: int = 1):
 
     container_page_data = all_containers
 
-    def get_embed(select_value:int=None):
+    def get_embed(select_value: int = None):
         if select_value is None:
             try:
                 select_value = int(select.values[0])
             except IndexError:
                 select_value = 0
-            
+
         container_type, containers = container_page_data[page]
 
         e = discord.Embed(
             title=get_locale_fm(
-                lang, "containers.embed.title", page + 1, len(container_page_data), select_labels[select_value]
+                lang,
+                "containers.embed.title",
+                page + 1,
+                len(container_page_data),
+                select_labels[select_value],
             ),
             description=get_locale_fm(lang, "containers.embed.description"),
             color=discord.Color.dark_theme(),
@@ -330,14 +335,27 @@ async def containers(ctx: Context, page: int = 1):
     # create select menu
     select = discord.ui.Select(
         options=[
-            discord.SelectOption(label=get_locale_fm(lang, "containers.select.label.all_containers"), value=0),
-            discord.SelectOption(label=get_locale_fm(lang, "containers.select.label.cases"), value=1, emoji=CASE_EMOJI),
-            discord.SelectOption( 
-                label=get_locale_fm(lang, "containers.select.label.souvenir_packages"), value=2, emoji=SOUVENIR_PACKAGE_EMOJI
+            discord.SelectOption(
+                label=get_locale_fm(lang, "containers.select.label.all_containers"),
+                value=0,
             ),
-            discord.SelectOption(label=get_locale_fm(lang, "containers.select.label.sticker_capsules"), value=3, emoji=STICKER_CAPSULE_EMOJI),
+            discord.SelectOption(
+                label=get_locale_fm(lang, "containers.select.label.cases"),
+                value=1,
+                emoji=CASE_EMOJI,
+            ),
+            discord.SelectOption(
+                label=get_locale_fm(lang, "containers.select.label.souvenir_packages"),
+                value=2,
+                emoji=SOUVENIR_PACKAGE_EMOJI,
+            ),
+            discord.SelectOption(
+                label=get_locale_fm(lang, "containers.select.label.sticker_capsules"),
+                value=3,
+                emoji=STICKER_CAPSULE_EMOJI,
+            ),
         ]
-    ) 
+    )
     select_labels = [select_option.label for select_option in select.options]
     select.callback = select_callback
     view.add_item(select)
