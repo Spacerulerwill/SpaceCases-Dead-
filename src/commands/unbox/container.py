@@ -36,7 +36,7 @@ async def container(ctx: Context, *args):
                 get_locale_fm(
                     lang,
                     "container.not_found_suggest",
-                    {container_data["formatted_name"]},
+                    container_data["formatted_name"],
                 ),
             )
         return
@@ -204,7 +204,7 @@ async def container(ctx: Context, *args):
         image_url = item_data["image_url"]
 
         e = discord.Embed(
-            title=f"{container_name} - ${container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})",
+            title=f"{container_name} - {container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})",
             color=rarity_color,
         )
         e.add_field(name=get_locale_fm(lang, "price_range"), value=price_range_str)

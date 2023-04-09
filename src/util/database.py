@@ -7,7 +7,11 @@ from timeit import default_timer as timer
 from datetime import timedelta
 from src.util.constants import ONE_WEEK
 from src.scripts.csgostash_scraper import csgostash_scrape
-from src.scripts.container_scraper import container_scrape
+from src.scripts.container_scraper import (
+    case_scrape,
+    souvenir_package_scrape,
+    collection_scrape,
+)
 
 # MongoDB collections
 user_data: Collection
@@ -24,6 +28,7 @@ wordle_games = {}
 skin_data = {}
 skin_data_hl = {}  # SKIN DATA for higher lower game - does not include knives, glov
 containers = {}
+collections = {}
 word_list = []
 
 
@@ -139,7 +144,15 @@ def scrape_skin_data():
 
 
 def scrape_container_data():
-    data = container_scrape()
+    global containers, collections
+
+    case_data = case_scrape()
+    collections = collection_scrape()
+    souvenir_data = souvenir_package_scrape(collections)
+
+    container_data = {**case_data, **souvenir_data}
 
     # upload to mongodb
-    skin_data_collection.replace_one({"_id": "container-data"}, data, upsert=True)
+    containers = skin_data_collection.find_one_and_replace(
+        {"_id": "container-data"}, container_data, upsert=True
+    )

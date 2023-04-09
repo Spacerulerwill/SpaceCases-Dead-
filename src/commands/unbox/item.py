@@ -14,6 +14,7 @@ from src.util.embed_func import msg_embed
 async def item(ctx: Context, *args):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
 
+    # if they have no user data - default language is english
     if user_data is None:
         lang = "en"
     else:
@@ -21,12 +22,27 @@ async def item(ctx: Context, *args):
 
     item_query = " ".join(args[:]).strip().lower()
 
-    if item_query not in database.skin_data["skins"]:
-        await msg_embed(ctx, get_locale_fm(lang, "item.could_not_find"))
+    try:
+        skin_data = database.skin_data["skins"][item_query]
+    except KeyError:
+        # try and find closest match
+        closest_match = get_closest_match(item_query, database.skin_data["skins"].keys())
+
+        # if match is reasonably close enough
+        if closest_match is None:
+            await msg_embed(ctx, get_locale_fm(lang, "item.not_found"))
+        else:
+            await msg_embed(
+                ctx,
+                get_locale_fm(
+                    lang,
+                    "item.not_found_suggest",
+                    closest_match.title(),
+                ),
+            )
         return
 
-    skin_data = database.skin_data["skins"][item_query]
-
+    # gather all the information from the item data
     formatted_name = skin_data["formatted_name"]
     price = currency_str_format(skin_data["price"])
 
@@ -37,6 +53,7 @@ async def item(ctx: Context, *args):
     max_float = "{:.2f}".format(skin_data["max_float"])
     inspect_url = get_inspect_link_3D(skin_data["inspect_url"])
 
+    # create an embed and add all the data
     e = discord.Embed(
         title=formatted_name,
         color=rarity_color,

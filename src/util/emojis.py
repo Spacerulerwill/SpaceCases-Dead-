@@ -9,6 +9,10 @@ CONTRABAND_EMOJI = "<:contraband_emoji:1056677266341494824>"
 
 BLANK_LETTER = "<:_gray:1073908863838982184>"
 
+CASE_EMOJI = "<:case:1094300190359421038>"
+SOUVENIR_PACKAGE_EMOJI = "<:souvenir_package:1094303587124908042>"
+STICKER_CAPSULE_EMOJI = "<:sticker_capsule:1094304443916366014>"
+
 # wordle emoji dicts
 gray_letters = {
     "a": "<:A_gray:1073694060944035870>",

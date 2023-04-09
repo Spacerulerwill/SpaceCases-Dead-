@@ -39,7 +39,7 @@ async def open(ctx: Context, *args):
                 get_locale_fm(
                     lang,
                     "container.not_found_suggest",
-                    {container_data["formatted_name"]},
+                    container_data["formatted_name"],
                 ),
             )
         return

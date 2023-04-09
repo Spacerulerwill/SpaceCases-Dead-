@@ -2,12 +2,13 @@ import discord
 from src.util import database
 from src.lang.lang import get_locale_fm
 from src.util.constants import case_wear_ranges_lower, case_wear_ranges_upper
-from src.util.string_util import round_sig_fig
+from src.util.string_util import round_sig_fig, get_closest_match
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.util.decorators import requires
 from discord.ext.commands import Context
 import random
 
+view = discord.ui.View(timeout=30)
 
 @requires(users_registered=True)
 async def upgrade(ctx: Context, item_index: int, *args):
@@ -16,6 +17,7 @@ async def upgrade(ctx: Context, item_index: int, *args):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
     lang = user_data["lang"]
 
+    # check the item exists in their inventory
     if item_index > len(user_data["inventory"]):
         await msg_embed(ctx, get_locale_fm(lang, "inventory.not_at_index", item_index))
         return
@@ -25,23 +27,39 @@ async def upgrade(ctx: Context, item_index: int, *args):
     start_item_float = user_data["inventory"][item_index]["float"]
 
     start_item_data = database.skin_data["skins"][start_item_name]
-
+    
+    # check the item they want to upgrade too exists
     try:
         result_item_data = database.skin_data["skins"][result_item_name]
     except KeyError:
-        await msg_embed(
-            ctx, get_locale_fm(lang, "inventory.not_found_name", result_item_name)
-        )
+        # try and find closest match
+        closest_match = get_closest_match(result_item_name, database.skin_data["skins"].keys())
+
+        # if match is reasonably close enough
+        if closest_match is None:
+            await msg_embed(ctx, get_locale_fm(lang, "item.not_found"))
+        else:
+            await msg_embed(
+                ctx,
+                get_locale_fm(
+                    lang,
+                    "item.not_found_suggest",
+                    closest_match.title(),
+                ),
+            )
         return
 
+    # make sure it isnt cheaper than the starting item
     if result_item_data["price"] <= start_item_data["price"]:
         await msg_embed(ctx, get_locale_fm(lang, "upgrade.cant_upgrade_to_cheaper"))
         return
 
+    # price multiplier
     price_multiplier = result_item_data["price"] / start_item_data["price"]
     percentage_chance = 1 / price_multiplier
     has_upgraded = False
 
+    # create embed
     e = discord.Embed(
         description=get_locale_fm(
             lang,
@@ -65,6 +83,7 @@ async def upgrade(ctx: Context, item_index: int, *args):
         text=get_locale_fm(lang, "upgrade.embed.footer"),
     )
 
+    # callback functions
     async def on_view_timeout():
         if not has_upgraded:
             await msg.delete()
@@ -82,7 +101,7 @@ async def upgrade(ctx: Context, item_index: int, *args):
 
         if random.random() < percentage_chance:
             # upgrade successful - replace item
-            # start a session to multi docuemnt atomic transaction
+            # start a session to multi document atomic transaction
             with database.mongo_client.start_session() as session:
                 with session.start_transaction():
                     update_result = database.user_data.update_one(
@@ -187,7 +206,6 @@ async def upgrade(ctx: Context, item_index: int, *args):
         has_upgraded = True
         await msg.edit(embed=e, view=None)
 
-    view = discord.ui.View(timeout=30)
     view.on_timeout = on_view_timeout
 
     upgrade_button = discord.ui.Button(
