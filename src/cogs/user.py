@@ -14,8 +14,6 @@ This cog contains the commands:
 import discord
 from discord.ext import commands
 from discord.ext.commands import Context
-from src.lang.lang import supported_languages, get_locale_fm
-from src.util.constants import PREFIX
 
 # commands
 from src.commands.user.register import register
@@ -32,6 +30,8 @@ from PIL import Image
 import requests
 from io import BytesIO
 
+from timeit import default_timer as timer
+from datetime import timedelta
 
 # initialise class
 class User(commands.Cog):
@@ -70,6 +70,7 @@ class User(commands.Cog):
 
     @commands.command()
     async def test(self, ctx: Context):
+        start = timer()
         response = requests.get(
             "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou6ryFAR17P7YJgJE6d2kq4iOluHtDLfQhGxUppR3iLvHpNygigfiqkVpYWunJYSSJAc7YFHZ_QS4k-ft1pPvvZzOzSd9-n51g3wi1hY/512fx384f"
         )
@@ -79,7 +80,6 @@ class User(commands.Cog):
             "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXQ9QVcJY8gulRcQFXICOis2s3XUmJ8KghYibakOQBlnfaZJmUTtd7lx4Hax_Gmau6IxzMFupEj3OiZpt6l0VLg_0FrYGD2dtSLMlhpp4buLJ0/260fx260f"
         )
         img2 = Image.open(BytesIO(response.content)).resize((60, 60))
-
         for x in range(2):
             for y in range(2):
                 img.paste(
@@ -93,6 +93,8 @@ class User(commands.Cog):
             file = discord.File(fp=image_binary, filename="image.png")
             e.set_image(url="attachment://image.png")
             await ctx.send(file=file, embed=e)
+        end = timer()
+        print(f"Executed in {timedelta(seconds=end-start)}")
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

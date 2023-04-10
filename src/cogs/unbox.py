@@ -20,6 +20,7 @@ from src.commands.unbox.containers import containers
 from src.commands.unbox.container import container
 from src.commands.unbox.open import open
 from src.commands.unbox.upgrade import upgrade
+from src.commands.unbox.tradeup import tradeup
 
 
 # initialise class
@@ -52,6 +53,11 @@ class Unboxing(commands.Cog):
     @commands.command()
     async def upgrade(self, ctx: Context, item_index: int, *args):
         await upgrade(ctx, item_index, *args)
+
+    # trade up contract
+    @commands.command()
+    async def tradeup(self, ctx: Context):
+        await tradeup(ctx)
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it
