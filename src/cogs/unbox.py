@@ -56,8 +56,8 @@ class Unboxing(commands.Cog):
 
     # trade up contract
     @commands.command()
-    async def tradeup(self, ctx: Context):
-        await tradeup(ctx)
+    async def tradeup(self, ctx: Context, *args):
+        await tradeup(ctx, *args)
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

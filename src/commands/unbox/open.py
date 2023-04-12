@@ -4,7 +4,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.lang.lang import get_locale_fm
 from src.util.decorators import requires
-from src.util.constants import KEY_PRICE, case_rarity_odds, rarity_color_dict
+from src.util.constants import KEY_PRICE, rarity_color_dict
 from src.util.string_util import (
     currency_str_format,
     get_closest_match,

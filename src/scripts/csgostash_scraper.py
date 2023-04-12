@@ -8,7 +8,8 @@ import requests
 import concurrent.futures
 from re import sub
 from src.util.string_util import remove_skin_name_formatting
-from src.util.constants import case_wear_ranges_lower, MAX_THREADS
+from src.util.constants import case_wear_ranges_lower, MAX_THREADS, HTTP_HEADERS
+from src.util import database
 from decimal import Decimal
 from timeit import default_timer as timer
 from datetime import timedelta
@@ -108,7 +109,7 @@ condition_index_dict = {
 
 # scraping a weapon endpoint (all the skins for a weapon) - adds them to a skin_links list
 def scrape_endpoint(skin_links, endpoint):
-    r = requests.get(f"https://csgostash.com/{endpoint}")
+    r = requests.get(f"https://csgostash.com/{endpoint}", headers=HTTP_HEADERS)
     soup = BeautifulSoup(r.content, "html.parser")
 
     # extract href from a tag of ever div with class details link
@@ -119,9 +120,9 @@ def scrape_endpoint(skin_links, endpoint):
     skin_links += details_links
 
 
-def scrape_skin_link(result, skin_link):
+def scrape_skin_link(result, container_data, skin_link):
     # get html source
-    r = requests.get(skin_link)
+    r = requests.get(skin_link, headers=HTTP_HEADERS)
     soup = BeautifulSoup(r.content, "html.parser")
 
     # get skins formatted and unformatted name
@@ -161,7 +162,27 @@ def scrape_skin_link(result, skin_link):
     rarity_div = soup.find("div", {"class": ["quality"]})
     rarity = rarity_div["class"][1].replace("color-", "").lower()
 
+    # can it be used in a trade up? Find its container name, check it is not the last tier in its respective container
+    collection = remove_skin_name_formatting(
+        soup.find(
+            "div", {"class": "skin-details-collection-container-wrapper"}
+        ).text.strip()
+    )
+
     weapon_type = rarity_div.text.split(" ")[-1].strip()
+
+    # Knives, Gloves, Souvenirs can NEVER be traded up
+    if (
+        weapon_type in ["Knife", "Gloves"]
+        or "Souvenir" in formatted_name
+        or rarity == "covert"
+    ):
+        can_tradeup = False
+    else:  # is the rarity the last key? if it is, no trade up!
+        can_tradeup = (
+            list(container_data[collection]["items"].keys()).index(rarity)
+            != len(container_data[collection]["items"]) - 1
+        )
 
     # add prices
     table = soup.find(
@@ -213,6 +234,7 @@ def scrape_skin_link(result, skin_link):
             ]:
                 result["skins"][condition.lower() + " " + unformatted_name] = {
                     "formatted_name": condition + " " + formatted_name,
+                    "no_wear_formatted_name": formatted_name,
                     "price": price,
                     "rarity": rarity,
                     "type": weapon_type,
@@ -223,6 +245,7 @@ def scrape_skin_link(result, skin_link):
                     "worst_condition_index": worst_condition_index,
                     "has_stattrak_variant": has_stattrak_variant,
                     "has_souvenir_variant": has_souvenir_variant,
+                    "can_tradeup": can_tradeup,
                 }
 
             # non wear version
@@ -236,6 +259,7 @@ def scrape_skin_link(result, skin_link):
                 "worst_condition_index": worst_condition_index,
                 "has_stattrak_variant": has_stattrak_variant,
                 "has_souvenir_variant": has_souvenir_variant,
+                "can_tradeup": can_tradeup,
             }
 
         else:  # otherwise do as usual
@@ -243,6 +267,7 @@ def scrape_skin_link(result, skin_link):
 
             result["skins"][row_unformatted_condition + " " + unformatted_name] = {
                 "formatted_name": row_formatted_condition + " " + formatted_name,
+                "no_wear_formatted_name": formatted_name,
                 "price": price,
                 "rarity": rarity,
                 "type": weapon_type,
@@ -253,6 +278,7 @@ def scrape_skin_link(result, skin_link):
                 "worst_condition_index": worst_condition_index,
                 "has_stattrak_variant": has_stattrak_variant,
                 "has_souvenir_variant": has_souvenir_variant,
+                "can_tradeup": can_tradeup,
             }
 
             # add the non wear versions
@@ -267,7 +293,15 @@ def scrape_skin_link(result, skin_link):
                 "worst_condition_index": worst_condition_index,
                 "has_stattrak_variant": has_stattrak_variant,
                 "has_souvenir_variant": has_souvenir_variant,
+                "can_tradeup": can_tradeup,
             }
+
+            # if not knife or gloves, add its container (or collection)
+            if weapon_type not in ["Knife", "Gloves"]:
+                result["skins"][row_unformatted_condition + " " + unformatted_name][
+                    "container"
+                ] = collection
+                result["no_wear_skins"][unformatted_name]["container"] = collection
 
     # add images and inspect links
     # if its a vanilla knife, add the same image to each wear
@@ -325,9 +359,17 @@ def scrape_skin_link(result, skin_link):
                 ] = inspect_url
 
 
-def csgostash_scrape() -> dict:
+def csgostash_scrape(scrape_containers: bool = False) -> dict:
     skin_links = []
     result = {"_id": "skin-data", "skins": {}, "no_wear_skins": {}}
+
+    if scrape_containers:
+        database.scrape_container_data()
+
+    all_container_data = {
+        **database.collections,
+        **database.containers,
+    }  # we need the collections and cases data, not the souvenir packages and cases data.
 
     print("Scraping skin data...")
     start = timer()
@@ -335,7 +377,7 @@ def csgostash_scrape() -> dict:
         executor.map(partial(scrape_endpoint, skin_links), endpoints)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(partial(scrape_skin_link, result), skin_links)
+        executor.map(partial(scrape_skin_link, result, all_container_data), skin_links)
     end = timer()
     print(f"Executed in {timedelta(seconds=end-start)}")
     return result

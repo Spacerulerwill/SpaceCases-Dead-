@@ -7,7 +7,7 @@ import concurrent.futures
 import requests
 from functools import partial
 from src.util.string_util import remove_skin_name_formatting
-from src.util.constants import MAX_THREADS
+from src.util.constants import MAX_THREADS, HTTP_HEADERS
 from re import sub
 from decimal import Decimal
 from timeit import default_timer as timer
@@ -104,19 +104,14 @@ souvenir_package_endpoints = {
 
 
 def calculate_container_odds(items_dict: dict) -> dict:
-    # find all rarities that have actual item data
-    rarities_with_items = [
-        rarity for rarity, items in items_dict.items() if len(items) != 0
-    ]
-
     # the most common is 80%, each rarity above is 5 times less likely
     rarity_odds = {
-        rarity: 0.8 * 0.2**count for count, rarity in enumerate(rarities_with_items)
+        rarity: 0.8 * 0.2**count for count, rarity in enumerate(items_dict.keys())
     }
 
     # sum of series: 0.8 * 0.2**X does not equal 1, therefore we must make them total one to avoid any boundry cases
     sum_odds = sum(rarity_odds.values())
-    add_to_each = (1 - sum_odds) / len(rarities_with_items)
+    add_to_each = (1 - sum_odds) / len(items_dict)
 
     rarity_odds = {rarity: odd + add_to_each for rarity, odd in rarity_odds.items()}
 
@@ -146,7 +141,7 @@ def scrape_container(result, container_link):
     }
 
     # get gun skins
-    container_skins = requests.get(container_link)
+    container_skins = requests.get(container_link, headers=HTTP_HEADERS)
     container_soup = BeautifulSoup(container_skins.content, "html.parser")
 
     # container name and image url
@@ -203,7 +198,7 @@ def scrape_container(result, container_link):
 
     # open rare items skins and get them too if there are any
     if rare_items_link != None:
-        rare_items_skins = requests.get(rare_items_link)
+        rare_items_skins = requests.get(rare_items_link, headers=HTTP_HEADERS)
         rare_items_soup = BeautifulSoup(rare_items_skins.content, "html.parser")
 
         result_boxes = rare_items_soup.find_all("div", {"class": "result-box"})
@@ -218,6 +213,12 @@ def scrape_container(result, container_link):
                     container_data["items"]["rare items"].append(unformatted_name)
                     container_data["all items"].append(unformatted_name)
 
+    # remove any rarities without items
+    container_data["items"] = {
+        rarity: items
+        for rarity, items in container_data["items"].items()
+        if len(items) != 0
+    }
     container_data["formatted_name"] = container_name
     container_data["image_url"] = container_img_url
     container_data["odds"] = calculate_container_odds(container_data["items"])
@@ -238,7 +239,7 @@ def scrape_collection(collections, collection_link):
         "all items": [],
     }
 
-    html = requests.get(collection_link)
+    html = requests.get(collection_link, headers=HTTP_HEADERS)
     soup = BeautifulSoup(html.content, "html.parser")
 
     # container name and image url
@@ -265,7 +266,7 @@ def scrape_collection(collections, collection_link):
 
 
 def scrape_souvenir_package(collections: dict, souvenir_data: dict, link: str):
-    html = requests.get(link)
+    html = requests.get(link, headers=HTTP_HEADERS)
     soup = BeautifulSoup(html.content, "html.parser")
 
     package_boxes = soup.select("div.well.result-box.nomargin")
@@ -291,7 +292,11 @@ def scrape_souvenir_package(collections: dict, souvenir_data: dict, link: str):
 
         pkg_data = {
             "type": "souvenir_package",
-            "items": collection_data["items"],
+            "items": {
+                rarity: items
+                for rarity, items in collection_data["items"].items()
+                if len(items) != 0
+            },  # remove rarities without items in them
             "all items": collection_data["all items"],
             "formatted_name": pkg_name,
             "image_url": image_url,
@@ -339,7 +344,7 @@ def case_scrape() -> dict:
 
     # scrape containers
     print("Scraping case data...")
-    case_data = {"_id": "container-data"}
+    case_data = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_container, case_data), container_endpoints)
 

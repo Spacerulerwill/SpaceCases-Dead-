@@ -130,7 +130,7 @@ async def on_command_error(ctx: Context, error):
                 ctx, get_locale_fm(lang, "command_not_found_suggest", closest_match)
             )
         return
-
+ 
     if isinstance(error, commands.BadArgument):
         (err_msg,) = error.args
 
@@ -218,15 +218,6 @@ async def on_message(message: discord.Message):
     # process commands as usual - lower case message before sending to make case insensitive
     message.content = message.content.lower()
     await bot_instance.process_commands(message)
-
-
-def scrape_skin_data():
-    database.init_collections()
-    database.scrape_skin_data()
-
-def scrape_container_data():
-    database.init_collections()
-    database.scrape_container_data()
 
 
 if __name__ == "__main__":

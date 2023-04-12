@@ -33,6 +33,7 @@ from io import BytesIO
 from timeit import default_timer as timer
 from datetime import timedelta
 
+
 # initialise class
 class User(commands.Cog):
     def __init__(self, bot):

@@ -50,6 +50,7 @@ en_data = {
     "button.more": "More",
     "button.clear": "Clear",
     "button.edit": "Edit",
+    "button.sign": "Sign",
     # GENERIC ERROR MESSAGES
     "command_not_found": "Command not found!",
     "command_not_found_suggest": "Command not found! Did you mean `%s`?",
@@ -107,6 +108,10 @@ en_data = {
     "inventory.embed.commands_1": f"""`{PREFIX}inspect <item number>` - view an item
     `{PREFIX}sell <item number>` - sell an item""",
     "inventory.embed.commands_2": f"`{PREFIX}inspect %s <item number>` - see an item",
+    "sell.item_missing": "Sell cancelled as the specific **%s** is no longer in your inventory",
+    "sell.are_you_sure": "Are you sure you want to sell **%s** for **%s**?",
+    "sell.success": "Successfully sold **%s**",
+    # UNBOX COG
     "container.not_found": "Container not found!",
     "container.not_found_suggest": "Container not found! Did you mean: `%s`?",
     "container.select.all_items": "All Items",
@@ -125,9 +130,13 @@ en_data = {
     "upgrade.embed.footer": "Warning! Upgrades will cancel after 30 seconds",
     "upgrade.error.title": "Upgrade Error",
     "upgrade.error.item_missing": "Failed to upgrade as **%s** no longer exists in inventory",
-    "sell.item_missing": "Sell cancelled as the specific **%s** is no longer in your inventory",
-    "sell.are_you_sure": "Are you sure you want to sell **%s** for **%s**?",
-    "sell.success": "Successfully sold **%s**",
+    "tradeup.error.same_item_twice": "You cannot use the same item twice in a tradeup!",
+    "tradeup.error.not_enough_items": "You must provide 10 items for contract",
+    "tradeup.error.not_all_found": "Not all skins found in inventory!",
+    "tradeup.error.not_same_rarity": "All items must be of the same rarity",
+    "tradeup.error.stattrak_mix": "You cannot mix StatTrak and non StatTrak items!",
+    "tradeup.error.invalid_items": "Not all items you have chosen can be traded up!",
+    "tradeup.footer": "Contract signing will be cancelled after 30 seconds",
     # RANKINGS COG
     "leaderboard.embed.title": "Leaderboard - #%s - %s",
     "leaderboard.footer": "Leaderboard updates every hour",
@@ -426,4 +435,16 @@ en_data = {
     "info.usage": {"Syntax": f"`{PREFIX}info`"},
     "config.description": "View the bot config menu",
     "config.usage": {"Syntax": f"`{PREFIX}config`"},
+    "tradeup.description": "Trade up 10 skins of one quality to get one skin of the next quality up!",
+    "tradeup.usage": {
+        "Syntax": f"`{PREFIX}tradeup <item indexes>`",
+        "Arguments": "`item indexes`: 10 inventory item indexes seperated by spaces",
+        "Additional Information": """
+        For a trade up, the items being traded up must meet these conditions:
+        • **All** must be same rarity
+        • **All** must be either StatTrak or not StatTrak, no mixing!
+        • **All** must be guns - no gloves, knives or souvenirs!
+        • **All** must be not the highest rarity in their respective collection/case
+        """ 
+    }
 }

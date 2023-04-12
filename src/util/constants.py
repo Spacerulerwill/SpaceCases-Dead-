@@ -14,6 +14,8 @@ MAX_THREADS = 30
 
 ROOM_DELETION_TIME = 900
 
+HTTP_HEADERS = {'User-Agent': "Mozilla/5.0 (Windows 11.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Safari/537.36 OPRGX/104.0.4480.100"}
+
 # rarity to color
 rarity_color_dict = {
     "consumer": 11584473,
@@ -50,6 +52,14 @@ conditions = [
     "Well Worn",
     "Battle Scarred",
 ]
+
+trade_up_rarity_dict = {
+    "consumer": "industrial",
+    "industrial": "milspec",
+    "milspec": "restricted",
+    "restricted": "classified",
+    "classified": "covert",
+}
 
 # index of each condition in above list mapped to the lower bound of their ranges
 case_wear_ranges_lower = {4: 0.45, 3: 0.38, 2: 0.15, 1: 0.07, 0: 0.00}
