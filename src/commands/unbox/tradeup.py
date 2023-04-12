@@ -1,7 +1,12 @@
 import discord
 from discord.ext.commands import Context
 from src.util.embed_func import msg_embed, msg_embed_response
-from src.util.constants import trade_up_rarity_dict, case_wear_ranges_lower, conditions, rarity_color_dict
+from src.util.constants import (
+    trade_up_rarity_dict,
+    case_wear_ranges_lower,
+    conditions,
+    rarity_color_dict,
+)
 from src.util.decorators import requires
 from src.lang.lang import get_locale_fm, get_locale
 from src.util.string_util import currency_str_format
@@ -60,7 +65,9 @@ async def tradeup(ctx: Context, *args):
         await msg_embed(ctx, get_locale(lang, "tradeup.error.stattrak_mix"))
         return
 
-    is_stattrak = is_stattraks[0] # safe to do as we ensured they are all either stattrak or not stattrak
+    is_stattrak = is_stattraks[
+        0
+    ]  # safe to do as we ensured they are all either stattrak or not stattrak
 
     # check if any are not trade uppable
     if any(not data["can_tradeup"] for data in item_data):
@@ -77,7 +84,6 @@ async def tradeup(ctx: Context, *args):
             nonlocal e
             e.set_footer(text="")
             await msg.edit(embed=e, view=None)
-                
 
     async def sign_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
@@ -87,8 +93,8 @@ async def tradeup(ctx: Context, *args):
                 ephemeral=True,
             )
             return
-        
-        nonlocal e,contract_signed
+
+        nonlocal contract_signed
 
         # ordered list of tuples of each collection to their respective chance
         col_prob = list(Counter(skin_collections).most_common())
@@ -119,7 +125,7 @@ async def tradeup(ctx: Context, *args):
             * (item_data["max_float"] - item_data["min_float"])
             + item_data["min_float"]
         )
-        
+
         for wear, upper in case_wear_ranges_lower.items():
             if final_float > upper:
                 condition = conditions[wear].lower() + " "
@@ -134,18 +140,29 @@ async def tradeup(ctx: Context, *args):
 
         # change embed and resend
         contract_signed = True
-        
-        await interact.message.remove_attachments()
+        e = discord.Embed(
+            title=new_item_data["formatted_name"],
+            color=rarity_color_dict[new_skin_rarity],
+            description=get_locale_fm(
+                lang, "inspect_in_3d", new_item_data["inspect_url"]
+            ),
+        )
         e.title = new_item_data["formatted_name"]
         e.color = rarity_color_dict[new_skin_rarity]
-        e.description = get_locale_fm(lang, "inspect_in_3d", new_item_data["inspect_url"])
-         
-        e.add_field(name=get_locale_fm(lang, "market_value"), value=currency_str_format(new_item_data["price"]))
-        e.add_field(name=get_locale_fm(lang, "rarity"), value=get_locale_fm(lang, rarity))
-        e.add_field(
-            name=get_locale_fm(lang, "float"), value=str(final_float)
+        e.description = get_locale_fm(
+            lang, "inspect_in_3d", new_item_data["inspect_url"]
         )
-        e.set_image(url=new_item_data["image_url"])
+
+        e.add_field(
+            name=get_locale_fm(lang, "market_value"),
+            value=currency_str_format(new_item_data["price"]),
+        )
+        e.add_field(
+            name=get_locale_fm(lang, "rarity"), value=get_locale_fm(lang, rarity)
+        )
+        e.add_field(name=get_locale_fm(lang, "float"), value=str(final_float))
+        e.set_thumbnail(url=new_item_data["image_url"])
+        e.set_image(url="attachment://contract1.png")
         e.set_footer(text="")
 
         await interact.response.edit_message(embed=e, view=None)
@@ -175,7 +192,7 @@ async def tradeup(ctx: Context, *args):
     for i in range(2):
         draw.text((315, 195 + (i * 13)), skin_names[i + 8], blue, font=small_font)
 
-    async def cancel_callback(interact:discord.Interaction):
+    async def cancel_callback(interact: discord.Interaction):
         if interact.user.id != ctx.author.id:
             await msg_embed_response(
                 interact.response,
@@ -191,8 +208,12 @@ async def tradeup(ctx: Context, *args):
     view = discord.ui.View(timeout=30)
     view.on_timeout = cancel_contract
 
-    cancel = discord.ui.Button(label=get_locale(lang, "button.cancel"), style=discord.ButtonStyle.red)
-    sign = discord.ui.Button(label=get_locale(lang, "button.sign"), style=discord.ButtonStyle.green)
+    cancel = discord.ui.Button(
+        label=get_locale(lang, "button.cancel"), style=discord.ButtonStyle.red
+    )
+    sign = discord.ui.Button(
+        label=get_locale(lang, "button.sign"), style=discord.ButtonStyle.green
+    )
     sign.callback = sign_callback
     cancel.callback = cancel_callback
 
@@ -203,7 +224,7 @@ async def tradeup(ctx: Context, *args):
         img.save(image_binary, "PNG")
         image_binary.seek(0)
         e = discord.Embed()
-        file = discord.File(fp=image_binary, filename="image.png")
-        e.set_image(url="attachment://image.png")
+        file = discord.File(fp=image_binary, filename="contract1.png")
+        e.set_image(url="attachment://contract1.png")
         e.set_footer(text=get_locale(lang, "tradeup.footer"))
         msg = await ctx.send(file=file, embed=e, view=view)

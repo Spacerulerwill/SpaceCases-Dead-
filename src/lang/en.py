@@ -445,6 +445,6 @@ en_data = {
         • **All** must be either StatTrak or not StatTrak, no mixing!
         • **All** must be guns - no gloves, knives or souvenirs!
         • **All** must be not the highest rarity in their respective collection/case
-        """ 
-    }
+        """,
+    },
 }

@@ -14,7 +14,9 @@ MAX_THREADS = 30
 
 ROOM_DELETION_TIME = 900
 
-HTTP_HEADERS = {'User-Agent': "Mozilla/5.0 (Windows 11.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Safari/537.36 OPRGX/104.0.4480.100"}
+HTTP_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows 11.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Safari/537.36 OPRGX/104.0.4480.100"
+}
 
 # rarity to color
 rarity_color_dict = {
