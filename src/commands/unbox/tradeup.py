@@ -144,7 +144,7 @@ async def tradeup(ctx: Context, *args):
                 for item_index in args:
                     name = inventory[int(item_index) - 1]["name"]
                     float = inventory[int(item_index) - 1]["float"]
-                    formatted_name = item_data[int(item_index)-1]["formatted_name"]
+                    formatted_name = item_data[int(item_index) - 1]["formatted_name"]
 
                     update_result = database.user_data.update_one(
                         {"_id": ctx.author.id},
@@ -160,8 +160,11 @@ async def tradeup(ctx: Context, *args):
                     )
 
                     if update_result.modified_count == 0:
-                        await msg_embed(ctx, f"Tradeup failed as the specific **{formatted_name}** is no longer in your inventory")
-                    
+                        await msg_embed(
+                            ctx,
+                            f"Tradeup failed as the specific **{formatted_name}** is no longer in your inventory",
+                        )
+
                 database.user_data.update_one(
                     {"_id": ctx.author.id},
                     {
