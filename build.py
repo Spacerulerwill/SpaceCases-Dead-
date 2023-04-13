@@ -49,13 +49,8 @@ def script_run():
 
     print("Inserting skin data - this may take a while!")
 
-    skin_data = csgostash_scrape()
+    skin_data = csgostash_scrape(True)
     skin_data_collection.replace_one({"_id": "skin-data"}, skin_data, upsert=True)
-
-    container_data = scrape_containers()
-    skin_data_collection.replace_one(
-        {"_id": "container-data"}, container_data, upsert=True
-    )
     print("Complete!")
 
 

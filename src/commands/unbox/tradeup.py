@@ -116,14 +116,14 @@ async def tradeup(ctx: Context, *args):
         container_data = database.cases_and_collections[container]
         new_skin_rarity = trade_up_rarity_dict[rarity]
         new_item = random.choice(container_data["items"][new_skin_rarity])
-        item_data = database.skin_data["no_wear_skins"][new_item]
+        new_item_data = database.skin_data["no_wear_skins"][new_item]
 
         # pick a random skin from the rarity above - linear interpolation
         final_float = (
             sum([inventory[int(item_index) - 1]["float"] for item_index in args])
             / 10
-            * (item_data["max_float"] - item_data["min_float"])
-            + item_data["min_float"]
+            * (new_item_data["max_float"] - new_item_data["min_float"])
+            + new_item_data["min_float"]
         )
 
         for wear, upper in case_wear_ranges_lower.items():
@@ -137,6 +137,43 @@ async def tradeup(ctx: Context, *args):
             new_item = "stattrak " + new_item
 
         new_item_data = database.skin_data["skins"][new_item]
+
+        with database.mongo_client.start_session() as session:
+            with session.start_transaction():
+                # remove original items
+                for item_index in args:
+                    name = inventory[int(item_index) - 1]["name"]
+                    float = inventory[int(item_index) - 1]["float"]
+                    formatted_name = item_data[int(item_index)-1]["formatted_name"]
+
+                    update_result = database.user_data.update_one(
+                        {"_id": ctx.author.id},
+                        {
+                            "$pull": {
+                                "inventory": {
+                                    "name": name,
+                                    "float": float,
+                                }
+                            },
+                        },
+                        session=session,
+                    )
+
+                    if update_result.modified_count == 0:
+                        await msg_embed(ctx, f"Tradeup failed as the specific **{formatted_name}** is no longer in your inventory")
+                    
+                database.user_data.update_one(
+                    {"_id": ctx.author.id},
+                    {
+                        "$push": {
+                            "inventory": {
+                                "name": new_item,
+                                "float": final_float,
+                            }
+                        }
+                    },
+                    session=session,
+                )
 
         # change embed and resend
         contract_signed = True
