@@ -1,4 +1,4 @@
-# SpaceCases [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) ![GitHub repo size](https://img.shields.io/github/repo-size/Spacerulerwill/SpaceCases)
+# SpaceCases [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) ![GitHub repo size](https://img.shields.io/github/repo-size/Spacerulerwill/SpaceCases) [![Lines Of Code](https://tokei.rs/b1/github/Spacerulerwill/SpaceCases?category=code)](https://github.com/XAMPPRocky/tokei)
 This is the new in development version of my Counter Strike trading and unboxing simulator, current features include:
 * Unboxing items from all CS:GO cases and souvenir packages
 * Trading items with other users
