@@ -116,6 +116,7 @@ async def upgrade(ctx: Context, item_index: int, *args):
                                     "float": start_item_float,
                                 }
                             },
+                            "$inc": {"inventory_size": -1},
                         },
                         session=session,
                     )
@@ -160,7 +161,8 @@ async def upgrade(ctx: Context, item_index: int, *args):
                                         "name": result_item_name,
                                         "float": upgraded_item_float,
                                     }
-                                }
+                                },
+                                "$inc": {"inventory_size": 1},
                             },
                             session=session,
                         )
