@@ -1,5 +1,6 @@
 from os import environ
 import pymongo
+from gridfs import GridFS
 import certifi
 from src.scripts.csgostash_scraper import NO_PRICE_FOUND
 from pymongo.collection import Collection
@@ -18,6 +19,7 @@ user_data: Collection
 trade_requests: Collection
 guild_data: Collection
 skin_data_collection: Collection
+fs: GridFS
 
 mongo_client: pymongo.MongoClient
 
@@ -99,6 +101,8 @@ def init_collections():
 
     # load the csgo bot database
     db = mongo_client["csgo-case-bot"]
+    fs = GridFS(db)
+    fs.put(b"bruh!!")
 
     # load collections
     user_data = db["user-data"]

@@ -11,6 +11,7 @@ This cog contains the commands:
 * Room
 """
 
+import random
 import discord
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -29,9 +30,13 @@ from decimal import Decimal
 from PIL import Image
 import requests
 from io import BytesIO
+from PIL import ImageFont
+from PIL import ImageDraw
 
 from timeit import default_timer as timer
 from datetime import timedelta
+
+from src.util import database
 
 
 # initialise class
@@ -71,29 +76,48 @@ class User(commands.Cog):
 
     @commands.command()
     async def test(self, ctx: Context):
-        start = timer()
-        response = requests.get(
-            "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou6ryFAR17P7YJgJE6d2kq4iOluHtDLfQhGxUppR3iLvHpNygigfiqkVpYWunJYSSJAc7YFHZ_QS4k-ft1pPvvZzOzSd9-n51g3wi1hY/512fx384f"
-        )
-        img = Image.open(BytesIO(response.content))
+        font = ImageFont.truetype("res/font/Roboto-Bold.ttf", 20)
 
-        response = requests.get(
+        skin_name = "factory new mp7 abyssal apparition"
+        float = random.random()
+
+        skin_data = database.skin_data["skins"][skin_name]
+        start = timer()
+        skin_img_url = skin_data["image_url"]
+        sticker_urls = [
             "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXQ9QVcJY8gulRcQFXICOis2s3XUmJ8KghYibakOQBlnfaZJmUTtd7lx4Hax_Gmau6IxzMFupEj3OiZpt6l0VLg_0FrYGD2dtSLMlhpp4buLJ0/260fx260f"
-        )
-        img2 = Image.open(BytesIO(response.content)).resize((60, 60))
-        for x in range(2):
-            for y in range(2):
-                img.paste(
-                    img2, (x * img2.width, img.height - img2.height - (y * img2.height))
-                )
+        ] * 4
+
+        response = requests.get(skin_img_url)
+        skin = Image.open(BytesIO(response.content))
+        draw = ImageDraw.Draw(skin)
+
+        # draw text
+        draw.text((0, 0), skin_data["formatted_name"], (255, 255, 255), font=font)
+        draw.text((0, 30), str(float), (255, 255, 255), font=font)
+
+        # draw stickers
+        for count, sticker_url in enumerate(sticker_urls):
+            response = requests.get(sticker_url)
+            sticker_img = Image.open(BytesIO(response.content)).resize((60, 60))
+            skin.paste(
+                sticker_img,
+                (
+                    (count % 2) * sticker_img.width,
+                    skin.height
+                    - sticker_img.height
+                    - ((count // 2) * sticker_img.height),
+                ),
+            )
 
         with BytesIO() as image_binary:
-            img.save(image_binary, "PNG")
+            skin.save(image_binary, "PNG")
             image_binary.seek(0)
             e = discord.Embed()
             file = discord.File(fp=image_binary, filename="image.png")
             e.set_image(url="attachment://image.png")
             await ctx.send(file=file, embed=e)
+
         end = timer()
         print(f"Executed in {timedelta(seconds=end-start)}")
 
