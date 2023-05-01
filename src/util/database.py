@@ -68,14 +68,13 @@ def get_leaderboard(bot: Bot):
     for guild in bot.guilds:
         id_list = [member.id for member in guild.members]
         local_leaderboard = [(_id, val) for _id, val in global_ldb if _id in id_list]
-        leaderboards.replace_one({"_id": guild.id}, {"data": local_leaderboard}, upsert=True)
+        leaderboards.replace_one(
+            {"_id": guild.id}, {"data": local_leaderboard}, upsert=True
+        )
     end = timer()
 
     print(f"Generated local leaderboards in {timedelta(seconds=end-start)}")
 
-
-     
-            
 
 # setup database and data
 def init_collections():

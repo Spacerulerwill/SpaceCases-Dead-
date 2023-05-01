@@ -7,7 +7,7 @@ from src.util.embed_func import msg_embed
 
 
 @requires(users_registered=True)
-async def ranking(ctx: Context, type:str, user: discord.Member):
+async def ranking(ctx: Context, type: str, user: discord.Member):
     if user is None:
         user = ctx.author
 
@@ -27,8 +27,12 @@ async def ranking(ctx: Context, type:str, user: discord.Member):
         leaderboard = list(database.leaderboards.find_one({"_id": "global"})["data"])
         text = get_locale_fm(lang, "ranking.global.text", user.name, position)
     elif type == "local":
-        leaderboard = list(database.leaderboards.find_one({"_id": ctx.guild.id})["data"])
-        text = get_locale_fm(lang, "ranking.local.text", user.name, position, ctx.guild.name)
+        leaderboard = list(
+            database.leaderboards.find_one({"_id": ctx.guild.id})["data"]
+        )
+        text = get_locale_fm(
+            lang, "ranking.local.text", user.name, position, ctx.guild.name
+        )
 
     for elem in leaderboard:
         _id, inv_value = elem
