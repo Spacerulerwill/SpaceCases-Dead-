@@ -41,7 +41,6 @@ async def leaderboard(ctx: Context, type: str, page: int):
         else:
             thumbnail = ctx.guild.icon.url
 
-
     if len(data) == 0:
         await msg_embed(ctx, get_locale_fm(lang, "invalid_page"))
         return
