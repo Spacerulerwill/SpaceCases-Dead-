@@ -1,4 +1,5 @@
 import discord
+import traceback
 import asyncio
 import datetime
 import threading
@@ -131,7 +132,7 @@ async def on_command_error(ctx: Context, error):
             )
         return
  
-    if isinstance(error, commands.BadArgument):
+    elif isinstance(error, commands.BadArgument):
         (err_msg,) = error.args
 
         query = err_msg.split('"')
@@ -152,21 +153,21 @@ async def on_command_error(ctx: Context, error):
         )
         return
 
-    if isinstance(error, commands.MissingRequiredArgument):
+    elif isinstance(error, commands.MissingRequiredArgument):
         param_name = error.param.name.replace("_", " ")
         await msg_embed(
             ctx, get_locale_fm(lang, "command_error.missing_required_argument", param_name)
         )
         return
 
-    if isinstance(error, commands.BadLiteralArgument):
+    elif isinstance(error, commands.BadLiteralArgument):
         param_name = error.param.name.replace("_", "/")
         await msg_embed(
             ctx, get_locale_fm(lang, "command_error.invalid_option", param_name)
         )
         return
 
-    if isinstance(error, commands.MissingPermissions):
+    elif isinstance(error, commands.MissingPermissions):
         await msg_embed(
             ctx,
             get_locale_fm(
@@ -177,14 +178,21 @@ async def on_command_error(ctx: Context, error):
         )
         return
 
-    if isinstance(error, commands.CommandOnCooldown):
+    elif isinstance(error, commands.CommandOnCooldown):
         await msg_embed(
             ctx, get_locale_fm(lang, "command_error.cooldown", error.retry_after)
         )
         return
 
-    raise error
-
+    else:
+        tb = traceback.format_exception(type(error), error, error.__traceback__)
+        string = "".join(tb)
+        e = discord.Embed(
+            title="Oops! Something went wrong!", 
+            description="This has been automatically reported to the development team. It will be fixed soon!",
+            color=discord.Color.red())
+        await ctx.send(embed=e)
+        raise error
 
 # send welcome message on joining a server
 @bot_instance.event

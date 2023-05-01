@@ -28,6 +28,7 @@ async def leaderboard(ctx: Context, type: str, page: int):
         embed_title = get_locale_fm(
             lang, "leaderboard.embed.global.title", start + 1, end
         )
+        thumbnail = ctx.author.display_avatar.url
     elif type == "local":
         data = list(database.leaderboards.find_one({"_id": ctx.guild.id})["data"])[
             start:end
@@ -35,6 +36,11 @@ async def leaderboard(ctx: Context, type: str, page: int):
         embed_title = get_locale_fm(
             lang, "leaderboard.embed.local.title", ctx.guild.name, start + 1, end
         )
+        if ctx.guild.icon is None:
+            thumbnail = ctx.author.display_avatar.url
+        else:
+            thumbnail = ctx.guild.icon.url
+
 
     if len(data) == 0:
         await msg_embed(ctx, get_locale_fm(lang, "invalid_page"))
@@ -64,6 +70,7 @@ async def leaderboard(ctx: Context, type: str, page: int):
         title=embed_title,
         description=string,
     )
-    e.set_thumbnail(url=ctx.bot.user.display_avatar.url)
+    ctx.guild.icon
+    e.set_thumbnail(url=thumbnail)
     e.set_footer(text=get_locale_fm(lang, "leaderboard.footer"))
     await ctx.send(embed=e)
