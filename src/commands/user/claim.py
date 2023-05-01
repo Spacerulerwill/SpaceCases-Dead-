@@ -2,7 +2,7 @@ from discord.ext.commands import Context
 from src.util import database
 from src.lang.lang import get_locale_fm
 from src.util.string_util import currency_str_format
-from src.util.skin_func import gen_item
+from src.util.item_func import gen_item
 from src.util.constants import ONE_DAY, rarity_color_dict
 from src.util.embed_func import msg_embed
 from src.util.decorators import requires

@@ -7,221 +7,47 @@ from src.util.embed_func import msg_embed, msg_embed_response
 from src.lang.lang import get_locale_fm
 from src.util import database
 
-cases = [
-    (
-        "Cases",
-        [
-            "revolution case",
-            "recoil case",
-            "operation riptide case",
-            "snakebite case",
-            "operation broken fang case",
-            "fracture case",
-            "prisma 2 case",
-            "shattered web case",
-            "cs20 case",
-            "prisma case",
-            "danger zone case",
-            "horizon case",
-            "clutch case",
-            "spectrum 2 case",
-            "operation hydra case",
-        ],
-    ),
-    (
-        "Cases",
-        [
-            "spectrum case",
-            "glove case",
-            "gamma 2 case",
-            "gamma case",
-            "chroma 3 case",
-            "operation wildfire case",
-            "revolver case",
-            "shadow case",
-            "falchion case",
-            "chroma 2 case",
-            "chroma case",
-            "operation vanguard weapon case",
-            "esports 2014 summer case",
-            "operation breakout weapon case",
-            "huntsman weapon case",
-            "operation phoenix weapon case",
-        ],
-    ),
-    (
-        "Cases",
-        [
-            "csgo weapon case 3",
-            "winter offensive weapon case",
-            "esports 2013 winter case",
-            "csgo weapon case 2",
-            "operation bravo case",
-            "esports 2013 case",
-            "csgo weapon case",
-        ],
-    ),
+# generate page data, sort by cheapest to most expensive
+cases = sorted(
+    [
+        name
+        for name, data in database.containers.items()
+        if name != "_id" and data["type"] == "case"
+    ],
+    key=lambda case: database.containers[case]["price"],
+)
+souvenir_packages = sorted(
+    [
+        name
+        for name, data in database.containers.items()
+        if name != "_id" and data["type"] == "souvenir_package"
+    ],
+    key=lambda package: database.containers[package]["price"],
+)
+sticker_capsules = sorted(
+    [
+        name
+        for name, data in database.containers.items()
+        if name != "_id" and data["type"] == "sticker_capsule"
+    ],
+    key=lambda capsule: database.containers[capsule]["price"],
+)
+
+
+# construct page tuples with first element being title and second being the elements on the page
+case_pages = [("Cases", cases[i : i + 14]) for i in range(0, len(cases), 14)]
+souvenir_package_pages = [
+    ("Souvenir Packages", souvenir_packages[i : i + 14])
+    for i in range(0, len(souvenir_packages), 14)
+]
+sticker_capsule_pages = [
+    ("Sticker Capsules", sticker_capsules[i : i + 14])
+    for i in range(0, len(sticker_capsules), 14)
 ]
 
-souvenir_packages = [
-    (
-        "Souvenir Packages",
-        [
-            "rio 2022 vertigo souvenir package",
-            "rio 2022 nuke souvenir package",
-            "rio 2022 ancient souvenir package",
-            "rio 2022 overpass souvenir package",
-            "rio 2022 dust ii souvenir package",
-            "rio 2022 mirage souvenir package",
-            "rio 2022 inferno souvenir package",
-            "antwerp 2022 vertigo souvenir package",
-            "antwerp 2022 nuke souvenir package",
-            "antwerp 2022 ancient souvenir package",
-            "antwerp 2022 overpass souvenir package",
-            "antwerp 2022 dust ii souvenir package",
-            "antwerp 2022 mirage souvenir package",
-            "antwerp 2022 inferno souvenir package",
-        ],
-    ),
-    (
-        "Souvenir Packages",
-        [
-            "stockholm 2021 vertigo souvenir package",
-            "stockholm 2021 nuke souvenir package",
-            "stockholm 2021 ancient souvenir package",
-            "stockholm 2021 overpass souvenir package",
-            "stockholm 2021 dust ii souvenir package",
-            "stockholm 2021 mirage souvenir package",
-            "stockholm 2021 inferno souvenir package",
-            "berlin 2019 vertigo souvenir package",
-            "berlin 2019 nuke souvenir package",
-            "berlin 2019 train souvenir package",
-            "berlin 2019 overpass souvenir package",
-            "berlin 2019 dust ii souvenir package",
-            "berlin 2019 mirage souvenir package",
-            "berlin 2019 inferno souvenir package",
-        ],
-    ),
-    (
-        "Souvenir Packages",
-        [
-            "katowice 2019 nuke souvenir package",
-            "katowice 2019 train souvenir package",
-            "katowice 2019 cache souvenir package",
-            "katowice 2019 overpass souvenir package",
-            "katowice 2019 dust ii souvenir package",
-            "katowice 2019 mirage souvenir package",
-            "katowice 2019 inferno souvenir package",
-            "london 2018 nuke souvenir package",
-            "london 2018 train souvenir package",
-            "london 2018 cache souvenir package",
-            "london 2018 overpass souvenir package",
-            "london 2018 dust ii souvenir package",
-            "london 2018 mirage souvenir package",
-            "london 2018 inferno souvenir package",
-        ],
-    ),
-    (
-        "Souvenir Packages",
-        [
-            "boston 2018 nuke souvenir package",
-            "boston 2018 train souvenir package",
-            "boston 2018 cache souvenir package",
-            "boston 2018 overpass souvenir package",
-            "boston 2018 cobblestone souvenir package",
-            "boston 2018 mirage souvenir package",
-            "boston 2018 inferno souvenir package",
-            "krakow 2017 nuke souvenir package",
-            "krakow 2017 train souvenir package",
-            "krakow 2017 cache souvenir package",
-            "krakow 2017 overpass souvenir package",
-            "krakow 2017 cobblestone souvenir package",
-            "krakow 2017 mirage souvenir package",
-            "krakow 2017 inferno souvenir package",
-        ],
-    ),
-    (
-        "Souvenir Packages",
-        [
-            "atlanta 2017 nuke souvenir package",
-            "atlanta 2017 train souvenir package",
-            "atlanta 2017 cache souvenir package",
-            "atlanta 2017 overpass souvenir package",
-            "atlanta 2017 cobblestone souvenir package",
-            "atlanta 2017 mirage souvenir package",
-            "atlanta 2017 dust ii souvenir package",
-            "cologne 2016 nuke souvenir package",
-            "cologne 2016 train souvenir package",
-            "cologne 2016 cache souvenir package",
-            "cologne 2016 overpass souvenir package",
-            "cologne 2016 cobblestone souvenir package",
-            "cologne 2016 mirage souvenir package",
-            "cologne 2016 dust ii souvenir package",
-        ],
-    ),
-    (
-        "Souvenir Packages",
-        [
-            "mlg columbus 2016 nuke souvenir package",
-            "mlg columbus 2016 train souvenir package",
-            "mlg columbus 2016 cache souvenir package",
-            "mlg columbus 2016 overpass souvenir package",
-            "mlg columbus 2016 cobblestone souvenir package",
-            "mlg columbus 2016 inferno souvenir package",
-            "mlg columbus 2016 mirage souvenir package",
-            "mlg columbus 2016 dust ii souvenir package",
-            "dreamhack cluj-napoca 2015 train souvenir package",
-            "dreamhack cluj-napoca 2015 cache souvenir package",
-            "dreamhack cluj-napoca 2015 overpass souvenir package",
-            "dreamhack cluj-napoca 2015 cobblestone souvenir package",
-            "dreamhack cluj-napoca 2015 inferno souvenir package",
-            "dreamhack cluj-napoca 2015 mirage souvenir package",
-            "dreamhack cluj-napoca 2015 dust ii souvenir package",
-        ],
-    ),
-    (
-        "Souvenir Packages",
-        [
-            "esl one cologne 2015 train souvenir package",
-            "esl one cologne 2015 cache souvenir package",
-            "esl one cologne 2015 overpass souvenir package",
-            "esl one cologne 2015 cobblestone souvenir package",
-            "esl one cologne 2015 inferno souvenir package",
-            "esl one cologne 2015 mirage souvenir package",
-            "esl one cologne 2015 dust ii souvenir package",
-            "esl one katowice 2015 overpass souvenir package",
-            "esl one katowice 2015 cobblestone souvenir package",
-            "esl one katowice 2015 cache souvenir package",
-            "esl one katowice 2015 nuke souvenir package",
-            "esl one katowice 2015 mirage souvenir package",
-            "esl one katowice 2015 inferno souvenir package",
-            "esl one katowice 2015 dust ii souvenir package",
-        ],
-    ),
-    (
-        "Souvenir Packages",
-        [
-            "dreamhack 2014 overpass souvenir package",
-            "dreamhack 2014 cobblestone souvenir package",
-            "dreamhack 2014 cache souvenir package",
-            "dreamhack 2014 nuke souvenir package",
-            "dreamhack 2014 mirage souvenir package",
-            "dreamhack 2014 inferno souvenir package",
-            "dreamhack 2014 dust ii souvenir package",
-            "esl one cologne 2014 overpass souvenir package",
-            "esl one cologne 2014 cobblestone souvenir package",
-            "esl one cologne 2014 cache souvenir package",
-            "esl one cologne 2014 nuke souvenir package",
-            "esl one cologne 2014 mirage souvenir package",
-            "esl one cologne 2014 inferno souvenir package",
-            "esl one cologne 2014 dust ii souvenir package",
-        ],
-    ),
-]
+all_pages = case_pages + souvenir_package_pages + sticker_capsule_pages
 
-all_containers = cases + souvenir_packages
-
-select_values = [all_containers, cases, souvenir_packages]
+select_values = [all_pages, case_pages, souvenir_package_pages, sticker_capsule_pages]
 select_images = [CASE, CASE, SOUVENIR_PACKAGE, STICKER_CAPSULE]
 
 prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
@@ -236,13 +62,13 @@ async def containers(ctx: Context, page: int = 1):
     else:
         lang = user_data["lang"]
 
-    if page <= 0 or page > len(all_containers):
+    if page <= 0 or page > len(all_pages):
         await msg_embed(ctx, get_locale_fm(lang, "invalid_page"))
         return
 
     page -= 1
 
-    container_page_data = all_containers
+    container_page_data = all_pages
 
     def get_embed(select_value: int = None):
         if select_value is None:

@@ -23,9 +23,13 @@ rarity_color_dict = {
     "consumer": 11584473,
     "industrial": 6199513,
     "milspec": 4942335,
+    "high": 4942335,
     "restricted": 8931327,
+    "remarkable": 8931327,
     "classified": 13839590,
+    "exotic": 13839590,
     "covert": 15420235,
+    "extraordinary": 15420235,
     "contraband": 14986809,
 }
 
@@ -33,9 +37,13 @@ rarity_emoji_dict = {
     "consumer": CONSUMER_GRADE_EMOJI,
     "industrial": INDUSTRIAL_GRADE_EMOJI,
     "milspec": MILSPEC_EMOJI,
+    "high": MILSPEC_EMOJI,
     "restricted": RESTRICTED_EMOJI,
+    "remarkable": RESTRICTED_EMOJI,
     "classified": CLASSIFIED_EMOJI,
+    "exotic": CLASSIFIED_EMOJI,
     "covert": COVERT_EMOJI,
+    "extraordinary": COVERT_EMOJI,
     "contraband": CONTRABAND_EMOJI,
 }
 

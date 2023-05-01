@@ -2,6 +2,7 @@ import discord
 from discord.ext.commands import Context
 from src.util import database
 from src.lang.lang import get_locale_fm
+from src.util.item_func import get_item_embed
 from src.util.string_util import currency_str_format, get_closest_match
 from src.util.constants import conditions, rarity_color_dict
 from src.util.embed_func import msg_embed, msg_embed_response
@@ -138,84 +139,113 @@ async def container(ctx: Context, *args):
     view.add_item(next_button)
 
     def get_embed():
-        item = rarities[selected_rarity][item_index]
-        formatted_item_name = database.skin_data["no_wear_skins"][item][
-            "formatted_name"
-        ]
+        unformatted_name = rarities[selected_rarity][item_index]
 
-        best_condition_index = database.skin_data["no_wear_skins"][item][
-            "best_condition_index"
-        ]
-        worst_condition_index = database.skin_data["no_wear_skins"][item][
-            "worst_condition_index"
-        ]
+        match container_data["type"]:
+            case "case" | "souvenir_package":
+                # figure out price ranges for the item
+                formatted_item_name = database.skin_data["no_wear_skins"][
+                    unformatted_name
+                ]["formatted_name"]
 
-        best_condition = conditions[best_condition_index].lower()
-        item_data = database.skin_data["skins"][best_condition + " " + item]
-        rarity = item_data["rarity"]
-        rarity_color = rarity_color_dict[rarity]
+                best_condition_index = database.skin_data["no_wear_skins"][
+                    unformatted_name
+                ]["best_condition_index"]
+                worst_condition_index = database.skin_data["no_wear_skins"][
+                    unformatted_name
+                ]["worst_condition_index"]
+                best_condition = conditions[best_condition_index].lower()
+                item_data = database.skin_data["skins"][
+                    best_condition + " " + unformatted_name
+                ]
+                rarity = item_data["rarity"]
+                rarity_color = rarity_color_dict[rarity]
 
-        # price range string generation
-        has_stattrak_variant = item_data["has_stattrak_variant"]
-        has_souvenir_variant = item_data["has_souvenir_variant"]
+                e = discord.Embed(
+                    title=f"{container_name} - {container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})",
+                    color=rarity_color,
+                )
 
-        has_modifier_price = False
+                # price range string generation
+                has_stattrak_variant = item_data["has_stattrak_variant"]
+                has_souvenir_variant = item_data["has_souvenir_variant"]
 
-        min_price = float("inf")
-        max_price = 0
-        for i in range(best_condition_index, worst_condition_index + 1):
-            price = database.skin_data["skins"][conditions[i].lower() + " " + item][
-                "price"
-            ]
-            if price < min_price:
-                min_price = price
-            if price > max_price:
-                max_price = price
+                has_modifier_price = False
 
-        if has_stattrak_variant:
-            has_modifier_price = True
-            modifier = "stattrak "
-        elif has_souvenir_variant:
-            has_modifier_price = True
-            modifier = "souvenir "
+                min_price = float("inf")
+                max_price = 0
+                for i in range(best_condition_index, worst_condition_index + 1):
+                    price = database.skin_data["skins"][
+                        conditions[i].lower() + " " + unformatted_name
+                    ]["price"]
+                    if price < min_price:
+                        min_price = price
+                    if price > max_price:
+                        max_price = price
 
-        if has_modifier_price:
-            min_modifier_price = float("inf")
-            max_modifier_price = 0.0
-            for i in range(best_condition_index, worst_condition_index + 1):
-                price = database.skin_data["skins"][
-                    modifier + conditions[i].lower() + " " + item
-                ]["price"]
-                if price < min_modifier_price:
-                    min_modifier_price = price
-                if price > max_modifier_price:
-                    max_modifier_price = price
+                if has_stattrak_variant:
+                    has_modifier_price = True
+                    modifier = "stattrak "
+                elif has_souvenir_variant:
+                    has_modifier_price = True
+                    modifier = "souvenir "
 
-        price_range_str = (
-            f"{currency_str_format(min_price)} - {currency_str_format(max_price)}"
-        )
-        if has_modifier_price:
-            price_range_str += f"\n{currency_str_format(min_modifier_price)} - {currency_str_format(max_modifier_price)}"
+                if has_modifier_price:
+                    min_modifier_price = float("inf")
+                    max_modifier_price = 0.0
+                    for i in range(best_condition_index, worst_condition_index + 1):
+                        price = database.skin_data["skins"][
+                            modifier + conditions[i].lower() + " " + unformatted_name
+                        ]["price"]
+                        if price < min_modifier_price:
+                            min_modifier_price = price
+                        if price > max_modifier_price:
+                            max_modifier_price = price
 
-        # min max float
-        min_float = "{:.2f}".format(item_data["min_float"])
-        max_float = "{:.2f}".format(item_data["max_float"])
+                price_range_str = f"{currency_str_format(min_price)} - {currency_str_format(max_price)}"
+                if has_modifier_price:
+                    price_range_str += f"\n{currency_str_format(min_modifier_price)} - {currency_str_format(max_modifier_price)}"
 
-        image_url = item_data["image_url"]
+                # min max float
+                min_float = "{:.2f}".format(item_data["min_float"])
+                max_float = "{:.2f}".format(item_data["max_float"])
 
-        e = discord.Embed(
-            title=f"{container_name} - {container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})",
-            color=rarity_color,
-        )
-        e.add_field(name=get_locale_fm(lang, "price_range"), value=price_range_str)
-        e.add_field(
-            name=get_locale_fm(lang, "rarity"), value=get_locale_fm(lang, rarity)
-        )
-        e.add_field(
-            name=get_locale_fm(lang, "float_range"), value=f"{min_float} - {max_float}"
-        )
-        e.set_image(url=image_url)
-        e.set_thumbnail(url=container_image_url)
-        return e
+                image_url = item_data["image_url"]
+
+                e.add_field(
+                    name=get_locale_fm(lang, "price_range"), value=price_range_str
+                )
+                e.add_field(
+                    name=get_locale_fm(lang, "rarity"),
+                    value=get_locale_fm(lang, rarity),
+                )
+                e.add_field(
+                    name=get_locale_fm(lang, "float_range"),
+                    value=f"{min_float} - {max_float}",
+                )
+                e.set_image(url=image_url)
+                e.set_thumbnail(url=container_image_url)
+
+                return e
+            case "sticker_capsule":
+                item_data = database.skin_data["skins"][unformatted_name]
+                formatted_item_name = item_data["formatted_name"]
+                image_url = item_data["image_url"]
+                rarity = item_data["rarity"]
+                rarity_color = rarity_color_dict[rarity]
+                e = discord.Embed(
+                    title=f"{container_name} - {container_price}\n{formatted_item_name} - ({item_index+1}/{rarity_len})",
+                    color=rarity_color,
+                )
+                e.set_image(url=image_url)
+                e.add_field(
+                    name=get_locale_fm(lang, "rarity"),
+                    value=get_locale_fm(lang, rarity),
+                )
+                e.add_field(
+                    name=get_locale_fm(lang, "market_value"),
+                    value=currency_str_format(item_data["price"]),
+                )
+                return e
 
     msg = await ctx.send(embed=get_embed(), view=view)

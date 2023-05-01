@@ -10,7 +10,7 @@ from src.util.string_util import (
     get_closest_match,
     get_inspect_link_3D,
 )
-from src.util.skin_func import gen_item
+from src.util.item_func import gen_item, get_item_embed
 from src.util.embed_func import msg_embed, msg_embed_response
 
 
@@ -41,16 +41,11 @@ async def open(ctx: Context, *args):
             container_data = database.containers[closest_match]
             await msg_embed(
                 ctx,
-                get_locale_fm(
-                    lang,
-                    "container.not_found_suggest",
-                    container_data["formatted_name"],
-                ),
+                get_locale_fm(lang, "container.not_found_suggest", closest_match),
             )
         return
 
     # check user has enough balance for case
-
     if user_data["balance"] < container_price:
         await msg_embed(ctx, get_locale_fm(lang, "not_enough_funds"))
         return
@@ -64,18 +59,21 @@ async def open(ctx: Context, *args):
             break
 
     skin_pool = container_data["items"][rarity]
-    unformatted_name, float_val = gen_item(
-        random.choice(skin_pool), container_data["type"]
-    )
+    chosen_item = random.choice(skin_pool)
 
-    skin_data = database.skin_data["skins"][unformatted_name]
+    # get the item dict
+    item = gen_item(chosen_item, container_data["type"])
 
-    formatted_name = skin_data["formatted_name"]
-    image_url = skin_data["image_url"]
-    skin_rarity = skin_data["rarity"]
-    color = rarity_color_dict[skin_rarity]
-    skin_price = skin_data["price"]
-    inspect_url = get_inspect_link_3D(skin_data["inspect_url"])
+    item_data = database.skin_data["skins"][item["name"]]
+    e = get_item_embed(lang, item_data)
+
+    # if its a weapon, add float field
+    if container_data["type"] in ["case", "souvenir_package"]:
+        e.add_field(name=get_locale_fm(lang, "float"), value=str(item["float"]))
+
+    e.set_footer(text=get_locale_fm(lang, "open.embed.footer"))
+
+    interacted_with = False
 
     # decrement balance, increment total spent, increase total return and containers opened
     database.user_data.update_one(
@@ -84,35 +82,17 @@ async def open(ctx: Context, *args):
             "$inc": {
                 "balance": -(container_price),
                 "stats.total_spent": container_price,
-                "stats.total_return": skin_price,
+                "stats.total_return": item_data["price"],
                 "stats.containers_opened": 1,
             }
         },
     )
 
-    # create embed to show user
-    e = discord.Embed(
-        title=formatted_name,
-        color=color,
-        description=get_locale_fm(lang, "inspect_in_3d", inspect_url),
-    )
-    e.add_field(
-        name=get_locale_fm(lang, "market_value"), value=currency_str_format(skin_price)
-    )
-    e.add_field(
-        name=get_locale_fm(lang, "rarity"), value=get_locale_fm(lang, skin_rarity)
-    )
-    e.add_field(name=get_locale_fm(lang, "float"), value=str(float_val))
-    e.set_image(url=image_url)
-    e.set_footer(text=get_locale_fm(lang, "open.embed.footer"))
-
-    interacted_with = False
-
     # callbacks
     async def sell_item():
         # change color to dark gray, remove footer, change balance to have balance of skin
         database.user_data.update_one(
-            {"_id": ctx.author.id}, {"$inc": {"balance": skin_price}}
+            {"_id": ctx.author.id}, {"$inc": {"balance": item_data["price"]}}
         )
 
         e.colour = discord.colour.Color.dark_gray()
@@ -155,7 +135,7 @@ async def open(ctx: Context, *args):
                 "$expr": {"$lt": ["$inventory_size", "$inventory_max_capacity"]},
             }
             update = {
-                "$push": {"inventory": {"name": unformatted_name, "float": float_val}},
+                "$push": {"inventory": item},
                 "$inc": {"inventory_size": 1},
             }
 

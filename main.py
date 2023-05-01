@@ -196,7 +196,7 @@ async def on_guild_join(guild: discord.Guild):
     ):
         channel = guild.system_channel
         await channel.send(embed=welcome_embed("en", bot_instance))
-    else:
+    else: 
         for ch in guild.text_channels:
             if ch.permissions_for(guild.me).send_messages:
                 channel = ch
@@ -222,4 +222,3 @@ async def on_message(message: discord.Message):
 
 if __name__ == "__main__":
     run_bot()
- 

@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from functools import partial
 import requests
 import concurrent.futures
-from re import sub
+import re
 from src.util.string_util import remove_skin_name_formatting
 from src.util.constants import case_wear_ranges_lower, MAX_THREADS, HTTP_HEADERS
 from src.util import database
@@ -212,10 +212,10 @@ def scrape_skin_link(result, container_data, skin_link):
         price = NO_PRICE_FOUND
 
         if steam_price != "":
-            price_str = sub(r"[^\d.]", "", steam_price)
+            price_str = re.sub(r"[^\d.]", "", steam_price)
             price = int(Decimal(price_str) * 100)
         elif bitskins_price != "":
-            price_str = sub(r"[^\d.]", "", bitskins_price)
+            price_str = re.sub(r"[^\d.]", "", bitskins_price)
             price = int(Decimal(price_str) * 100)
 
         # if a vanilla knife, create 5 identical entries with different wear ratings in their names (circumvents difficulty later for vanilla knives)
@@ -234,6 +234,7 @@ def scrape_skin_link(result, container_data, skin_link):
             ]:
                 result["skins"][condition.lower() + " " + unformatted_name] = {
                     "formatted_name": condition + " " + formatted_name,
+                    "item_type": "weapon",
                     "no_wear_formatted_name": formatted_name,
                     "price": price,
                     "rarity": rarity,
@@ -251,6 +252,7 @@ def scrape_skin_link(result, container_data, skin_link):
             # non wear version
             result["no_wear_skins"][unformatted_name] = {
                 "formatted_name": formatted_name,
+                "item_type": "weapon",
                 "rarity": rarity,
                 "type": weapon_type,
                 "min_float": min_float,
@@ -267,6 +269,7 @@ def scrape_skin_link(result, container_data, skin_link):
 
             result["skins"][row_unformatted_condition + " " + unformatted_name] = {
                 "formatted_name": row_formatted_condition + " " + formatted_name,
+                "item_type": "weapon",
                 "no_wear_formatted_name": formatted_name,
                 "price": price,
                 "rarity": rarity,
@@ -284,6 +287,7 @@ def scrape_skin_link(result, container_data, skin_link):
             # add the non wear versions
             result["no_wear_skins"][unformatted_name] = {
                 "formatted_name": formatted_name,
+                "item_type": "weapon",
                 "rarity": rarity,
                 "type": weapon_type,
                 "min_float": min_float,
@@ -359,6 +363,66 @@ def scrape_skin_link(result, container_data, skin_link):
                 ] = inspect_url
 
 
+sticker_links = [
+    f"https://csgostash.com/stickers/regular?page={i+1}" for i in range(14)
+] + [f"https://csgostash.com/stickers/tournament?page={i+1}" for i in range(95)]
+sticker_modifiers = ["foil", "gold", "holo", "glitter", "lenticular"]
+
+
+def scrape_sticker_link(result, sticker_link):
+    # get html source
+    r = requests.get(sticker_link, headers=HTTP_HEADERS)
+    soup = BeautifulSoup(r.content, "html.parser")
+
+    result_boxes = soup.select("div.well.result-box.nomargin")
+    for result_box in result_boxes:
+        h3 = result_box.find("h3")
+
+        if h3 is None:
+            continue
+
+        formatted_sticker_name = h3.text.strip()
+        formatted_tournament_name = result_box.find("h4")
+
+        any((modifier := mod) in formatted_sticker_name for mod in sticker_modifiers)
+
+        if formatted_tournament_name is not None:
+            formatted_tournament_name = formatted_tournament_name.find("a").text.strip()
+            formatted_sticker_name = (
+                f"{formatted_sticker_name} | {formatted_tournament_name}"
+            )
+
+        unformatted_sticker_name = remove_skin_name_formatting(formatted_sticker_name)
+
+        price_div = result_box.find("div", {"class": "price"})
+        price_str = price_div.find("a").text.strip()
+
+        if price_str == "No Recent Price":
+            price = NO_PRICE_FOUND
+        else:
+            price_str = re.sub(r"[^\d.]", "", price_str)
+            price = int(Decimal(price_str) * 100)
+
+        image_url = result_box.find("img")["src"]
+
+        rarity = (
+            result_box.find("div", {"class": "quality"})
+            .text.split(" ")[0]
+            .lower()
+            .strip()
+        )
+
+        result["skins"][unformatted_sticker_name] = {
+            "item_type": "sticker",
+            "formatted_name": formatted_sticker_name,
+            "modifier": modifier,
+            "price": price,
+            "rarity": rarity,
+            "image_url": image_url,
+            "can_tradeup": False,
+        }
+
+
 def csgostash_scrape(scrape_containers: bool = False) -> dict:
     skin_links = []
     result = {"_id": "skin-data", "skins": {}, "no_wear_skins": {}}
@@ -373,11 +437,16 @@ def csgostash_scrape(scrape_containers: bool = False) -> dict:
 
     print("Scraping skin data...")
     start = timer()
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_endpoint, skin_links), endpoints)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_skin_link, result, all_container_data), skin_links)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
+        executor.map(partial(scrape_sticker_link, result), sticker_links)
+
     end = timer()
     print(f"Executed in {timedelta(seconds=end-start)}")
     return result

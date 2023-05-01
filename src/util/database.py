@@ -12,6 +12,7 @@ from src.scripts.container_scraper import (
     case_scrape,
     souvenir_package_scrape,
     collection_scrape,
+    sticker_capsule_scrape,
 )
 
 # MongoDB collections
@@ -102,7 +103,6 @@ def init_collections():
     # load the csgo bot database
     db = mongo_client["csgo-case-bot"]
     fs = GridFS(db)
-    fs.put(b"bruh!!")
 
     # load collections
     user_data = db["user-data"]
@@ -137,7 +137,10 @@ def load_data():
     skin_data_hl = {
         key: value
         for key, value in skin_data["skins"].items()
-        if value["type"] not in ["Gloves", "Knife"] or value["price"] == NO_PRICE_FOUND
+        if value["item_type"] == "weapon"
+        and (
+            value["type"] not in ["Gloves", "Knife"] or value["price"] == NO_PRICE_FOUND
+        )
     }
 
     # word list
@@ -160,8 +163,14 @@ def scrape_container_data():
     case_data = case_scrape()
     collections = collection_scrape()
     souvenir_data = souvenir_package_scrape(collections)
+    sticker_capsule_data = sticker_capsule_scrape()
 
-    containers = {"_id": "container-data", **case_data, **souvenir_data}
+    containers = {
+        "_id": "container-data",
+        **case_data,
+        **souvenir_data,
+        **sticker_capsule_data,
+    }
     cases_and_collections = {
         "_id": "cases-and-collections-data",
         **case_data,
