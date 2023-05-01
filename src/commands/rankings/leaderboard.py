@@ -36,8 +36,6 @@ async def leaderboard(ctx: Context, type: str, page: int):
             lang, "leaderboard.embed.local.title", ctx.guild.name, start + 1, end
         )
 
-    print(data)
-
     if len(data) == 0:
         await msg_embed(ctx, get_locale_fm(lang, "invalid_page"))
         return
