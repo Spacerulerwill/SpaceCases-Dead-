@@ -14,18 +14,19 @@ from src.scripts.container_scraper import (
     collection_scrape,
     sticker_capsule_scrape,
 )
+from discord.ext.commands.bot import Bot
 
 # MongoDB collections
 user_data: Collection
 trade_requests: Collection
 guild_data: Collection
+leaderboards: Collection
 skin_data_collection: Collection
 fs: GridFS
 
 mongo_client: pymongo.MongoClient
 
 # Bot data
-leaderboard = []  # user leaderboard
 rooms = {}
 wordle_games = {}
 skin_data = {}
@@ -36,14 +37,13 @@ cases_and_collections = {}  # just cases and collections
 word_list = []
 
 
-def get_leaderboard():
+def get_leaderboard(bot: Bot):
     """Regenerate the leaderboard"""
-    global leaderboard
-
     start = timer()
     all_users_data = user_data.find({}).batch_size(4)
 
-    leaderboard = sorted(
+    # global leaderboard
+    global_ldb = sorted(
         [
             (
                 user_data["_id"],
@@ -59,14 +59,27 @@ def get_leaderboard():
         key=lambda x: x[1],
         reverse=True,
     )
+    leaderboards.replace_one({"_id": "global"}, {"data": global_ldb}, upsert=True)
+    end = timer()
+    print(f"Generated global leaderboard in {timedelta(seconds=end-start)}")
+
+    # local server leaderboards
+    start = timer()
+    for guild in bot.guilds:
+        id_list = [member.id for member in guild.members]
+        local_leaderboard = [(_id, val) for _id, val in global_ldb if _id in id_list]
+        leaderboards.replace_one({"_id": guild.id}, {"data": local_leaderboard}, upsert=True)
     end = timer()
 
-    print(f"Generated leaderboard in {timedelta(seconds=end-start)}")
+    print(f"Generated local leaderboards in {timedelta(seconds=end-start)}")
 
+
+     
+            
 
 # setup database and data
 def init_collections():
-    global user_data, trade_requests, skin_data_collection, mongo_client, guild_data, word_list
+    global user_data, trade_requests, skin_data_collection, mongo_client, leaderboards, guild_data, word_list
 
     localhost = False
     # try read mongodb database password from database_pass.txt, if fails read from environment variable
@@ -110,6 +123,7 @@ def init_collections():
     guild_data = db["guild-data"]
     skin_data_collection = db["skin-data"]
     patch_notes = db["patch-notes"]
+    leaderboards = db["leaderboards"]
 
     # create indexes
     trade_requests.create_index(

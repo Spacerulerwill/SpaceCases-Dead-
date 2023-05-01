@@ -142,9 +142,11 @@ en_data = {
     "tradeup.error.invalid_items": "Not all items you have chosen can be traded up!",
     "tradeup.footer": "Contract signing will be cancelled after 30 seconds",
     # RANKINGS COG
-    "leaderboard.embed.title": "Leaderboard - #%s - %s",
+    "leaderboard.embed.global.title": "Global Leaderboard - #%s - %s",
+    "leaderboard.embed.local.title": "%s's Leaderboard - #%s - %s",
     "leaderboard.footer": "Leaderboard updates every hour",
-    "ranking.text": "%s is at position **#%s** on the leaderboard",
+    "ranking.global.text": "%s is at position **#%s** on the global leaderboard",
+    "ranking.local.text": "%s is at position **#%s** in %s",
     # GAMES COG
     "greater_than_0": "You must bet more than **$0**!",
     "cannot_be_negative": "You cannot bet negative!",
@@ -323,12 +325,19 @@ en_data = {
     "leaderboard.description": "View the global leaderboard",
     "leaderboard.usage": {
         "Syntax": f"`{PREFIX}leaderboard <page>`",
-        "Arguments": "**OPTIONAL** `page`: page of the leaderboard",
+        "Arguments": """**OPTIONAL** `type`: which type of leaderboard to view:
+        • global - **DEFAULT**
+        • local
+        **OPTIONAL** `page`: page of the leaderboard
+        """,
     },
     "ranking.description": "View a user's ranking on the global leaderboard",
     "ranking.usage": {
         "Syntax": f"`{PREFIX}ranking <user>`",
-        "Arguments": "**OPTIONAL** `user`: user to check ranking of",
+        "Arguments": """**OPTIONAL** `type`: which type of leaderboard to be ranked on:
+        • global - **DEFAULT**
+        • local
+        **OPTIONAL** `user`: user to check ranking of""",
     },
     "inventory.description": "View a user's inventory",
     "inventory.usage": {

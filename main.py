@@ -104,7 +104,7 @@ async def bot_status_loop():
 # loop that updates the leaderboard every hour
 @tasks.loop(hours=1)
 async def leaderboard_loop():
-    database.get_leaderboard()
+    database.get_leaderboard(bot_instance)
 
 
 # handle command errors with an appriopriate error messages
