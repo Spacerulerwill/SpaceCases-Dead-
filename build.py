@@ -41,6 +41,7 @@ def script_run():
     trade_requests = try_create_collection(db, "trade-requests")
     skin_data_collection = try_create_collection(db, "skin-data")
     patch_notes = try_create_collection(db, "patch-notes")
+    leaderboards = try_create_collection(db, "leaderboards")
 
     # create indexes
     trade_requests.create_index(
