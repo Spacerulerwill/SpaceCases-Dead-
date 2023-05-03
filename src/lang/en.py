@@ -1,8 +1,6 @@
-from src.util.constants import PREFIX
-from src.util.constants import KEY_PRICE
+from src.util.constants import PREFIX, KEY_PRICE, HL_MAX_GUESS, HL_MIN_GUESS, HL_PRICE
 from src.lang.lang import supported_languages_str
 from src.util.string_util import currency_str_format
-from src.commands.games.higher_lower import HL_MAX_GUESS, HL_MIN_GUESS, HL_PRICE
 
 KEY_PRICE_STR = currency_str_format(KEY_PRICE)
 HL_PRICE_STR = currency_str_format(HL_PRICE)

@@ -9,10 +9,12 @@ import concurrent.futures
 import re
 from src.util.string_util import remove_skin_name_formatting
 from src.util.constants import case_wear_ranges_lower, MAX_THREADS, HTTP_HEADERS
+from src.util.decorators import ProgressBar
 from src.util import database
 from decimal import Decimal
 from timeit import default_timer as timer
 from datetime import timedelta
+import threading
 
 NO_PRICE_FOUND = 300000
 
@@ -106,9 +108,11 @@ condition_index_dict = {
     "souvenir battle scarred": 4,
 }
 
+lock = threading.Lock()
 
 # scraping a weapon endpoint (all the skins for a weapon) - adds them to a skin_links list
 def scrape_endpoint(skin_links, endpoint):
+    global scraped, pb
     r = requests.get(f"https://csgostash.com/{endpoint}", headers=HTTP_HEADERS)
     soup = BeautifulSoup(r.content, "html.parser")
 
@@ -119,8 +123,13 @@ def scrape_endpoint(skin_links, endpoint):
     ]
     skin_links += details_links
 
+    with lock:
+        scraped += 1
+        pb.set_progress(scraped / len(endpoint))
+        print(pb, end="\r")
 
 def scrape_skin_link(result, container_data, skin_link):
+    global scraped, pb
     # get html source
     r = requests.get(skin_link, headers=HTTP_HEADERS)
     soup = BeautifulSoup(r.content, "html.parser")
@@ -361,7 +370,10 @@ def scrape_skin_link(result, container_data, skin_link):
                 result["skins"]["souvenir " + wear + unformatted_name][
                     "inspect_url"
                 ] = inspect_url
-
+    with lock:
+        scraped += 1
+        pb.set_progress(scraped / len(skin_links))
+        print(pb, end="\r")
 
 sticker_links = [
     f"https://csgostash.com/stickers/regular?page={i+1}" for i in range(14)
@@ -370,6 +382,7 @@ sticker_modifiers = ["foil", "gold", "holo", "glitter", "lenticular"]
 
 
 def scrape_sticker_link(result, sticker_link):
+    global scraped, pb
     # get html source
     r = requests.get(sticker_link, headers=HTTP_HEADERS)
     soup = BeautifulSoup(r.content, "html.parser")
@@ -421,9 +434,19 @@ def scrape_sticker_link(result, sticker_link):
             "image_url": image_url,
             "can_tradeup": False,
         }
+    with lock:
+        scraped += 1
+        pb.set_progress(scraped / len(sticker_links))
+        print(pb, end="\r")
 
 
+scraped = 0
+pb = ProgressBar()
+
+skin_links = []
 def csgostash_scrape(scrape_containers: bool = False) -> dict:
+    global scraped, pb, skin_links
+
     skin_links = []
     result = {"_id": "skin-data", "skins": {}, "no_wear_skins": {}}
 
@@ -435,18 +458,31 @@ def csgostash_scrape(scrape_containers: bool = False) -> dict:
         **database.containers,
     }  # we need the collections and cases data, not the souvenir packages and cases data.
 
-    print("Scraping skin data...")
     start = timer()
 
+    scraped = 0
+    pb.set_progress(0)
+    pb.set_title("Gathering weapon skins...")
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_endpoint, skin_links), endpoints)
+    pb.set_progress(1)
+    print(pb)
 
+    scraped = 0
+    pb.set_progress(0)
+    pb.set_title("Scraping skin data...")
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_skin_link, result, all_container_data), skin_links)
+    pb.set_progress(1)
+    print(pb)
 
+    scraped = 0
+    pb.set_progress(0)
+    pb.set_title("Scraping sticker data...")
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_sticker_link, result), sticker_links)
-
+    pb.set_progress(1)
+    print(pb)
     end = timer()
     print(f"Executed in {timedelta(seconds=end-start)}")
     return result

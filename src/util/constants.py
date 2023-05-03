@@ -75,3 +75,13 @@ trade_up_rarity_dict = {
 case_wear_ranges_lower = {4: 0.45, 3: 0.38, 2: 0.15, 1: 0.07, 0: 0.00}
 # index of each condition in above list mapped to the upper bound of their ranges
 case_wear_ranges_upper = {4: 1.0, 3: 0.45, 2: 0.38, 1: 0.15, 0: 0.07}
+
+# higher lower game constants
+COSTS_MORE = True
+COSTS_LESS = False
+
+HL_MIN_GUESS = 5
+HL_MAX_GUESS = 10
+
+HL_PRICE = 250
+HL_REWARD = lambda difficulty: ((difficulty - HL_MIN_GUESS) * 250) + HL_PRICE + 750

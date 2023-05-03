@@ -223,10 +223,11 @@ async def on_message(message: discord.Message):
         task.cancel()
         room_data[1] = asyncio.create_task(delete_room(message.author.id, room))
 
-    # process commands as usual - lower case message before sending to make case insensitive
+    # process commands as usua l - lower case message before sending to make case insensitive
     message.content = message.content.lower()
     await bot_instance.process_commands(message)
 
 
 if __name__ == "__main__":
-    run_bot()
+    database.init_collections()
+    database.scrape_skin_data(scrape_containers=True)

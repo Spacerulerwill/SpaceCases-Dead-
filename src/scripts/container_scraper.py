@@ -3,6 +3,7 @@ Webscraper script used to scrape all the containers items and container prices
 """
 
 import re
+import threading
 from bs4 import BeautifulSoup
 import concurrent.futures
 import requests
@@ -13,9 +14,12 @@ from re import sub
 from decimal import Decimal
 from timeit import default_timer as timer
 from datetime import timedelta
+from src.util.decorators import ProgressBar
 
 NO_PRICE_FOUND = 300000
 NO_PRICE_FOUND_STICKER_CAPSULE = 100000
+
+lock = threading.Lock()
 
 collection_endpoints = [
     "https://csgostash.com/collection/The+Vertigo+Collection",
@@ -321,6 +325,8 @@ def calculate_container_odds(items_dict: dict) -> dict:
 
 
 def scrape_container(result, container_link):
+    global scraped, pb
+
     container_data = {
         "type": "case",
         "items": {
@@ -419,8 +425,14 @@ def scrape_container(result, container_link):
     container_data["odds"] = calculate_container_odds(container_data["items"])
     result[remove_skin_name_formatting(container_name)] = container_data
 
+    with lock:
+        scraped += 1
+        pb.set_progress(scraped/len(container_endpoints))
+        print(pb, end="\r")
+
 
 def scrape_collection(collections, collection_link):
+    global scraped, pb
     collection_data = {
         "items": {
             "consumer": [],
@@ -459,8 +471,15 @@ def scrape_collection(collections, collection_link):
 
     collections[collection_name] = collection_data
 
+    with lock:
+        scraped += 1
+        pb.set_progress(scraped/len(collection_endpoints))
+        print(pb, end="\r")
+
 
 def scrape_souvenir_package(collections: dict, souvenir_data: dict, link: str):
+    global scraped, pb
+
     html = requests.get(link, headers=HTTP_HEADERS)
     soup = BeautifulSoup(html.content, "html.parser")
 
@@ -500,6 +519,11 @@ def scrape_souvenir_package(collections: dict, souvenir_data: dict, link: str):
         }
 
         souvenir_data[unformatted_pkg_name] = pkg_data
+    
+        with lock:
+            scraped += 1
+            pb.set_progress(scraped/len(souvenir_package_endpoints))
+            print(pb, end="\r")
 
 
 sticker_modifiers = ["foil", "gold", "holo", "glitter", "lenticular"]
@@ -541,6 +565,7 @@ def get_items_from_sticker_soup(
 
 
 def scrape_sticker_capsule(sticker_capsule_data: dict, link: str):
+    global scraped, pb
     try:
         html = requests.get(link, headers=HTTP_HEADERS)
         soup = BeautifulSoup(html.content, "html.parser")
@@ -606,30 +631,45 @@ def scrape_sticker_capsule(sticker_capsule_data: dict, link: str):
             "odds": calculate_container_odds(items_dict),
         }
 
+        with lock:
+            scraped += 1
+            pb.set_progress(scraped/len(sticker_capsule_endpoints))
+            print(pb, end="\r")
     except Exception as e:
         pass
         # print(e)
 
+scraped = 0
+pb = ProgressBar()
 
 def collection_scrape() -> dict:
+    global scraped, pb
+    scraped = 0
+    pb.set_progress(0)
+    pb.set_title("Scraping collections...")
+
     # scrape collections
     start = timer()
 
-    print("Scraping collection data...")
     collections = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_collection, collections), collection_endpoints)
 
     end = timer()
+    print(pb)
     print(f"Executed in {timedelta(seconds=end-start)}")
     return collections
 
 
 def souvenir_package_scrape(collections: dict) -> dict:
+    global pb, scraped
+    scraped = 0
+    pb.set_progress(0)
+    pb.set_title("Scraping souvenir packages...")
+
     start = timer()
 
     # scrape souvenir packages
-    print("Scraping souvenir packages...")
     souvenir_data = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(
@@ -638,31 +678,41 @@ def souvenir_package_scrape(collections: dict) -> dict:
         )
 
     end = timer()
+    print(pb)
     print(f"Executed in {timedelta(seconds=end-start)}")
 
     return souvenir_data
 
-
 def case_scrape() -> dict:
+    global pb, scraped
+    scraped = 0
+    pb.set_progress(0)
+    pb.set_title("Scraping case data...")
+
     start = timer()
 
     # scrape containers
-    print("Scraping case data...")
+    print(pb, end="\r")
     case_data = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_container, case_data), container_endpoints)
-
+    
     end = timer()
+    print(pb)
     print(f"Executed in {timedelta(seconds=end-start)}")
 
     return case_data
 
 
 def sticker_capsule_scrape() -> dict:
+    global pb, scraped
+    scraped =0
+    pb.set_progress(0)
+    pb.set_title("Scraping sticker capsules...")
+
     start = timer()
 
     # scrape containers
-    print("Scraping sticker capsules data...")
     sticker_capsule_data = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(
@@ -671,6 +721,7 @@ def sticker_capsule_scrape() -> dict:
         )
 
     end = timer()
+    print(pb)
     print(f"Executed in {timedelta(seconds=end-start)}")
 
     return sticker_capsule_data

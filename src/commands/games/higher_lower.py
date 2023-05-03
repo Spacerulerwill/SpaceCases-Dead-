@@ -6,18 +6,8 @@ from discord.ext.commands import Context
 from src.util.embed_func import msg_embed, msg_embed_response
 from src.util.decorators import requires
 from src.util.string_util import currency_str_format
-from src.util.constants import conditions
+from src.util.constants import conditions, COSTS_MORE, COSTS_LESS, HL_MIN_GUESS, HL_MAX_GUESS, HL_PRICE, HL_REWARD
 from src.util import database
-
-COSTS_MORE = True
-COSTS_LESS = False
-
-HL_MIN_GUESS = 5
-HL_MAX_GUESS = 10
-
-HL_PRICE = 250
-HL_REWARD = lambda difficulty: ((difficulty - HL_MIN_GUESS) * 250) + HL_PRICE + 750
-
 
 @requires(users_registered=True)
 async def higher_lower(ctx: Context, difficulty: int):
