@@ -229,5 +229,4 @@ async def on_message(message: discord.Message):
 
 
 if __name__ == "__main__":
-    database.init_collections()
-    database.scrape_skin_data(scrape_containers=True)
+    run_bot()

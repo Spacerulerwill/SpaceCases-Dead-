@@ -15,6 +15,7 @@ from decimal import Decimal
 from timeit import default_timer as timer
 from datetime import timedelta
 from src.util.decorators import ProgressBar
+import traceback
 
 NO_PRICE_FOUND = 300000
 NO_PRICE_FOUND_STICKER_CAPSULE = 100000
@@ -100,6 +101,7 @@ container_endpoints = [
     "https://csgostash.com/case/207/Spectrum-Case",
     "https://csgostash.com/case/220/Spectrum-2-Case",
     "https://csgostash.com/case/7/Winter-Offensive-Weapon-Case",
+    "https://csgostash.com/case/378/Anubis-Collection-Package"
 ]
 
 souvenir_package_endpoints = [
@@ -325,205 +327,226 @@ def calculate_container_odds(items_dict: dict) -> dict:
 
 
 def scrape_container(result, container_link):
-    global scraped, pb
+    try:
+        global scraped, pb
 
-    container_data = {
-        "type": "case",
-        "items": {
-            "consumer": [],
-            "industrial": [],
-            "milspec": [],
-            "restricted": [],
-            "classified": [],
-            "covert": [],
-            "rare items": [],
-        },
-        "all items": [],
-    }
+        container_data = {
+            "type": "case",
+            "items": {
+                "consumer": [],
+                "industrial": [],
+                "milspec": [],
+                "restricted": [],
+                "classified": [],
+                "covert": [],
+                "rare items": [],
+            },
+            "all items": [],
+        }
 
-    # get gun skins
-    container_skins = requests.get(container_link, headers=HTTP_HEADERS)
-    container_soup = BeautifulSoup(container_skins.content, "html.parser")
+        # get gun skins
+        container_skins = requests.get(container_link, headers=HTTP_HEADERS)
+        container_soup = BeautifulSoup(container_skins.content, "html.parser")
 
-    # container name and image url
-    container_name = (
-        container_soup.find("div", {"class": ["inline-middle collapsed-top-margin"]})
-        .find("h1")
-        .text
-    )
+        # container name and image url
+        container_name = (
+            container_soup.find("div", {"class": ["inline-middle collapsed-top-margin"]})
+            .find("h1")
+            .text
+        )
 
-    # remove punctuation
-    container_name = container_name.replace("&", "and")
-    container_name = sub("[^\w\s]", "", container_name)
+        # remove punctuation
+        container_name = container_name.replace("&", "and")
+        container_name = sub("[^\w\s]", "", container_name)
 
-    price_div = container_soup.find(
-        "div", {"class": ["btn-group", "content-header-container-btn"]}
-    )
-    container_price = price_div.find(
-        "a", {"class": ["btn", "btn-default", "market-button-item"]}
-    ).text
+        price_div = container_soup.find(
+            "div", {"class": ["btn-group", "content-header-container-btn"]}
+        )
+        container_price = price_div.find(
+            "a", {"class": ["btn", "btn-default", "market-button-item"]}
+        ).text
 
-    container_price = container_price.split(" ")[0]
-    container_price = sub(r"[^\d.]", "", container_price)
-    container_data["price"] = int(Decimal(container_price) * 100)
+        container_price = container_price.split(" ")[0]
+        container_price = sub(r"[^\d.]", "", container_price)
+        container_data["price"] = int(Decimal(container_price) * 100)
 
-    container_img_url = container_soup.find("a", {"class": "market-button-item"}).find(
-        "img"
-    )["src"]
+        container_img_url = container_soup.find("a", {"class": "market-button-item"}).find(
+            "img"
+        )["src"]
 
-    result_boxes = container_soup.find_all("div", {"class": "result-box"})
-    result_boxes.reverse()
+        result_boxes = container_soup.select("div.well.result-box.nomargin")
+        result_boxes.reverse()
 
-    rare_items_link = None
-
-    for result_box in result_boxes:
-        h3 = result_box.find("h3")
-
-        if h3 != None:
-            name = remove_skin_name_formatting(h3.text)
-
-            if "gloves" in name:
-                rare_items_link = container_link + "?Gloves=1"
-            elif "knives" in name:
-                rare_items_link = container_link + "?Knives=1"
-            else:
-                quality_div = result_box.find("div", {"class": "quality"})
-                quality = (
-                    quality_div["class"][1]
-                    .replace("color-", " ")
-                    .replace("-", "")
-                    .strip()
-                )
-                container_data["items"][quality].append(name)
-                container_data["all items"].append(name)
-
-    # open rare items skins and get them too if there are any
-    if rare_items_link != None:
-        rare_items_skins = requests.get(rare_items_link, headers=HTTP_HEADERS)
-        rare_items_soup = BeautifulSoup(rare_items_skins.content, "html.parser")
-
-        result_boxes = rare_items_soup.find_all("div", {"class": "result-box"})
+        rare_items_link = None
 
         for result_box in result_boxes:
             h3 = result_box.find("h3")
-            if h3 != None and "Case Skins" not in h3.text:
-                unformatted_name = remove_skin_name_formatting(h3.text)
-                if (
-                    container_name not in unformatted_name
-                ):  # avoids the link back to the cases original skins
-                    container_data["items"]["rare items"].append(unformatted_name)
-                    container_data["all items"].append(unformatted_name)
 
-    # remove any rarities without items
-    container_data["items"] = {
-        rarity: items
-        for rarity, items in container_data["items"].items()
-        if len(items) != 0
-    }
-    container_data["formatted_name"] = container_name
-    container_data["image_url"] = container_img_url
-    container_data["odds"] = calculate_container_odds(container_data["items"])
-    result[remove_skin_name_formatting(container_name)] = container_data
+            if h3 != None:
+                name = remove_skin_name_formatting(h3.text)
 
-    with lock:
-        scraped += 1
-        pb.set_progress(scraped/len(container_endpoints))
-        print(pb, end="\r")
+                if "gloves" in name:
+                    rare_items_link = container_link + "?Gloves=1"
+                elif "knives" in name:
+                    rare_items_link = container_link + "?Knives=1"
+                else:
+                    quality_div = result_box.find("div", {"class": "quality"})
+                    quality = (
+                        quality_div["class"][1]
+                        .replace("color-", " ")
+                        .replace("-", "")
+                        .strip()
+                    )
+                    container_data["items"][quality].append(name)
+                    container_data["all items"].append(name)
+
+        # open rare items skins and get them too if there are any
+        if rare_items_link != None:
+            rare_items_skins = requests.get(rare_items_link, headers=HTTP_HEADERS)
+            rare_items_soup = BeautifulSoup(rare_items_skins.content, "html.parser")
+
+            result_boxes = rare_items_soup.select("div.well.result-box.nomargin")
+
+            for result_box in result_boxes:
+                h3 = result_box.find("h3")
+                if h3 != None and "Case Skins" not in h3.text:
+                    unformatted_name = remove_skin_name_formatting(h3.text)
+                    if (
+                        container_name not in unformatted_name
+                    ):  # avoids the link back to the cases original skins
+                        container_data["items"]["rare items"].append(unformatted_name)
+                        container_data["all items"].append(unformatted_name)
+
+        # remove any rarities without items
+        container_data["items"] = {
+            rarity: items
+            for rarity, items in container_data["items"].items()
+            if len(items) != 0
+        }
+        container_data["formatted_name"] = container_name
+        container_data["image_url"] = container_img_url
+        container_data["odds"] = calculate_container_odds(container_data["items"])
+        result[remove_skin_name_formatting(container_name)] = container_data
+
+        with lock:
+            scraped += 1
+            pb.set_progress(scraped/len(container_endpoints))
+            print(pb, end="\r")
+
+    except Exception as e:
+        tb = traceback.format_exception(type(e), e, e.__traceback__)
+        string = "".join(tb)
+        print(container_name)
+        print(string)
 
 
 def scrape_collection(collections, collection_link):
-    global scraped, pb
-    collection_data = {
-        "items": {
-            "consumer": [],
-            "industrial": [],
-            "milspec": [],
-            "restricted": [],
-            "classified": [],
-            "covert": [],
-            "rare items": [],
-        },
-        "all items": [],
-    }
+    try:
+        global scraped, pb
+        collection_data = {
+            "items": {
+                "consumer": [],
+                "industrial": [],
+                "milspec": [],
+                "restricted": [],
+                "classified": [],
+                "covert": [],
+                "rare items": [],
+            },
+            "all items": [],
+        }
 
-    html = requests.get(collection_link, headers=HTTP_HEADERS)
-    soup = BeautifulSoup(html.content, "html.parser")
+        html = requests.get(collection_link, headers=HTTP_HEADERS)
+        soup = BeautifulSoup(html.content, "html.parser")
 
-    # container name and image url
-    collection_name = (
-        soup.find("div", {"class": ["inline-middle collapsed-top-margin"]})
-        .find("h1")
-        .text.lower()
-    )
+        # container name and image url
+        collection_name = soup.find("div", {"class": ["inline-middle collapsed-top-margin"]}).find("h1").text.lower()
+        
+        result_boxes = soup.select("div.well.result-box.nomargin")
+        for result_box in result_boxes:
+            h3 = result_box.find("h3")
+            if h3 != None:
+                name = remove_skin_name_formatting(h3.text)
 
-    result_boxes = soup.find_all("div", {"class": "result-box"})
-    for result_box in result_boxes:
-        h3 = result_box.find("h3")
-        if h3 != None:
-            name = remove_skin_name_formatting(h3.text)
+                quality_div = result_box.find("div", {"class": "quality"})
+                quality = (
+                    quality_div["class"][1].replace("color-", " ").replace("-", "").strip()
+                )
+                collection_data["items"][quality].append(name)
+                collection_data["all items"].append(name)
 
-            quality_div = result_box.find("div", {"class": "quality"})
-            quality = (
-                quality_div["class"][1].replace("color-", " ").replace("-", "").strip()
-            )
-            collection_data["items"][quality].append(name)
-            collection_data["all items"].append(name)
+        collections[collection_name] = collection_data
 
-    collections[collection_name] = collection_data
+        with lock:
+            scraped += 1
+            pb.set_progress(scraped/len(collection_endpoints))
+            print(pb, end="\r")
+    except Exception as e:
+        tb = traceback.format_exception(type(e), e, e.__traceback__)
+        string = "".join(tb)
+        print(collection_name)
+        print(string)
 
-    with lock:
-        scraped += 1
-        pb.set_progress(scraped/len(collection_endpoints))
-        print(pb, end="\r")
 
 
 def scrape_souvenir_package(collections: dict, souvenir_data: dict, link: str):
-    global scraped, pb
+    try:
+        global scraped, pb
 
-    html = requests.get(link, headers=HTTP_HEADERS)
-    soup = BeautifulSoup(html.content, "html.parser")
+        html = requests.get(link, headers=HTTP_HEADERS)
+        soup = BeautifulSoup(html.content, "html.parser")
 
-    package_boxes = soup.select("div.well.result-box.nomargin")
-    for box in package_boxes:
-        h4 = box.find("h4")
-        if h4 is None:
-            continue
+        package_boxes = soup.select("div.well.result-box.nomargin")
+        for box in package_boxes:
+            h4 = box.find("h4")
+            if h4 is None:
+                continue
 
-        pkg_name = h4.text
-        unformatted_pkg_name = pkg_name.lower()
-        collection_name = (
-            box.find("div", {"class": "containers-details-link"}).text.lower().strip()
-        )
-        collection_data = collections[collection_name]
-        image_url = box.find("img", {"class": "img-responsive"})["src"]
-        price_str = box.find("div", {"class": "price"}).text.strip()
+            pkg_name = h4.text
+            unformatted_pkg_name = pkg_name.lower()
+            collection_name_div = (
+                box.find("div", {"class": "containers-details-link"})
+            )
 
-        if price_str != "No Recent Price":
-            price_str = sub(r"[^\d.]", "", price_str)
-            price = int(Decimal(price_str) * 100)
-        else:
-            price = NO_PRICE_FOUND
+            if collection_name_div is None:
+                continue
 
-        pkg_data = {
-            "type": "souvenir_package",
-            "items": {
-                rarity: items
-                for rarity, items in collection_data["items"].items()
-                if len(items) != 0
-            },  # remove rarities without items in them
-            "all items": collection_data["all items"],
-            "formatted_name": pkg_name,
-            "image_url": image_url,
-            "price": price,
-            "odds": calculate_container_odds(collection_data["items"]),
-        }
+            collection_name = collection_name_div.text.lower().strip()
+            collection_data = collections[collection_name]
+            image_url = box.find("img", {"class": "img-responsive"})["src"]
+            price_str = box.find("div", {"class": "price"}).text.strip()
 
-        souvenir_data[unformatted_pkg_name] = pkg_data
-    
+            if price_str != "No Recent Price":
+                price_str = sub(r"[^\d.]", "", price_str)
+                price = int(Decimal(price_str) * 100)
+            else:
+                price = NO_PRICE_FOUND
+
+            pkg_data = {
+                "type": "souvenir_package",
+                "items": {
+                    rarity: items
+                    for rarity, items in collection_data["items"].items()
+                    if len(items) != 0
+                },  # remove rarities without items in them
+                "all items": collection_data["all items"],
+                "formatted_name": pkg_name,
+                "image_url": image_url,
+                "price": price,
+                "odds": calculate_container_odds(collection_data["items"]),
+            }
+
+            souvenir_data[unformatted_pkg_name] = pkg_data
+        
         with lock:
             scraped += 1
             pb.set_progress(scraped/len(souvenir_package_endpoints))
             print(pb, end="\r")
+    except Exception as e:
+        tb = traceback.format_exception(type(e), e, e.__traceback__)
+        string = "".join(tb)
+        print(pkg_name)
+        print(string)
 
 
 sticker_modifiers = ["foil", "gold", "holo", "glitter", "lenticular"]
@@ -706,7 +729,7 @@ def case_scrape() -> dict:
 
 def sticker_capsule_scrape() -> dict:
     global pb, scraped
-    scraped =0
+    scraped = 0
     pb.set_progress(0)
     pb.set_title("Scraping sticker capsules...")
 
