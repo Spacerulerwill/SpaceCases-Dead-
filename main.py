@@ -229,4 +229,5 @@ async def on_message(message: discord.Message):
 
 
 if __name__ == "__main__":
-    run_bot()
+    database.init_collections()
+    database.refresh_game_data()

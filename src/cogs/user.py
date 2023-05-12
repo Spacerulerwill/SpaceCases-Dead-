@@ -12,6 +12,7 @@ This cog contains the commands:
 """
 
 import random
+import ffmpy
 import discord
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -120,6 +121,18 @@ class User(commands.Cog):
 
         end = timer()
         print(f"Executed in {timedelta(seconds=end-start)}")
+
+    @commands.command()
+    async def test2(self, ctx:Context):
+        ff = ffmpy.FFmpeg(
+            inputs = {"cash.mp4" : None},
+            outputs = {"cash.gif" : None})
+        
+        ff.run()
+
+        e = discord.Embed(title="bru")
+        e.set_image(url="https://cdn.csgoskins.gg/public/videos/floats/v1/embedding/ursus-knife-rust-coat.webm")
+        await ctx.send(embed=e)
 
 
 # this setup function needs to be in every cog in order for the bot to be able to load it

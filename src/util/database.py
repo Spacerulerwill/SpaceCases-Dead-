@@ -14,6 +14,7 @@ from src.scripts.container_scraper import (
     collection_scrape,
     sticker_capsule_scrape,
 )
+from src.scripts.csgo_data_scraper import scrape_game_data
 from discord.ext.commands.bot import Bot
 
 # MongoDB collections
@@ -29,11 +30,9 @@ mongo_client: pymongo.MongoClient
 # Bot data
 rooms = {}
 wordle_games = {}
-skin_data = {}
-skin_data_hl = {}  # SKIN DATA for higher lower game - does not include knives, glov
+item_data  = {}
+skin_data_hl = {}  # SKIN DATA for higher lower game - does not include knives, gloves, stickers
 containers = {}  # all containers that are openable
-collections = {}
-cases_and_collections = {}  # just cases and collections
 word_list = []
 
 
@@ -133,7 +132,7 @@ def init_collections():
 
 
 def load_data():
-    global containers, collections, cases_and_collections, skin_data, skin_data_hl, word_list
+    global containers, skin_data, skin_data_hl, word_list
 
     # load container data
     containers = skin_data_collection.find_one({"_id": "container-data"})
@@ -141,18 +140,13 @@ def load_data():
     # load skin data
     skin_data = skin_data_collection.find_one({"_id": "skin-data"})
 
-    # load collection data
-    cases_and_collections = skin_data_collection.find_one(
-        {"_id": "cases-and-collections-data"}
-    )
-
     # skin data for higher lower gamae
     skin_data_hl = {
         key: value
         for key, value in skin_data["skins"].items()
         if value["item_type"] == "weapon"
         and (
-            value["type"] not in ["Gloves", "Knife"] or value["price"] == NO_PRICE_FOUND
+            value["type"] not in ["gloves", "knife", "sticker"] or value["price"] == NO_PRICE_FOUND
         )
     }
 
@@ -163,38 +157,9 @@ def load_data():
     print("Loaded data")
 
 
-def scrape_skin_data(scrape_containers: bool = False):
-    global skin_data
-    skin_data = csgostash_scrape(scrape_containers)
+def refresh_game_data():
+    global item_data, containers
 
-    skin_data_collection.replace_one({"_id": "skin-data"}, skin_data, upsert=True)
-
-
-def scrape_container_data():
-    global containers, collections, cases_and_collections
-
-    case_data = case_scrape()
-    collections = collection_scrape()
-    souvenir_data = souvenir_package_scrape(collections)
-    sticker_capsule_data = sticker_capsule_scrape()
-
-    containers = {
-        "_id": "container-data",
-        **case_data,
-        **souvenir_data,
-        **sticker_capsule_data,
-    }
-    cases_and_collections = {
-        "_id": "cases-and-collections-data",
-        **case_data,
-        **collections,
-    }
-
-    # upload to mongodb
-    skin_data_collection.find_one_and_replace(
-        {"_id": "container-data"}, containers, upsert=True
-    )
-
-    skin_data_collection.find_one_and_replace(
-        {"_id": "cases-and-collections-data"}, cases_and_collections, upsert=True
-    )
+    item_data, containers = scrape_game_data()
+    skin_data_collection.replace_one({"_id": "item_data"}, item_data, upsert=True)
+    skin_data_collection.find_one_and_replace({"_id": "container_data"}, containers, upsert=True)
