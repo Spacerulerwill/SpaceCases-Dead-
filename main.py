@@ -1,3 +1,8 @@
+"""
+Copyright (C) 2023 William Redding - All Rights Reserved
+
+"""
+
 import discord
 import traceback
 import asyncio

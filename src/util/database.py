@@ -6,14 +6,6 @@ from pymongo.collection import Collection
 from timeit import default_timer as timer
 from datetime import timedelta
 from src.util.constants import ONE_WEEK
-from src.scripts.csgostash_scraper import NO_PRICE_FOUND
-from src.scripts.csgostash_scraper import csgostash_scrape
-from src.scripts.container_scraper import (
-    case_scrape,
-    souvenir_package_scrape,
-    collection_scrape,
-    sticker_capsule_scrape,
-)
 from src.scripts.csgo_data_scraper import scrape_game_data
 from discord.ext.commands.bot import Bot
 
