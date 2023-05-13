@@ -6,7 +6,7 @@ Webscraper script that scrapes csgoskins.gg for game data needed, including:
 * Containers data
 * Sticker Data
 
-See bottom of file for licence details
+See end of file for licence details
 """
 
 import re
@@ -17,42 +17,65 @@ from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 
-from src.util.constants import MAX_THREADS, HTTP_HEADERS, case_wear_ranges_lower, conditions
+from src.util.constants import (
+    MAX_THREADS,
+    HTTP_HEADERS,
+    case_wear_ranges_lower,
+    conditions,
+)
 from src.util.string_util import remove_skin_name_formatting
 
 from typing import List
 
 NO_PRICE_FOUND = 5000000
 
-def get_links_from_page(item_links:List[str], url:str):
+
+def get_links_from_page(item_links: List[str], url: str):
     print(url)
     request = requests.get(url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "html.parser")
 
     # find all image divs
     boxes = soup.select("div.bg-gray-800.rounded.shadow-md.relative.flex.flex-wrap")
-    
+
     # extract hrefs and append to skin_links
     item_links += [box.find("a")["href"] for box in boxes]
 
-#region === ITEM SCRAPING ===
+
+# region === ITEM SCRAPING ===
 gun_endpoints = (
-    [f"https://csgoskins.gg/?type=1&order=lowest_price&page={i+1}" for i in range(8)] # pistols
-    + [f"https://csgoskins.gg/?type=2&order=lowest_price&page={i+1}" for i in range(5)] # smg
-    + [f"https://csgoskins.gg/?type=3&order=lowest_price&page={i+1}" for i in range(6)] # rifles
-    + [f"https://csgoskins.gg/?type=4&order=lowest_price&page={i+1}" for i in range(3)] # shotguns
-    + [f"https://csgoskins.gg/?type=5&order=lowest_price&page={i+1}" for i in range(3)] # sniper rifle
-    + [f"https://csgoskins.gg/?type=6&order=lowest_price&page={i+1}" for i in range(1)] # machine gun
+    [
+        f"https://csgoskins.gg/?type=1&order=lowest_price&page={i+1}" for i in range(8)
+    ]  # pistols
+    + [
+        f"https://csgoskins.gg/?type=2&order=lowest_price&page={i+1}" for i in range(5)
+    ]  # smg
+    + [
+        f"https://csgoskins.gg/?type=3&order=lowest_price&page={i+1}" for i in range(6)
+    ]  # rifles
+    + [
+        f"https://csgoskins.gg/?type=4&order=lowest_price&page={i+1}" for i in range(3)
+    ]  # shotguns
+    + [
+        f"https://csgoskins.gg/?type=5&order=lowest_price&page={i+1}" for i in range(3)
+    ]  # sniper rifle
+    + [
+        f"https://csgoskins.gg/?type=6&order=lowest_price&page={i+1}" for i in range(1)
+    ]  # machine gun
 )
 
-rare_item_endpoints = (
-    [f"https://csgoskins.gg/?type=8&order=lowest_price&page={i+1}" for i in range(9)] # knife
-    + [f"https://csgoskins.gg/?type=11&order=lowest_price&page={i+1}" for i in range(2)] # gloves
-)
+rare_item_endpoints = [
+    f"https://csgoskins.gg/?type=8&order=lowest_price&page={i+1}" for i in range(9)
+] + [  # knife
+    f"https://csgoskins.gg/?type=11&order=lowest_price&page={i+1}" for i in range(2)
+]  # gloves
 
-sticker_endpoints = [f"https://csgoskins.gg/categories/sticker?page={i+1}" for i in range(140)]
+sticker_endpoints = [
+    f"https://csgoskins.gg/categories/sticker?page={i+1}" for i in range(140)
+]
 
-def scrape_weapon_skin_link(item_data:dict, url:str):
+
+def scrape_weapon_skin_link(item_data: dict, url: str):
     request = requests.get(url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "html.parser")
 
@@ -72,7 +95,7 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
         min_float = float(float_spans[0].text)
         max_float = float(float_spans[1].text)
 
-    #weapon type
+    # weapon type
     summary_div = soup.find("div", {"class": None})
     summary_boxes = summary_div.select("div.flex.px-4.py-2")
     type_summary_box = summary_boxes[1].select_one("div.flex-grow.text-right")
@@ -89,7 +112,7 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
     # whether it has a stattrak or souvenir variant
     if len(item_class_divs) > 1:
         has_stattrak_variant = item_class_divs[1].text.strip() == "StatTrak"
-        
+
         if not has_stattrak_variant:
             has_souvenir_variant = item_class_divs[1].text.strip() == "Souvenir"
         else:
@@ -110,8 +133,8 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
         if max_float > lower_value:
             worst_condition_index = index
             break
-    
-    #prices and image urls
+
+    # prices and image urls
     price_divs = soup.find_all("a", {"class": "version-link"})
 
     # create data for skin without wear
@@ -133,10 +156,10 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
     # if vanilla knife, create identical copies for each wear
     if is_vanilla_knife:
         image_url = price_divs[0]["data-image-url"]
-        
+
         # non stattrak version
         price_div_text = price_divs[0].text.strip()
-        
+
         if "No offers" in price_div_text:
             price = NO_PRICE_FOUND
         else:
@@ -144,8 +167,15 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
             price_str = re.sub(r"[^\d.]", "", price_str)
             price = int(Decimal(price_str) * 100)
 
-
-        for condition_index, formatted_condition in enumerate(["Factory New", "Minimal Wear", "Field-Tested", "Well-Worn", "Battle-Scarred"]):
+        for condition_index, formatted_condition in enumerate(
+            [
+                "Factory New",
+                "Minimal Wear",
+                "Field-Tested",
+                "Well-Worn",
+                "Battle-Scarred",
+            ]
+        ):
             unformatted_condition = remove_skin_name_formatting(formatted_condition)
             print(formatted_condition + " " + formatted_name)
 
@@ -157,11 +187,13 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
             new_data["condition_index"] = condition_index
             new_data["formatted_name"] = formatted_condition + " " + formatted_name
 
-            item_data["items"][unformatted_condition + " " + unformatted_name] = new_data
+            item_data["items"][
+                unformatted_condition + " " + unformatted_name
+            ] = new_data
 
         # stattrak version
         price_div_text = price_divs[1].text.strip()
-        
+
         if "No offers" in price_div_text:
             price = NO_PRICE_FOUND
         else:
@@ -169,7 +201,15 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
             price_str = re.sub(r"[^\d.]", "", price_str)
             price = int(Decimal(price_str) * 100)
 
-        for condition_index, formatted_condition in enumerate(["StatTrak Factory New", "StatTrak Minimal Wear", "StatTrak Field-Tested", "StatTrak Well-Worn", "StatTrak Battle-Scarred"]):
+        for condition_index, formatted_condition in enumerate(
+            [
+                "StatTrak Factory New",
+                "StatTrak Minimal Wear",
+                "StatTrak Field-Tested",
+                "StatTrak Well-Worn",
+                "StatTrak Battle-Scarred",
+            ]
+        ):
             unformatted_condition = remove_skin_name_formatting(formatted_condition)
             print(formatted_condition + " " + formatted_name)
 
@@ -181,11 +221,12 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
             new_data["formatted_name"] = formatted_condition + " " + formatted_name
             new_data["condition_index"] = condition_index
 
-            item_data["items"][unformatted_condition + " " + unformatted_name] = new_data
+            item_data["items"][
+                unformatted_condition + " " + unformatted_name
+            ] = new_data
     else:
         # iterate through price divs, getting data
         for count, price_div in enumerate(price_divs):
-            
             price_div_text = price_div.text.strip()
 
             if "Not Possible" in price_div_text:
@@ -195,7 +236,11 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
 
             if "No offers" in price_div_text:
                 price = NO_PRICE_FOUND
-                formatted_condition = price_div_text.replace("No offers", "").strip().replace("\n\n\n", " ")
+                formatted_condition = (
+                    price_div_text.replace("No offers", "")
+                    .strip()
+                    .replace("\n\n\n", " ")
+                )
                 unformatted_condition = remove_skin_name_formatting(formatted_condition)
             else:
                 price_div_text = price_div_text.split("$")
@@ -213,14 +258,19 @@ def scrape_weapon_skin_link(item_data:dict, url:str):
             new_data["no_wear_formatted_name"] = formatted_name
             new_data["image_url"] = image_url
 
-            item_data["items"][unformatted_condition + " " + unformatted_name] = new_data
+            item_data["items"][
+                unformatted_condition + " " + unformatted_name
+            ] = new_data
 
-def scrape_sticker_page(item_data:dict, url:str):
+
+def scrape_sticker_page(item_data: dict, url: str):
     try:
         request = requests.get(url, headers=HTTP_HEADERS)
         soup = BeautifulSoup(request.content, "html.parser")
 
-        sticker_boxes = soup.select("div.bg-gray-800.rounded.shadow-md.relative.flex.flex-wrap")
+        sticker_boxes = soup.select(
+            "div.bg-gray-800.rounded.shadow-md.relative.flex.flex-wrap"
+        )
 
         for box in sticker_boxes:
             h2 = box.find("h2")
@@ -229,15 +279,19 @@ def scrape_sticker_page(item_data:dict, url:str):
             tournament_name = spans[0].text.strip()
             formatted_sticker_name = spans[1].text.strip()
 
-            if tournament_name != "Sticker": 
+            if tournament_name != "Sticker":
                 formatted_sticker_name += f" | {tournament_name}"
 
             print(formatted_sticker_name)
 
-            unformatted_sticker_name = remove_skin_name_formatting(formatted_sticker_name)
+            unformatted_sticker_name = remove_skin_name_formatting(
+                formatted_sticker_name
+            )
 
             image_url = box.find("img")["src"]
-            price_str = box.select_one("div.left-4.right-4.text-center.text-lg.absolute").text.strip()
+            price_str = box.select_one(
+                "div.left-4.right-4.text-center.text-lg.absolute"
+            ).text.strip()
 
             if price_str == "No Price Data":
                 price = NO_PRICE_FOUND
@@ -245,8 +299,14 @@ def scrape_sticker_page(item_data:dict, url:str):
                 price_str = re.sub(r"[^\d.]", "", price_str)
                 price = int(Decimal(price_str) * 100)
 
-            rarity = box.select_one("div.left-4.right-4.text-center.text-sm.rounded-xl.text-black.absolute.truncate").text.split()[0].lower()
-            
+            rarity = (
+                box.select_one(
+                    "div.left-4.right-4.text-center.text-sm.rounded-xl.text-black.absolute.truncate"
+                )
+                .text.split()[0]
+                .lower()
+            )
+
             item_data["items"][unformatted_sticker_name] = {
                 "item_type": "sticker",
                 "formatted_name": formatted_sticker_name,
@@ -257,9 +317,12 @@ def scrape_sticker_page(item_data:dict, url:str):
             }
     except Exception as e:
         print(e)
+
+
 # endregion
 
-#region === CONTAINER SCRAPING === 
+
+# region === CONTAINER SCRAPING ===
 def calculate_container_odds(items_dict: dict) -> dict:
     # the most common is 80%, each rarity above is 5 times less likely
     rarity_odds = {
@@ -281,38 +344,45 @@ def calculate_container_odds(items_dict: dict) -> dict:
     # reverse dict
     return dict(reversed(final_rarity_odds.items()))
 
+
 weapon_case_endpoint = "https://csgoskins.gg/categories/weapon-case?page=1"
 
-souvenir_package_endpoints = [f"https://csgoskins.gg/categories/souvenir-package?page={i+1}" for i in range(3)]
+souvenir_package_endpoints = [
+    f"https://csgoskins.gg/categories/souvenir-package?page={i+1}" for i in range(3)
+]
 
 package_endpoints = []
 
-sticker_capsule_endpoints = (
-    [f"https://csgoskins.gg/categories/sticker-capsule?page={i+1}" for i in range(2)]
-    + [f"https://csgoskins.gg/categories/autograph-capsule?page={i+1}" for i in range(3)]
-)
+sticker_capsule_endpoints = [
+    f"https://csgoskins.gg/categories/sticker-capsule?page={i+1}" for i in range(2)
+] + [f"https://csgoskins.gg/categories/autograph-capsule?page={i+1}" for i in range(3)]
 
-def scrape_case_link(weapon_case_data:dict, item_data:dict, url:str):
+
+def scrape_case_link(weapon_case_data: dict, item_data: dict, url: str):
     # open container page, get price name and link to items
     request = requests.get(url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "lxml")
 
     name_h1 = soup.select_one("body > main > div > div.w-full.px-4.pb-4 > h1")
     formatted_case_name = name_h1.text.strip()
-    unformatted_case_name = remove_skin_name_formatting(formatted_case_name)   
+    unformatted_case_name = remove_skin_name_formatting(formatted_case_name)
 
     # get price
-    side_bar = soup.select_one("body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none")
+    side_bar = soup.select_one(
+        "body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none"
+    )
 
     statistics_box = side_bar.find_all("div", {"class": None})[1]
-    price_stat = statistics_box.select_one("div.shadow-md.bg-gray-800.rounded.mt-4 > div:nth-child(1)")
+    price_stat = statistics_box.select_one(
+        "div.shadow-md.bg-gray-800.rounded.mt-4 > div:nth-child(1)"
+    )
     price_str = price_stat.find_all("div")[1].text.strip()
     price_str = re.sub(r"[^\d.]", "", price_str)
     price = int(Decimal(price_str) * 100)
 
     # image url
     image_url = soup.select_one("#main-image")["src"]
-    
+
     data = {
         "type": "case",
         "price": price,
@@ -331,7 +401,9 @@ def scrape_case_link(weapon_case_data:dict, item_data:dict, url:str):
         "all items": [],
     }
 
-    items_page_url = soup.select_one("body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none > a")["href"]
+    items_page_url = soup.select_one(
+        "body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none > a"
+    )["href"]
     rare_items_url = items_page_url + "/specials"
 
     # open items page get items data
@@ -343,14 +415,16 @@ def scrape_case_link(weapon_case_data:dict, item_data:dict, url:str):
     # iterate through cases skins
     for box in boxes[1:]:
         spans = box.find_all("span")
-        
+
         # get information
         weapon_name = spans[0].text.strip()
         skin_name = spans[1].text.strip()
         unformatted_name = remove_skin_name_formatting(weapon_name + " " + skin_name)
 
         rarity_div = box.find_all("div")[1]
-        rarity = remove_skin_name_formatting(rarity_div.text.strip().split()[0].replace("-", ""))
+        rarity = remove_skin_name_formatting(
+            rarity_div.text.strip().split()[0].replace("-", "")
+        )
         data["items"][rarity].append(unformatted_name)
         data["all items"].append(unformatted_name)
 
@@ -359,15 +433,24 @@ def scrape_case_link(weapon_case_data:dict, item_data:dict, url:str):
         can_tradeup = _item_data["rarity"] != "covert"
         item_data["no_wear_skins"][unformatted_name]["can_tradeup"] = can_tradeup
 
-        for i in range(_item_data["best_condition_index"], _item_data["worst_condition_index"]+1):
+        for i in range(
+            _item_data["best_condition_index"], _item_data["worst_condition_index"] + 1
+        ):
             condition = conditions[i].lower()
-            item_data["items"][condition + " " + unformatted_name]["can_tradeup"] = can_tradeup   
+            item_data["items"][condition + " " + unformatted_name][
+                "can_tradeup"
+            ] = can_tradeup
 
         # if has stattrak variant do for that
-        if _item_data["has_stattrak_variant"]:        
-            for i in range(_item_data["best_condition_index"], _item_data["worst_condition_index"]+1):
+        if _item_data["has_stattrak_variant"]:
+            for i in range(
+                _item_data["best_condition_index"],
+                _item_data["worst_condition_index"] + 1,
+            ):
                 condition = conditions[i].lower()
-                item_data["items"]["stattrak " + condition + " " + unformatted_name]["can_tradeup"] = can_tradeup  
+                item_data["items"]["stattrak " + condition + " " + unformatted_name][
+                    "can_tradeup"
+                ] = can_tradeup
 
     # open rare items page, get rare itemsdata
     request = requests.get(rare_items_url, headers=HTTP_HEADERS)
@@ -377,7 +460,7 @@ def scrape_case_link(weapon_case_data:dict, item_data:dict, url:str):
 
     for box in boxes[1:]:
         spans = box.find_all("span")
-        
+
         weapon_name = spans[0].text.strip()
         skin_name = spans[1].text.strip()
         unformatted_name = remove_skin_name_formatting(weapon_name + " " + skin_name)
@@ -386,38 +469,41 @@ def scrape_case_link(weapon_case_data:dict, item_data:dict, url:str):
         data["all items"].append(unformatted_name)
 
     # remove empty rarities
-    data["items"] = {
-        rarity: items
-        for rarity, items in data["items"].items()
-        if items
-    }
+    data["items"] = {rarity: items for rarity, items in data["items"].items() if items}
 
     # add final information
     data["odds"] = calculate_container_odds(data["items"])
     weapon_case_data[unformatted_case_name] = data
     print(unformatted_case_name)
 
-def scrape_package_link(souvenir_package_data:dict, item_data:dict, type:str, url:str):
+
+def scrape_package_link(
+    souvenir_package_data: dict, item_data: dict, type: str, url: str
+):
     # open souvenir package page, get price name and link to items
     request = requests.get(url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "lxml")
 
     name_h1 = soup.select_one("body > main > div > div.w-full.px-4.pb-4 > h1")
     formatted_case_name = name_h1.text.strip()
-    unformatted_case_name = remove_skin_name_formatting(formatted_case_name)   
+    unformatted_case_name = remove_skin_name_formatting(formatted_case_name)
 
     # get price
-    side_bar = soup.select_one("body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none")
+    side_bar = soup.select_one(
+        "body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none"
+    )
 
     statistics_box = side_bar.find_all("div", {"class": None})[1]
-    price_stat = statistics_box.select_one("div.shadow-md.bg-gray-800.rounded.mt-4 > div:nth-child(1)")
+    price_stat = statistics_box.select_one(
+        "div.shadow-md.bg-gray-800.rounded.mt-4 > div:nth-child(1)"
+    )
     price_str = price_stat.find_all("div")[1].text.strip()
     price_str = re.sub(r"[^\d.]", "", price_str)
     price = int(Decimal(price_str) * 100)
 
     # image url
     image_url = soup.select_one("#main-image")["src"]
-    
+
     data = {
         "type": type,
         "price": price,
@@ -435,7 +521,9 @@ def scrape_package_link(souvenir_package_data:dict, item_data:dict, type:str, ur
         "all items": [],
     }
 
-    items_page_url = soup.select_one("body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none > a")["href"]
+    items_page_url = soup.select_one(
+        "body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none > a"
+    )["href"]
     # open items page get items data
     request = requests.get(items_page_url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "html.parser")
@@ -445,22 +533,20 @@ def scrape_package_link(souvenir_package_data:dict, item_data:dict, type:str, ur
     # iterate through cases skins
     for box in boxes:
         spans = box.find_all("span")
-        
+
         weapon_name = spans[0].text.strip()
         skin_name = spans[1].text.strip()
         unformatted_name = remove_skin_name_formatting(weapon_name + " " + skin_name)
 
         rarity_div = box.find_all("div")[1]
-        rarity = remove_skin_name_formatting(rarity_div.text.strip().split()[0].replace("-", ""))
+        rarity = remove_skin_name_formatting(
+            rarity_div.text.strip().split()[0].replace("-", "")
+        )
         data["items"][rarity].append(unformatted_name)
         data["all items"].append(unformatted_name)
 
     # remove empty rarities
-    data["items"] = {
-        rarity: items
-        for rarity, items in data["items"].items()
-        if items
-    }
+    data["items"] = {rarity: items for rarity, items in data["items"].items() if items}
 
     # set can trade_up values
     for _unformatted_name in data["all items"]:
@@ -468,53 +554,72 @@ def scrape_package_link(souvenir_package_data:dict, item_data:dict, type:str, ur
         can_tradeup = (
             list(data["items"].keys()).index(_item_data["rarity"])
             != len(data["items"]) - 1
-        ) 
+        )
         print(can_tradeup, _unformatted_name)
 
         # if has souvenir variant do for that
-        if _item_data["has_souvenir_variant"]:        
-            for i in range(_item_data["best_condition_index"], _item_data["worst_condition_index"]+1):
+        if _item_data["has_souvenir_variant"]:
+            for i in range(
+                _item_data["best_condition_index"],
+                _item_data["worst_condition_index"] + 1,
+            ):
                 condition = conditions[i].lower()
-                item_data["items"]["souvenir " + condition + " " + unformatted_name]["can_tradeup"] = False
+                item_data["items"]["souvenir " + condition + " " + unformatted_name][
+                    "can_tradeup"
+                ] = False
 
         # if has stattrak variant do for that
-        elif _item_data["has_stattrak_variant"]:        
-            for i in range(_item_data["best_condition_index"], _item_data["worst_condition_index"]+1):
+        elif _item_data["has_stattrak_variant"]:
+            for i in range(
+                _item_data["best_condition_index"],
+                _item_data["worst_condition_index"] + 1,
+            ):
                 condition = conditions[i].lower()
-                item_data["items"]["stattrak " + condition + " " + unformatted_name]["can_tradeup"] = can_tradeup
+                item_data["items"]["stattrak " + condition + " " + unformatted_name][
+                    "can_tradeup"
+                ] = can_tradeup
 
         item_data["no_wear_skins"][unformatted_name]["can_tradeup"] = can_tradeup
-        
-        for i in range(_item_data["best_condition_index"], _item_data["worst_condition_index"]+1):
+
+        for i in range(
+            _item_data["best_condition_index"], _item_data["worst_condition_index"] + 1
+        ):
             condition = conditions[i].lower()
-            item_data["items"][condition + " " + unformatted_name]["can_tradeup"] = can_tradeup
+            item_data["items"][condition + " " + unformatted_name][
+                "can_tradeup"
+            ] = can_tradeup
 
     # add final information
     data["odds"] = calculate_container_odds(data["items"])
     souvenir_package_data[unformatted_case_name] = data
     print(unformatted_case_name)
 
-def scrape_sticker_capsule_link(sticker_capsule_data:dict, url:str):
+
+def scrape_sticker_capsule_link(sticker_capsule_data: dict, url: str):
     # open sticker capsule page
     request = requests.get(url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "lxml")
 
     name_h1 = soup.select_one("body > main > div > div.w-full.px-4.pb-4 > h1")
     formatted_capsule_name = name_h1.text.strip()
-    unformatted_capsule_name = remove_skin_name_formatting(formatted_capsule_name)   
+    unformatted_capsule_name = remove_skin_name_formatting(formatted_capsule_name)
 
     # get price
-    side_bar = soup.select_one("body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none")
+    side_bar = soup.select_one(
+        "body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none"
+    )
 
     statistics_box = side_bar.find_all("div", {"class": None})[1]
-    price_stat = statistics_box.select_one("div.shadow-md.bg-gray-800.rounded.mt-4 > div:nth-child(1)")
+    price_stat = statistics_box.select_one(
+        "div.shadow-md.bg-gray-800.rounded.mt-4 > div:nth-child(1)"
+    )
     price_str = price_stat.find_all("div")[1].text.strip()
     price_str = re.sub(r"[^\d.]", "", price_str)
     price = int(Decimal(price_str) * 100)
 
     # image url
     image_url = soup.select_one("#main-image")["src"]
-    
+
     data = {
         "type": "sticker_capsule",
         "price": price,
@@ -531,7 +636,9 @@ def scrape_sticker_capsule_link(sticker_capsule_data:dict, url:str):
         "all items": [],
     }
 
-    items_page_url = soup.select_one("body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none > a")["href"]
+    items_page_url = soup.select_one(
+        "body > main > div > div.w-full.sm\\:w-full.md\\:w-full.lg\\:w-2\\/5.xl\\:w-1\\/3.\\32 xl\\:w-1\\/3.p-4.flex-none > a"
+    )["href"]
     # open items page get items data
     request = requests.get(items_page_url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "html.parser")
@@ -541,28 +648,29 @@ def scrape_sticker_capsule_link(sticker_capsule_data:dict, url:str):
     # iterate through cases skins
     for box in boxes:
         spans = box.find_all("span")
-        
+
         weapon_name = spans[0].text.strip()
         skin_name = spans[1].text.strip()
         unformatted_name = remove_skin_name_formatting(weapon_name + " " + skin_name)
 
         rarity_div = box.find_all("div")[1]
-        rarity = remove_skin_name_formatting(rarity_div.text.strip().split()[0].replace("-", ""))
+        rarity = remove_skin_name_formatting(
+            rarity_div.text.strip().split()[0].replace("-", "")
+        )
         data["items"][rarity].append(unformatted_name)
         data["all items"].append(unformatted_name)
 
     # remove empty rarities
-    data["items"] = {
-        rarity: items
-        for rarity, items in data["items"].items()
-        if items
-    }
+    data["items"] = {rarity: items for rarity, items in data["items"].items() if items}
 
     # add final information
     data["odds"] = calculate_container_odds(data["items"])
     sticker_capsule_data[unformatted_capsule_name] = data
     print(unformatted_capsule_name)
-#endregion
+
+
+# endregion
+
 
 # Scrape all game data needed
 def scrape_game_data():
@@ -572,8 +680,11 @@ def scrape_game_data():
 
     # get weapon skin links
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(partial(get_links_from_page, weapon_skin_links), gun_endpoints + rare_item_endpoints)
-    
+        executor.map(
+            partial(get_links_from_page, weapon_skin_links),
+            gun_endpoints + rare_item_endpoints,
+        )
+
     # get weapon skin data
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(partial(scrape_weapon_skin_link, item_data), weapon_skin_links)
@@ -590,35 +701,138 @@ def scrape_game_data():
 
     weapon_case_data = {}
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(partial(scrape_case_link, weapon_case_data, item_data), weapon_case_links)
-    
+        executor.map(
+            partial(scrape_case_link, weapon_case_data, item_data), weapon_case_links
+        )
+
     # packages
     packages_links = [
         "https://csgoskins.gg/items/anubis-collection-package",
-        "https://csgoskins.gg/items/x-ray-p250-package"
+        "https://csgoskins.gg/items/x-ray-p250-package",
     ]
     packages_data = {}
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(partial(scrape_package_link, packages_data, item_data, "package"), packages_links)
+        executor.map(
+            partial(scrape_package_link, packages_data, item_data, "package"),
+            packages_links,
+        )
 
     # souvenir packages
     souvenir_packages_links = []
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(partial(get_links_from_page, souvenir_packages_links), souvenir_package_endpoints)
-    
+        executor.map(
+            partial(get_links_from_page, souvenir_packages_links),
+            souvenir_package_endpoints,
+        )
+
     souvenir_packages_data = {}
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(partial(scrape_package_link, souvenir_packages_data, item_data, "souvenir_package"), souvenir_packages_links)
-    
+        executor.map(
+            partial(
+                scrape_package_link,
+                souvenir_packages_data,
+                item_data,
+                "souvenir_package",
+            ),
+            souvenir_packages_links,
+        )
+
     # sticker capsules
     sticker_capsules_links = []
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(partial(get_links_from_page, sticker_capsules_links), sticker_capsule_endpoints)
+        executor.map(
+            partial(get_links_from_page, sticker_capsules_links),
+            sticker_capsule_endpoints,
+        )
 
     sticker_capsules_data = {}
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        executor.map(partial(scrape_sticker_capsule_link, sticker_capsules_data), sticker_capsules_links)
+        executor.map(
+            partial(scrape_sticker_capsule_link, sticker_capsules_data),
+            sticker_capsules_links,
+        )
 
-    container_data = {"_id": "container_data", "container_data": {**weapon_case_data, **packages_data, **souvenir_packages_data, **sticker_capsules_data}}
+    container_data = {
+        "_id": "container_data",
+        "container_data": {
+            **weapon_case_data,
+            **packages_data,
+            **souvenir_packages_data,
+            **sticker_capsules_data,
+        },
+    }
 
     return item_data, container_data
+
+
+"""
+                    GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+                            Preamble
+
+  The GNU General Public License is a free, copyleft license for
+software and other kinds of works.
+
+  The licenses for most software and other practical works are designed
+to take away your freedom to share and change the works.  By contrast,
+the GNU General Public License is intended to guarantee your freedom to
+share and change all versions of a program--to make sure it remains free
+software for all its users.  We, the Free Software Foundation, use the
+GNU General Public License for most of our software; it applies also to
+any other work released this way by its authors.  You can apply it to
+your programs, too.
+
+  When we speak of free software, we are referring to freedom, not
+price.  Our General Public Licenses are designed to make sure that you
+have the freedom to distribute copies of free software (and charge for
+them if you wish), that you receive source code or can get it if you
+want it, that you can change the software or use pieces of it in new
+free programs, and that you know you can do these things.
+
+  To protect your rights, we need to prevent others from denying you
+these rights or asking you to surrender the rights.  Therefore, you have
+certain responsibilities if you distribute copies of the software, or if
+you modify it: responsibilities to respect the freedom of others.
+
+  For example, if you distribute copies of such a program, whether
+gratis or for a fee, you must pass on to the recipients the same
+freedoms that you received.  You must make sure that they, too, receive
+or can get the source code.  And you must show them these terms so they
+know their rights.
+
+  Developers that use the GNU GPL protect your rights with two steps:
+(1) assert copyright on the software, and (2) offer you this License
+giving you legal permission to copy, distribute and/or modify it.
+
+  For the developers' and authors' protection, the GPL clearly explains
+that there is no warranty for this free software.  For both users' and
+authors' sake, the GPL requires that modified versions be marked as
+changed, so that their problems will not be attributed erroneously to
+authors of previous versions.
+
+  Some devices are designed to deny users access to install or run
+modified versions of the software inside them, although the manufacturer
+can do so.  This is fundamentally incompatible with the aim of
+protecting users' freedom to change the software.  The systematic
+pattern of such abuse occurs in the area of products for individuals to
+use, which is precisely where it is most unacceptable.  Therefore, we
+have designed this version of the GPL to prohibit the practice for those
+products.  If such problems arise substantially in other domains, we
+stand ready to extend this provision to those domains in future versions
+of the GPL, as needed to protect the freedom of users.
+
+  Finally, every program is threatened constantly by software patents.
+States should not allow patents to restrict development and use of
+software on general-purpose computers, but in those that do, we wish to
+avoid the special danger that patents applied to a free program could
+make it effectively proprietary.  To prevent this, the GPL assures that
+patents cannot be used to render the program non-free.
+
+  The precise terms and conditions for copying, distribution and
+modification follow.
+"""
