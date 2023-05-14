@@ -45,6 +45,7 @@ async def cancel(ctx: Context, recipient: discord.Member):
                 ctx, get_locale_fm(lang, "no_outgoing_trade", recipient.name)
             )
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

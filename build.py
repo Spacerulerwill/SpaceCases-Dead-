@@ -15,6 +15,7 @@ from src.scripts.csgostash_scraper import csgostash_scrape
 from src.scripts.container_scraper import scrape_containers
 from src.util.constants import ONE_WEEK
 
+
 def try_create_collection(db: Database, name: str) -> Collection:
     try:
         collection = db.create_collection(name)

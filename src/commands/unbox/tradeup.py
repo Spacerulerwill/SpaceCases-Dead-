@@ -101,7 +101,9 @@ async def tradeup(ctx: Context, *args):
         nonlocal contract_signed
 
         # pick a random item from the 10 submitted and get their tradeup result pool
-        option_pool = database.item_data["no_wear_skins"][random.choice(skin_names)]["tradeup_result_pool"]
+        option_pool = database.item_data["no_wear_skins"][random.choice(skin_names)][
+            "tradeup_result_pool"
+        ]
 
         # choose one at random from said option pool
         new_item = random.choice(option_pool)
@@ -171,7 +173,7 @@ async def tradeup(ctx: Context, *args):
         contract_signed = True
         e = discord.Embed(
             title=new_item_data["formatted_name"],
-            color=rarity_color_dict[new_item_data["rarity"]]
+            color=rarity_color_dict[new_item_data["rarity"]],
         )
         e.title = new_item_data["formatted_name"]
         e.color = rarity_color_dict[new_item_data["rarity"]]
@@ -251,6 +253,7 @@ async def tradeup(ctx: Context, *args):
         e.set_image(url="attachment://contract1.png")
         e.set_footer(text=get_locale(lang, "tradeup.footer"))
         msg = await ctx.send(file=file, embed=e, view=view)
+
 
 """
 This program is free software: you can redistribute it and/or modify

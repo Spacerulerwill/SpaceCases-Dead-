@@ -11,6 +11,7 @@ Functions
 See end of file for licence details
 """
 
+
 def get_locale_fm(lang: str, str, *args) -> str:
     """Get text in specific language from lang data using a key and format it
 

@@ -51,6 +51,7 @@ async def item(ctx: Context, *args):
     e = get_item_embed(lang, item_data)
     await ctx.send(embed=e)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -18,6 +18,7 @@ from typing import List
 import Levenshtein
 from urllib.parse import quote
 
+
 def remove_skin_name_formatting(formatted_name: str) -> str:
     """Remove formatting from a skin name
 
@@ -90,6 +91,7 @@ def get_closest_match(
             closest_match = option
 
     return closest_match
+
 
 """
 This program is free software: you can redistribute it and/or modify

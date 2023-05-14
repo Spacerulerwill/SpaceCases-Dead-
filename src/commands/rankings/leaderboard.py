@@ -80,6 +80,7 @@ async def leaderboard(ctx: Context, type: str, page: int):
     e.set_footer(text=get_locale_fm(lang, "leaderboard.footer"))
     await ctx.send(embed=e)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

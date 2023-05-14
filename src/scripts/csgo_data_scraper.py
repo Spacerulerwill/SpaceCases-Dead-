@@ -22,11 +22,12 @@ from src.util.constants import (
     HTTP_HEADERS,
     case_wear_ranges_lower,
     conditions,
-    NO_PRICE_FOUND
+    NO_PRICE_FOUND,
 )
 from src.util.string_util import remove_skin_name_formatting
 
 from typing import List
+
 
 def get_links_from_page(item_links: List[str], url: str):
     request = requests.get(url, headers=HTTP_HEADERS)
@@ -145,7 +146,7 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
         "has_stattrak_variant": has_stattrak_variant,
         "has_souvenir_variant": has_souvenir_variant,
         "can_tradeup": False,
-        "tradeup_result_pool": []
+        "tradeup_result_pool": [],
     }
     item_data["no_wear_skins"][unformatted_name] = data
 
@@ -309,6 +310,8 @@ def scrape_sticker_page(item_data: dict, url: str):
             }
     except Exception as e:
         print(e)
+
+
 # endregion
 
 
@@ -465,10 +468,10 @@ def scrape_case_link(weapon_case_data: dict, item_data: dict, url: str):
     data["odds"] = calculate_container_odds(data["items"])
     weapon_case_data[unformatted_case_name] = data
 
+
 def scrape_package_link(
     souvenir_package_data: dict, item_data: dict, type: str, url: str
 ):
-
     # open souvenir package page, get price name and link to items
     request = requests.get(url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "lxml")
@@ -581,6 +584,7 @@ def scrape_package_link(
     data["odds"] = calculate_container_odds(data["items"])
     souvenir_package_data[unformatted_case_name] = data
 
+
 def scrape_sticker_capsule_link(sticker_capsule_data: dict, url: str):
     # open sticker capsule page
     request = requests.get(url, headers=HTTP_HEADERS)
@@ -653,7 +657,8 @@ def scrape_sticker_capsule_link(sticker_capsule_data: dict, url: str):
     data["odds"] = calculate_container_odds(data["items"])
     sticker_capsule_data[unformatted_capsule_name] = data
 
-def set_tradeup_result_pools(item_data:dict, container_data:dict):
+
+def set_tradeup_result_pools(item_data: dict, container_data: dict):
     for name, data in container_data.items():
         if name != "_id" and data["type"] != "sticker_capsule":
             container_rarites = list(data["items"].keys())
@@ -663,13 +668,16 @@ def set_tradeup_result_pools(item_data:dict, container_data:dict):
 
                 if skin_data["can_tradeup"]:
                     rarity = skin_data["rarity"]
-                    next_rarity = container_rarites[container_rarites.index(rarity)+1]
+                    next_rarity = container_rarites[container_rarites.index(rarity) + 1]
 
                     # set result pool for item and all its variations
-                    item_data["no_wear_skins"][unformmatted_name]["tradeup_result_pool"] = data["items"][next_rarity]
+                    item_data["no_wear_skins"][unformmatted_name][
+                        "tradeup_result_pool"
+                    ] = data["items"][next_rarity]
 
                     for i in range(
-                        skin_data["best_condition_index"], skin_data["worst_condition_index"] + 1
+                        skin_data["best_condition_index"],
+                        skin_data["worst_condition_index"] + 1,
                     ):
                         condition = conditions[i].lower()
                         item_data["items"][condition + " " + unformmatted_name][
@@ -678,12 +686,14 @@ def set_tradeup_result_pools(item_data:dict, container_data:dict):
 
                     if skin_data["has_stattrak_variant"]:
                         for i in range(
-                            skin_data["best_condition_index"], skin_data["worst_condition_index"] + 1
+                            skin_data["best_condition_index"],
+                            skin_data["worst_condition_index"] + 1,
                         ):
                             condition = conditions[i].lower()
-                            item_data["items"]["stattrak " + condition + " " + unformmatted_name][
-                                "tradeup_result_pool"
-                            ] = data["items"][next_rarity]
+                            item_data["items"][
+                                "stattrak " + condition + " " + unformmatted_name
+                            ]["tradeup_result_pool"] = data["items"][next_rarity]
+
 
 # endregion
 
@@ -721,7 +731,6 @@ def scrape_game_data():
         executor.map(
             partial(scrape_case_link, weapon_case_data, item_data), weapon_case_links
         )
-
 
     # packages
     packages_links = [
@@ -781,6 +790,7 @@ def scrape_game_data():
     set_tradeup_result_pools(item_data, container_data)
 
     return item_data, container_data
+
 
 """
 This program is free software: you can redistribute it and/or modify

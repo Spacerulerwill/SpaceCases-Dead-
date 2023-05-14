@@ -337,6 +337,7 @@ async def claim(ctx: Context):
         lang = database.user_data.find_one({"_id": ctx.author.id})["language"]
         await msg_embed(ctx, get_locale_fm(lang, "claim.already"))
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

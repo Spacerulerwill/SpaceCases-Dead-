@@ -48,6 +48,7 @@ async def decline(ctx: Context, sender: discord.Member):
         e.add_field(name=get_locale_fm(lang, "for_your"), value=for_your)
         await sender.send(embed=e)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

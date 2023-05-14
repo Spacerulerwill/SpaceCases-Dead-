@@ -17,6 +17,7 @@ from discord.ext.commands.bot import Bot
 from src.commands.config.config import config_menu
 from src.commands.config.info import info
 
+
 # initialise class
 class Config(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -35,6 +36,7 @@ class Config(commands.Cog):
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot: Bot):
     await bot.add_cog(Config(bot))
+
 
 """
 This program is free software: you can redistribute it and/or modify

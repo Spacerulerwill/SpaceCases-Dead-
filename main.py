@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from src.util import database
 from src.lang.lang import get_locale_fm
 from src.util.string_util import get_closest_match
-from src.util.room_func import delete_room
+from src.util.room_func import delete_room, Room
 from src.util.embed_func import msg_embed, welcome_embed
 from src.util.constants import PREFIX
 
@@ -31,10 +31,10 @@ load_dotenv(".env")
 logging.basicConfig(
     level=logging.INFO,
     format="%(levelname)s (%(asctime)s): %(message)s",
-    datefmt="%I:%M:%S %p"
+    datefmt="%I:%M:%S %p",
 )
 
-TOKEN:str = os.getenv("BOT_TOKEN")
+TOKEN: str = os.getenv("BOT_TOKEN")
 
 # cogs to load
 cogs = ["help", "user", "unbox", "trading", "inventory", "rankings", "games", "config"]
@@ -241,13 +241,11 @@ async def on_guild_join(guild: discord.Guild):
 @bot_instance.event
 async def on_message(message: discord.Message):
     # if message sent from a room, cancel the room deletion task for it and restart it
-    room_data = database.rooms.get(message.author.id)
+    room: Room = database.rooms.get(message.author.id)
 
-    if room_data is not None:
-        room = room_data[0]
-        task = room_data[1]
-        task.cancel()
-        room_data[1] = asyncio.create_task(delete_room(message.author.id, room))
+    if room is not None:
+        room.task.cancel()
+        room.task = asyncio.create_task(delete_room(message.author.id, room.thread))
 
     # process commands as usua l - lower case message before sending to make case insensitive
     message.content = message.content.lower()

@@ -128,6 +128,7 @@ async def new(ctx: Context, recipient: discord.Member):
         # show warning that this will override previous trade
         await send_warning(lang, ctx, recipient)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

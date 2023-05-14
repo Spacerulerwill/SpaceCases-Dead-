@@ -107,6 +107,7 @@ async def remove(ctx: Context, in_out: str, item_index: int):
     recipient = await ctx.bot.fetch_user(trade["recipient_id"])
     await send_trade_in_creation_embed(lang, ctx, recipient)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

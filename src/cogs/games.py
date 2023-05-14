@@ -59,6 +59,7 @@ class Games(commands.Cog):
 async def setup(bot: Bot):
     await bot.add_cog(Games(bot))
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

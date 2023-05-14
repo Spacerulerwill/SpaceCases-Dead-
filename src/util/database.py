@@ -38,8 +38,10 @@ game_data: Collection
 # Bot data
 rooms = {}
 wordle_games = {}
-item_data  = {}
-item_data_hl = {}  # SKIN DATA for higher lower game - does not include knives, gloves, stickers
+item_data = {}
+item_data_hl = (
+    {}
+)  # SKIN DATA for higher lower game - does not include knives, gloves, stickers
 containers = {}  # all containers that are openable
 word_list = []
 
@@ -147,7 +149,8 @@ def load_game_data():
         for key, value in item_data["items"].items()
         if value["item_type"] == "weapon"
         and (
-            value["type"] not in ["gloves", "knife", "sticker"] or value["price"] == NO_PRICE_FOUND
+            value["type"] not in ["gloves", "knife", "sticker"]
+            or value["price"] == NO_PRICE_FOUND
         )
     }
 
@@ -164,6 +167,7 @@ def refresh_game_data():
     item_data, containers = scrape_game_data()
     game_data.replace_one({"_id": "item_data"}, item_data, upsert=True)
     game_data.find_one_and_replace({"_id": "container_data"}, containers, upsert=True)
+
 
 """
 This program is free software: you can redistribute it and/or modify

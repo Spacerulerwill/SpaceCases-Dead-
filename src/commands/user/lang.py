@@ -49,6 +49,7 @@ async def lang(ctx: Context, lang: str):
 
     await ctx.send(embed=get_lang_embed(lang))
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

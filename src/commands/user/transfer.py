@@ -73,6 +73,7 @@ async def transfer(ctx: Context, member: discord.Member, amount: Decimal):
             else:
                 await msg_embed(ctx, get_locale_fm(lang, "transfer.insufficient_funds"))
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

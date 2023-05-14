@@ -98,8 +98,11 @@ async def sell(ctx: Context, item_index: int):
     view.add_item(cancel_button)
 
     msg = await msg_embed(
-        ctx, get_locale_fm(lang, "sell.are_you_sure", formatted_name, price_str), view=view
+        ctx,
+        get_locale_fm(lang, "sell.are_you_sure", formatted_name, price_str),
+        view=view,
     )
+
 
 """
 This program is free software: you can redistribute it and/or modify

@@ -189,6 +189,7 @@ async def accept(ctx: Context, sender: discord.Member):
 
                 await ctx.send(embed=e)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

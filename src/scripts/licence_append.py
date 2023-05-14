@@ -29,10 +29,10 @@ if __name__ == "__main__":
     for path, subdirs, files in os.walk(root):
         for name in files:
             if name.endswith(".py"):
-              with open(os.path.join(path, name), "r+", encoding="utf-8") as f:
-                  if LICENCE_PREAMBLE not in f.read():
-                      f.write(LICENCE_PREAMBLE)
-                      print(f"Licence added to {name}")
+                with open(os.path.join(path, name), "r+", encoding="utf-8") as f:
+                    if LICENCE_PREAMBLE not in f.read():
+                        f.write(LICENCE_PREAMBLE)
+                        print(f"Licence added to {name}")
 
 """
 This program is free software: you can redistribute it and/or modify

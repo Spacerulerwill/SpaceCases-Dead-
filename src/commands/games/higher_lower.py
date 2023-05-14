@@ -290,6 +290,7 @@ async def start_game(
 
     await msg.edit(embed=get_embed(), view=view)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -6,7 +6,12 @@ See end of file for licence details
 
 import discord
 from discord.ext.commands import Context
-from src.util.emojis import CASE_EMOJI, PACKAGE_EMOJI, SOUVENIR_PACKAGE_EMOJI, STICKER_CAPSULE_EMOJI
+from src.util.emojis import (
+    CASE_EMOJI,
+    PACKAGE_EMOJI,
+    SOUVENIR_PACKAGE_EMOJI,
+    STICKER_CAPSULE_EMOJI,
+)
 from src.util.images import CASE, PACKAGE, SOUVENIR_PACKAGE, STICKER_CAPSULE
 from src.util.string_util import currency_str_format
 from src.util.embed_func import msg_embed, msg_embed_response
@@ -15,20 +20,12 @@ from src.util import database
 
 # generate page data, sort by cheapest to most expensive
 cases = sorted(
-    [
-        name
-        for name, data in database.containers.items()
-        if data["type"] == "case"
-    ],
+    [name for name, data in database.containers.items() if data["type"] == "case"],
     key=lambda case: database.containers[case]["price"],
 )
 
 packages = sorted(
-    [
-        name
-        for name, data in database.containers.items()
-        if data["type"] == "package"
-    ],
+    [name for name, data in database.containers.items() if data["type"] == "package"],
     key=lambda package: database.containers[package]["price"],
 )
 
@@ -53,7 +50,9 @@ sticker_capsules = sorted(
 
 # construct page tuples with first element being title and second being the elements on the page
 case_pages = [("Cases", cases[i : i + 14]) for i in range(0, len(cases), 14)]
-package_pages = [("Packages", packages[i : i + 14]) for i in range(0, len(packages), 14)]
+package_pages = [
+    ("Packages", packages[i : i + 14]) for i in range(0, len(packages), 14)
+]
 souvenir_package_pages = [
     ("Souvenir Packages", souvenir_packages[i : i + 14])
     for i in range(0, len(souvenir_packages), 14)
@@ -65,7 +64,13 @@ sticker_capsule_pages = [
 
 all_pages = case_pages + souvenir_package_pages + sticker_capsule_pages
 
-select_values = [all_pages, case_pages, package_pages, souvenir_package_pages, sticker_capsule_pages]
+select_values = [
+    all_pages,
+    case_pages,
+    package_pages,
+    souvenir_package_pages,
+    sticker_capsule_pages,
+]
 select_images = [CASE, CASE, PACKAGE, SOUVENIR_PACKAGE, STICKER_CAPSULE]
 
 prev_button = discord.ui.Button(label="◀", style=discord.ButtonStyle.gray)
@@ -217,6 +222,7 @@ async def containers(ctx: Context, page: int = 1):
     view.add_item(next_button)
 
     msg = await ctx.send(embed=get_embed(), view=view)
+
 
 """
 This program is free software: you can redistribute it and/or modify

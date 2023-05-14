@@ -248,6 +248,7 @@ async def config_menu(ctx: Context, bot: Bot):
 
     msg = await ctx.send(embed=await get_config_embed(), view=view)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

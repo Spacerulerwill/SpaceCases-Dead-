@@ -123,9 +123,11 @@ class User(commands.Cog):
         end = timer()
         print(f"Executed in {timedelta(seconds=end-start)}")
 
+
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot: Bot):
     await bot.add_cog(User(bot))
+
 
 """
 This program is free software: you can redistribute it and/or modify

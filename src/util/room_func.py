@@ -16,6 +16,14 @@ import discord
 from src.util import database
 from src.util.constants import ROOM_DELETION_TIME
 
+from dataclasses import dataclass
+
+
+@dataclass
+class Room:
+    thread: discord.Thread
+    task: asyncio.Task
+
 
 async def delete_room(owner_id: int, thread: discord.Thread):
     """Delete a room given its owner's discord id and the thread
@@ -51,6 +59,7 @@ def get_guild_room_create_channel(guild: discord.Guild, guild_data=None):
         )
 
     return channel
+
 
 """
 This program is free software: you can redistribute it and/or modify

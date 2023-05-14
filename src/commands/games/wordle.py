@@ -179,6 +179,7 @@ async def guess_word(lang: str, ctx: Context, guess: str):
 
         del database.wordle_games[ctx.author.id]
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

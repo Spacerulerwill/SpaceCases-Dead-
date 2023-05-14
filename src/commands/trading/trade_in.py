@@ -25,6 +25,7 @@ async def view_incoming_trade(ctx: Context, sender: discord.Member):
 
     await send_trade_embed(lang, ctx, trade, True)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

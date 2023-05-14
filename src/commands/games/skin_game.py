@@ -92,6 +92,7 @@ async def skin_game(ctx: Context):
             ctx, get_locale_fm(lang, "skin_game.lost.out_of_time", skin_name)
         )
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

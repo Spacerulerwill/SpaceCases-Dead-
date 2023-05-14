@@ -211,6 +211,7 @@ async def trades(ctx: Context, in_out: str, page: int):
     one_week = timedelta(weeks=1)
     msg = await ctx.send(embed=await get_trades_embed(), view=view)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

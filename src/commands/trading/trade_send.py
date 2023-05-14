@@ -40,6 +40,7 @@ async def send(ctx: Context):
     await send_trade_notif_to_user(lang, ctx.author, recipient)
     await send_trade_in_creation_embed(lang, ctx, recipient, trade, True)
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -38,6 +38,7 @@ from src.commands.trading.trade_accept import accept
 
 from typing import Literal, Optional
 
+
 # initialise class
 class Trading(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -97,6 +98,7 @@ class Trading(commands.Cog):
 # this setup function needs to be in every cog in order for the bot to be able to load it
 async def setup(bot: Bot):
     await bot.add_cog(Trading(bot))
+
 
 """
 This program is free software: you can redistribute it and/or modify

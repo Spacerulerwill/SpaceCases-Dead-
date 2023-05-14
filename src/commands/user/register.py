@@ -42,6 +42,7 @@ async def register(ctx: Context):
     else:
         await msg_embed(ctx, get_locale_fm(user_data["lang", "register.success"]))
 
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

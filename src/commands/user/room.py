@@ -9,7 +9,7 @@ from src.util import database
 from src.lang.lang import get_locale_fm
 from src.util.embed_func import msg_embed
 from src.util.decorators import requires
-from src.util.room_func import delete_room, get_guild_room_create_channel
+from src.util.room_func import delete_room, get_guild_room_create_channel, Room
 import discord
 import asyncio
 
@@ -66,7 +66,8 @@ async def room(ctx: Context, public_private: str):
     await thread.add_user(ctx.author)
 
     task = asyncio.create_task(delete_room(ctx.author.id, thread))
-    database.rooms[ctx.author.id] = [thread, task]
+    database.rooms[ctx.author.id] = Room(thread, task)
+
 
 """
 This program is free software: you can redistribute it and/or modify

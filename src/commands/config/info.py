@@ -9,7 +9,8 @@ from discord.ext.commands import Context
 from src.util import database
 from src.util.embed_func import welcome_embed
 
-async def info(ctx:Context):
+
+async def info(ctx: Context):
     user_data = database.user_data.find_one({"_id": ctx.author.id})
 
     if user_data is None:
@@ -18,6 +19,7 @@ async def info(ctx:Context):
         lang = user_data["lang"]
 
     await ctx.send(embed=welcome_embed(lang, ctx.bot))
+
 
 """
 This program is free software: you can redistribute it and/or modify
