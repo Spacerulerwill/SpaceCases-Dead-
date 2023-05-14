@@ -9,5 +9,5 @@ python-Levenshtein
 beautifulsoup4
 numpy
 black
-python-dotenvs
+python-dotenv
 lxml

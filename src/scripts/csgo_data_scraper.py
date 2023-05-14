@@ -22,16 +22,13 @@ from src.util.constants import (
     HTTP_HEADERS,
     case_wear_ranges_lower,
     conditions,
+    NO_PRICE_FOUND
 )
 from src.util.string_util import remove_skin_name_formatting
 
 from typing import List
 
-NO_PRICE_FOUND = 5000000
-
-
 def get_links_from_page(item_links: List[str], url: str):
-    print(url)
     request = requests.get(url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "html.parser")
 
@@ -81,7 +78,6 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
 
     # get name
     formatted_name = soup.select_one("h1.text-2xl.sm\:text-3xl.font-bold").text
-    print(formatted_name)
     unformatted_name = remove_skin_name_formatting(formatted_name)
 
     is_vanilla_knife = " | Vanilla" in formatted_name  # vanilla knives are difficult
@@ -107,7 +103,7 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
 
     # rarity
     item_class_divs = soup.select("div.text-center.mb-1")
-    rarity = item_class_divs[0].text.strip().lower()
+    rarity = item_class_divs[0].text.replace("-", "").split()[0].strip().lower()
 
     # whether it has a stattrak or souvenir variant
     if len(item_class_divs) > 1:
@@ -132,7 +128,6 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
     for index, lower_value in case_wear_ranges_lower.items():
         if max_float > lower_value:
             worst_condition_index = index
-            break
 
     # prices and image urls
     price_divs = soup.find_all("a", {"class": "version-link"})
@@ -150,6 +145,7 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
         "has_stattrak_variant": has_stattrak_variant,
         "has_souvenir_variant": has_souvenir_variant,
         "can_tradeup": False,
+        "tradeup_result_pool": []
     }
     item_data["no_wear_skins"][unformatted_name] = data
 
@@ -177,7 +173,6 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
             ]
         ):
             unformatted_condition = remove_skin_name_formatting(formatted_condition)
-            print(formatted_condition + " " + formatted_name)
 
             new_data = deepcopy(data)
 
@@ -211,7 +206,6 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
             ]
         ):
             unformatted_condition = remove_skin_name_formatting(formatted_condition)
-            print(formatted_condition + " " + formatted_name)
 
             new_data = deepcopy(data)
 
@@ -282,8 +276,6 @@ def scrape_sticker_page(item_data: dict, url: str):
             if tournament_name != "Sticker":
                 formatted_sticker_name += f" | {tournament_name}"
 
-            print(formatted_sticker_name)
-
             unformatted_sticker_name = remove_skin_name_formatting(
                 formatted_sticker_name
             )
@@ -317,8 +309,6 @@ def scrape_sticker_page(item_data: dict, url: str):
             }
     except Exception as e:
         print(e)
-
-
 # endregion
 
 
@@ -474,12 +464,11 @@ def scrape_case_link(weapon_case_data: dict, item_data: dict, url: str):
     # add final information
     data["odds"] = calculate_container_odds(data["items"])
     weapon_case_data[unformatted_case_name] = data
-    print(unformatted_case_name)
-
 
 def scrape_package_link(
     souvenir_package_data: dict, item_data: dict, type: str, url: str
 ):
+
     # open souvenir package page, get price name and link to items
     request = requests.get(url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "lxml")
@@ -555,7 +544,6 @@ def scrape_package_link(
             list(data["items"].keys()).index(_item_data["rarity"])
             != len(data["items"]) - 1
         )
-        print(can_tradeup, _unformatted_name)
 
         # if has souvenir variant do for that
         if _item_data["has_souvenir_variant"]:
@@ -592,8 +580,6 @@ def scrape_package_link(
     # add final information
     data["odds"] = calculate_container_odds(data["items"])
     souvenir_package_data[unformatted_case_name] = data
-    print(unformatted_case_name)
-
 
 def scrape_sticker_capsule_link(sticker_capsule_data: dict, url: str):
     # open sticker capsule page
@@ -666,8 +652,38 @@ def scrape_sticker_capsule_link(sticker_capsule_data: dict, url: str):
     # add final information
     data["odds"] = calculate_container_odds(data["items"])
     sticker_capsule_data[unformatted_capsule_name] = data
-    print(unformatted_capsule_name)
 
+def set_tradeup_result_pools(item_data:dict, container_data:dict):
+    for name, data in container_data.items():
+        if name != "_id" and data["type"] != "sticker_capsule":
+            container_rarites = list(data["items"].keys())
+
+            for unformmatted_name in data["all items"]:
+                skin_data = item_data["no_wear_skins"][unformmatted_name]
+
+                if skin_data["can_tradeup"]:
+                    rarity = skin_data["rarity"]
+                    next_rarity = container_rarites[container_rarites.index(rarity)+1]
+
+                    # set result pool for item and all its variations
+                    item_data["no_wear_skins"][unformmatted_name]["tradeup_result_pool"] = data["items"][next_rarity]
+
+                    for i in range(
+                        skin_data["best_condition_index"], skin_data["worst_condition_index"] + 1
+                    ):
+                        condition = conditions[i].lower()
+                        item_data["items"][condition + " " + unformmatted_name][
+                            "tradeup_result_pool"
+                        ] = data["items"][next_rarity]
+
+                    if skin_data["has_stattrak_variant"]:
+                        for i in range(
+                            skin_data["best_condition_index"], skin_data["worst_condition_index"] + 1
+                        ):
+                            condition = conditions[i].lower()
+                            item_data["items"]["stattrak " + condition + " " + unformmatted_name][
+                                "tradeup_result_pool"
+                            ] = data["items"][next_rarity]
 
 # endregion
 
@@ -676,6 +692,7 @@ def scrape_sticker_capsule_link(sticker_capsule_data: dict, url: str):
 def scrape_game_data():
     # === PART 1: Scrape the item data
     item_data = {"_id": "item_data", "items": {}, "no_wear_skins": {}}
+
     weapon_skin_links = []
 
     # get weapon skin links
@@ -704,6 +721,7 @@ def scrape_game_data():
         executor.map(
             partial(scrape_case_link, weapon_case_data, item_data), weapon_case_links
         )
+
 
     # packages
     packages_links = [
@@ -754,85 +772,27 @@ def scrape_game_data():
 
     container_data = {
         "_id": "container_data",
-        "container_data": {
-            **weapon_case_data,
-            **packages_data,
-            **souvenir_packages_data,
-            **sticker_capsules_data,
-        },
+        **weapon_case_data,
+        **packages_data,
+        **souvenir_packages_data,
+        **sticker_capsules_data,
     }
+
+    set_tradeup_result_pools(item_data, container_data)
 
     return item_data, container_data
 
-
 """
-                    GNU GENERAL PUBLIC LICENSE
-                       Version 3, 29 June 2007
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
- Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
- Everyone is permitted to copy and distribute verbatim copies
- of this license document, but changing it is not allowed.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-                            Preamble
-
-  The GNU General Public License is a free, copyleft license for
-software and other kinds of works.
-
-  The licenses for most software and other practical works are designed
-to take away your freedom to share and change the works.  By contrast,
-the GNU General Public License is intended to guarantee your freedom to
-share and change all versions of a program--to make sure it remains free
-software for all its users.  We, the Free Software Foundation, use the
-GNU General Public License for most of our software; it applies also to
-any other work released this way by its authors.  You can apply it to
-your programs, too.
-
-  When we speak of free software, we are referring to freedom, not
-price.  Our General Public Licenses are designed to make sure that you
-have the freedom to distribute copies of free software (and charge for
-them if you wish), that you receive source code or can get it if you
-want it, that you can change the software or use pieces of it in new
-free programs, and that you know you can do these things.
-
-  To protect your rights, we need to prevent others from denying you
-these rights or asking you to surrender the rights.  Therefore, you have
-certain responsibilities if you distribute copies of the software, or if
-you modify it: responsibilities to respect the freedom of others.
-
-  For example, if you distribute copies of such a program, whether
-gratis or for a fee, you must pass on to the recipients the same
-freedoms that you received.  You must make sure that they, too, receive
-or can get the source code.  And you must show them these terms so they
-know their rights.
-
-  Developers that use the GNU GPL protect your rights with two steps:
-(1) assert copyright on the software, and (2) offer you this License
-giving you legal permission to copy, distribute and/or modify it.
-
-  For the developers' and authors' protection, the GPL clearly explains
-that there is no warranty for this free software.  For both users' and
-authors' sake, the GPL requires that modified versions be marked as
-changed, so that their problems will not be attributed erroneously to
-authors of previous versions.
-
-  Some devices are designed to deny users access to install or run
-modified versions of the software inside them, although the manufacturer
-can do so.  This is fundamentally incompatible with the aim of
-protecting users' freedom to change the software.  The systematic
-pattern of such abuse occurs in the area of products for individuals to
-use, which is precisely where it is most unacceptable.  Therefore, we
-have designed this version of the GPL to prohibit the practice for those
-products.  If such problems arise substantially in other domains, we
-stand ready to extend this provision to those domains in future versions
-of the GPL, as needed to protect the freedom of users.
-
-  Finally, every program is threatened constantly by software patents.
-States should not allow patents to restrict development and use of
-software on general-purpose computers, but in those that do, we wish to
-avoid the special danger that patents applied to a free program could
-make it effectively proprietary.  To prevent this, the GPL assures that
-patents cannot be used to render the program non-free.
-
-  The precise terms and conditions for copying, distribution and
-modification follow.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """

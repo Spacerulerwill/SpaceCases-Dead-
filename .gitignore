@@ -1,9 +1,3 @@
-# tokens and keys
-bot_token.txt
-database_pass.txt
-
-TODO.txt
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -4,13 +4,21 @@ Copyright (C) 2023 William Redding - All Rights Reserved
 See end of file for licence details
 """
 
-"""
-Copyright (C) 2023 William Redding - All Rights Reserved
+from discord.ext.commands import Context
 
-See end of file for licence details
-"""
+from src.util import database
+from src.util.embed_func import welcome_embed
 
-fr_data = {}
+async def info(ctx:Context):
+    user_data = database.user_data.find_one({"_id": ctx.author.id})
+
+    if user_data is None:
+        lang = "en"
+    else:
+        lang = user_data["lang"]
+
+    await ctx.send(embed=welcome_embed(lang, ctx.bot))
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
