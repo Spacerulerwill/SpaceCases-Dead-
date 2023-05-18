@@ -86,7 +86,7 @@ async def tradeup(ctx: Context, *args):
             e = discord.Embed(
                 title=get_locale(lang, "tradeup.error.invalid_items"),
                 description=io.read(),
-                color=discord.Color.dark_theme()
+                color=discord.Color.dark_theme(),
             )
             await ctx.send(embed=e)
             return
