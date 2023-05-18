@@ -27,14 +27,31 @@ from discord.ext.commands import Context
 # load environment variables
 load_dotenv(".env")
 
-# setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s (%(asctime)s): %(message)s",
-    datefmt="%I:%M:%S %p",
+# detemrine whether on debug or production
+environment: str = os.getenv("ENV")
+
+match environment:
+    case "DEBUG":
+        log_level = logging.DEBUG
+    case "PROD":
+        log_level = logging.INFO
+    case _:
+        raise ValueError(
+            f"Environment variable ENV must be DEBUG or PROD, not {environment}"
+        )
+
+logfile_loc = datetime.datetime.utcnow().strftime(
+    f"logs/%Y_%m_%d_%H_%M_%S_{environment}.log"
 )
 
-TOKEN: str = os.getenv("BOT_TOKEN")
+# setup logging
+logging.basicConfig(
+    level=log_level,
+    format="%(levelname)s (%(asctime)s): %(message)s",
+    datefmt="%I:%M:%S %p",
+    filename=logfile_loc,
+    filemode="w",
+)
 
 # cogs to load
 cogs = ["help", "user", "unbox", "trading", "inventory", "rankings", "games", "config"]
@@ -42,7 +59,7 @@ cogs = ["help", "user", "unbox", "trading", "inventory", "rankings", "games", "c
 # use all intents
 intents = discord.Intents().all()
 
-# instanciate bot with prefix, intents and disabled help command (uses custom command)
+# instancia  bot with prefix, intents and disabled help command (uses custom command)
 bot_instance = commands.Bot(
     command_prefix=[PREFIX, PREFIX.upper(), PREFIX.title()],
     intents=intents,
@@ -54,6 +71,8 @@ bot_instance = commands.Bot(
 def run_bot():
     database.init_collections()
     database.load_game_data()
+
+    TOKEN: str = os.getenv("BOT_TOKEN")
 
     try:
         bot_instance.run(TOKEN)
@@ -254,7 +273,6 @@ async def on_message(message: discord.Message):
 
 if __name__ == "__main__":
     run_bot()
-
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

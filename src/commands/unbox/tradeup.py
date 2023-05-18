@@ -19,7 +19,7 @@ from src.util import database
 from PIL import Image
 import requests
 import random
-from io import BytesIO
+from io import BytesIO, StringIO
 from PIL import ImageFont
 from PIL import ImageDraw
 from datetime import datetime
@@ -74,10 +74,22 @@ async def tradeup(ctx: Context, *args):
     ]  # safe to do as we ensured they are all either stattrak or not stattrak
 
     # check if any are not trade uppable
-    if any(not (b := data)["can_tradeup"] for data in item_data):
-        print(b)
-        await msg_embed(ctx, get_locale(lang, "tradeup.error.invalid_items"))
-        return
+
+    invalid_items = [data for data in item_data if not data["can_tradeup"]]
+
+    if invalid_items:
+        with StringIO() as io:
+            for data in invalid_items:
+                io.write(f'\n• {data["formatted_name"]}')
+            io.seek(0)
+
+            e = discord.Embed(
+                title=get_locale(lang, "tradeup.error.invalid_items"),
+                description=io.read(),
+                color=discord.Color.dark_theme()
+            )
+            await ctx.send(embed=e)
+            return
 
     skin_names = [data["no_wear_formatted_name"] for data in item_data]
 

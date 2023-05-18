@@ -8,11 +8,11 @@ See end of file for licence details
 
 import pymongo
 import os
+from dotenv import set_key
 from pymongo.database import Database
 from pymongo.collection import Collection
 from pymongo.errors import CollectionInvalid
-from src.scripts.csgostash_scraper import csgostash_scrape
-from src.scripts.container_scraper import scrape_containers
+from src.scripts.csgo_data_scraper import scrape_game_data
 from src.util.constants import ONE_WEEK
 
 
@@ -32,8 +32,8 @@ def script_run():
 
     bot_token = input("Enter bot token: ")
 
-    with open("bot_token.txt", "w+") as f:
-        f.write(bot_token)
+    open(".env", "w+").close()
+    set_key(".env", "BOT_TOKEN", bot_token)
 
     # setup mongodb database
     mongo_url = "mongodb://127.0.0.1:27017"
@@ -45,11 +45,11 @@ def script_run():
 
     # create fake database and collections
     db = mongo_client["csgo-case-bot"]
-    guild_data = try_create_collection(db, "guild-data")
-    user_data = try_create_collection(db, "user-data")
-    trade_requests = try_create_collection(db, "trade-requests")
-    skin_data_collection = try_create_collection(db, "skin-data")
-    patch_notes = try_create_collection(db, "patch-notes")
+    guild_data = try_create_collection(db, "guild_data")
+    user_data = try_create_collection(db, "user_data")
+    trade_requests = try_create_collection(db, "trade_requests")
+    item_data_collection = try_create_collection(db, "item_data")
+    patch_notes = try_create_collection(db, "patch_notes")
     leaderboards = try_create_collection(db, "leaderboards")
 
     # create indexes
@@ -57,10 +57,13 @@ def script_run():
         [("send-timestamp", pymongo.ASCENDING)], expireAfterSeconds=ONE_WEEK
     )  # TRADES DELETE AFTER ONE WEEK
 
-    print("Inserting skin data - this may take a while!")
+    print("Gathering game data - this may take a while!")
 
-    skin_data = csgostash_scrape(True)
-    skin_data_collection.replace_one({"_id": "skin-data"}, skin_data, upsert=True)
+    item_data, container_data = scrape_game_data()
+    item_data_collection.replace_one({"_id": "item_data"}, item_data, upsert=True)
+    item_data_collection.replace_one(
+        {"_id": "container_data"}, container_data, upsert=True
+    )
     print("Complete!")
 
 

@@ -10,6 +10,7 @@ See end of file for licence details
 """
 
 import re
+import logging
 from copy import deepcopy
 import requests
 from decimal import Decimal
@@ -26,10 +27,8 @@ from src.util.constants import (
 )
 from src.util.string_util import remove_skin_name_formatting
 
-from typing import List
 
-
-def get_links_from_page(item_links: List[str], url: str):
+def get_links_from_page(item_links: list[str], url: str):
     request = requests.get(url, headers=HTTP_HEADERS)
     soup = BeautifulSoup(request.content, "html.parser")
 
@@ -79,6 +78,8 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
 
     # get name
     formatted_name = soup.select_one("h1.text-2xl.sm\:text-3xl.font-bold").text
+
+    logging.debug(f"Scraping item: {formatted_name}")
     unformatted_name = remove_skin_name_formatting(formatted_name)
 
     is_vanilla_knife = " | Vanilla" in formatted_name  # vanilla knives are difficult

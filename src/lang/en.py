@@ -144,7 +144,7 @@ en_data = {
     "tradeup.error.not_all_found": "Not all skins found in inventory!",
     "tradeup.error.not_same_rarity": "All items must be of the same rarity",
     "tradeup.error.stattrak_mix": "You cannot mix StatTrak and non StatTrak items!",
-    "tradeup.error.invalid_items": "Not all items you have chosen can be traded up!",
+    "tradeup.error.invalid_items": "The following items cannot be used in a tradeup:",
     "tradeup.footer": "Contract signing will be cancelled after 30 seconds",
     # RANKINGS COG
     "leaderboard.embed.global.title": "Global Leaderboard - #%s - %s",
