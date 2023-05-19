@@ -130,7 +130,9 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
     for index, lower_value in case_wear_ranges_lower.items():
         if max_float > lower_value:
             worst_condition_index = index
+            break
 
+    print(min_float, max_float, best_condition_index, worst_condition_index)
     # prices and image urls
     price_divs = soup.find_all("a", {"class": "version-link"})
 
@@ -180,6 +182,9 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
 
             new_data["price"] = price
             new_data["no_wear_formatted_name"] = formatted_name
+            new_data["no_wear_unformatted_name"] = remove_skin_name_formatting(
+                formatted_name
+            )
             new_data["image_url"] = image_url
             new_data["condition_index"] = condition_index
             new_data["formatted_name"] = formatted_condition + " " + formatted_name
@@ -213,6 +218,9 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
 
             new_data["price"] = price
             new_data["no_wear_formatted_name"] = formatted_name
+            new_data["no_wear_unformatted_name"] = remove_skin_name_formatting(
+                formatted_name
+            )
             new_data["image_url"] = image_url
             new_data["formatted_name"] = formatted_condition + " " + formatted_name
             new_data["condition_index"] = condition_index
@@ -252,6 +260,9 @@ def scrape_weapon_skin_link(item_data: dict, url: str):
             new_data["formatted_name"] = formatted_condition + " " + formatted_name
             new_data["condition_index"] = count % 5
             new_data["no_wear_formatted_name"] = formatted_name
+            new_data["no_wear_unformatted_name"] = remove_skin_name_formatting(
+                formatted_name
+            )
             new_data["image_url"] = image_url
 
             item_data["items"][
@@ -431,6 +442,7 @@ def scrape_case_link(weapon_case_data: dict, item_data: dict, url: str):
             _item_data["best_condition_index"], _item_data["worst_condition_index"] + 1
         ):
             condition = conditions[i].lower()
+            print(condition + " " + unformatted_name, can_tradeup)
             item_data["items"][condition + " " + unformatted_name][
                 "can_tradeup"
             ] = can_tradeup
@@ -705,7 +717,6 @@ def scrape_game_data():
     item_data = {"_id": "item_data", "items": {}, "no_wear_skins": {}}
 
     weapon_skin_links = []
-
     # get weapon skin links
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         executor.map(
@@ -724,7 +735,7 @@ def scrape_game_data():
     # === PART 2: Scrape containers and their data
 
     # weapon cases
-    weapon_case_links = []
+    weapon_case_links = ["https://csgoskins.gg/containers/prisma-2-case"]
     get_links_from_page(weapon_case_links, weapon_case_endpoint)
 
     weapon_case_data = {}

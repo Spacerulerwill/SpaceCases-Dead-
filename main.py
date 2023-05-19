@@ -273,6 +273,7 @@ async def on_message(message: discord.Message):
 
 if __name__ == "__main__":
     run_bot()
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

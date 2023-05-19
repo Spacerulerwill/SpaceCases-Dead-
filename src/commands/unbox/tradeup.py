@@ -92,6 +92,7 @@ async def tradeup(ctx: Context, *args):
             return
 
     skin_names = [data["no_wear_formatted_name"] for data in item_data]
+    skin_unformatted_names = [data["no_wear_unformatted_name"] for data in item_data]
 
     contract_signed = False
 
@@ -113,9 +114,9 @@ async def tradeup(ctx: Context, *args):
         nonlocal contract_signed
 
         # pick a random item from the 10 submitted and get their tradeup result pool
-        option_pool = database.item_data["no_wear_skins"][random.choice(skin_names)][
-            "tradeup_result_pool"
-        ]
+        option_pool = database.item_data["no_wear_skins"][
+            random.choice(skin_unformatted_names)
+        ]["tradeup_result_pool"]
 
         # choose one at random from said option pool
         new_item = random.choice(option_pool)
