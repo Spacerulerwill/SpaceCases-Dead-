@@ -25,7 +25,7 @@ from discord.ext import commands, tasks
 from discord.ext.commands import Context
 
 # load environment variables
-load_dotenv(".env")
+load_dotenv()
 
 # detemrine whether on debug or production
 environment: str = os.getenv("ENV")
