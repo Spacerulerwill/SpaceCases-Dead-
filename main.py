@@ -28,7 +28,7 @@ from discord.ext.commands import Context
 load_dotenv()
 
 # detemrine whether on debug or production
-environment: str = os.getenv("ENV")
+environment: str = os.environ["ENV"]
 
 match environment:
     case "DEBUG":
@@ -72,7 +72,7 @@ def run_bot():
     database.init_collections()
     database.load_game_data()
 
-    TOKEN: str = os.getenv("BOT_TOKEN")
+    TOKEN: str = os.environ["BOT_TOKEN"]
 
     try:
         bot_instance.run(TOKEN)

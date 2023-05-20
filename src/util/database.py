@@ -91,7 +91,7 @@ def init_collections():
 
     localhost = False
     try:
-        PASS = os.getenv("DATABASE_PASS")
+        PASS = os.environ["DATABASE_PASS"]
     except:
         # using localhost
         localhost = True
