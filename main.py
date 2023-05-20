@@ -50,7 +50,7 @@ logging.basicConfig(
     format="%(levelname)s (%(asctime)s): %(message)s",
     datefmt="%I:%M:%S %p",
     filename=logfile_loc,
-    filemode="w",
+    filemode="w+",
 )
 
 # cogs to load
