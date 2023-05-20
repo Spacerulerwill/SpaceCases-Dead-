@@ -73,6 +73,8 @@ async def open(ctx: Context, *args):
     if container_data["type"] in ["case", "souvenir_package", "package"]:
         e.add_field(name=get_locale_fm(lang, "float"), value=str(item["float"]))
 
+    e.set_thumbnail(url=container_data["image_url"])
+
     e.set_footer(text=get_locale_fm(lang, "open.embed.footer"))
 
     interacted_with = False
