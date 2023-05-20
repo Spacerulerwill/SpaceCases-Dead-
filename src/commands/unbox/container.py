@@ -37,13 +37,12 @@ async def container(ctx: Context, *args):
         if closest_match is None:
             await msg_embed(ctx, get_locale_fm(lang, "container.not_found"))
         else:
-            container_data = database.containers[closest_match]
             await msg_embed(
                 ctx,
                 get_locale_fm(
                     lang,
                     "container.not_found_suggest",
-                    container_data["formatted_name"],
+                    closest_match,
                 ),
             )
         return
